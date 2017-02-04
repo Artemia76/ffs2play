@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "misc/clogger.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +18,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    CLogger* Log;
 };
 
 #endif // MAINWINDOW_H

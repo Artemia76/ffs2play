@@ -17,10 +17,14 @@ INCLUDEPATH +=	./include \
 
 SOURCES +=	src/main.cpp \
                 src/gui/mainwindow.cpp \
-                src/net/udpserver.cpp
+                src/net/udpserver.cpp \
+                src/misc/clogger.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
-                include/net/udpserver.h
+                include/net/udpserver.h \
+                include/misc/call_once.h \
+                include/misc/singleton.h \
+                include/misc/clogger.h
 
 FORMS    +=     ./forms/mainwindow.ui
 

@@ -1,5 +1,6 @@
 #include "gui/mainwindow.h"
 #include "ui_mainwindow.h"
+#include "misc/clogger.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,8 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     QPalette p = ui->pteLogger->palette();
     p.setColor(QPalette::Text,Qt::darkBlue);
+    Log = CLogger::instance();
+    Log->SetOutPut(ui->pteLogger);
     ui->pteLogger->setPalette(p);
-    ui->pteLogger->appendPlainText("Bienvenue sur FFS2Play");
+    Log->Add("Bienvenue sur FFS2Play");
 }
 
 MainWindow::~MainWindow()
