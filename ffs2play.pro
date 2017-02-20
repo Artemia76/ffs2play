@@ -6,7 +6,7 @@
 
 QT       += core gui network
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 
 TARGET = ffs2play
 TEMPLATE = app
@@ -30,4 +30,3 @@ FORMS    +=     ./forms/mainwindow.ui
 
 RESOURCES += \
     ressources.qrc
-CONFIG += static

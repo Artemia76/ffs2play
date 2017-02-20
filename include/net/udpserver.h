@@ -4,17 +4,23 @@
 #include <QObject>
 #include <QUdpSocket>
 
+#include "misc/clogger.h"
+
 class UDPServer : public QObject
 {
     Q_OBJECT
-    QUdpSocket m_Listenner;
+private:
+    QUdpSocket* m_pListenner;
+
+    CLogger* Logger;
 public:
     explicit UDPServer(QObject *parent = 0);
     ~UDPServer();
 
 signals:
-
-public slots:
+    void fireIncomingData (QByteArray);
+private slots:
+    void incomingData () ;
 };
 
 #endif // UDPSERVER_H

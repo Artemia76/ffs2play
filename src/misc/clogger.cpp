@@ -4,7 +4,8 @@
 CLogger::CLogger(QObject* parent):
     QObject(parent)
 {
-    OutPut = NULL;
+    m_pOutput = NULL;
+    m_eDebugLevel = LEVEL_NONE;
 }
 
 CLogger* CLogger::createInstance()
@@ -22,14 +23,24 @@ CLogger* CLogger::instance()
     return Singleton<CLogger>::instance(CLogger::createInstance);
 }
 
-void CLogger::SetOutPut(QPlainTextEdit* pOutPut)
+void CLogger::setOutput(QPlainTextEdit* pOutput)
 {
-    OutPut = pOutPut;
+    m_pOutput = pOutput;
 }
 
-void CLogger::Add (QString Texte)
+void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
 {
-    if (OutPut==NULL) return;
-    OutPut->appendPlainText(Texte);
+    if (pLevel < LEVEL_NONE ) m_eDebugLevel=LEVEL_NONE;
+    else if (pLevel > LEVEL_VERBOSE) m_eDebugLevel=LEVEL_VERBOSE;
+    else m_eDebugLevel = pLevel;
+}
+
+void CLogger::log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
+{
+    if ((m_pOutput==NULL) || (pLevel > m_eDebugLevel)) return;
+    QTextCharFormat fmt;
+    fmt.setForeground(QBrush(pColor));
+    m_pOutput->mergeCurrentCharFormat(fmt);
+    m_pOutput->appendPlainText(Texte);
 }
 
