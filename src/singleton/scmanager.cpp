@@ -38,7 +38,6 @@ CSCManager* CSCManager::instance()
 
 void CSCManager::open_close()
 {
-    m_logger->log("SCManager : open_close");
     if (!m_bConnected) open();
     else close();
 }
@@ -58,7 +57,7 @@ void CSCManager::open ()
         }
         else
         {
-            m_logger->log("SCManager : La connexion au simulateur a échouée");
+            m_logger->log("La connexion au FS a échoué.",Qt::darkMagenta);
         }
     }
 }
@@ -74,7 +73,7 @@ void CSCManager::close ()
         m_bConnected = false;
         m_thread->wait(0);
         SimConnect_Close(m_hSimConnect);
-        m_logger->log("SCManager : Fermeture de simconnect");
+        m_logger->log("La connexion au simulateur à été fermée");
         emit(closed());
     }
 }
@@ -99,13 +98,11 @@ void CALLBACK CSCManager::DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData,
 void CSCManager::mainThread()
 {
     HRESULT hr;
-    m_logger->log("SCManager : Thread démarré");
     while (m_bConnected)
     {
         hr=SimConnect_CallDispatch(m_hSimConnect,CSCManager::DispatchCallback,this);
         m_thread->msleep(1);
     }
-    m_logger->log("SCManager : Thread arrêté");
     emit(finished());
 }
 
@@ -166,7 +163,7 @@ void CSCManager::process(SIMCONNECT_RECV *pData, DWORD cbData)
         }
         default:
         {
-            m_logger->log("Reçu un Event ID inconnu");
+            m_logger->log("SCManager : Reçu un Event ID inconnu",Qt::darkMagenta,LEVEL_VERBOSE);
             break;
         }
     }
@@ -237,7 +234,7 @@ void CSCManager::InitSimConnect()
 
 void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
 {
-    m_logger->log("Simulateur ouvert");
+    m_logger->log("La connexion au simulateur a réussie");
     InitSimConnect();
 }
 

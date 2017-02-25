@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QNetworkDatagram>
+#include <QTextCodec>
+#include <QSettings>
 
 #include "singleton/clogger.h"
 #include "singleton/scmanager.h"
@@ -31,6 +33,9 @@ private:
     CLogger* Log;
     UDPServer* udpServer;
     CSCManager* scManager;
+    QSettings s;
+
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H

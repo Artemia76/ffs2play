@@ -1,8 +1,6 @@
 #include "gui/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QTextCodec>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -13,21 +11,30 @@ MainWindow::MainWindow(QWidget *parent) :
     Log = CLogger::instance();
     Log->setOutput(ui->pteLogger);
     ui->pteLogger->setPalette(p);
-    Log->log("Bienvenue sur FFS2Play",Qt::red);
-    Log->log("Test de couleur en bleu",Qt::blue);
-    //Log->setDebugLevel(LEVEL_NORMAL);
+    Log->log("Bienvenue sur FFS2Play",Qt::blue);
     udpServer = new UDPServer();
     connect(udpServer, SIGNAL(fireIncomingData(QByteArray)),this, SLOT(onDatagramReceived(QByteArray)));
     // Initialisation Simconnect Manager
     scManager = CSCManager::instance();
     connect(scManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
     connect(scManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
-
+    s.beginGroup("MainWindow");
+    resize(s.value("size", QSize(400,400)).toSize());
+    move(s.value("pos", QPoint(200,200)).toPoint());
+    s.endGroup();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    s.beginGroup("MainWindow");
+    s.setValue("size", size());
+    s.setValue("pos", pos());
+    s.endGroup();
 }
 
 void MainWindow::onDatagramReceived (QByteArray pData)
