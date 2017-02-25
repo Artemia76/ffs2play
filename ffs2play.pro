@@ -13,20 +13,22 @@ TEMPLATE = app
 
 INCLUDEPATH +=	./include \
                 ./src \
-                ./forms
+                ./forms \
+                "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc"
 
 SOURCES +=	src/main.cpp \
                 src/gui/mainwindow.cpp \
                 src/net/udpserver.cpp \
-                src/misc/clogger.cpp
+                src/singleton/clogger.cpp \
+                src/singleton/scmanager.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \
-                include/misc/call_once.h \
-                include/misc/singleton.h \
-                include/misc/clogger.h
+                include/singleton/call_once.h \
+                include/singleton/clogger.h \
+                include/singleton/scmanager.h
 
 FORMS    +=     ./forms/mainwindow.ui
-
+LIBS    += -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib" -lSimConnect
 RESOURCES += \
     ressources.qrc

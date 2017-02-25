@@ -4,7 +4,8 @@
 #include <QMainWindow>
 #include <QNetworkDatagram>
 
-#include "misc/clogger.h"
+#include "singleton/clogger.h"
+#include "singleton/scmanager.h"
 #include "net/udpserver.h"
 
 namespace Ui {
@@ -21,10 +22,15 @@ public:
 public slots:
     void onDatagramReceived (QByteArray);
 
+private slots:
+    void on_atFSCon_triggered();
+    void onSCM_Opened();
+    void onSCM_Closed();
 private:
     Ui::MainWindow *ui;
     CLogger* Log;
-    UDPServer* server;
+    UDPServer* udpServer;
+    CSCManager* scManager;
 };
 
 #endif // MAINWINDOW_H

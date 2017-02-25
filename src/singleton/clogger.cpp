@@ -1,11 +1,13 @@
-#include "misc/clogger.h"
-#include "misc/singleton.h"
+#include "singleton/clogger.h"
+#include "singleton/singleton.h"
 
 CLogger::CLogger(QObject* parent):
     QObject(parent)
 {
+    qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
     m_pOutput = NULL;
     m_eDebugLevel = LEVEL_NONE;
+    connect (this,SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(_log(QString,QColor,CL_DEBUG_LEVEL)));
 }
 
 CLogger* CLogger::createInstance()
@@ -35,7 +37,7 @@ void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
     else m_eDebugLevel = pLevel;
 }
 
-void CLogger::log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
+void CLogger::_log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {
     if ((m_pOutput==NULL) || (pLevel > m_eDebugLevel)) return;
     QTextCharFormat fmt;
@@ -44,3 +46,7 @@ void CLogger::log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
     m_pOutput->appendPlainText(Texte);
 }
 
+void CLogger::log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
+{
+    emit(fireLog(Texte,pColor,pLevel));
+}

@@ -20,12 +20,16 @@ private:
     static CLogger* createInstance();
     QPlainTextEdit* m_pOutput;
     CL_DEBUG_LEVEL m_eDebugLevel;
+private slots:
+    void _log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 public:
     ~CLogger();
     static CLogger* instance();
     void setOutput(QPlainTextEdit* pOutput);
-    void log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
     void setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    void log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+signals:
+    void fireLog (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 };
 
 #endif // CLOGGER_H

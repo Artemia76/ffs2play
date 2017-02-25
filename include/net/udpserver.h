@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QUdpSocket>
 
-#include "misc/clogger.h"
+#include "singleton/clogger.h"
 
 class UDPServer : public QObject
 {
