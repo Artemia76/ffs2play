@@ -6,7 +6,7 @@
 
 QT       += core gui network
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 
 TARGET = ffs2play
 TEMPLATE = app
@@ -14,24 +14,37 @@ TEMPLATE = app
 INCLUDEPATH +=	./include \
                 ./src \
                 ./forms \
-                "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc"
+                "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
+                "E:\git\miniupnp\miniupnpc"
 
 SOURCES +=	src/main.cpp \
                 src/gui/mainwindow.cpp \
                 src/net/udpserver.cpp \
                 src/singleton/clogger.cpp \
-                src/singleton/scmanager.cpp
+                src/singleton/scmanager.cpp \
+    src/net/chttprequest.cpp \
+    src/singleton/p2pmanager.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \
                 include/singleton/call_once.h \
                 include/singleton/clogger.h \
-                include/singleton/scmanager.h
+                include/singleton/scmanager.h \
+    include/net/chttprequest.h \
+    include/singleton/p2pmanager.h \
+    include/singleton/singleton.h
 
-FORMS    +=     ./forms/mainwindow.ui
-LIBS    += -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib" -lSimConnect
-RESOURCES += \
-    ressources.qrc
+FORMS	+= ./forms/mainwindow.ui
+LIBS    += -L"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86"
+LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
+LIBS	+= -L"E:\git\miniupnp\miniupnpc\msvc\Release"
+LIBS	+= -lSimConnect
+LIBS	+= -lWs2_32
+LIBS	+= -liphlpapi
+LIBS	+= -lminiupnpc
+
+RESOURCES += ressources.qrc
+
 RC_FILE = ./ffs2play.rc
 
 isEmpty(TARGET_EXT) {

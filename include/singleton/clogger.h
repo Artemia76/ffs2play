@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QPlainTextEdit>
+#include <QSettings>
 
 enum CL_DEBUG_LEVEL
 {
@@ -16,20 +17,24 @@ class CLogger : public QObject
     Q_OBJECT
 
 private:
-    CLogger(QObject* parent = 0);
+                    CLogger(QObject* parent = 0);
     static CLogger* createInstance();
-    QPlainTextEdit* m_pOutput;
-    CL_DEBUG_LEVEL m_eDebugLevel;
+    QPlainTextEdit* m_Output;
+    CL_DEBUG_LEVEL  m_DebugLevel;
+    QSettings       s;
+
 private slots:
-    void _log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    void            _log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+
 public:
-    ~CLogger();
+                    ~CLogger();
     static CLogger* instance();
-    void setOutput(QPlainTextEdit* pOutput);
-    void setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-    void log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    void            setOutput(QPlainTextEdit* pOutput);
+    void            setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    void            log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+
 signals:
-    void fireLog (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    void            fireLog (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 };
 
 #endif // CLOGGER_H

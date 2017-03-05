@@ -5,8 +5,10 @@ CLogger::CLogger(QObject* parent):
     QObject(parent)
 {
     qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
-    m_pOutput = NULL;
-    m_eDebugLevel = LEVEL_NONE;
+    m_Output = NULL;
+    s.beginGroup("Log");
+    m_DebugLevel = (CL_DEBUG_LEVEL)s.value("DebugLevel",LEVEL_NONE).toLongLong();
+    s.endGroup();
     connect (this,SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(_log(QString,QColor,CL_DEBUG_LEVEL)));
 }
 
@@ -27,23 +29,26 @@ CLogger* CLogger::instance()
 
 void CLogger::setOutput(QPlainTextEdit* pOutput)
 {
-    m_pOutput = pOutput;
+    m_Output = pOutput;
 }
 
 void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
 {
-    if (pLevel < LEVEL_NONE ) m_eDebugLevel=LEVEL_NONE;
-    else if (pLevel > LEVEL_VERBOSE) m_eDebugLevel=LEVEL_VERBOSE;
-    else m_eDebugLevel = pLevel;
+    if (pLevel < LEVEL_NONE ) m_DebugLevel=LEVEL_NONE;
+    else if (pLevel > LEVEL_VERBOSE) m_DebugLevel=LEVEL_VERBOSE;
+    else m_DebugLevel = pLevel;
+    s.beginGroup("Log");
+    s.setValue("DebugLevel",(long)m_DebugLevel);
+    s.endGroup();
 }
 
 void CLogger::_log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {
-    if ((m_pOutput==NULL) || (pLevel > m_eDebugLevel)) return;
+    if ((m_Output==NULL) || (pLevel > m_DebugLevel)) return;
     QTextCharFormat fmt;
     fmt.setForeground(QBrush(pColor));
-    m_pOutput->mergeCurrentCharFormat(fmt);
-    m_pOutput->appendPlainText(Texte);
+    m_Output->mergeCurrentCharFormat(fmt);
+    m_Output->appendPlainText(Texte);
 }
 
 void CLogger::log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)

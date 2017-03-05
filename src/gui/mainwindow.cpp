@@ -1,5 +1,6 @@
 #include "gui/mainwindow.h"
 #include "ui_mainwindow.h"
+#include "net/chttprequest.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,18 +11,23 @@ MainWindow::MainWindow(QWidget *parent) :
     p.setColor(QPalette::Text,Qt::darkBlue);
     Log = CLogger::instance();
     Log->setOutput(ui->pteLogger);
+    Log->setDebugLevel(LEVEL_VERBOSE);
     ui->pteLogger->setPalette(p);
     Log->log("Bienvenue sur FFS2Play",Qt::blue);
-    udpServer = new UDPServer();
-    connect(udpServer, SIGNAL(fireIncomingData(QByteArray)),this, SLOT(onDatagramReceived(QByteArray)));
     // Initialisation Simconnect Manager
     scManager = CSCManager::instance();
     connect(scManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
     connect(scManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
+    // Init window position and size
     s.beginGroup("MainWindow");
     resize(s.value("size", QSize(400,400)).toSize());
     move(s.value("pos", QPoint(200,200)).toPoint());
     s.endGroup();
+    //Lancement du timer pour mise à jour de l'interface
+    connect(&Update,&QTimer::timeout,this,&MainWindow::onUpdate);
+    Update.start(5000);
+    P2PManager = CP2PManager::instance();
+    P2PManager->init(true);
 }
 
 MainWindow::~MainWindow()
@@ -35,14 +41,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     s.setValue("size", size());
     s.setValue("pos", pos());
     s.endGroup();
-}
-
-void MainWindow::onDatagramReceived (QByteArray pData)
-{
-    QDataStream data(pData);
-    QString Message;
-    data >> Message;
-    Log->log(QTextCodec::codecForMib(106)->toUnicode(pData),Qt::green);
+    P2PManager->init(false);
 }
 
 void MainWindow::on_atFSCon_triggered()
@@ -58,4 +57,9 @@ void MainWindow::onSCM_Opened()
 void MainWindow::onSCM_Closed()
 {
     ui->atFSCon->setIcon(QIcon(":/gfx/plane_gris.png"));
+}
+
+void MainWindow::onUpdate()
+{
+
 }
