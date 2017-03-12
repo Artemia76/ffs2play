@@ -265,9 +265,9 @@
    </attribute>
    <addaction name="atFSCon"/>
    <addaction name="afServeurCon"/>
-   <addaction name="actionProfil"/>
-   <addaction name="actionLogger"/>
-   <addaction name="actionAide"/>
+   <addaction name="afProfil"/>
+   <addaction name="afLogger"/>
+   <addaction name="afAide"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="sizePolicy">
@@ -553,7 +553,7 @@
     <string extracomment="Connexion au serveur">Connexion au serveur</string>
    </property>
   </action>
-  <action name="actionAide">
+  <action name="afAide">
    <property name="icon">
     <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/help.png</normaloff>:/gfx/help.png</iconset>
@@ -562,7 +562,7 @@
     <string>Aide</string>
    </property>
   </action>
-  <action name="actionProfil">
+  <action name="afProfil">
    <property name="icon">
     <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/Outils.png</normaloff>:/gfx/Outils.png</iconset>
@@ -571,7 +571,7 @@
     <string>Profil</string>
    </property>
   </action>
-  <action name="actionLogger">
+  <action name="afLogger">
    <property name="icon">
     <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/console.png</normaloff>:/gfx/console.png</iconset>

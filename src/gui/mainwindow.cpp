@@ -1,6 +1,7 @@
 #include "gui/mainwindow.h"
 #include "ui_mainwindow.h"
 #include "net/chttprequest.h"
+#include "gui/dialogprofils.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
     Update.start(5000);
     P2PManager = CP2PManager::instance();
     P2PManager->init(true);
+
+    WebManager = CWebManager::instance();
 }
 
 MainWindow::~MainWindow()
@@ -62,4 +65,15 @@ void MainWindow::onSCM_Closed()
 void MainWindow::onUpdate()
 {
 
+}
+
+void MainWindow::on_afServeurCon_triggered()
+{
+
+}
+
+void MainWindow::on_afProfil_triggered()
+{
+    DialogProfils* dialog = new DialogProfils();
+    dialog->show();
 }

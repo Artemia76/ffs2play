@@ -22,26 +22,34 @@ SOURCES +=	src/main.cpp \
                 src/net/udpserver.cpp \
                 src/singleton/clogger.cpp \
                 src/singleton/scmanager.cpp \
-    src/net/chttprequest.cpp \
-    src/singleton/p2pmanager.cpp
+                src/net/chttprequest.cpp \
+                src/singleton/p2pmanager.cpp \
+                src/singleton/webmanager.cpp \
+                src/gui/dialogprofils.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \
                 include/singleton/call_once.h \
                 include/singleton/clogger.h \
                 include/singleton/scmanager.h \
-    include/net/chttprequest.h \
-    include/singleton/p2pmanager.h \
-    include/singleton/singleton.h
+                include/net/chttprequest.h \
+                include/singleton/p2pmanager.h \
+                include/singleton/singleton.h \
+                include/singleton/webmanager.h \
+                include/gui/dialogprofils.h
 
-FORMS	+= ./forms/mainwindow.ui
+FORMS	+=	forms/mainwindow.ui \
+                forms/dialogprofils.ui
+
+MINIUPNPC_PATH = "E:\git\miniupnp\miniupnpc\msvc\Release"
+MINIUPNPC_LIB = miniupnpc
 LIBS    += -L"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86"
 LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
-LIBS	+= -L"E:\git\miniupnp\miniupnpc\msvc\Release"
+LIBS	+= -L$${MINIUPNPC_PATH}
 LIBS	+= -lSimConnect
 LIBS	+= -lWs2_32
 LIBS	+= -liphlpapi
-LIBS	+= -lminiupnpc
+LIBS	+= -l$${MINIUPNPC_LIB}
 
 RESOURCES += ressources.qrc
 
@@ -59,7 +67,7 @@ isEmpty(TARGET_EXT) {
 }
 
 win32 {
-    DEPLOY_COMMAND = windeployqt
+    DEPLOY_COMMAND = windeployqt --no-system-d3d-compiler --compiler-runtime
 }
 macx {
     DEPLOY_COMMAND = macdeployqt

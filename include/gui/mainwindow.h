@@ -10,6 +10,7 @@
 #include "singleton/scmanager.h"
 #include "net/chttprequest.h"
 #include "singleton/p2pmanager.h"
+#include "singleton/webmanager.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,11 +28,16 @@ private slots:
     void onSCM_Opened();
     void onSCM_Closed();
     void onUpdate();
+    void on_afServeurCon_triggered();
+
+    void on_afProfil_triggered();
+
 private:
     Ui::MainWindow *ui;
     CLogger* Log;
     CSCManager* scManager;
     CP2PManager* P2PManager;
+    CWebManager* WebManager;
     QSettings s;
     QTimer Update;
 
