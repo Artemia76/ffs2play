@@ -39,7 +39,7 @@ class CWebManager : public QObject
 {
     Q_OBJECT
     //Q_ENUM(XmlCode)
-    friend class ProfilDialog;
+    friend class DialogProfils;
 private:
                         CWebManager(QObject *parent = 0);
     static CWebManager* createInstance();

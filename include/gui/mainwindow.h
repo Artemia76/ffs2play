@@ -40,7 +40,6 @@ private:
     CWebManager* WebManager;
     QSettings s;
     QTimer Update;
-
     void closeEvent(QCloseEvent *event);
 };
 

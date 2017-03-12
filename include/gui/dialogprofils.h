@@ -2,7 +2,11 @@
 #define DIALOGPROFILS_H
 
 #include <QDialog>
+#include <QListWidgetItem>
+#include <QSettings>
+
 #include "singleton/clogger.h"
+#include "singleton/webmanager.h"
 
 namespace Ui {
 class DialogProfils;
@@ -18,9 +22,14 @@ public:
 
 private:
     Ui::DialogProfils *ui;
-    CLogger*    Log;
+    CLogger*        Log;
+    CWebManager*    WebManager;
+    QSettings       s;
 private slots:
     void accept();
+    void on_btnAdd_pressed();
+    void on_btnDelete_pressed();
+    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 };
 
 #endif // DIALOGPROFILS_H

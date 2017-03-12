@@ -64,16 +64,6 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     }
     s.endGroup();
     if (num < Users.count()) CurentUser = Users.at(num);
-    if (num==0)
-    {
-        SUser user;
-        user.Profil = "toto";
-        user.Login = "titi";
-        user.Password = "tata";
-        user.URL = "https://tartempion.com";
-        Users.append(user);
-        SaveConfig();
-    }
 }
 
 CWebManager::~CWebManager()
