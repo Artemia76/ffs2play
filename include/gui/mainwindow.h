@@ -29,8 +29,9 @@ private slots:
     void onSCM_Closed();
     void onUpdate();
     void on_afServeurCon_triggered();
-
     void on_afProfil_triggered();
+
+    void on_afAide_triggered();
 
 private:
     Ui::MainWindow *ui;

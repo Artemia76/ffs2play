@@ -4,18 +4,21 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 
 TARGET = ffs2play
 TEMPLATE = app
 
+MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
+MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
+
 INCLUDEPATH +=	./include \
                 ./src \
                 ./forms \
                 "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
-                "E:\git\miniupnp\miniupnpc"
+                $${MINIUPNPC_PATH}
 
 SOURCES +=	src/main.cpp \
                 src/gui/mainwindow.cpp \
@@ -25,7 +28,8 @@ SOURCES +=	src/main.cpp \
                 src/net/chttprequest.cpp \
                 src/singleton/p2pmanager.cpp \
                 src/singleton/webmanager.cpp \
-                src/gui/dialogprofils.cpp
+                src/gui/dialogprofils.cpp \
+    src/tools/getappversion.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \
@@ -36,20 +40,20 @@ HEADERS  +=     include/gui/mainwindow.h \
                 include/singleton/p2pmanager.h \
                 include/singleton/singleton.h \
                 include/singleton/webmanager.h \
-                include/gui/dialogprofils.h
+                include/gui/dialogprofils.h \
+                include/tools/version.h \
+    include/tools/getappversion.h
 
 FORMS	+=	forms/mainwindow.ui \
                 forms/dialogprofils.ui
 
-MINIUPNPC_PATH = "E:\git\miniupnp\miniupnpc\msvc\Release"
-MINIUPNPC_LIB = miniupnpc
 LIBS    += -L"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86"
 LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
-LIBS	+= -L$${MINIUPNPC_PATH}
+LIBS	+= -L$${MINIUPNPC_LIB_PATH}
 LIBS	+= -lSimConnect
 LIBS	+= -lWs2_32
 LIBS	+= -liphlpapi
-LIBS	+= -l$${MINIUPNPC_LIB}
+LIBS	+= -lminiupnpc
 
 RESOURCES += ressources.qrc
 
@@ -86,3 +90,16 @@ CONFIG( debug, debug|release ) {
 
 # Use += instead of = if you use multiple QMAKE_POST_LINKs
 QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
+
+DISTFILES += \
+    ffs2play.rc
+
+# Application Version
+
+VERSION_MAJOR = 1
+VERSION_MINOR = 0
+VERSION_BUILD = 0
+DEFINES += APP_NAME=\\\"$${TARGET}\\\"
+DEFINES += APP_MAJOR=$$VERSION_MAJOR
+DEFINES += APP_MINOR=$$VERSION_MINOR
+DEFINES += APP_BUILD=$$VERSION_BUILD

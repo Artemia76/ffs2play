@@ -42,7 +42,7 @@ void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
     s.endGroup();
 }
 
-void CLogger::_log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
+void CLogger::_log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {
     if ((m_Output==NULL) || (pLevel > m_DebugLevel)) return;
     QTextCharFormat fmt;
@@ -51,7 +51,7 @@ void CLogger::_log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
     m_Output->appendPlainText(Texte);
 }
 
-void CLogger::log (QString Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
+void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {
     emit(fireLog(Texte,pColor,pLevel));
 }

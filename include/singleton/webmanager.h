@@ -30,6 +30,7 @@
 #include <QList>
 #include <QTimer>
 #include <QDateTime>
+#include <QMetaEnum>
 #include "singleton/clogger.h"
 #include "singleton/scmanager.h"
 #include "singleton/p2pmanager.h"
@@ -44,24 +45,21 @@ struct SUser
 
 Q_DECLARE_METATYPE(QList<SUser>)
 
-enum XmlCode
-{
-    verify,
-    //getflight,
-    liveupdate,
-    atc,
-    //pirep,
-    syncai,
-    sendai,
-    askai,
-    logout
-};
-
 class CWebManager : public QObject
 {
     Q_OBJECT
-    //Q_ENUM(XmlCode)
     friend class DialogProfils;
+public:
+    enum XmlCode
+    {
+        hello,
+        verify,
+        liveupdate,
+        atc,
+        logout
+    };
+    Q_ENUM(XmlCode)
+
 private:
                         CWebManager(QObject *parent = 0);
     static CWebManager* createInstance();
@@ -71,6 +69,7 @@ private:
     CSCManager*         SCM;
     CP2PManager*        P2P;
     CLogger*            Log;
+    QMetaEnum           metaXmlCode;
 
     // Etat de la connexion
     bool                m_bConnected;
@@ -78,11 +77,10 @@ private:
     QString             m_sURL;
     QDateTime           LastGoodUpdate;
     QList<SUser>        Users;
-    SUser               CurentUser;
+    SUser               CurrentUser;
     QString             Key;
-    QDomDocument        SendVerify;
+    void                XmlBuild(QDomDocument& Doc, XmlCode Code);
 
-    void                XmlBuild (QDomDocument& Doc, XmlCode Code);
 protected:
     void                SaveConfig();
 

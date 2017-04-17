@@ -28,6 +28,9 @@
 
 #include <QCryptographicHash>
 #include <QByteArray>
+#include <QXmlStreamWriter>
+
+#include "tools/getappversion.h"
 
 QDataStream& operator<<(QDataStream& out, const QList<SUser>& v)
 {
@@ -63,6 +66,7 @@ QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
 */
 CWebManager::CWebManager(QObject *parent) : QObject(parent)
 {
+    metaXmlCode = QMetaEnum::fromType<XmlCode>();
     qRegisterMetaTypeStreamOperators<QList<SUser> >("QList<SUser>");
     Log = CLogger::instance();
     s.beginGroup("Web");
@@ -83,6 +87,11 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
        stream.setVersion(QDataStream::Qt_5_8);
        Users.clear();
        stream >> Users;
+        if (num >= Users.count())
+        {
+                num = 0;
+                s.setValue("Default",0);
+        }
     }
     else if (!Check.isEmpty())
     {
@@ -92,7 +101,9 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
         s.setValue("Hash","");
     }
     s.endGroup();
-    if (num < Users.count()) CurentUser = Users.at(num);
+    if (num < Users.count()) CurrentUser = Users.at(num);
+    QDomDocument SendHello;
+    XmlBuild(SendHello, hello);
 }
 
 /*!
@@ -115,7 +126,51 @@ CWebManager* CWebManager::instance()
 
 void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
 {
+    QDomProcessingInstruction Header = Doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"utf-8\"");
+    Doc.appendChild(Header);
 
+    //Root
+    QDomElement xmlRoot = Doc.createElement("FFS2Play");
+    Doc.appendChild(xmlRoot);
+
+    //Version
+    QDomElement xmlVersion = Doc.createElement("version");
+    xmlVersion.appendChild(Doc.createTextNode(GetAppVersion().FullVersion));
+    xmlRoot.appendChild(xmlVersion);
+
+    //Création du switch
+    QDomElement xmlSwitch = Doc.createElement("switch");
+    xmlRoot.appendChild(xmlSwitch);
+
+    //Création du data
+    QDomElement xmlData = Doc.createElement("data");
+    xmlData.appendChild(Doc.createTextNode(metaXmlCode.valueToKey(Code)));
+    xmlSwitch.appendChild(xmlData);
+
+    //Création du key
+    QDomElement xmlKey = Doc.createElement("key");
+    xmlKey.appendChild(Doc.createTextNode(Key));
+    xmlSwitch.appendChild(xmlKey);
+
+    switch (Code)
+    {
+        case hello:
+        {
+            QDomElement xmlHello = Doc.createElement("hello");
+            xmlRoot.appendChild(xmlHello);
+            //Création de la balise pilotID
+            QDomElement xmlLogin = Doc.createElement("pilotID");
+            xmlLogin.appendChild(Doc.createTextNode(CurrentUser.Login));
+            xmlHello.appendChild(xmlLogin);
+            break;
+        }
+    }
+
+    QString out;
+    QTextStream* stream = new QTextStream (&out);
+    stream->setCodec("UTF-8");
+    Doc.save(*stream,4);
+    Log->log("XMl = " +out);
 }
 
 void CWebManager::SaveConfig()

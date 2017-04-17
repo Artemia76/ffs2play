@@ -494,10 +494,24 @@
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit_Login"/>
+       <widget class="QLineEdit" name="lineEdit_Login">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEdit_ProfilName"/>
+       <widget class="QLineEdit" name="lineEdit_ProfilName">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label">
@@ -522,8 +536,14 @@
       </item>
       <item row="2" column="1">
        <widget class="QLineEdit" name="lineEdit_Password">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -535,7 +555,14 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLineEdit" name="lineEdit_URL"/>
+       <widget class="QLineEdit" name="lineEdit_URL">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -625,38 +652,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>DialogProfils</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>DialogProfils</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

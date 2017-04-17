@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "net/chttprequest.h"
 #include "gui/dialogprofils.h"
+#include "tools/getappversion.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -76,4 +77,10 @@ void MainWindow::on_afProfil_triggered()
 {
     DialogProfils* dialog = new DialogProfils();
     dialog->show();
+}
+
+void MainWindow::on_afAide_triggered()
+{
+    sVersion Version = GetAppVersion();
+    Log->log("Version actuelle : " + Version.FullVersion  );
 }

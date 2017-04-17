@@ -24,14 +24,14 @@ private:
     QSettings       s;
 
 private slots:
-    void            _log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    void            _log (const QString& Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 
 public:
                     ~CLogger();
     static CLogger* instance();
     void            setOutput(QPlainTextEdit* pOutput);
     void            setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-    void            log (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    void            log (const QString& Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 
 signals:
     void            fireLog (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
