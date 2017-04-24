@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 Gianni Peschiutta.
+** Copyright (C) 2017 FSFranceSimulateur team.
 ** Contact: https://github.com/ffs2/ffs2play
 **
 ** FFS2Play is free software; you can redistribute it and/or modify

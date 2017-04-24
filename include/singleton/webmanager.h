@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 Gianni Peschiutta.
+** Copyright (C) 2017 FSFranceSimulateur team.
 ** Contact: https://github.com/ffs2/ffs2play
 **
 ** FFS2Play is free software; you can redistribute it and/or modify
@@ -34,6 +34,7 @@
 #include "singleton/clogger.h"
 #include "singleton/scmanager.h"
 #include "singleton/p2pmanager.h"
+#include "net/chttprequest.h"
 
 struct SUser
 {
@@ -77,20 +78,23 @@ private:
     QString             m_sURL;
     QDateTime           LastGoodUpdate;
     QList<SUser>        Users;
-    SUser               CurrentUser;
+    int                 CurrentUser;
     QString             Key;
     void                XmlBuild(QDomDocument& Doc, XmlCode Code);
 
 protected:
     void                SaveConfig();
+    void                SetCurrentUser(int num);
 
 public:
                         ~CWebManager();
     static CWebManager* instance();
     bool                DelayedExit;
+    void                Connect();
 signals:
 
-public slots:
+private slots:
+    void                HelloCallback (CHttpRequest* Request);
 };
 
 #endif // WEBMANAGER_H

@@ -29,7 +29,7 @@ SOURCES +=	src/main.cpp \
                 src/singleton/p2pmanager.cpp \
                 src/singleton/webmanager.cpp \
                 src/gui/dialogprofils.cpp \
-    src/tools/getappversion.cpp
+                src/tools/getappversion.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \

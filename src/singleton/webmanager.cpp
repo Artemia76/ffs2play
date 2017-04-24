@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 Gianni Peschiutta.
+** Copyright (C) 2017 FSFranceSimulateur team.
 ** Contact: https://github.com/ffs2/ffs2play
 **
 ** FFS2Play is free software; you can redistribute it and/or modify
@@ -19,9 +19,6 @@
 ** information to ensure the GNU General Public License requirements will
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
-
-/*! \class CWebManager
-*/
 
 #include "singleton/webmanager.h"
 #include "singleton/singleton.h"
@@ -83,14 +80,14 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     }
     else if (result == Check)
     {
-       QDataStream stream(Profils);
-       stream.setVersion(QDataStream::Qt_5_8);
-       Users.clear();
-       stream >> Users;
-        if (num >= Users.count())
+        QDataStream stream(Profils);
+        stream.setVersion(QDataStream::Qt_5_8);
+        Users.clear();
+        stream >> Users;
+        if ((num > Users.count()) || (num <1))
         {
-                num = 0;
-                s.setValue("Default",0);
+                (Users.count()> 0) ? num = 1 : num =0;
+                s.setValue("Default",num);
         }
     }
     else if (!Check.isEmpty())
@@ -101,9 +98,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
         s.setValue("Hash","");
     }
     s.endGroup();
-    if (num < Users.count()) CurrentUser = Users.at(num);
-    QDomDocument SendHello;
-    XmlBuild(SendHello, hello);
+    CurrentUser = num;
 }
 
 /*!
@@ -126,7 +121,7 @@ CWebManager* CWebManager::instance()
 
 void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
 {
-    QDomProcessingInstruction Header = Doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"utf-8\"");
+    QDomProcessingInstruction Header = Doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
     Doc.appendChild(Header);
 
     //Root
@@ -160,7 +155,7 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             xmlRoot.appendChild(xmlHello);
             //Création de la balise pilotID
             QDomElement xmlLogin = Doc.createElement("pilotID");
-            xmlLogin.appendChild(Doc.createTextNode(CurrentUser.Login));
+            xmlLogin.appendChild(Doc.createTextNode(Users[CurrentUser-1].Login));
             xmlHello.appendChild(xmlLogin);
             break;
         }
@@ -183,10 +178,32 @@ void CWebManager::SaveConfig()
     Hash.addData(profils);
     QByteArray checksum = Hash.result();
     s.beginGroup("Web");
-    int num = s.value("Default",0).toInt();
-    if ((num==0) && (Users.count()>0)) num = 1;
+    int num=CurrentUser;
+    if (Users.count()==0) num = 0;
     s.setValue("Default",num);
     s.setValue("Hash", QString(checksum.toBase64()));
     s.setValue("Profils",QString(profils.toBase64()));
     s.endGroup();
+}
+
+void CWebManager::SetCurrentUser(int num)
+{
+    if ((num<1) || (num>Users.count())) return;
+    CurrentUser = num;
+}
+
+void CWebManager::Connect()
+{
+    if (CurrentUser == 0) return;
+    QDomDocument SendHello;
+    XmlBuild(SendHello, hello);
+    CHttpRequest* Request = new CHttpRequest(this);
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
+    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendHello);
+}
+
+void CWebManager::HelloCallback (CHttpRequest* Request)
+{
+    Log->log("HelloCallback" + Request->getAsString());
+    Request->deleteLater();
 }
