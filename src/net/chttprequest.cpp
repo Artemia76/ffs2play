@@ -22,7 +22,13 @@
 
 #include "net/chttprequest.h"
 
+// Static pointer to Network Access Manager
 QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = NULL;
+
+///
+/// \brief CHttpRequest::CHttpRequest
+/// \param parent
+///
 
 CHttpRequest::CHttpRequest(QObject *parent) : QObject(parent)
 {
@@ -32,34 +38,66 @@ CHttpRequest::CHttpRequest(QObject *parent) : QObject(parent)
     Log = CLogger::instance();
 }
 
+///
+/// \brief CHttpRequest::~CHttpRequest
+///
+
 CHttpRequest::~CHttpRequest()
 {
     if (m_reply) m_reply->deleteLater();
 }
 
+///
+/// \brief CHttpRequest::execute
+/// \param URL
+/// \param Doc
+///
+
 void CHttpRequest::execute(QString URL, QDomDocument& Doc)
 {
     m_request.setUrl(QUrl(URL));
-    Log->log("HttpRequest URL = " + URL,Qt::darkBlue,LEVEL_VERBOSE );
     m_request.setHeader(QNetworkRequest::ContentTypeHeader, "text/xml; encoding='utf-8'");
     QByteArray content = Doc.toByteArray();
-    Log->log("HttpRequest Post = " + QString(content),Qt::darkBlue,LEVEL_VERBOSE );
     m_reply = m_ptNetworkManager->post(m_request,content);
     connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
+#ifdef QT_DEBUG
+    Log->log("HttpRequest : URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
+    Log->log("HttpRequest Post = " + QString(content),Qt::darkGreen,LEVEL_VERBOSE );
+#endif
 }
+
+///
+/// \brief CHttpRequest::execute
+/// \param URL
+///
 
 void CHttpRequest::execute(QString URL)
 {
     m_request.setUrl(QUrl(URL));
     m_reply = m_ptNetworkManager->get(m_request);
     connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
+#ifdef QT_DEBUG
+    Log->log("HttpRequest Get URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
+#endif
 }
+
+///
+/// \brief CHttpRequest::callback
+///
 
 void CHttpRequest::callback()
 {
     if (m_reply!= NULL) Reponse = (QString) m_reply->readAll();
+#ifdef QT_DEBUG
+    Log->log("HttpRequest Response = " + Reponse,Qt::darkRed,LEVEL_VERBOSE );
+#endif
     emit(finished(this));
 }
+
+///
+/// \brief CHttpRequest::getAsString
+/// \return
+///
 
 QString CHttpRequest::getAsString()
 {

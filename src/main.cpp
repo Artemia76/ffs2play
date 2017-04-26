@@ -24,6 +24,14 @@
 #include "net/udpserver.h"
 #include <QApplication>
 #include <QSettings>
+#include <QTranslator>
+
+///
+/// \brief main
+/// \param argc
+/// \param argv
+/// \return
+///
 
 int main(int argc, char *argv[])
 {
@@ -31,9 +39,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("FFS2P");
     QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
     QCoreApplication::setApplicationName("FFS2Play");
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-
-    return a.exec();
+    QApplication app(argc, argv);
+    QString locale = QLocale::system().name();
+    QTranslator Translator;
+    Translator.load("translations/ffs2play_" + locale +".qm");
+    app.installTranslator(&Translator);
+    MainWindow mainWindow;
+    mainWindow.show();
+    return app.exec();
 }

@@ -147,7 +147,7 @@ void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem *current, Q
         if (Changed)
         {
             int ret = QMessageBox::warning(this,tr("Warning"),
-                                           tr("Some modifications are currently operated on selected profil. Do you want apply them?"),
+                                           tr("There is some modifications on selected profil. Do you want apply them?"),
                                            QMessageBox::Yes |QMessageBox::No);
             if (ret == QMessageBox::Yes)
             {
@@ -174,6 +174,10 @@ void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem *current, Q
         CurrentProfil = current;
     }
 }
+
+///
+/// \brief DialogProfils::applyChangedItem
+///
 
 void DialogProfils::applyChangedItem()
 {
@@ -219,7 +223,7 @@ void DialogProfils::on_buttonBox_clicked(QAbstractButton *button)
         if (Changed)
         {
             int ret = QMessageBox::warning(this,tr("Warning"),
-                                           tr("Some modifications are currently operated on selected profil. Do you want apply them?"),
+                                           tr("There is some modifications on selected profil. Do you want apply them?"),
                                            QMessageBox::Yes |QMessageBox::No);
             if (ret == QMessageBox::Yes)
             {
@@ -236,6 +240,11 @@ void DialogProfils::on_buttonBox_clicked(QAbstractButton *button)
     }
 
 }
+
+///
+/// \brief DialogProfils::getCurrentRow
+/// \return
+///
 
 int DialogProfils::getCurrentRow()
 {
@@ -269,15 +278,30 @@ void DialogProfils::on_lineEdit_ProfilName_textChanged(const QString&)
     checkIfChanged();
 }
 
+///
+/// \brief DialogProfils::on_lineEdit_Login_textChanged
+/// \param arg1
+///
+
 void DialogProfils::on_lineEdit_Login_textChanged(const QString &arg1)
 {
     checkIfChanged();
 }
 
+///
+/// \brief DialogProfils::on_lineEdit_Password_textChanged
+/// \param arg1
+///
+
 void DialogProfils::on_lineEdit_Password_textChanged(const QString &arg1)
 {
     checkIfChanged();
 }
+
+///
+/// \brief DialogProfils::on_lineEdit_URL_textChanged
+/// \param arg1
+///
 
 void DialogProfils::on_lineEdit_URL_textChanged(const QString &arg1)
 {

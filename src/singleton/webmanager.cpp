@@ -29,6 +29,13 @@
 
 #include "tools/getappversion.h"
 
+/// Build Users Profils to Setting file
+/// \brief operator <<
+/// \param out
+/// \param v
+/// \return
+///
+
 QDataStream& operator<<(QDataStream& out, const QList<SUser>& v)
 {
     out << v.count();
@@ -38,6 +45,13 @@ QDataStream& operator<<(QDataStream& out, const QList<SUser>& v)
     }
     return out;
 }
+
+/// Extraction of Users profils data from Setting file
+/// \brief operator >>
+/// \param in
+/// \param v
+/// \return
+///
 
 QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
 {
@@ -56,11 +70,12 @@ QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
     return in;
 }
 
-/*!
-    Creates a CWebManager singleton object.
+///
+/// \brief CWebManager::CWebManager
+/// \param parent
+/// Creates a CWebManager singleton object.
 
-    \a parent is passed to the QObject constructor.
-*/
+
 CWebManager::CWebManager(QObject *parent) : QObject(parent)
 {
     metaXmlCode = QMetaEnum::fromType<XmlCode>();
@@ -75,7 +90,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     int num = s.value("Default",0).toInt();
     if(Profils.isEmpty() && (num>0))
     {
-        Log->log(tr("WebManager : Users Profils Settings is empty but default user is set. Reset of default user"),Qt::darkMagenta);
+        Log->log("WebManager : " + tr("Users Profils Settings is empty but default user is set. Reset of default user"),Qt::darkMagenta);
         s.setValue("Default",0);
     }
     else if (result == Check)
@@ -92,7 +107,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     }
     else if (!Check.isEmpty())
     {
-        Log->log(tr("WebManager : Users Profils Settings checkum error, repair setting data"),Qt::darkMagenta);
+        Log->log("WebManager : " + tr("Users Profils Settings checkum error, repair setting datas"),Qt::darkMagenta);
         s.setValue("Default",0);
         s.setValue("Profils","");
         s.setValue("Hash","");
@@ -101,23 +116,40 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     CurrentUser = num;
 }
 
-/*!
-    Destroys the signleton instance.
-*/
+///
+/// \brief CWebManager::~CWebManager
+///
+
 CWebManager::~CWebManager()
 {
 
 }
+
+///
+/// \brief CWebManager::createInstance
+/// \return
+///
 
 CWebManager* CWebManager::createInstance()
 {
     return new CWebManager();
 }
 
+///
+/// \brief CWebManager::instance
+/// \return
+///
+
 CWebManager* CWebManager::instance()
 {
     return Singleton<CWebManager>::instance(CWebManager::createInstance);
 }
+
+///
+/// \brief CWebManager::XmlBuild
+/// \param Doc
+/// \param Code
+///
 
 void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
 {
@@ -160,13 +192,11 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             break;
         }
     }
-
-    QString out;
-    QTextStream* stream = new QTextStream (&out);
-    stream->setCodec("UTF-8");
-    Doc.save(*stream,4);
-    Log->log("XMl = " +out);
 }
+
+///
+/// \brief CWebManager::SaveConfig
+///
 
 void CWebManager::SaveConfig()
 {
@@ -186,11 +216,20 @@ void CWebManager::SaveConfig()
     s.endGroup();
 }
 
+///
+/// \brief CWebManager::SetCurrentUser
+/// \param num
+///
+
 void CWebManager::SetCurrentUser(int num)
 {
     if ((num<1) || (num>Users.count())) return;
     CurrentUser = num;
 }
+
+///
+/// \brief CWebManager::Connect
+///
 
 void CWebManager::Connect()
 {
@@ -202,8 +241,15 @@ void CWebManager::Connect()
     Request->execute(Users[CurrentUser-1].URL+"/action.php",SendHello);
 }
 
+///
+/// \brief CWebManager::HelloCallback
+/// \param Request
+///
+
 void CWebManager::HelloCallback (CHttpRequest* Request)
 {
-    Log->log("HelloCallback" + Request->getAsString());
+#ifdef QT_DEBUG
+    Log->log("WebManager : " + tr("Get HelloCallback"));
+#endif
     Request->deleteLater();
 }

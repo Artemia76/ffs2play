@@ -26,40 +26,55 @@
 #include "gui/dialogprofils.h"
 #include "tools/getappversion.h"
 
+///
+/// \brief MainWindow::MainWindow
+/// \param parent
+///
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QPalette p = ui->pteLogger->palette();
-    p.setColor(QPalette::Text,Qt::darkBlue);
-    Log = CLogger::instance();
-    Log->setOutput(ui->pteLogger);
-    Log->setDebugLevel(LEVEL_VERBOSE);
-    ui->pteLogger->setPalette(p);
-    Log->log("Bienvenue sur FFS2Play",Qt::blue);
-    // Initialisation Simconnect Manager
-    scManager = CSCManager::instance();
-    connect(scManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
-    connect(scManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
+
     // Init window position and size
     s.beginGroup("MainWindow");
     resize(s.value("size", QSize(400,400)).toSize());
     move(s.value("pos", QPoint(200,200)).toPoint());
     s.endGroup();
-    //Lancement du timer pour mise à jour de l'interface
+
+    QPalette p = ui->pteLogger->palette();
+    p.setColor(QPalette::Text,Qt::darkBlue);
+    Log = CLogger::instance();
+    Log->setOutput(ui->pteLogger);
+    ui->pteLogger->setPalette(p);
+    Log->log(tr("Welcome to FFS2Play"),Qt::blue);
+    // Simconnect Manager Init
+    scManager = CSCManager::instance();
+    connect(scManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
+    connect(scManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
+    //Start timer to updating GUI
     connect(&Update,&QTimer::timeout,this,&MainWindow::onUpdate);
     Update.start(5000);
+
     P2PManager = CP2PManager::instance();
     P2PManager->init(true);
 
     WebManager = CWebManager::instance();
 }
 
+///
+/// \brief MainWindow::~MainWindow
+///
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+///
+/// \brief MainWindow::closeEvent
+///
 
 void MainWindow::closeEvent(QCloseEvent*)
 {
@@ -70,30 +85,54 @@ void MainWindow::closeEvent(QCloseEvent*)
     P2PManager->init(false);
 }
 
+///
+/// \brief MainWindow::on_atFSCon_triggered
+///
+
 void MainWindow::on_atFSCon_triggered()
 {
     scManager->open_close();
 }
+
+///
+/// \brief MainWindow::onSCM_Opened
+///
 
 void MainWindow::onSCM_Opened()
 {
     ui->atFSCon->setIcon(QIcon(":/gfx/plane_green.png"));
 }
 
+///
+/// \brief MainWindow::onSCM_Closed
+///
+
 void MainWindow::onSCM_Closed()
 {
     ui->atFSCon->setIcon(QIcon(":/gfx/plane_gris.png"));
 }
+
+///
+/// \brief MainWindow::onUpdate
+///
 
 void MainWindow::onUpdate()
 {
 
 }
 
+///
+/// \brief MainWindow::on_afServeurCon_triggered
+///
+
 void MainWindow::on_afServeurCon_triggered()
 {
     WebManager->Connect();
 }
+
+///
+/// \brief MainWindow::on_afProfil_triggered
+///
 
 void MainWindow::on_afProfil_triggered()
 {
@@ -101,8 +140,12 @@ void MainWindow::on_afProfil_triggered()
     dialog->show();
 }
 
+///
+/// \brief MainWindow::on_afAide_triggered
+///
+
 void MainWindow::on_afAide_triggered()
 {
     sVersion Version = GetAppVersion();
-    Log->log("Version actuelle : " + Version.FullVersion  );
+    Log->log(tr("FFS2Play Version : ") + Version.FullVersion  );
 }

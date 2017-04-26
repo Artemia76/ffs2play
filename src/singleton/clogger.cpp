@@ -23,6 +23,11 @@
 #include "singleton/clogger.h"
 #include "singleton/singleton.h"
 
+///
+/// \brief CLogger::CLogger
+/// \param parent
+///
+
 CLogger::CLogger(QObject* parent):
     QObject(parent)
 {
@@ -34,25 +39,49 @@ CLogger::CLogger(QObject* parent):
     connect (this,SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(_log(QString,QColor,CL_DEBUG_LEVEL)));
 }
 
+///
+/// \brief CLogger::createInstance
+/// \return
+///
+
 CLogger* CLogger::createInstance()
 {
     return new CLogger();
 }
+
+///
+/// \brief CLogger::~CLogger
+///
 
 CLogger::~CLogger()
 {
 
 }
 
+///
+/// \brief CLogger::instance
+/// \return
+///
+
 CLogger* CLogger::instance()
 {
     return Singleton<CLogger>::instance(CLogger::createInstance);
 }
 
+///
+/// \brief CLogger::setOutput
+/// \param pOutput
+///
+
 void CLogger::setOutput(QPlainTextEdit* pOutput)
 {
     m_Output = pOutput;
 }
+
+///
+/// \brief CLogger::setDebugLevel
+/// \param pLevel
+///
 
 void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
 {
@@ -64,6 +93,13 @@ void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
     s.endGroup();
 }
 
+///
+/// \brief CLogger::_log
+/// \param Texte
+/// \param pColor
+/// \param pLevel
+///
+
 void CLogger::_log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {
     if ((m_Output==NULL) || (pLevel > m_DebugLevel)) return;
@@ -72,6 +108,13 @@ void CLogger::_log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
     m_Output->mergeCurrentCharFormat(fmt);
     m_Output->appendPlainText(Texte);
 }
+
+///
+/// \brief CLogger::log
+/// \param Texte
+/// \param pColor
+/// \param pLevel
+///
 
 void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {

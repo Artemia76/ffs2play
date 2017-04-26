@@ -25,6 +25,11 @@
 #include "singleton/singleton.h"
 #include "WinSock2.h"
 
+///
+/// \brief CP2PManager::CP2PManager
+/// \param parent
+///
+
 CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
 {
     m_logger=CLogger::instance();
@@ -32,20 +37,39 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     connect (m_server,&UDPServer::fireIncomingData, this,&CP2PManager::OnReceiveDatagram);
 }
 
+///
+/// \brief CP2PManager::createInstance
+/// \return
+///
+
 CP2PManager* CP2PManager::createInstance()
 {
     return new CP2PManager();
 }
+
+///
+/// \brief CP2PManager::~CP2PManager
+///
 
 CP2PManager::~CP2PManager()
 {
     init(false);
 }
 
+///
+/// \brief CP2PManager::instance
+/// \return
+///
+
 CP2PManager* CP2PManager::instance()
 {
     return Singleton<CP2PManager>::instance(CP2PManager::createInstance);
 }
+
+///
+/// \brief CP2PManager::init
+/// \param flag
+///
 
 void CP2PManager::init(bool flag)
 {
@@ -69,6 +93,11 @@ void CP2PManager::init(bool flag)
     }
 }
 
+///
+/// \brief CP2PManager::initUPNP
+/// \param flag
+///
+
 void CP2PManager::initUPNP(bool flag)
 {
     if (flag)
@@ -77,7 +106,7 @@ void CP2PManager::initUPNP(bool flag)
         WSADATA wsaData;
         int nResult = WSAStartup(MAKEWORD(2,2), &wsaData);
         if(nResult != NO_ERROR) {
-            m_logger->log("P2PManager : WSAStartup() failed.");
+            m_logger->log("P2PManager : "+ tr("UPNP Windows Socket failed."),Qt::red);
             return;
         }
         UPNPDev* devlist;
@@ -89,12 +118,15 @@ void CP2PManager::initUPNP(bool flag)
         devlist = upnpDiscover( 1000, multicastif, minissdpdpath, 0, 0,255, &error);
         if (devlist != NULL)
         {
+#ifdef QT_DEBUG
             for (UPNPDev* device = devlist; device !=NULL; device = device->pNext)
             {
                 m_logger->log("P2PManager : " + tr("IGP Desc = ") + QString(device->descURL) + tr(" st: ") + QString(device->st),Qt::darkBlue,LEVEL_NORMAL);
             }
+#endif
             if ((error = UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, 64)) != 0)
             {
+#ifdef QT_DEBUG
                 switch (error)
                 {
                     case 1:
@@ -118,11 +150,14 @@ void CP2PManager::initUPNP(bool flag)
                         break;
                     }
                 }
+#endif
                 m_InternalIP = QString(lanaddr);
-                m_logger->log("P2PManager : " + tr("Local LAN IP address : ") + QString(m_InternalIP),Qt::darkBlue,LEVEL_NORMAL);
                 UPNP_GetExternalIPAddress(urls.controlURL,data.first.servicetype,wanaddr);
                 m_ExternalIP = QString(wanaddr);
+#ifdef QT_DEBUG
+                m_logger->log("P2PManager : " + tr("Local LAN IP address : ") + QString(m_InternalIP),Qt::darkBlue,LEVEL_NORMAL);
                 m_logger->log("P2PManager : " + tr("Internet IP address : ") + QString(m_ExternalIP),Qt::darkBlue,LEVEL_NORMAL);
+#endif
                 error = UPNP_AddPortMapping(
                         urls.controlURL,
                         data.first.servicetype,
@@ -135,18 +170,18 @@ void CP2PManager::initUPNP(bool flag)
                         "0"
                 );
                 if (error != UPNPCOMMAND_SUCCESS)
-                    m_logger->log("P2PManager : " + tr("AddPortMapping failed with code ") + QString::number(error),Qt::red);
+                    m_logger->log("P2PManager : " + tr("Adding port mappping failed with code ") + QString::number(error),Qt::red);
                 else m_bUPNP=true;
             }
             else
             {
-                m_logger->log("P2PManager : " + tr("No valid UPNP Internet Gateway Device found."),Qt::darkRed);
+                m_logger->log("P2PManager : " + tr("No valid UPNP Internet Gateway Device found."),Qt::red);
             }
             freeUPNPDevlist(devlist);
         }
         else
         {
-            m_logger->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::darkRed);
+            m_logger->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
         }
     }
     else
@@ -160,12 +195,17 @@ void CP2PManager::initUPNP(bool flag)
                     NULL
         );
         if (error != UPNPCOMMAND_SUCCESS)
-            m_logger->log("P2PManager : " + tr("DelPortMapping failed with code ") + QString::number(error),Qt::red);
+            m_logger->log("P2PManager : " + tr("Delete port mapping failed with code ") + QString::number(error),Qt::red);
         m_bUPNP = false;
     }
 }
 
+///
+/// \brief CP2PManager::OnReceiveDatagram
+/// \param data
+///
+
 void CP2PManager::OnReceiveDatagram(const QNetworkDatagram* data)
 {
-    m_logger->log(tr("P2PManager : Receive datagram from ") + data->senderAddress().toString());
+
 }

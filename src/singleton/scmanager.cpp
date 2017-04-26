@@ -25,6 +25,11 @@
 
 #include <QCoreApplication>
 
+///
+/// \brief CSCManager::CSCManager
+/// \param parent
+///
+
 CSCManager::CSCManager(QObject* parent):
     QObject(parent)
 {
@@ -39,10 +44,19 @@ CSCManager::CSCManager(QObject* parent):
     connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
 }
 
+///
+/// \brief CSCManager::createInstance
+/// \return
+///
+
 CSCManager* CSCManager::createInstance()
 {
     return new CSCManager();
 }
+
+///
+/// \brief CSCManager::~CSCManager
+///
 
 CSCManager::~CSCManager()
 {
@@ -53,16 +67,29 @@ CSCManager::~CSCManager()
     }
 }
 
+///
+/// \brief CSCManager::instance
+/// \return
+///
+
 CSCManager* CSCManager::instance()
 {
     return Singleton<CSCManager>::instance(CSCManager::createInstance);
 }
+
+///
+/// \brief CSCManager::open_close
+///
 
 void CSCManager::open_close()
 {
     if (!m_bConnected) open();
     else close();
 }
+
+///
+/// \brief CSCManager::open
+///
 
 void CSCManager::open ()
 {
@@ -71,15 +98,15 @@ void CSCManager::open ()
         HRESULT hr;
         if (SUCCEEDED (hr = SimConnect_Open (&m_hSimConnect,QCoreApplication::applicationName().toStdString().c_str(),NULL,NULL, (HANDLE)WM_USER_SIMCONNECT,0)))
         {
-            // Mémorisation de l'état de connexion
+            // Keep connexion status
             m_bConnected = true;
-            // Démarrage du thread
+            // Thread starting
             m_thread->start();
             emit(opened());
         }
         else
         {
-            m_logger->log("La connexion au FS a échoué.",Qt::darkMagenta);
+            m_logger->log(tr("Connexion to simulator failed."),Qt::darkMagenta);
         }
     }
 }
@@ -95,7 +122,7 @@ void CSCManager::close ()
         m_bConnected = false;
         m_thread->wait(0);
         SimConnect_Close(m_hSimConnect);
-        m_logger->log("La connexion au simulateur à été fermée");
+        m_logger->log(tr("Disconnected from simulator."));
         emit(closed());
     }
 }
@@ -185,11 +212,17 @@ void CSCManager::process(SIMCONNECT_RECV *pData, DWORD cbData)
         }
         default:
         {
-            m_logger->log("SCManager : Reçu un Event ID inconnu",Qt::darkMagenta,LEVEL_VERBOSE);
+#ifdef QT_DEBUG
+            m_logger->log("SCManager : " + tr("Get an unknown Event ID"), Qt::darkMagenta,LEVEL_VERBOSE);
+#endif
             break;
         }
     }
 }
+
+///
+/// \brief CSCManager::InitSimConnect
+///
 
 void CSCManager::InitSimConnect()
 {
@@ -254,47 +287,108 @@ void CSCManager::InitSimConnect()
     hr = SimConnect_RequestSystemState(m_hSimConnect, (SIMCONNECT_DATA_REQUEST_ID)REQUESTS_ID::SYSTEM, "sim");
 }
 
+///
+/// \brief CSCManager::OnRecvOpen
+/// \param data
+///
+
 void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
 {
-    m_logger->log("La connexion au simulateur a réussie");
+    m_logger->log(tr("Connected to simulator."));
     InitSimConnect();
 }
 
+///
+/// \brief CSCManager::OnRecvQuit
+/// \param data
+///
+
 void CSCManager::OnRecvQuit(SIMCONNECT_RECV* data)
 {
-    m_logger->log("Le simulateur a quitté");
+#ifdef QT_DEBUG
+    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
     close();
 }
 
+///
+/// \brief CSCManager::OnRecvSystemState
+/// \param data
+///
+
 void CSCManager::OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data)
 {
-    m_logger->log("Reçu un SIMCONNECT_RECV_ID_SYSTEM_STATE");
+#ifdef QT_DEBUG
+    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_SYSTEM_STATE event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 }
+
+///
+/// \brief CSCManager::OnRecvException
+/// \param data
+///
 
 void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 {
-    m_logger->log("Reçu une exception : " + QString::number(data->dwException));
+    m_logger->log(tr("Get a SimConnect exception = ") + QString::number(data->dwException),Qt::red);
 }
+
+///
+/// \brief CSCManager::OnRecvEvent
+/// \param data
+///
 
 void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 {
-    m_logger->log("Reçu un SIMCONNECT_RECV_EVENT");
+#ifdef QT_DEBUG
+    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 }
+
+///
+/// \brief CSCManager::OnRecvSimObjectData
+/// \param data
+///
 
 void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 {
+#ifdef QT_DEBUG
+    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_SIMOBJECT_DATA event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 }
+
+///
+/// \brief CSCManager::OnRecvEventFrame
+/// \param data
+///
 
 void CSCManager::OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data)
 {
+#ifdef QT_DEBUG
+    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT_FRAME event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 }
+
+///
+/// \brief CSCManager::OnRecvEventObjectAddremove
+/// \param data
+///
 
 void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data)
 {
-    m_logger->log("Reçu un SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE");
+#ifdef QT_DEBUG
+    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 }
+
+///
+/// \brief CSCManager::OnRecvAssignedObjectId
+/// \param data
+///
 
 void CSCManager::OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data)
 {
-    m_logger->log("Reçu un SIMCONNECT_RECV_ASSIGNED_OBJECT_ID");
+#ifdef QT_DEBUG
+    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 }

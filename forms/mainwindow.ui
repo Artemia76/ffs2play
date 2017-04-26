@@ -534,10 +534,10 @@
      <normalon>:/gfx/plane_green.png</normalon>:/gfx/plane_gris.png</iconset>
    </property>
    <property name="text">
-    <string>Connexion au FS</string>
+    <string>Connect to Sim</string>
    </property>
    <property name="toolTip">
-    <string>Connexion au FS</string>
+    <string>Connect to Sim</string>
    </property>
   </action>
   <action name="afServeurCon">
@@ -547,10 +547,10 @@
      <normalon>:/gfx/connect2_V.png</normalon>:/gfx/connect2_R.png</iconset>
    </property>
    <property name="text">
-    <string>Connexion au serveur</string>
+    <string>Connect to web server</string>
    </property>
    <property name="toolTip">
-    <string extracomment="Connexion au serveur">Connexion au serveur</string>
+    <string extracomment="Connexion au serveur">Connect to web server</string>
    </property>
   </action>
   <action name="afAide">
@@ -559,7 +559,7 @@
      <normaloff>:/gfx/help.png</normaloff>:/gfx/help.png</iconset>
    </property>
    <property name="text">
-    <string>Aide</string>
+    <string>Help</string>
    </property>
   </action>
   <action name="afProfil">
@@ -577,7 +577,7 @@
      <normaloff>:/gfx/console.png</normaloff>:/gfx/console.png</iconset>
    </property>
    <property name="text">
-    <string>Logger</string>
+    <string>Log options</string>
    </property>
   </action>
  </widget>

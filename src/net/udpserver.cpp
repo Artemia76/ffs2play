@@ -25,11 +25,18 @@
 #include <QTextCodec>
 #include <QNetworkDatagram>
 
+///
+/// \brief UDPServer::UDPServer
+/// \param parent
+///
+
 UDPServer::UDPServer(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<const QNetworkDatagram*>("const QNetworkDatagram*");
     Logger = CLogger::instance();
+#ifdef QT_DEBUG
     Logger->log("UPDServer : " + tr("constructor"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
     m_running = false;
     m_pListenner = new QUdpSocket(this);
     connect(m_pListenner, SIGNAL(readyRead()),
@@ -37,10 +44,19 @@ UDPServer::UDPServer(QObject *parent) : QObject(parent)
     m_port = 0;
 }
 
+///
+/// \brief UDPServer::setPort
+/// \param pPort
+///
+
 void UDPServer::setPort(int pPort)
 {
     if (!m_running) m_port = pPort;
 }
+
+///
+/// \brief UDPServer::start
+///
 
 void UDPServer::start ()
 {
@@ -48,9 +64,15 @@ void UDPServer::start ()
     {
         if (m_pListenner->isOpen()) stop();
         m_running = m_pListenner->bind (QHostAddress::LocalHost, m_port);
+#ifdef QT_DEBUG
         Logger->log("UPDServer : " + tr("listenning on port ") + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
+#endif
     }
 }
+
+///
+/// \brief UDPServer::stop
+///
 
 void UDPServer::stop ()
 {
@@ -61,19 +83,29 @@ void UDPServer::stop ()
     }
 }
 
+///
+/// \brief UDPServer::~UDPServer
+///
+
 UDPServer::~UDPServer()
 {
     stop();
 }
+
+///
+/// \brief UDPServer::incomingData
+///
 
 void UDPServer::incomingData()
 {
     while (m_pListenner->hasPendingDatagrams())
     {
         QNetworkDatagram datagram = m_pListenner->receiveDatagram();
+#ifdef QT_DEBUG
         Logger->log("UPDServer : " + tr("receive datagram = ") +
                     QTextCodec::codecForMib(106)->toUnicode(datagram.data().toHex()),
                     Qt::darkBlue,LEVEL_VERBOSE);
+#endif
         emit fireIncomingData(&datagram);
     }
 }
