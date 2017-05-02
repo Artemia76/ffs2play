@@ -13,12 +13,22 @@ TEMPLATE = app
 
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
 MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
+OPENSSL_INCLUDE_PATH = "D:\OpenSSL-Win32-1-0-2\include"
+OPENSSL_LIB_PATH = "D:\OpenSSL-Win32-1-0-2\lib"
+CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
+CONFIG( debug, debug|release ) {
+    CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Debug"
+} else {
+    CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Release"
+}
 
 INCLUDEPATH +=	./include \
                 ./src \
                 ./forms \
                 "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
-                $${MINIUPNPC_PATH}
+                $${MINIUPNPC_PATH} \
+                $${OPENSSL_INCLUDE_PATH} \
+                $${CRYPTOPP_INCLUDE_PATH}
 
 SOURCES +=	src/main.cpp \
                 src/gui/mainwindow.cpp \
@@ -29,7 +39,8 @@ SOURCES +=	src/main.cpp \
                 src/singleton/p2pmanager.cpp \
                 src/singleton/webmanager.cpp \
                 src/gui/dialogprofils.cpp \
-                src/tools/getappversion.cpp
+                src/tools/getappversion.cpp \
+                src/tools/crypto.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \
@@ -42,7 +53,8 @@ HEADERS  +=     include/gui/mainwindow.h \
                 include/singleton/webmanager.h \
                 include/gui/dialogprofils.h \
                 include/tools/version.h \
-    include/tools/getappversion.h
+                include/tools/getappversion.h \
+                include/tools/crypto.h
 
 FORMS	+=	forms/mainwindow.ui \
                 forms/dialogprofils.ui
@@ -51,11 +63,15 @@ TRANSLATIONS += intl/ffs2play_fr_FR.ts
 				
 LIBS    += -L"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86"
 LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
+LIBS	+= -L$${OPENSSL_LIB_PATH}
 LIBS	+= -L$${MINIUPNPC_LIB_PATH}
+LIBS	+= -L$${CRYPTOPP_LIB_PATH}
 LIBS	+= -lSimConnect
 LIBS	+= -lWs2_32
 LIBS	+= -liphlpapi
 LIBS	+= -lminiupnpc
+LIBS	+= -lcryptopp-static
+LIBS	+= -llibeay32
 
 RESOURCES += ressources.qrc
 

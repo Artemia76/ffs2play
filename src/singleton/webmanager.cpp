@@ -114,6 +114,9 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     }
     s.endGroup();
     CurrentUser = num;
+#ifdef QT_DEBUG
+    Log->log("WebManager : " + tr("AES Key generated = ") + QString(Crypto.EncryptionKey().toHex()),Qt::darkBlue,LEVEL_NORMAL);
+#endif
 }
 
 ///
@@ -185,11 +188,17 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
         {
             QDomElement xmlHello = Doc.createElement("hello");
             xmlRoot.appendChild(xmlHello);
-            //Création de la balise pilotID
             QDomElement xmlLogin = Doc.createElement("pilotID");
             xmlLogin.appendChild(Doc.createTextNode(Users[CurrentUser-1].Login));
             xmlHello.appendChild(xmlLogin);
             break;
+        }
+    case verify:
+        {
+            QDomElement xmlVerify = Doc.createElement("verify");
+            xmlRoot.appendChild(xmlVerify);
+            QDomElement xmlAES = Doc.createElement("AES");
+            xmlAES.appendChild(Doc.createTextNode(m_sCrypted_AESKey));
         }
     }
 }
@@ -251,5 +260,15 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
 #ifdef QT_DEBUG
     Log->log("WebManager : " + tr("Get HelloCallback"));
 #endif
+    QDomDocument Doc;
+    if (Request->getAsXml(Doc))
+    {
+        QDomNode NodeCert = Doc.elementsByTagName("certificat").at(0);
+        QString SCert = NodeCert.firstChild().nodeValue();
+        Crypto.LoadCertificate(SCert);
+        m_sCrypted_AESKey = Crypto.RSA_EncryptToBase64(Crypto.EncryptionKey());
+        Log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey);
+
+    }
     Request->deleteLater();
 }

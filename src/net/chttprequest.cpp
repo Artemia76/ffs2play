@@ -103,3 +103,19 @@ QString CHttpRequest::getAsString()
 {
     return Reponse;
 }
+
+bool CHttpRequest::getAsXml(QDomDocument& Doc)
+{
+    if (!Reponse.isEmpty())
+    {
+        QString ErrorMessage;
+        Doc.setContent(Reponse,&ErrorMessage);
+        if (!ErrorMessage.isEmpty())
+        {
+            Log->log("HttpRequest error : " + ErrorMessage);
+            return false;
+        }
+        return true;
+    }
+    return false;
+}

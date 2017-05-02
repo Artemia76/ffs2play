@@ -42,6 +42,7 @@ public:
     void execute(QString URL, QDomDocument& Doc);
     void execute(QString URL);
     QString getAsString();
+    bool getAsXml(QDomDocument& Doc);
 private:
     QString Reponse;
     CLogger* Log;

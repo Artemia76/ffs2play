@@ -35,6 +35,7 @@
 #include "singleton/scmanager.h"
 #include "singleton/p2pmanager.h"
 #include "net/chttprequest.h"
+#include "tools/crypto.h"
 
 struct SUser
 {
@@ -76,10 +77,12 @@ private:
     bool                m_bConnected;
     bool                m_SyncAIDone;
     QString             m_sURL;
+    QString             m_sCrypted_AESKey;
     QDateTime           LastGoodUpdate;
     QList<SUser>        Users;
     int                 CurrentUser;
     QString             Key;
+    CCrypto             Crypto;
     void                XmlBuild(QDomDocument& Doc, XmlCode Code);
 
 protected:
