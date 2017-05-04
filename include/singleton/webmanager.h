@@ -95,9 +95,11 @@ public:
     bool                DelayedExit;
     void                Connect();
 signals:
-
+    void                EndHelloCallback();
 private slots:
     void                HelloCallback (CHttpRequest* Request);
+    void                ConnectCallback (CHttpRequest* Request);
+    void                SendVerify();
 };
 
 #endif // WEBMANAGER_H

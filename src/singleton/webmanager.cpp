@@ -81,6 +81,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     metaXmlCode = QMetaEnum::fromType<XmlCode>();
     qRegisterMetaTypeStreamOperators<QList<SUser> >("QList<SUser>");
     Log = CLogger::instance();
+    P2P = CP2PManager::instance();
     s.beginGroup("Web");
     QByteArray Profils = QByteArray::fromBase64(s.value("Profils","").toByteArray());
     QByteArray Check = QByteArray::fromBase64(s.value("Hash","").toByteArray());
@@ -115,8 +116,9 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     s.endGroup();
     CurrentUser = num;
 #ifdef QT_DEBUG
-    Log->log("WebManager : " + tr("AES Key generated = ") + QString(Crypto.EncryptionKey().toHex()),Qt::darkBlue,LEVEL_NORMAL);
+    Log->log("WebManager : " + tr("AES Key generated = ") + QString(Crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
+    connect(this, SIGNAL(EndHelloCallback()),this, SLOT( SendVerify()));
 }
 
 ///
@@ -199,6 +201,17 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             xmlRoot.appendChild(xmlVerify);
             QDomElement xmlAES = Doc.createElement("AES");
             xmlAES.appendChild(Doc.createTextNode(m_sCrypted_AESKey));
+            xmlVerify.appendChild(xmlAES);
+            QDomElement xmlLogin = Doc.createElement("pilotID");
+            xmlLogin.appendChild(Doc.createTextNode(Users[CurrentUser-1].Login));
+            xmlVerify.appendChild(xmlLogin);
+            QDomElement xmlPassword = Doc.createElement("password");
+            xmlPassword.appendChild(Doc.createTextNode(Crypto.EncryptToBase64(Users[CurrentUser-1].Password)));
+            xmlVerify.appendChild(xmlPassword);
+            QDomElement xmlPort = Doc.createElement("port");
+            xmlPort.appendChild(Doc.createTextNode(QString::number(P2P->getPort())));
+            xmlVerify.appendChild(xmlPort);
+
         }
     }
 }
@@ -265,10 +278,28 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
     {
         QDomNode NodeCert = Doc.elementsByTagName("certificat").at(0);
         QString SCert = NodeCert.firstChild().nodeValue();
-        Crypto.LoadCertificate(SCert);
-        m_sCrypted_AESKey = Crypto.RSA_EncryptToBase64(Crypto.EncryptionKey());
-        Log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey);
-
+        m_sCrypted_AESKey = Crypto.RSA_EncryptToBase64(SCert, Crypto.EncryptionKey());
+#ifdef QT_DEBUG
+        Log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
+#endif
+        emit (EndHelloCallback());
     }
+    Request->deleteLater();
+}
+
+void CWebManager::SendVerify()
+{
+    QDomDocument SendVerify;
+    XmlBuild(SendVerify, verify);
+    CHttpRequest* Request = new CHttpRequest(this);
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)));
+    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendVerify);
+}
+
+void CWebManager::ConnectCallback(CHttpRequest *Request)
+{
+#ifdef QT_DEBUG
+    Log->log("WebManager : " + tr("Get ConnectCallback"));
+#endif
     Request->deleteLater();
 }

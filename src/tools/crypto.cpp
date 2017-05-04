@@ -31,24 +31,8 @@ CCrypto::CCrypto(QObject *parent) : QObject(parent)
 {
     Log = CLogger::instance();
     m_key.resize(32);
-    cert = NULL;
-    pkey = NULL;
-    rsa = NULL;
     AutoSeededRandomPool prng;
     prng.GenerateBlock((byte*)m_key.data(),32);
-}
-
-///
-/// \brief CCrypto::GenerateRandomIV
-/// \param IV
-///
-
-void CCrypto::GenerateRandomIV(QByteArray& IV)
-{
-    AutoSeededRandomPool rnd;
-    // Generate a random IV
-    IV.resize(AES::BLOCKSIZE);
-    rnd.GenerateBlock((byte*)IV.data(), AES::BLOCKSIZE);
 }
 
 ///
@@ -81,12 +65,12 @@ QString CCrypto::EncryptToBase64(const QString& Data)
 {
     std::string cipher;
     // Generate a random IV
-    byte iv[AES::BLOCKSIZE];
+    QByteArray iv (AES::BLOCKSIZE,'\0');
     AutoSeededRandomPool rnd;
-    rnd.GenerateBlock(iv, AES::BLOCKSIZE);
+    rnd.GenerateBlock((byte*)iv.data(), AES::BLOCKSIZE);
     try
     {
-        CBC_Mode<AES>::Encryption cfbEncryption((const byte*) m_key.data(),m_key.size(),iv);
+        CFB_Mode<AES>::Encryption cfbEncryption((const byte*) m_key.data(),m_key.size(),(const byte*)iv.data());
         StringSource ss(Data.toStdString(), true,
                     new StreamTransformationFilter ( cfbEncryption,
                         new StringSink(cipher)
@@ -96,12 +80,12 @@ QString CCrypto::EncryptToBase64(const QString& Data)
     catch( const CryptoPP::Exception& e)
     {
         Log->log("CCrypto encode error : " + QString(e.what()));
+        return QString("");
     }
-
     QByteArray Output;
     Output.append(cipher.c_str());
     Output.append(QByteArray("-[--IV-[-"));
-    Output.append((char*)iv,sizeof(iv));
+    Output.append(iv);
     return QString(Output.toBase64());
 }
 
@@ -115,12 +99,12 @@ QString CCrypto::DecryptFromBase64(const QString& Data)
 {
     QByteArray chaine = QByteArray::fromBase64(Data.toStdString().c_str());
     int pos = chaine.indexOf("-[--IV-[-");
-    QByteArray IV = chaine.mid(pos+9);
+    QByteArray iv = chaine.mid(pos+9);
     std::string ToDecode = chaine.left(pos).toStdString();
     std::string Decoded;
     try
     {
-        CBC_Mode<AES>::Decryption cfbDecryption((const byte*) m_key.data(),m_key.size(),(const byte*)IV.data());
+        CFB_Mode<AES>::Decryption cfbDecryption((const byte*) m_key.data(),m_key.size(),(const byte*)iv.data());
         StringSource ss( ToDecode, true,
                     new StreamTransformationFilter( cfbDecryption,
                         new StringSink(Decoded)
@@ -136,30 +120,29 @@ QString CCrypto::DecryptFromBase64(const QString& Data)
 }
 
 ///
-/// \brief CCrypto::LoadCertificate
-/// \param Cert
-///
-
-void CCrypto::LoadCertificate(const QString& Cert)
-{
-    BIO *bio_mem = BIO_new(BIO_s_mem());
-    BIO_puts(bio_mem,QByteArray(Cert.toStdString().c_str()).data());
-    cert = PEM_read_bio_X509(bio_mem, NULL, NULL, NULL);
-    pkey = X509_get_pubkey(cert);
-    if (rsa != NULL) delete rsa;
-    rsa = EVP_PKEY_get1_RSA(pkey);
-}
-
-///
 /// \brief CCrypto::RSA_EncryptToBase64
 /// \param Data
 /// \return
 ///
 
-QString CCrypto::RSA_EncryptToBase64(const QByteArray& Data)
+QString CCrypto::RSA_EncryptToBase64(const QString& Cert, const QByteArray& Data)
 {
-  if (rsa == NULL) return QString("");
-  unsigned char * encrypt = (unsigned char*)malloc(2048);
-  int size = RSA_public_encrypt(Data.length(), (unsigned char*)Data.data(), (unsigned char*)encrypt, rsa, RSA_PKCS1_OAEP_PADDING);
-  return QString(QByteArray::fromRawData((char*)encrypt,size).toBase64());
+    QByteArray encrypt(2048,'\0');
+    int Taille =0;
+    BIO* bio_mem = BIO_new(BIO_s_mem());
+    BIO_puts(bio_mem,QByteArray(Cert.toStdString().c_str()).data());
+    EVP_PKEY* pkey = X509_get_pubkey(PEM_read_bio_X509(bio_mem, NULL, NULL, NULL));
+    if (pkey != NULL)
+    {
+        RSA* rsa = EVP_PKEY_get1_RSA(pkey);
+        if (rsa != NULL)
+        {
+            Taille = RSA_public_encrypt(Data.size(), (unsigned char*)Data.data(), (unsigned char*)encrypt.data(), rsa, RSA_PKCS1_PADDING);
+            RSA_free(rsa);
+        }
+        EVP_PKEY_free(pkey);
+    }
+    BIO_free(bio_mem);
+    encrypt.resize(Taille);
+    return QString(encrypt.toBase64());
 }

@@ -50,6 +50,7 @@ public:
     ~CP2PManager();
     static CP2PManager* instance();
     void                init (bool flag);
+    int                 getPort();
 signals:
 
 private slots:

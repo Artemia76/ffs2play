@@ -209,3 +209,8 @@ void CP2PManager::OnReceiveDatagram(const QNetworkDatagram* data)
 {
 
 }
+
+int CP2PManager::getPort()
+{
+    return m_port;
+}
