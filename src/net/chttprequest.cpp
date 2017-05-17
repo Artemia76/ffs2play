@@ -22,9 +22,8 @@
 
 #include "net/chttprequest.h"
 
-// Static pointer to Network Access Manager
 QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = NULL;
-
+int CHttpRequest::m_nbInstance =0;
 ///
 /// \brief CHttpRequest::CHttpRequest
 /// \param parent
@@ -33,9 +32,11 @@ QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = NULL;
 CHttpRequest::CHttpRequest(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<CHttpRequest*>("CHttpRequest*");
-    if (m_ptNetworkManager==NULL) m_ptNetworkManager = new QNetworkAccessManager();
+    if (m_ptNetworkManager==NULL) m_ptNetworkManager=new QNetworkAccessManager(parent);
+    //m_nbInstance++;
     m_request.setRawHeader("User-Agent","FFS2Play");
     Log = CLogger::instance();
+    m_reply=NULL;
 }
 
 ///
@@ -44,6 +45,8 @@ CHttpRequest::CHttpRequest(QObject *parent) : QObject(parent)
 
 CHttpRequest::~CHttpRequest()
 {
+    //m_nbInstance--;
+    //if (m_nbInstance<1) m_ptNetworkManager->deleteLater();
     if (m_reply) m_reply->deleteLater();
 }
 

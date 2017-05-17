@@ -48,7 +48,8 @@ private:
     CLogger* Log;
     QNetworkRequest m_request;
     QNetworkReply* m_reply;
-    static QNetworkAccessManager* m_ptNetworkManager;
+static    QNetworkAccessManager* m_ptNetworkManager;
+static  int m_nbInstance;
 private slots:
     void callback();
 signals:

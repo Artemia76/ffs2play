@@ -31,6 +31,8 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QMetaEnum>
+#include <QNetworkAccessManager>
+
 #include "singleton/clogger.h"
 #include "singleton/scmanager.h"
 #include "singleton/p2pmanager.h"
@@ -76,6 +78,7 @@ private:
     // Etat de la connexion
     bool                m_bConnected;
     bool                m_SyncAIDone;
+    bool                m_AIManagement;
     QString             m_sURL;
     QString             m_sCrypted_AESKey;
     QDateTime           LastGoodUpdate;
@@ -84,6 +87,7 @@ private:
     QString             Key;
     CCrypto             Crypto;
     void                XmlBuild(QDomDocument& Doc, XmlCode Code);
+    bool                CheckError(QDomDocument& Doc);
 
 protected:
     void                SaveConfig();
@@ -94,12 +98,19 @@ public:
     static CWebManager* instance();
     bool                DelayedExit;
     void                Connect();
+    void                Disconnect();
 signals:
-    void                EndHelloCallback();
+    void                FireHelloCallback();
+    void                FireConnected();
+    void                FireDisconnected();
+public slots:
+    void                connect_disconnect();
 private slots:
     void                HelloCallback (CHttpRequest* Request);
     void                ConnectCallback (CHttpRequest* Request);
+    void                LogoutCallback (CHttpRequest* Request);
     void                SendVerify();
+    void                OnATCUpdate();
+    void                OnLiveUpdate();
 };
-
 #endif // WEBMANAGER_H

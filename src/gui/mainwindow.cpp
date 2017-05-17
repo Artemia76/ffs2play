@@ -54,13 +54,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(scManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
     connect(scManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
     //Start timer to updating GUI
-    connect(&Update,&QTimer::timeout,this,&MainWindow::onUpdate);
+    connect(&Update,SIGNAL(timeout()),this,SLOT(onUpdate()));
     Update.start(5000);
 
     P2PManager = CP2PManager::instance();
     P2PManager->init(true);
 
     WebManager = CWebManager::instance();
+    connect(WebManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
+    connect(WebManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
 }
 
 ///
@@ -83,6 +85,7 @@ void MainWindow::closeEvent(QCloseEvent*)
     s.setValue("pos", pos());
     s.endGroup();
     P2PManager->init(false);
+    scManager->close();
 }
 
 ///
@@ -100,7 +103,7 @@ void MainWindow::on_atFSCon_triggered()
 
 void MainWindow::onSCM_Opened()
 {
-    ui->atFSCon->setIcon(QIcon(":/gfx/plane_green.png"));
+    ui->afFSCon->setIcon(QIcon(":/gfx/plane_green.png"));
 }
 
 ///
@@ -109,7 +112,25 @@ void MainWindow::onSCM_Opened()
 
 void MainWindow::onSCM_Closed()
 {
-    ui->atFSCon->setIcon(QIcon(":/gfx/plane_gris.png"));
+    ui->afFSCon->setIcon(QIcon(":/gfx/plane_gris.png"));
+}
+
+///
+/// \brief MainWindow::onWM_Connected
+///
+
+void MainWindow::onWM_Connected()
+{
+    ui->afServeurCon->setIcon(QIcon(":/gfx/connect2_V.png"));
+}
+
+///
+/// \brief MainWindow::onWM_Disconnected
+///
+
+void MainWindow::onWM_Disconnected()
+{
+    ui->afServeurCon->setIcon(QIcon(":/gfx/connect2_R.png"));
 }
 
 ///
@@ -127,7 +148,7 @@ void MainWindow::onUpdate()
 
 void MainWindow::on_afServeurCon_triggered()
 {
-    WebManager->Connect();
+    WebManager->connect_disconnect();
 }
 
 ///

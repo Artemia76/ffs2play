@@ -25,6 +25,9 @@
 #include "singleton/singleton.h"
 #include "WinSock2.h"
 
+#include <sstream>
+
+using namespace ::std;
 ///
 /// \brief CP2PManager::CP2PManager
 /// \param parent
@@ -151,11 +154,15 @@ void CP2PManager::initUPNP(bool flag)
                     }
                 }
 #endif
-                m_InternalIP = QString(lanaddr);
+                m_InternalIP.add_ip(lanaddr);
                 UPNP_GetExternalIPAddress(urls.controlURL,data.first.servicetype,wanaddr);
                 m_ExternalIP = QString(wanaddr);
 #ifdef QT_DEBUG
-                m_logger->log("P2PManager : " + tr("Local LAN IP address : ") + QString(m_InternalIP),Qt::darkBlue,LEVEL_NORMAL);
+                m_logger->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
+                for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
+                {
+                    m_logger->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
+                }
                 m_logger->log("P2PManager : " + tr("Internet IP address : ") + QString(m_ExternalIP),Qt::darkBlue,LEVEL_NORMAL);
 #endif
                 error = UPNP_AddPortMapping(
@@ -213,4 +220,12 @@ void CP2PManager::OnReceiveDatagram(const QNetworkDatagram* data)
 int CP2PManager::getPort()
 {
     return m_port;
+}
+
+QString CP2PManager::getLocalIPs()
+{
+    std::ostringstream out;
+    m_InternalIP.SerializeToOstream(&out);
+    QByteArray OutPut(out.str().c_str());
+    return QString(OutPut.toBase64());
 }

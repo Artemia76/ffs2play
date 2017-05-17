@@ -263,7 +263,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="atFSCon"/>
+   <addaction name="afFSCon"/>
    <addaction name="afServeurCon"/>
    <addaction name="afProfil"/>
    <addaction name="afLogger"/>
@@ -527,7 +527,7 @@
     </layout>
    </widget>
   </widget>
-  <action name="atFSCon">
+  <action name="afFSCon">
    <property name="icon">
     <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/plane_gris.png</normaloff>

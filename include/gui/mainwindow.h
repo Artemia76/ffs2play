@@ -49,10 +49,11 @@ private slots:
     void on_atFSCon_triggered();
     void onSCM_Opened();
     void onSCM_Closed();
+    void onWM_Connected();
+    void onWM_Disconnected();
     void onUpdate();
     void on_afServeurCon_triggered();
     void on_afProfil_triggered();
-
     void on_afAide_triggered();
 
 private:
@@ -65,5 +66,4 @@ private:
     QTimer Update;
     void closeEvent(QCloseEvent *event);
 };
-
 #endif // MAINWINDOW_H

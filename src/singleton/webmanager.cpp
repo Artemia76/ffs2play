@@ -26,6 +26,7 @@
 #include <QCryptographicHash>
 #include <QByteArray>
 #include <QXmlStreamWriter>
+#include <QApplication>
 
 #include "tools/getappversion.h"
 
@@ -78,6 +79,9 @@ QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
 
 CWebManager::CWebManager(QObject *parent) : QObject(parent)
 {
+    m_bConnected=false;
+    m_AIManagement=false;
+
     metaXmlCode = QMetaEnum::fromType<XmlCode>();
     qRegisterMetaTypeStreamOperators<QList<SUser> >("QList<SUser>");
     Log = CLogger::instance();
@@ -118,7 +122,14 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
 #ifdef QT_DEBUG
     Log->log("WebManager : " + tr("AES Key generated = ") + QString(Crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
-    connect(this, SIGNAL(EndHelloCallback()),this, SLOT( SendVerify()));
+    connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
+    connect(this, SIGNAL(FireConnected()),this, SLOT( OnConnected()));
+    connect(this, SIGNAL(FireDisconnected()),this, SLOT( OnDisconnected()));
+    ATCTimer.setInterval(5000);
+    LiveUpdateTimer.setInterval(30000);
+    connect(&ATCTimer, SIGNAL(timeout()),this,SLOT(OnATCUpdate()));
+    connect(&LiveUpdateTimer, SIGNAL(timeout()),this,SLOT(OnLiveUpdate()));
+    LiveUpdateTimer.start();
 }
 
 ///
@@ -195,7 +206,7 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             xmlHello.appendChild(xmlLogin);
             break;
         }
-    case verify:
+        case verify:
         {
             QDomElement xmlVerify = Doc.createElement("verify");
             xmlRoot.appendChild(xmlVerify);
@@ -211,7 +222,22 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             QDomElement xmlPort = Doc.createElement("port");
             xmlPort.appendChild(Doc.createTextNode(QString::number(P2P->getPort())));
             xmlVerify.appendChild(xmlPort);
-
+            QDomElement xmlLocalIP = Doc.createElement("local_ip");
+            xmlLocalIP.appendChild(Doc.createTextNode(P2P->getLocalIPs()));
+            xmlVerify.appendChild(xmlLocalIP);
+            break;
+        }
+        case liveupdate:
+        {
+            break;
+        }
+        case atc:
+        {
+            break;
+        }
+        default:
+        {
+            break;
         }
     }
 }
@@ -249,18 +275,41 @@ void CWebManager::SetCurrentUser(int num)
     CurrentUser = num;
 }
 
+void CWebManager::connect_disconnect()
+{
+    if (m_bConnected) Disconnect();
+    else Connect();
+}
+
 ///
 /// \brief CWebManager::Connect
 ///
 
 void CWebManager::Connect()
 {
+    if (m_bConnected) return;
     if (CurrentUser == 0) return;
     QDomDocument SendHello;
     XmlBuild(SendHello, hello);
     CHttpRequest* Request = new CHttpRequest(this);
     connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
     Request->execute(Users[CurrentUser-1].URL+"/action.php",SendHello);
+}
+
+///
+/// \brief CWebManager::Disconnect
+///
+
+void CWebManager::Disconnect()
+{
+    if (!m_bConnected) return;
+    ATCTimer.stop();
+    OnLiveUpdate();
+    QDomDocument SendLogout;
+    XmlBuild(SendLogout, logout);
+    CHttpRequest* Request = new CHttpRequest(this);
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
+    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendLogout);
 }
 
 ///
@@ -271,7 +320,7 @@ void CWebManager::Connect()
 void CWebManager::HelloCallback (CHttpRequest* Request)
 {
 #ifdef QT_DEBUG
-    Log->log("WebManager : " + tr("Get HelloCallback"));
+    Log->log("WebManager : " + tr("Get HelloCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QDomDocument Doc;
     if (Request->getAsXml(Doc))
@@ -282,10 +331,15 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
 #ifdef QT_DEBUG
         Log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
 #endif
-        emit (EndHelloCallback());
+        emit (FireHelloCallback());
     }
     Request->deleteLater();
 }
+
+
+///
+/// \brief CWebManager::SendVerify
+///
 
 void CWebManager::SendVerify()
 {
@@ -296,10 +350,107 @@ void CWebManager::SendVerify()
     Request->execute(Users[CurrentUser-1].URL+"/action.php",SendVerify);
 }
 
+///
+/// \brief CWebManager::ConnectCallback
+/// \param Request
+///
+
 void CWebManager::ConnectCallback(CHttpRequest *Request)
 {
 #ifdef QT_DEBUG
-    Log->log("WebManager : " + tr("Get ConnectCallback"));
+    Log->log("WebManager : " + tr("Get ConnectCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
+    QDomDocument Doc;
+    if (Request->getAsXml(Doc))
+    {
+        bool bError = CheckError(Doc);
+        QDomElement Element = Doc.elementsByTagName("loginStatus").at(0).toElement();
+        if (!Element.isNull())
+        {
+            m_bConnected = Element.firstChild().nodeValue().toInt()==1;
+            if (m_bConnected && (!bError))
+            {
+                Log->log(tr("FFS2Play is connected on server"));
+                QDomElement xmlExternalIP = Doc.elementsByTagName("your_ip").at(0).toElement();
+                if (!xmlExternalIP.isNull())
+                {
+                    QHostAddress ExternalIP (xmlExternalIP.firstChild().nodeValue());
+#ifdef QT_DEBUG
+                    if (ExternalIP.isNull())
+                    {
+                        Log->log("WebManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
+                    }
+                    else
+                    {
+                        Log->log("WebManager : " + tr("Get external IP = ") + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
+                    }
+#endif
+                }
+                QDomElement xmlKey = Doc.elementsByTagName("key").at(0).toElement();
+                if (!xmlKey.isNull())
+                {
+                    Key = xmlKey.firstChild().nodeValue();
+                    OnLiveUpdate();
+                }
+                QDomElement xmlAtc = Doc.elementsByTagName("atc").at(0).toElement();
+                if (!xmlAtc.isNull())
+                {
+                    if (xmlAtc.firstChild().nodeValue().toInt()==1)
+                    {
+                        ATCTimer.start();
+                    }
+                }
+                QDomElement AIManagement = Doc.elementsByTagName("AI_Management").at(0).toElement();
+                if (!AIManagement.isNull())
+                {
+                    m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
+                }
+                emit (FireConnected());
+            }
+        }
+
+    }
     Request->deleteLater();
 }
+
+bool CWebManager::CheckError(QDomDocument& Doc)
+{
+    QDomElement Element = Doc.elementsByTagName("erreur").at(0).toElement();
+    if (!Element.isNull())
+    {
+        int Level = Element.attribute("error").toInt();
+        QColor Couleur = Qt::black;
+        switch (Level)
+        {
+            case 0:
+                Couleur = Qt::black;
+                break;
+            case 1:
+                Couleur = Qt::darkRed;
+                QApplication::beep();
+                break;
+            case 2:
+                Couleur = Qt::darkRed;
+                //Disconnect();
+                break;
+        }
+        Log->log(tr("Server : ") + Element.firstChild().nodeValue(),Couleur);
+        if (Level >= 2) return true;
+    }
+    return false;
+}
+
+void CWebManager::OnATCUpdate()
+{
+#ifdef QT_DEBUG
+    Log->log("WebManager : " + tr("Get ATCUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+}
+
+void CWebManager::OnLiveUpdate()
+{
+#ifdef QT_DEBUG
+    Log->log("WebManager : " + tr("Get LiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+}
+

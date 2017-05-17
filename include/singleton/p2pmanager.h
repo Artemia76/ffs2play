@@ -29,6 +29,9 @@
 #include "net/udpserver.h"
 #include "miniupnpc.h"
 #include "upnpcommands.h"
+#include "protobuf/ffs2play.pb.h"
+
+using namespace ffs2play;
 
 class CP2PManager : public QObject
 {
@@ -42,7 +45,7 @@ private:
     QSettings           s;
     int                 m_port;
     bool                m_bUPNP;
-    QString             m_InternalIP;
+    LocalIPList         m_InternalIP;
     QString             m_ExternalIP;
     UPNPUrls            urls;
     IGDdatas            data;
@@ -51,6 +54,8 @@ public:
     static CP2PManager* instance();
     void                init (bool flag);
     int                 getPort();
+    QString             getLocalIPs();
+
 signals:
 
 private slots:

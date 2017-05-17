@@ -12,14 +12,16 @@ TARGET = ffs2play
 TEMPLATE = app
 
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
-MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
+PROTOBUF_PATH = "E:\devel\protobuf"
 OPENSSL_INCLUDE_PATH = "D:\OpenSSL-Win32-1-0-2\include"
 OPENSSL_LIB_PATH = "D:\OpenSSL-Win32-1-0-2\lib"
 CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
 CONFIG( debug, debug|release ) {
     CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Debug"
+    MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Debug
 } else {
     CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Release"
+    MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
 }
 
 INCLUDEPATH +=	./include \
@@ -28,7 +30,8 @@ INCLUDEPATH +=	./include \
                 "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
                 $${MINIUPNPC_PATH} \
                 $${OPENSSL_INCLUDE_PATH} \
-                $${CRYPTOPP_INCLUDE_PATH}
+                $${CRYPTOPP_INCLUDE_PATH} \
+                $${PROTOBUF_PATH}
 
 SOURCES +=	src/main.cpp \
                 src/gui/mainwindow.cpp \
@@ -40,7 +43,8 @@ SOURCES +=	src/main.cpp \
                 src/singleton/webmanager.cpp \
                 src/gui/dialogprofils.cpp \
                 src/tools/getappversion.cpp \
-                src/tools/crypto.cpp
+                src/tools/crypto.cpp \
+                protobuf/ffs2play.pb.cc
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \
@@ -54,24 +58,35 @@ HEADERS  +=     include/gui/mainwindow.h \
                 include/gui/dialogprofils.h \
                 include/tools/version.h \
                 include/tools/getappversion.h \
-                include/tools/crypto.h
+                include/tools/crypto.h \
+                protobuf/ffs2play.pb.h
 
 FORMS	+=	forms/mainwindow.ui \
                 forms/dialogprofils.ui
 
 TRANSLATIONS += intl/ffs2play_fr_FR.ts
-				
-LIBS    += -L"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86"
+
+DEFINES += MINIUPNP_STATICLIB
+#Libs Path
+LIBS    += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x86"
 LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
 LIBS	+= -L$${OPENSSL_LIB_PATH}
 LIBS	+= -L$${MINIUPNPC_LIB_PATH}
 LIBS	+= -L$${CRYPTOPP_LIB_PATH}
+LIBS	+= -L$${PROTOBUF_PATH}/lib
+
+# Libs to load
 LIBS	+= -lSimConnect
 LIBS	+= -lWs2_32
 LIBS	+= -liphlpapi
 LIBS	+= -lminiupnpc
 LIBS	+= -lcryptopp-static
 LIBS	+= -llibeay32
+CONFIG( debug, debug|release ) {
+LIBS	+= -llibprotobufd
+} else {
+LIBS	+= -llibprotobuf
+}
 
 RESOURCES += ressources.qrc
 
@@ -117,7 +132,7 @@ DISTFILES += \
 
 # Application Version
 
-VERSION_MAJOR = 1
+VERSION_MAJOR = 2
 VERSION_MINOR = 0
 VERSION_BUILD = 0
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
@@ -133,6 +148,4 @@ win32 {
     for(FILE,EXTRA_LANGFILES){
                 QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${FILE} $${DESTDIR_WIN}$$escape_expand(\n\t))
     }
-    $${MINIUPNPC_LIB_PATH} ~= s,/,\\,g
-    QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${MINIUPNPC_LIB_PATH}/miniupnpc.dll $${DEPLOY_PATH}$$escape_expand(\n\t))
 }
