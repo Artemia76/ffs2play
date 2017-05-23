@@ -25,6 +25,8 @@
 
 #include <QObject>
 #include <QThread>
+#include <QDateTime>
+
 #include <windows.h>
 #include <WinDef.h>
 
@@ -171,22 +173,22 @@ struct DonneesAvion
     char Type[256];
     char Model[256];
     char Category[256];
-    double AvionAltitude;
-    double SolAltitude;
+    double PlaneAltitude;
+    double GndAltitude;
     double Vario;
-    double Direction;
+    double PlaneHeading;
     qint32 TimeFactor;
     double Longitude;
     double Latitude;
-    double GSpeed;
+    double GndSpeed;
     double TASSpeed;
     double FuelQty;
     double TotalFuelCapacity;
     double FuelWeightGallon;
-    double AvionPitch;
-    double AvionBank;
-    double AvionG;
-    double AvionPoids;
+    double PlanePitch;
+    double PlaneBank;
+    double GForce;
+    double PlaneWeight;
     double Realism;
     double AmbiantWindVelocity;
     double AmbiantWindDirection;
@@ -212,6 +214,43 @@ struct DonneesAvion
     qint32 Squawk;
 };
 
+class SCManagerEventSCEvent
+{
+public:
+    SCManagerEventSCEvent()
+    {
+        Time = QDateTime::currentDateTimeUtc();
+    }
+
+    SCManagerEventSCEvent(EVENT_ID pEvt_ID, int pData )
+    {
+        Time = QDateTime::currentDateTimeUtc();
+        Data = pData;
+        Evt_Id = pEvt_ID;
+    }
+
+    EVENT_ID Evt_Id;
+    int Data;
+    QDateTime Time;
+};
+
+class SCManagerEventSCVariable
+{
+public:
+    SCManagerEventSCVariable ()
+    {
+        Time = QDateTime::currentDateTimeUtc();
+    }
+
+    SCManagerEventSCVariable (DonneesAvion* pData)
+    {
+        Data = *pData;
+        Time = QDateTime::currentDateTimeUtc();
+    }
+    DonneesAvion Data;
+    QDateTime Time;
+};
+
 class CSCManager : public QObject
 {
     Q_OBJECT
@@ -223,6 +262,10 @@ private:
     bool        m_bRunning;
     HANDLE      m_hSimConnect;
     QThread*    m_thread;
+    qint64      m_SimRate;
+    qint64      m_VariableRate;
+    QDateTime   m_LastVariable;
+    QDateTime   m_LastSim;
 
     void        InitSimConnect();
     void        OnRecvOpen (SIMCONNECT_RECV_OPEN* data);
@@ -245,6 +288,8 @@ signals:
     void        finished();
     void        opened();
     void        closed();
+    void        fireSCReceiveVariable(SCManagerEventSCVariable);
+    void        fireSCReceiveEvent(SCManagerEventSCEvent);
 public:
     ~CSCManager ();
     static CSCManager* instance();

@@ -45,9 +45,7 @@ CHttpRequest::CHttpRequest(QObject *parent) : QObject(parent)
 
 CHttpRequest::~CHttpRequest()
 {
-    //m_nbInstance--;
-    //if (m_nbInstance<1) m_ptNetworkManager->deleteLater();
-    if (m_reply) m_reply->deleteLater();
+
 }
 
 ///

@@ -1,0 +1,101 @@
+/****************************************************************************
+**
+** Copyright (C) 2017 FSFranceSimulateur team.
+** Contact: https://github.com/ffs2/ffs2play
+**
+** FFS2Play is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 3 of the License, or
+** (at your option) any later version.
+**
+** FFS2Play is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** The license is as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL3
+** included in the packaging of this software. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-3.0.html.
+****************************************************************************/
+
+#include "singleton/webmanager.h"
+#include "singleton/singleton.h"
+
+#include <QXmlStreamWriter>
+#include <QApplication>
+
+/// Build Users Profils to Setting file
+/// \brief operator <<
+/// \param out
+/// \param v
+/// \return
+///
+
+QDataStream& operator<<(QDataStream& out, const QList<SUser>& v)
+{
+    out << v.count();
+    for (QList<SUser>::const_iterator it = v.constBegin(); it != v.constEnd(); ++it)
+    {
+        out << it->Profil << it->Login << it->Password << it->URL;
+    }
+    return out;
+}
+
+/// Extraction of Users profils data from Setting file
+/// \brief operator >>
+/// \param in
+/// \param v
+/// \return
+///
+
+QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
+{
+    v.clear();
+    int num;
+    in >> num;
+    for (int i=0; i < num; i++)
+    {
+        SUser User;
+        in >> User.Profil;
+        in >> User.Login;
+        in >> User.Password;
+        in >> User.URL;
+        v.append(User);
+    }
+    return in;
+}
+
+///
+/// \brief CWebManager::CheckError
+/// \param Doc
+/// \return
+///
+
+bool CWebManager::CheckError(QDomDocument& Doc)
+{
+    QDomElement Element = Doc.elementsByTagName("erreur").at(0).toElement();
+    if (!Element.isNull())
+    {
+        int Level = Element.attribute("error").toInt();
+        QColor Couleur = Qt::black;
+        switch (Level)
+        {
+            case 0:
+                Couleur = Qt::black;
+                break;
+            case 1:
+                Couleur = Qt::darkRed;
+                QApplication::beep();
+                break;
+            case 2:
+                Couleur = Qt::darkRed;
+                //Disconnect();
+                break;
+        }
+        Log->log(tr("Server : ") + Element.firstChild().nodeValue(),Couleur);
+        if (Level >= 2) return true;
+    }
+    return false;
+}

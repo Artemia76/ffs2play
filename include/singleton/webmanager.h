@@ -38,6 +38,7 @@
 #include "singleton/p2pmanager.h"
 #include "net/chttprequest.h"
 #include "tools/crypto.h"
+#include "tools/aircraftstate.h"
 
 struct SUser
 {
@@ -48,6 +49,9 @@ struct SUser
 };
 
 Q_DECLARE_METATYPE(QList<SUser>)
+
+QDataStream& operator<<(QDataStream& out, const QList<SUser>& v);
+QDataStream& operator>>(QDataStream& in, QList<SUser>& v);
 
 class CWebManager : public QObject
 {
@@ -74,6 +78,7 @@ private:
     CP2PManager*        P2P;
     CLogger*            Log;
     QMetaEnum           metaXmlCode;
+    CAircraftState      AircraftState;
 
     // Etat de la connexion
     bool                m_bConnected;

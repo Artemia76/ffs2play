@@ -46,7 +46,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 private slots:
-    void on_atFSCon_triggered();
     void onSCM_Opened();
     void onSCM_Closed();
     void onWM_Connected();
@@ -55,6 +54,7 @@ private slots:
     void on_afServeurCon_triggered();
     void on_afProfil_triggered();
     void on_afAide_triggered();
+    void on_afFSCon_triggered();
 
 private:
     Ui::MainWindow *ui;

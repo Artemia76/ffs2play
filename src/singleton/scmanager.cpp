@@ -33,6 +33,8 @@
 CSCManager::CSCManager(QObject* parent):
     QObject(parent)
 {
+    qRegisterMetaType<SCManagerEventSCVariable>("SCManagerEventSCVariable");
+    qRegisterMetaType<SCManagerEventSCEvent>("SCManagerEventSCEvent");
     m_logger = CLogger::instance();
     // Initialisation de l'état de connexion avec le simulateur
     m_bConnected = false;
@@ -352,9 +354,29 @@ void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 
 void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 {
-#ifdef QT_DEBUG
-    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_SIMOBJECT_DATA event"), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
+    switch ((REQUESTS_ID)data->dwRequestID)
+    {
+        case REQUESTS_ID::PERIODIQUE:
+        {
+            SCManagerEventSCVariable Variable((DonneesAvion*)&data->dwData);
+            emit(fireSCReceiveVariable(Variable));
+            break;
+        }
+        default:
+        {
+            if ((REQUESTS_ID)data->dwRequestID >= REQUESTS_ID::AI_UPDATE)
+            {
+                //fireSCReceiveAIUpdate
+            }
+            else
+            {
+                SCManagerEventSCEvent SCEvent ((EVENT_ID)data->dwRequestID, data->dwData);
+                emit(fireSCReceiveEvent(SCEvent));
+            }
+            break;
+        }
+
+    }
 }
 
 ///
@@ -364,9 +386,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 
 void CSCManager::OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data)
 {
-#ifdef QT_DEBUG
-    m_logger->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT_FRAME event"), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
+
 }
 
 ///

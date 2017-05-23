@@ -89,15 +89,6 @@ void MainWindow::closeEvent(QCloseEvent*)
 }
 
 ///
-/// \brief MainWindow::on_atFSCon_triggered
-///
-
-void MainWindow::on_atFSCon_triggered()
-{
-    scManager->open_close();
-}
-
-///
 /// \brief MainWindow::onSCM_Opened
 ///
 
@@ -169,4 +160,9 @@ void MainWindow::on_afAide_triggered()
 {
     sVersion Version = GetAppVersion();
     Log->log(tr("FFS2Play Version : ") + Version.FullVersion  );
+}
+
+void MainWindow::on_afFSCon_triggered()
+{
+    scManager->open_close();
 }

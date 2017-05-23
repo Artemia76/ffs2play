@@ -44,7 +44,11 @@ SOURCES +=	src/main.cpp \
                 src/gui/dialogprofils.cpp \
                 src/tools/getappversion.cpp \
                 src/tools/crypto.cpp \
-                protobuf/ffs2play.pb.cc
+                protobuf/ffs2play.pb.cc \
+    src/singleton/webmanager.Requests.cpp \
+    src/singleton/webmanager.Callback.cpp \
+    src/singleton/webmanager.Utils.cpp \
+    src/tools/aircraftstate.cpp
 				
 HEADERS  +=     include/gui/mainwindow.h \
                 include/net/udpserver.h \
@@ -59,7 +63,8 @@ HEADERS  +=     include/gui/mainwindow.h \
                 include/tools/version.h \
                 include/tools/getappversion.h \
                 include/tools/crypto.h \
-                protobuf/ffs2play.pb.h
+                protobuf/ffs2play.pb.h \
+    include/tools/aircraftstate.h
 
 FORMS	+=	forms/mainwindow.ui \
                 forms/dialogprofils.ui
