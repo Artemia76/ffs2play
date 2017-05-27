@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>428</width>
-    <height>315</height>
+    <width>486</width>
+    <height>791</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -111,11 +111,14 @@
    <string>FFS2Play</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../ressources.qrc">
+   <iconset resource="ressources.qrc">
     <normaloff>:/gfx/plane.png</normaloff>:/gfx/plane.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">Background:#bde3f8;</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
@@ -124,7 +127,6 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="palette">
@@ -267,9 +269,10 @@
    <addaction name="afServeurCon"/>
    <addaction name="afProfil"/>
    <addaction name="afLogger"/>
+   <addaction name="afP2P"/>
    <addaction name="afAide"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="dwLog">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
      <horstretch>0</horstretch>
@@ -279,7 +282,7 @@
    <property name="minimumSize">
     <size>
      <width>89</width>
-     <height>150</height>
+     <height>100</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -527,9 +530,117 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dwDebugOpt">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>Debug Options</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QRadioButton" name="radioButton">
+       <property name="text">
+        <string>None</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_2">
+       <property name="text">
+        <string>Normal</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_3">
+       <property name="text">
+        <string>Verbose</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox">
+       <item>
+        <property name="text">
+         <string>*</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dwP2P">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>Multiplayer Network</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTableView" name="tableView"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>Tchat Zone</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(240, 240, 240);</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>PushButton</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QTextEdit" name="textEdit">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(240, 240, 240);</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="lineWidth">
+        <number>2</number>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="afFSCon">
    <property name="icon">
-    <iconset resource="../ressources.qrc">
+    <iconset resource="ressources.qrc">
      <normaloff>:/gfx/plane_gris.png</normaloff>
      <normalon>:/gfx/plane_green.png</normalon>:/gfx/plane_gris.png</iconset>
    </property>
@@ -542,7 +653,7 @@
   </action>
   <action name="afServeurCon">
    <property name="icon">
-    <iconset resource="../ressources.qrc">
+    <iconset resource="ressources.qrc">
      <normaloff>:/gfx/connect2_R.png</normaloff>
      <normalon>:/gfx/connect2_V.png</normalon>:/gfx/connect2_R.png</iconset>
    </property>
@@ -555,7 +666,7 @@
   </action>
   <action name="afAide">
    <property name="icon">
-    <iconset resource="../ressources.qrc">
+    <iconset resource="ressources.qrc">
      <normaloff>:/gfx/help.png</normaloff>:/gfx/help.png</iconset>
    </property>
    <property name="text">
@@ -564,7 +675,7 @@
   </action>
   <action name="afProfil">
    <property name="icon">
-    <iconset resource="../ressources.qrc">
+    <iconset resource="ressources.qrc">
      <normaloff>:/gfx/Outils.png</normaloff>:/gfx/Outils.png</iconset>
    </property>
    <property name="text">
@@ -573,17 +684,29 @@
   </action>
   <action name="afLogger">
    <property name="icon">
-    <iconset resource="../ressources.qrc">
+    <iconset resource="ressources.qrc">
      <normaloff>:/gfx/console.png</normaloff>:/gfx/console.png</iconset>
    </property>
    <property name="text">
     <string>Log options</string>
    </property>
   </action>
+  <action name="afP2P">
+   <property name="icon">
+    <iconset resource="ressources.qrc">
+     <normaloff>:/gfx/network.png</normaloff>:/gfx/network.png</iconset>
+   </property>
+   <property name="text">
+    <string>P2P Settings</string>
+   </property>
+   <property name="toolTip">
+    <string>P2P Settings</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../ressources.qrc"/>
+  <include location="ressources.qrc"/>
  </resources>
  <connections/>
 </ui>

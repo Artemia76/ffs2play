@@ -30,10 +30,11 @@
 #include "miniupnpc.h"
 #include "upnpcommands.h"
 #include "protobuf/ffs2play.pb.h"
+#include "tools/ffs2core_global.h"
 
 using namespace ffs2play;
 
-class CP2PManager : public QObject
+class FFS2CORE_EXPORT CP2PManager : public QObject
 {
     Q_OBJECT
 private:

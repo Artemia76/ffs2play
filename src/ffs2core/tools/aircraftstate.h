@@ -25,8 +25,9 @@
 
 #include <QObject>
 #include "singleton/scmanager.h"
+#include "tools/ffs2core_global.h"
 
-class CAircraftState : public QObject
+class FFS2CORE_EXPORT CAircraftState : public QObject
 {
 
 public slots:

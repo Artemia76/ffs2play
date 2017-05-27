@@ -6,10 +6,12 @@
 
 QT       += core gui
 
+TEMPLATE = app
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 
 TARGET = ffs2play
-TEMPLATE = app
+DEPENDPATH += ../ffs2core
 
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
 PROTOBUF_PATH = "E:\devel\protobuf"
@@ -24,78 +26,35 @@ CONFIG( debug, debug|release ) {
     MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
 }
 
-INCLUDEPATH +=	./include \
-                ./src \
-                ./forms \
-                "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
+INCLUDEPATH +=	"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
                 $${MINIUPNPC_PATH} \
                 $${OPENSSL_INCLUDE_PATH} \
                 $${CRYPTOPP_INCLUDE_PATH} \
-                $${PROTOBUF_PATH}
+                $${PROTOBUF_PATH} \
+                ../ffs2core
 
-SOURCES +=	src/main.cpp \
-                src/gui/mainwindow.cpp \
-                src/net/udpserver.cpp \
-                src/singleton/clogger.cpp \
-                src/singleton/scmanager.cpp \
-                src/net/chttprequest.cpp \
-                src/singleton/p2pmanager.cpp \
-                src/singleton/webmanager.cpp \
-                src/gui/dialogprofils.cpp \
-                src/tools/getappversion.cpp \
-                src/tools/crypto.cpp \
-                protobuf/ffs2play.pb.cc \
-    src/singleton/webmanager.Requests.cpp \
-    src/singleton/webmanager.Callback.cpp \
-    src/singleton/webmanager.Utils.cpp \
-    src/tools/aircraftstate.cpp
+SOURCES +=	main.cpp \
+                mainwindow.cpp \
+                dialogprofils.cpp \
 				
-HEADERS  +=     include/gui/mainwindow.h \
-                include/net/udpserver.h \
-                include/singleton/call_once.h \
-                include/singleton/clogger.h \
-                include/singleton/scmanager.h \
-                include/net/chttprequest.h \
-                include/singleton/p2pmanager.h \
-                include/singleton/singleton.h \
-                include/singleton/webmanager.h \
-                include/gui/dialogprofils.h \
-                include/tools/version.h \
-                include/tools/getappversion.h \
-                include/tools/crypto.h \
-                protobuf/ffs2play.pb.h \
-    include/tools/aircraftstate.h
+HEADERS  +=     mainwindow.h \
+                dialogprofils.h \
 
-FORMS	+=	forms/mainwindow.ui \
-                forms/dialogprofils.ui
+FORMS	+=	mainwindow.ui \
+                dialogprofils.ui
 
-TRANSLATIONS += intl/ffs2play_fr_FR.ts
+TRANSLATIONS += ../../intl/ffs2play_fr_FR.ts
 
-DEFINES += MINIUPNP_STATICLIB
 #Libs Path
-LIBS    += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x86"
-LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
-LIBS	+= -L$${OPENSSL_LIB_PATH}
-LIBS	+= -L$${MINIUPNPC_LIB_PATH}
-LIBS	+= -L$${CRYPTOPP_LIB_PATH}
-LIBS	+= -L$${PROTOBUF_PATH}/lib
-
-# Libs to load
-LIBS	+= -lSimConnect
-LIBS	+= -lWs2_32
-LIBS	+= -liphlpapi
-LIBS	+= -lminiupnpc
-LIBS	+= -lcryptopp-static
-LIBS	+= -llibeay32
 CONFIG( debug, debug|release ) {
-LIBS	+= -llibprotobufd
+LIBS	+= -L../ffs2core/debug -lffs2core
 } else {
-LIBS	+= -llibprotobuf
+LIBS	+= -L../ffs2core/release -lffs2core
 }
 
 RESOURCES += ressources.qrc
 
-RC_FILE = ./ffs2play.rc
+RC_FILE = ffs2play.rc
 
 isEmpty(TARGET_EXT) {
     win32 {
@@ -133,7 +92,7 @@ QMAKE_POST_LINK = $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\n
 
 DISTFILES += \
     ffs2play.rc \
-    intl/ffs2play_fr_FR.ts
+    ../../intl/ffs2play_fr_FR.ts
 
 # Application Version
 

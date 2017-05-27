@@ -1,7 +1,7 @@
-IDI_ICON1               ICON    DISCARDABLE     "ffstracker_48x48.ico"
+IDI_ICON1               ICON    DISCARDABLE     "ffs2play_48x48.ico"
 
 #include <windows.h>
-#include "include/tools/version.h"
+#include "../ffs2core/tools/version.h"
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION     VER_FILEVERSION

@@ -40,7 +40,9 @@
 #include "tools/crypto.h"
 #include "tools/aircraftstate.h"
 
-struct SUser
+#include "tools/ffs2core_global.h"
+
+struct FFS2CORE_EXPORT SUser
 {
     QString Profil;
     QString Login;
@@ -53,7 +55,7 @@ Q_DECLARE_METATYPE(QList<SUser>)
 QDataStream& operator<<(QDataStream& out, const QList<SUser>& v);
 QDataStream& operator>>(QDataStream& in, QList<SUser>& v);
 
-class CWebManager : public QObject
+class FFS2CORE_EXPORT CWebManager : public QObject
 {
     Q_OBJECT
     friend class DialogProfils;

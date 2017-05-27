@@ -20,31 +20,22 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
-#include "gui/mainwindow.h"
-#include "net/udpserver.h"
-#include <QApplication>
-#include <QSettings>
-#include <QTranslator>
+#ifndef GETAPPVERSION_H
+#define GETAPPVERSION_H
 
-///
-/// \brief main
-/// \param argc
-/// \param argv
-/// \return
-///
+#include <QString>
+#include <QTextStream>
+#include "tools/ffs2core_global.h"
 
-int main(int argc, char *argv[])
+struct FFS2CORE_EXPORT sVersion
 {
-    QSettings::setDefaultFormat(QSettings::IniFormat);
-    QCoreApplication::setOrganizationName("FFS2P");
-    QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
-    QCoreApplication::setApplicationName("FFS2Play");
-    QApplication app(argc, argv);
-    QString locale = QLocale::system().name();
-    QTranslator Translator;
-    Translator.load("translations/ffs2play_" + locale +".qm");
-    app.installTranslator(&Translator);
-    MainWindow mainWindow;
-    mainWindow.show();
-    return app.exec();
-}
+    QString Name;
+    QString FullVersion;
+    int Major;
+    int Minor;
+    int Build;
+};
+
+FFS2CORE_EXPORT sVersion GetAppVersion();
+
+#endif

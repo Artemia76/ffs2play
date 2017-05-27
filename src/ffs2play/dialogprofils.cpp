@@ -27,7 +27,7 @@
  * to connect severals FFS2Play networks servers
  * **************************************************************************/
 
-#include "include/gui/dialogprofils.h"
+#include "dialogprofils.h"
 #include "ui_dialogprofils.h"
 
 #include <QMessageBox>

@@ -24,7 +24,6 @@
 #include "singleton/singleton.h"
 
 #include <QXmlStreamWriter>
-#include <QApplication>
 
 /// Build Users Profils to Setting file
 /// \brief operator <<
@@ -87,7 +86,6 @@ bool CWebManager::CheckError(QDomDocument& Doc)
                 break;
             case 1:
                 Couleur = Qt::darkRed;
-                QApplication::beep();
                 break;
             case 2:
                 Couleur = Qt::darkRed;

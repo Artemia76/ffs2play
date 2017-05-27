@@ -20,10 +20,10 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
-#include "gui/mainwindow.h"
+#include <QByteArray>
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "net/chttprequest.h"
-#include "gui/dialogprofils.h"
+#include "dialogprofils.h"
 #include "tools/getappversion.h"
 
 ///
@@ -39,14 +39,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Init window position and size
     s.beginGroup("MainWindow");
-    resize(s.value("size", QSize(400,400)).toSize());
-    move(s.value("pos", QPoint(200,200)).toPoint());
+    restoreGeometry(s.value("Geometry").toByteArray());
+    restoreState(s.value("State").toByteArray());
     s.endGroup();
 
     QPalette p = ui->pteLogger->palette();
     p.setColor(QPalette::Text,Qt::darkBlue);
     Log = CLogger::instance();
-    Log->setOutput(ui->pteLogger);
+    connect(Log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)));
     ui->pteLogger->setPalette(p);
     Log->log(tr("Welcome to FFS2Play"),Qt::blue);
     // Simconnect Manager Init
@@ -81,11 +81,20 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent*)
 {
     s.beginGroup("MainWindow");
-    s.setValue("size", size());
-    s.setValue("pos", pos());
+    s.setValue("Geometry",saveGeometry());
+    s.setValue("State",saveState());
     s.endGroup();
     P2PManager->init(false);
     scManager->close();
+}
+
+
+void MainWindow::onLog (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
+{
+    QTextCharFormat fmt;
+    fmt.setForeground(QBrush(pColor));
+    ui->pteLogger->mergeCurrentCharFormat(fmt);
+    ui->pteLogger->appendPlainText(Texte);
 }
 
 ///
@@ -165,4 +174,9 @@ void MainWindow::on_afAide_triggered()
 void MainWindow::on_afFSCon_triggered()
 {
     scManager->open_close();
+}
+
+void MainWindow::on_afP2P_triggered()
+{
+
 }

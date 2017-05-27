@@ -46,6 +46,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 private slots:
+    void onLog(const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel);
     void onSCM_Opened();
     void onSCM_Closed();
     void onWM_Connected();
@@ -55,6 +56,8 @@ private slots:
     void on_afProfil_triggered();
     void on_afAide_triggered();
     void on_afFSCon_triggered();
+
+    void on_afP2P_triggered();
 
 private:
     Ui::MainWindow *ui;

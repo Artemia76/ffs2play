@@ -32,10 +32,11 @@
 
 #include "singleton/clogger.h"
 #include "SimConnect.h"
+#include "tools/ffs2core_global.h"
 
 const int WM_USER_SIMCONNECT = 0x402;
 
-struct SAI_Data
+struct FFS2CORE_EXPORT SAI_Data
 {
     char    title[256];
     double  kohlsmann;
@@ -45,7 +46,7 @@ struct SAI_Data
 };
 
 
-enum class GROUP_ID
+enum class FFS2CORE_EXPORT GROUP_ID
 {
     JOYSTICK,
     AI
@@ -54,7 +55,7 @@ enum class GROUP_ID
 /// <summary>
 /// Enumération des évenements du simulateur à traiter
 /// </summary>
-enum class EVENT_ID
+enum class FFS2CORE_EXPORT EVENT_ID
 {
     PERIODIQUE,
     PAUSE,
@@ -108,7 +109,7 @@ enum class EVENT_ID
 /// Enumération des requêtes
 /// à partir de 100, réservé pour les requetes de création et destruction d'avion
 /// </summary>
-enum class REQUESTS_ID
+enum class FFS2CORE_EXPORT REQUESTS_ID
 {
     PERIODIQUE,
     PAUSE,
@@ -138,7 +139,7 @@ enum class REQUESTS_ID
     AI_UPDATE = 0x200000,
 };
 
-enum class DEFINITIONS_ID
+enum class FFS2CORE_EXPORT DEFINITIONS_ID
 {
     PERIODIQUE,
     PARKING_BRAKE,
@@ -167,7 +168,7 @@ enum class DEFINITIONS_ID
 /// Structure d'importation des données envoyées par
 /// la librairie simconnect
 /// </summary>
-struct DonneesAvion
+struct FFS2CORE_EXPORT DonneesAvion
 {
     char Title[256];
     char Type[256];
@@ -214,7 +215,7 @@ struct DonneesAvion
     qint32 Squawk;
 };
 
-class SCManagerEventSCEvent
+class FFS2CORE_EXPORT SCManagerEventSCEvent
 {
 public:
     SCManagerEventSCEvent()
@@ -234,7 +235,7 @@ public:
     QDateTime Time;
 };
 
-class SCManagerEventSCVariable
+class FFS2CORE_EXPORT SCManagerEventSCVariable
 {
 public:
     SCManagerEventSCVariable ()
@@ -251,7 +252,7 @@ public:
     QDateTime Time;
 };
 
-class CSCManager : public QObject
+class FFS2CORE_EXPORT CSCManager : public QObject
 {
     Q_OBJECT
 private:
