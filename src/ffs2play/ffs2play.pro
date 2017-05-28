@@ -15,8 +15,8 @@ DEPENDPATH += ../ffs2core
 
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
 PROTOBUF_PATH = "E:\devel\protobuf"
-OPENSSL_INCLUDE_PATH = "D:\OpenSSL-Win32-1-0-2\include"
-OPENSSL_LIB_PATH = "D:\OpenSSL-Win32-1-0-2\lib"
+OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
+OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
 CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
 CONFIG( debug, debug|release ) {
     CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Debug"
@@ -56,6 +56,11 @@ RESOURCES += ressources.qrc
 
 RC_FILE = ffs2play.rc
 
+DISTFILES += \
+    ffs2play.rc \
+    ../../intl/ffs2play_fr_FR.ts
+
+
 isEmpty(TARGET_EXT) {
     win32 {
         TARGET_CUSTOM_EXT = .exe
@@ -68,7 +73,7 @@ isEmpty(TARGET_EXT) {
 }
 
 win32 {
-    DEPLOY_COMMAND = windeployqt --no-system-d3d-compiler --compiler-runtime
+    DEPLOY_COMMAND = windeployqt --no-system-d3d-compiler --no-opengl-sw --no-compiler-runtime
 }
 macx {
     DEPLOY_COMMAND = macdeployqt
@@ -78,21 +83,51 @@ CONFIG( debug, debug|release ) {
     # debug
     DEPLOY_PATH = $${OUT_PWD}/debug
     DEPLOY_TARGET = $$shell_quote($$shell_path($${DEPLOY_PATH}/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    DEPLOY_TARGET += $$shell_quote($$shell_path($${OUT_PWD}/../ffs2core/debug/ffs2core.dll))
 } else {
     # release
     DEPLOY_PATH = $${OUT_PWD}/release
     DEPLOY_TARGET = $$shell_quote($$shell_path($${DEPLOY_PATH}/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    DEPLOY_TARGET += $$shell_quote($$shell_path($${OUT_PWD}/../ffs2core/release/ffs2core.dll))
 }
 
 #  # Uncomment the following line to help debug the deploy command when running qmake
-#  warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
+  warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
 
 # Use += instead of = if you use multiple QMAKE_POST_LINKs
-QMAKE_POST_LINK = $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\n\t))
 
-DISTFILES += \
-    ffs2play.rc \
-    ../../intl/ffs2play_fr_FR.ts
+#copy depends DLLs
+win32 {
+    EXTRA_DLLS += $${OPENSSL_LIB_PATH}/libeay32.dll
+CONFIG( debug, debug|release ) {
+    # debug
+    EXTRA_DLLS += $${OUT_PWD}/../ffs2core/debug/ffs2core.dll
+} else {
+    # release
+    EXTRA_DLLS += $${OUT_PWD}/../ffs2core/release/ffs2core.dll
+}
+    EXTRA_DLLS ~= s,/,\\,g
+    DESTDIR_DLLS = $${DEPLOY_PATH}
+    DESTDIR_DLLS ~= s,/,\\,g
+    for(FILE,EXTRA_DLLS){
+                QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${FILE} $${DESTDIR_DLLS}$$escape_expand(\n\t))
+    }
+}
+
+#install language files
+win32 {
+    EXTRA_LANGFILES += $${OUT_PWD}/../../intl/ffs2play_fr_FR.qm
+    EXTRA_LANGFILES += $${OUT_PWD}/../../intl/ffs2core_fr_FR.qm
+    EXTRA_LANGFILES ~= s,/,\\,g
+    DESTDIR_TRANSLATION = $${DEPLOY_PATH}/translations
+    DESTDIR_TRANSLATION ~= s,/,\\,g
+    for(FILE,EXTRA_LANGFILES){
+                QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${FILE} $${DESTDIR_TRANSLATION}$$escape_expand(\n\t))
+    }
+}
+
+warning($${QMAKE_POST_LINK})
 
 # Application Version
 
@@ -104,12 +139,3 @@ DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
 DEFINES += APP_BUILD=$$VERSION_BUILD
 
-win32 {
-    EXTRA_LANGFILES = $${OUT_PWD}/intl/ffs2play_fr_FR.qm
-    EXTRA_LANGFILES ~= s,/,\\,g
-    DESTDIR_WIN = $${DEPLOY_PATH}/translations
-    DESTDIR_WIN ~= s,/,\\,g
-    for(FILE,EXTRA_LANGFILES){
-                QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${FILE} $${DESTDIR_WIN}$$escape_expand(\n\t))
-    }
-}

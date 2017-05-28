@@ -15,8 +15,8 @@ DEFINES += FFS2CORE_DLL
 
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
 PROTOBUF_PATH = "E:\devel\protobuf"
-OPENSSL_INCLUDE_PATH = "D:\OpenSSL-Win32-1-0-2\include"
-OPENSSL_LIB_PATH = "D:\OpenSSL-Win32-1-0-2\lib"
+OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
+OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
 CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
 CONFIG( debug, debug|release ) {
     CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Debug"
@@ -63,7 +63,11 @@ HEADERS  +=     net/udpserver.h \
                 tools/aircraftstate.h \
                 tools/ffs2core_global.h
 
-TRANSLATIONS += ../intl/ffs2play_fr_FR.ts
+TRANSLATIONS += ../../intl/ffs2core_fr_FR.ts
+
+DISTFILES += \
+    ../../intl/ffs2core_fr_FR.ts
+
 
 #Libs Path
 LIBS    += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x86"
