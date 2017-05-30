@@ -24,16 +24,11 @@
 #define AIRCRAFTSTATE_H
 
 #include <QObject>
-#include "singleton/scmanager.h"
+#include <QDateTime>
 #include "tools/ffs2core_global.h"
 
-class FFS2CORE_EXPORT CAircraftState : public QObject
+class FFS2CORE_EXPORT CAircraftState
 {
-
-public slots:
-    void    OnSCReceiveVariable(SCManagerEventSCVariable pData);
-    void    OnSCReceiveEvent(SCManagerEventSCEvent pData);
-
 public:
     CAircraftState();
     CAircraftState(const CAircraftState& Object);
@@ -84,6 +79,7 @@ public:
     qint32 ThrottleEng2;
     qint32 ThrottleEng3;
     qint32 ThrottleEng4;
+    qint32 Transponder;
     //Etat
     bool ParkingBrake;
     bool Pause;

@@ -42,7 +42,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     qRegisterMetaTypeStreamOperators<QList<SUser> >("QList<SUser>");
     Log = CLogger::instance();
     P2P = CP2PManager::instance();
-    SCM = CSCManager::instance();
+    SimManager = simbasemanager::instance();
     s.beginGroup("Web");
     QByteArray Profils = QByteArray::fromBase64(s.value("Profils","").toByteArray());
     QByteArray Check = QByteArray::fromBase64(s.value("Hash","").toByteArray());
@@ -82,9 +82,6 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
     connect(this, SIGNAL(FireConnected()),this, SLOT( OnConnected()));
     connect(this, SIGNAL(FireDisconnected()),this, SLOT( OnDisconnected()));
-
-    connect(SCM, &CSCManager::fireSCReceiveVariable , &AircraftState, &CAircraftState::OnSCReceiveVariable);
-    connect(SCM, SIGNAL(fireSCReceiveEvent(SCManagerEventSCEvent*)),&AircraftState,SLOT(OnSCReceiveEvent(SCManagerEventSCEvent*)));
 
     ATCTimer.setInterval(5000);
     LiveUpdateTimer.setInterval(30000);

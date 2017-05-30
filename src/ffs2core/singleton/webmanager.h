@@ -34,7 +34,7 @@
 #include <QNetworkAccessManager>
 
 #include "singleton/clogger.h"
-#include "singleton/scmanager.h"
+#include "singleton/simbasemanager.h"
 #include "singleton/p2pmanager.h"
 #include "net/chttprequest.h"
 #include "tools/crypto.h"
@@ -76,11 +76,10 @@ private:
     QSettings           s;
     QTimer              LiveUpdateTimer;
     QTimer              ATCTimer;
-    CSCManager*         SCM;
+    simbasemanager*     SimManager;
     CP2PManager*        P2P;
     CLogger*            Log;
     QMetaEnum           metaXmlCode;
-    CAircraftState      AircraftState;
 
     // Etat de la connexion
     bool                m_bConnected;

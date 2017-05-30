@@ -78,6 +78,7 @@ CAircraftState::CAircraftState ()
     ThrottleEng2 = 0;
     ThrottleEng3 = 0;
     ThrottleEng4 = 0;
+    Transponder = 0;
     NumEngine = 0;
     FlapsIndex = 0;
     GearPos = false;
@@ -137,6 +138,7 @@ CAircraftState::CAircraftState(const CAircraftState &Object)
     Door4Pos = Object.Door4Pos;
     FlapsIndex = Object.FlapsIndex;
     NumEngine = Object.NumEngine;
+    Transponder = Object.Transponder;
     ThrottleEng1 = Object.ThrottleEng1;
     ThrottleEng2 = Object.ThrottleEng2;
     ThrottleEng3 = Object.ThrottleEng3;
@@ -170,157 +172,3 @@ CAircraftState::~CAircraftState()
 
 }
 
-void CAircraftState::OnSCReceiveVariable(SCManagerEventSCVariable pData)
-{
-    TimeStamp = pData.Time;
-    Title = pData.Data.Title;
-    Model = pData.Data.Model;
-    Type = pData.Data.Type;
-    Category = pData.Data.Category;
-    PlaneAltitude = pData.Data.PlaneAltitude;
-    GndAltitude = pData.Data.GndAltitude;
-    PlaneWeight = pData.Data.PlaneWeight;
-    Vario = pData.Data.Vario;
-    PlaneHeading = pData.Data.PlaneHeading;
-    TimeFactor = pData.Data.TimeFactor;
-    Longitude = pData.Data.Longitude;
-    Latitude = pData.Data.Latitude;
-    GndSpeed = pData.Data.GndSpeed;
-    TASSpeed = pData.Data.TASSpeed;
-    IASSpeed = pData.Data.IASSpeed;
-    Fuel = pData.Data.FuelQty;
-    TotalFuelCapacity = pData.Data.TotalFuelCapacity;
-    GForce = pData.Data.GForce;
-    PlanePitch = pData.Data.PlanePitch;
-    PlaneBank = pData.Data.PlaneBank;
-    AmbiantWindVelocity = pData.Data.AmbiantWindDirection;
-    AmbiantWindDirection = pData.Data.AmbiantWindDirection;
-    SeaLevelPressure = pData.Data.SeaLevelPressure;
-    Squawk = pData.Data.Squawk;
-    Realism = pData.Data.Realism;
-    AmbiantPrecipState = pData.Data.AmbiantPrecipState;
-    ElevatorPos = pData.Data.ElevatorPos;
-    AileronPos = pData.Data.AileronPos;
-    RudderPos = pData.Data.RudderPos;
-    Door1Pos = pData.Data.Door1Pos;
-    Door2Pos = pData.Data.Door2Pos;
-    Door3Pos = pData.Data.Door3Pos;
-    Door4Pos = pData.Data.Door4Pos;
-    NumEngine = pData.Data.NumEngine;
-    ThrottleEng1 = pData.Data.ThrottleEng1;
-    ThrottleEng2 = pData.Data.ThrottleEng2;
-    ThrottleEng3 = pData.Data.ThrottleEng3;
-    ThrottleEng4 = pData.Data.ThrottleEng4;
-    StateEng1 = pData.Data.StateEng1;
-    StateEng2 = pData.Data.StateEng2;
-    StateEng3 = pData.Data.StateEng3;
-    StateEng4 = pData.Data.StateEng4;
-}
-
-void CAircraftState::OnSCReceiveEvent(SCManagerEventSCEvent pData)
-{
-    switch (pData.Evt_Id)
-    {
-        case EVENT_ID::PARKING_BRAKE:
-        {
-            ParkingBrake = (bool)pData.Data;
-            break;
-        }
-        /*case EVENT_ID::OVERSPEED:
-        {
-            OverSpeed = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::STALLING:
-        {
-            Stalling = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::CRASH:
-        {
-            Crash = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::SLEW:
-        {
-            Slew = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::PUSHBACK:
-        {
-            Pushback = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::ON_GROUND:
-        {
-            if ((pData.Data >=0) && (pData.Data <=1))
-                OnGround = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::SIMSTART:
-        {
-            RunState = true;
-            break;
-        }
-        case EVENT_ID::SIMSTOP:
-        {
-            RunState = false;
-            break;
-        }
-        case EVENT_ID::PAUSE:
-        {
-            if ((pData.Data >=0) && (pData.Data <=1))
-                Pause = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::FLAPS_HANDLE_INDEX:
-        {
-            FlapsIndex = pData.Data;
-            break;
-        }
-        case EVENT_ID::GEAR_HANDLE_POSITION:
-        {
-            GearPos = pData.Data;
-            break;
-        }
-        case EVENT_ID::ALTIMETER_SETTING:
-        {
-            AltimeterSetting = pData.Data;
-            break;
-        }
-        case EVENT_ID::LANDING_LIGHT:
-        {
-            LandingLight = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::STROBE_LIGHT:
-        {
-            StrobeLight = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::BEACON_LIGHT:
-        {
-            BeaconLight = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::NAV_LIGHT:
-        {
-            NavLight = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::RECOGNITION_LIGHT:
-        {
-            RecoLight = (bool)pData.Data;
-            break;
-        }
-        case EVENT_ID::SMOKE_ENABLE:
-        {
-            Smoke = (bool)pData.Data;
-            break;
-        }*/
-        default:
-        {
-            break;
-        }
-    }
-}

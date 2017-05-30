@@ -26,7 +26,9 @@ CONFIG( debug, debug|release ) {
     MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
 }
 
-INCLUDEPATH +=	"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
+INCLUDEPATH +=	\
+                "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
+ #               "D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\Inc" \
                 $${MINIUPNPC_PATH} \
                 $${OPENSSL_INCLUDE_PATH} \
                 $${CRYPTOPP_INCLUDE_PATH} \
@@ -36,9 +38,11 @@ INCLUDEPATH +=	"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulato
 SOURCES +=	main.cpp \
                 mainwindow.cpp \
                 dialogprofils.cpp \
+                scmanager.cpp
 				
 HEADERS  +=     mainwindow.h \
                 dialogprofils.h \
+                scmanager.h
 
 FORMS	+=	mainwindow.ui \
                 dialogprofils.ui
@@ -51,6 +55,9 @@ LIBS	+= -L../ffs2core/debug -lffs2core
 } else {
 LIBS	+= -L../ffs2core/release -lffs2core
 }
+LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
+#LIBS	+= -L"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\lib"
+LIBS	+= -lSimConnect
 
 RESOURCES += ressources.qrc
 

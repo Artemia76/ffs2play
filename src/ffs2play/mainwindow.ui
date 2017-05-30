@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>486</width>
+    <width>640</width>
     <height>791</height>
    </rect>
   </property>
@@ -583,7 +583,7 @@
     <string>Multiplayer Network</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -633,6 +633,366 @@
        <property name="readOnly">
         <bool>true</bool>
        </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <property name="windowTitle">
+    <string>SIM Variables</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QTableWidget" name="twSIMData">
+       <property name="rowCount">
+        <number>33</number>
+       </property>
+       <property name="columnCount">
+        <number>1</number>
+       </property>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>20</number>
+       </attribute>
+       <row>
+        <property name="text">
+         <string>Title</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Type</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Model</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Category</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Altitude</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Ground Altitude</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Vertical Speed</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Heading</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Longitude</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Latitude</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Ground Speed</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>TAS</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Total Fuel Qty</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Total Fuel Capacity</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Fuel Weight per Gallon</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Pitch</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Bank</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>G Force</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Total Weight</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Realism</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Ambient Wind Velocity</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Ambient Wind Direction</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Ambiant Precipitation State</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Sea level Pressure</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>IAS</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Elevator Position</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Aileron Position</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Rudder Position</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Simulation Rate</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Exit 0</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Exit 1</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Exit 2</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Exit 3</string>
+        </property>
+       </row>
+       <column>
+        <property name="text">
+         <string>Data</string>
+        </property>
+       </column>
+       <item row="0" column="0">
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item row="1" column="0">
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item row="2" column="0">
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item row="3" column="0">
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item row="4" column="0">
+        <property name="text">
+         <string>0 ft</string>
+        </property>
+       </item>
+       <item row="5" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="6" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="7" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="8" column="0">
+        <property name="text">
+         <string>0°</string>
+        </property>
+       </item>
+       <item row="9" column="0">
+        <property name="text">
+         <string>0°</string>
+        </property>
+       </item>
+       <item row="10" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="11" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="12" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="13" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="14" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="15" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="16" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="17" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="18" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="19" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="20" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="21" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="22" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="23" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="24" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="25" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="26" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="27" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="28" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="29" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="30" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="31" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item row="32" column="0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>

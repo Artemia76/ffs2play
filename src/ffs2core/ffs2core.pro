@@ -26,15 +26,13 @@ CONFIG( debug, debug|release ) {
     MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
 }
 
-INCLUDEPATH +=	"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
-                $${MINIUPNPC_PATH} \
+INCLUDEPATH +=	$${MINIUPNPC_PATH} \
                 $${OPENSSL_INCLUDE_PATH} \
                 $${CRYPTOPP_INCLUDE_PATH} \
                 $${PROTOBUF_PATH}
 
 SOURCES +=      net/udpserver.cpp \
                 singleton/clogger.cpp \
-                singleton/scmanager.cpp \
                 net/chttprequest.cpp \
                 singleton/p2pmanager.cpp \
                 singleton/webmanager.cpp \
@@ -45,7 +43,8 @@ SOURCES +=      net/udpserver.cpp \
                 singleton/webmanager.Callback.cpp \
                 singleton/webmanager.Utils.cpp \
                 tools/aircraftstate.cpp \
-                singleton/simbasemanager.cpp
+                singleton/simbasemanager.cpp \
+                sim/simconnector.cpp
 
 HEADERS  +=     net/udpserver.h \
                 net/chttprequest.h \
@@ -55,13 +54,13 @@ HEADERS  +=     net/udpserver.h \
                 singleton/p2pmanager.h \
                 singleton/singleton.h \
                 singleton/webmanager.h \
-                singleton/scmanager.h \
                 singleton/simbasemanager.h \
                 tools/version.h \
                 tools/getappversion.h \
                 tools/crypto.h \
                 tools/aircraftstate.h \
-                tools/ffs2core_global.h
+                tools/ffs2core_global.h \
+                sim/simconnector.h
 
 TRANSLATIONS += ../../intl/ffs2core_fr_FR.ts
 
@@ -71,14 +70,12 @@ DISTFILES += \
 
 #Libs Path
 LIBS    += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x86"
-LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
 LIBS	+= -L$${OPENSSL_LIB_PATH}
 LIBS	+= -L$${MINIUPNPC_LIB_PATH}
 LIBS	+= -L$${CRYPTOPP_LIB_PATH}
 LIBS	+= -L$${PROTOBUF_PATH}/lib
 
 # Libs to load
-LIBS	+= -lSimConnect
 LIBS	+= -lWs2_32
 LIBS	+= -liphlpapi
 LIBS	+= -lminiupnpc

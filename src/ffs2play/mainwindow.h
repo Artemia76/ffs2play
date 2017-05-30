@@ -29,7 +29,8 @@
 #include <QTimer>
 
 #include "singleton/clogger.h"
-#include "singleton/scmanager.h"
+#include "scmanager.h"
+#include "singleton/simbasemanager.h"
 #include "net/chttprequest.h"
 #include "singleton/p2pmanager.h"
 #include "singleton/webmanager.h"
@@ -62,7 +63,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     CLogger* Log;
-    CSCManager* scManager;
+    simbasemanager* SimManager;
     CP2PManager* P2PManager;
     CWebManager* WebManager;
     QSettings s;

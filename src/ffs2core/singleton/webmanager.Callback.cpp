@@ -144,5 +144,10 @@ void CWebManager::OnLiveUpdate()
 #ifdef QT_DEBUG
     Log->log("WebManager : " + tr("Get LiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-    Log->log("WebManager : " + tr("Latitude = ") + QString::number(AircraftState.Latitude));
+    if (m_bConnected && SimManager->isConnected())
+    {
+        CAircraftState data= SimManager->getAircraftState();
+        Log->log("WebManager : " + tr("Titre = ") + data.Title);
+        Log->log("WebManager : " + tr("Latitude = ") + QString::number(data.Latitude));
+    }
 }

@@ -50,12 +50,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pteLogger->setPalette(p);
     Log->log(tr("Welcome to FFS2Play"),Qt::blue);
     // Simconnect Manager Init
-    scManager = CSCManager::instance();
-    connect(scManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
-    connect(scManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
+    SimManager = simbasemanager::instance();
+    connect(SimManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
+    connect(SimManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
+    SimManager->init(new CSCManager());
     //Start timer to updating GUI
     connect(&Update,SIGNAL(timeout()),this,SLOT(onUpdate()));
-    Update.start(5000);
+    Update.start(500);
 
     P2PManager = CP2PManager::instance();
     P2PManager->init(true);
@@ -85,7 +86,7 @@ void MainWindow::closeEvent(QCloseEvent*)
     s.setValue("State",saveState());
     s.endGroup();
     P2PManager->init(false);
-    scManager->close();
+    SimManager->close();
 }
 
 
@@ -139,7 +140,159 @@ void MainWindow::onWM_Disconnected()
 
 void MainWindow::onUpdate()
 {
+    CAircraftState State = SimManager->getAircraftState();
+    for (int i = 0; i < ui->twSIMData->rowCount(); i++)
+    {
+        switch (i)
+        {
+            case 0:
+            {
+                ui->twSIMData->item(i,0)->setText(State.Title);
+                break;
+            }
+            case 1:
+            {
+                ui->twSIMData->item(i,0)->setText(State.Type);
+                break;
+            }
+            case 2:
+            {
+                ui->twSIMData->item(i,0)->setText(State.Model);
+                break;
+            }
+            case 3:
+            {
+                ui->twSIMData->item(i,0)->setText(State.Category);
+                break;
+            }
+            case 4:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneAltitude)+ " ft");
+                break;
+            }
+            case 5:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.GndAltitude)+ " ft");
+                break;
+            }
+            case 6:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Vario)+ " ft/min");
+                break;
+            }
+            case 7:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneHeading)+ " °");
+                break;
+            }
+            case 8:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Longitude)+ " °");
+                break;
+            }
+            case 9:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Latitude)+ " °");
+                break;
+            }
+            case 10:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.GndSpeed)+ " Kt");
+                break;
+            }
+            case 11:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.TASSpeed)+ " Kt");
+                break;
+            }
+            case 12:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Fuel)+ " lbs");
+                break;
+            }
+            case 13:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Fuel)+ " lbs");
+                break;
+            }
+            case 14:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.TotalFuelCapacity)+ " lbs");
+                break;
+            }
+            case 15:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.PlanePitch)+ " °");
+                break;
+            }
+            case 16:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneBank)+ " °");
+                break;
+            }
+            case 17:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.GForce));
+                break;
+            }
+            case 18:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneWeight)+" lbs");
+                break;
+            }
+            case 19:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Realism));
+                break;
+            }
+            case 20:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.AmbiantWindVelocity));
+                break;
+            }
+            case 21:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.AmbiantWindDirection));
+                break;
+            }
+            case 22:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.AmbiantPrecipState));
+                break;
+            }
+            case 23:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.SeaLevelPressure));
+                break;
+            }
+            case 24:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.IASSpeed) + " kt");
+                break;
+            }
+            case 25:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.ElevatorPos) + " °");
+                break;
+            }
+            case 26:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.AileronPos) + " °");
+                break;
+            }
+            case 27:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.RudderPos) + " °");
+                break;
+            }
+            case 28:
+            {
+                ui->twSIMData->item(i,0)->setText(QString::number(State.TimeFactor));
+                break;
+            }
+        }
 
+    }
 }
 
 ///
@@ -173,7 +326,7 @@ void MainWindow::on_afAide_triggered()
 
 void MainWindow::on_afFSCon_triggered()
 {
-    scManager->open_close();
+    SimManager->open_close();
 }
 
 void MainWindow::on_afP2P_triggered()
