@@ -31,7 +31,6 @@ class FFS2CORE_EXPORT CAircraftState
 {
 public:
     CAircraftState();
-    CAircraftState(const CAircraftState& Object);
     ~CAircraftState();
     QDateTime TimeStamp;
     QString Title;

@@ -87,6 +87,12 @@ LIBS	+= -llibprotobufd
 LIBS	+= -llibprotobuf
 }
 
+win32-msvc* {
+    system(cl|grep "Compiler Version 18.") {
+        message( "msvc 2013 detected" )
+        QMAKE_CXXFLAGS += /FS
+    }
+
 # Application Version
 
 VERSION_MAJOR = 2

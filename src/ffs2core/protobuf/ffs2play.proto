@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package ffs2play;
+
+message LocalIPList {
+	repeated string IP = 1;
+}
