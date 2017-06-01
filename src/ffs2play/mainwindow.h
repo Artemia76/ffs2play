@@ -57,9 +57,9 @@ private slots:
     void on_afProfil_triggered();
     void on_afAide_triggered();
     void on_afFSCon_triggered();
-
     void on_afP2P_triggered();
 
+    void OnSimEvent(SimEvent);
 private:
     Ui::MainWindow *ui;
     CLogger* Log;

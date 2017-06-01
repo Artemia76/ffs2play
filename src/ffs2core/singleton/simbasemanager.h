@@ -31,6 +31,8 @@ static simbasemanager* instance();
 
 private slots:
     void        mainThread();
+    void        OnSimVariableEvent(CAircraftState);
+    void        OnSimEvent(SimEvent);
 public slots:
     void        open_close();
 
@@ -38,7 +40,7 @@ signals:
     void        finished();
     void        opened();
     void        closed();
-    void        fireSimVariableEvent();
+    void        fireSimVariableEvent(CAircraftState);
     void        fireSimEvent(SimEvent);
 };
 

@@ -69,3 +69,16 @@ void CWebManager::SendVerify()
     Request->execute(Users[CurrentUser-1].URL+"/action.php",SendVerify);
 }
 
+///
+/// \brief CWebManager::SendVerify
+///
+
+void CWebManager::SendLiveUpdate()
+{
+    QDomDocument SendLiveUpdate;
+    XmlBuild(SendLiveUpdate, liveupdate);
+    CHttpRequest* Request = new CHttpRequest(this);
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
+    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendLiveUpdate);
+}
+

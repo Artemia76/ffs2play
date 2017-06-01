@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     WebManager = CWebManager::instance();
     connect(WebManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
     connect(WebManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
+    connect(SimManager, SIGNAL(fireSimEvent(SimEvent)),SLOT(OnSimEvent(SimEvent)));
 }
 
 ///
@@ -290,6 +291,31 @@ void MainWindow::onUpdate()
                 ui->twSIMData->item(i,0)->setText(QString::number(State.TimeFactor));
                 break;
             }
+        case 29:
+        {
+            ui->twSIMData->item(i,0)->setText(QString::number(State.Door1Pos));
+            break;
+        }
+        case 30:
+        {
+            ui->twSIMData->item(i,0)->setText(QString::number(State.Door2Pos));
+            break;
+        }
+        case 31:
+        {
+            ui->twSIMData->item(i,0)->setText(QString::number(State.Door3Pos));
+            break;
+        }
+        case 32:
+        {
+            ui->twSIMData->item(i,0)->setText(QString::number(State.Door4Pos));
+            break;
+        }
+        case 33:
+        {
+            ui->twSIMData->item(i,0)->setText(QString::number((int)State.ParkingBrake));
+            break;
+        }
         }
 
     }
@@ -332,4 +358,9 @@ void MainWindow::on_afFSCon_triggered()
 void MainWindow::on_afP2P_triggered()
 {
 
+}
+
+void MainWindow::OnSimEvent(SimEvent Event)
+{
+    Log->log("Receive Sim Event = " + QString::number((int)Event.Evt_Id) + " Data = " + QString::number(Event.Data));
 }

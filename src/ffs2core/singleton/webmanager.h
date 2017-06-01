@@ -114,8 +114,10 @@ public slots:
 private slots:
     void                HelloCallback (CHttpRequest* Request);
     void                ConnectCallback (CHttpRequest* Request);
+    void                LiveUpdateCallback (CHttpRequest* Request);
     void                LogoutCallback (CHttpRequest* Request);
     void                SendVerify();
+    void                SendLiveUpdate();
     void                OnATCUpdate();
     void                OnLiveUpdate();
 };

@@ -74,7 +74,7 @@ signals:
     void            finished();
     void            opened();
     void            closed();
-    void            fireSimVariableEvent();
+    void            fireSimVariableEvent(CAircraftState);
     void            fireSimEvent(SimEvent);
 public slots:
 };

@@ -10,6 +10,7 @@ simbasemanager::simbasemanager(QObject* parent):
     QObject(parent)
 {
     qRegisterMetaType<SimEvent>("SimEvent");
+    qRegisterMetaType<CAircraftState>("CAircraftState");
     m_logger = CLogger::instance();
     m_connector =NULL;
     m_initialized = false;
@@ -55,9 +56,11 @@ simbasemanager* simbasemanager::instance()
 
 void simbasemanager::init(SimConnector *p_connector)
 {
-    if (p_connector==NULL) return;
+    if ((p_connector==NULL)||(m_initialized)) return;
     m_connector=p_connector;
     m_initialized=true;
+    connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
+    connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
 }
 
 ///
@@ -140,4 +143,14 @@ const CAircraftState simbasemanager::getAircraftState()
     if (m_initialized && (m_connector!=NULL))
         State = m_connector->State;
     return State;
+}
+
+void simbasemanager::OnSimVariableEvent(CAircraftState pState)
+{
+    emit(fireSimVariableEvent(pState));
+}
+
+void simbasemanager::OnSimEvent(SimEvent pEvent)
+{
+    emit(fireSimEvent(pEvent));
 }

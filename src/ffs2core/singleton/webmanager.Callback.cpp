@@ -112,6 +112,13 @@ void CWebManager::ConnectCallback(CHttpRequest *Request)
     Request->deleteLater();
 }
 
+void CWebManager::LiveUpdateCallback(CHttpRequest *Request)
+{
+#ifdef QT_DEBUG
+    Log->log("WebManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+}
+
 ///
 /// \brief CWebManager::LogoutCallback
 /// \param Request
@@ -146,8 +153,6 @@ void CWebManager::OnLiveUpdate()
 #endif
     if (m_bConnected && SimManager->isConnected())
     {
-        CAircraftState data= SimManager->getAircraftState();
-        Log->log("WebManager : " + tr("Titre = ") + data.Title);
-        Log->log("WebManager : " + tr("Latitude = ") + QString::number(data.Latitude));
+        SendLiveUpdate();
     }
 }
