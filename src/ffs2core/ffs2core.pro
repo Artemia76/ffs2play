@@ -8,6 +8,18 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += network xml
 
+Release:DESTDIR = release
+Release:OBJECTS_DIR = release/.obj
+Release:MOC_DIR = release/.moc
+Release:RCC_DIR = release/.rcc
+Release:UI_DIR = release/.ui
+
+Debug:DESTDIR = debug
+Debug:OBJECTS_DIR = debug/.obj
+Debug:MOC_DIR = debug/.moc
+Debug:RCC_DIR = debug/.rcc
+Debug:UI_DIR = debug/.ui
+
 TARGET = ffs2core
 TEMPLATE = lib
 DEFINES += MINIUPNP_STATICLIB
@@ -66,7 +78,11 @@ TRANSLATIONS += ../../intl/ffs2core_fr_FR.ts
 
 DISTFILES += \
     ../../intl/ffs2core_fr_FR.ts
-
+target.path = ../ffs2play/$${DESTDIR}
+dep.path = ../ffs2play/$${DESTDIR}
+dep.files += $${OPENSSL_LIB_PATH}/libeay32.dll
+INSTALLS += target
+INSTALLS += dep
 
 #Libs Path
 LIBS    += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x86"

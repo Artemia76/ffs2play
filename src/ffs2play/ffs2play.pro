@@ -13,6 +13,18 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 TARGET = ffs2play
 DEPENDPATH += ../ffs2core
 
+Release:DESTDIR = release
+Release:OBJECTS_DIR = release/.obj
+Release:MOC_DIR = release/.moc
+Release:RCC_DIR = release/.rcc
+Release:UI_DIR = release/.ui
+
+Debug:DESTDIR = debug
+Debug:OBJECTS_DIR = debug/.obj
+Debug:MOC_DIR = debug/.moc
+Debug:RCC_DIR = debug/.rcc
+Debug:UI_DIR = debug/.ui
+
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
 PROTOBUF_PATH = "E:\devel\protobuf"
 OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
@@ -49,12 +61,12 @@ FORMS	+=	mainwindow.ui \
 
 TRANSLATIONS += ../../intl/ffs2play_fr_FR.ts
 
+trans.path = $${DESTDIR}/translations
+trans.files = ../../intl/*.qm
+INSTALLS += trans
+
 #Libs Path
-CONFIG( debug, debug|release ) {
-LIBS	+= -L../ffs2core/debug -lffs2core
-} else {
-LIBS	+= -L../ffs2core/release -lffs2core
-}
+LIBS	+= -L../ffs2core/DESTDIR -lffs2core
 LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
 #LIBS	+= -L"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\lib"
 LIBS	+= -lSimConnect
@@ -80,61 +92,16 @@ isEmpty(TARGET_EXT) {
 }
 
 win32 {
-    DEPLOY_COMMAND = windeployqt --no-system-d3d-compiler --no-opengl-sw --no-compiler-runtime
+    DEPLOY_COMMAND = windeployqt --no-system-d3d-compiler --no-opengl --no-opengl-sw --no-angle --no-compiler-runtime
 }
 macx {
     DEPLOY_COMMAND = macdeployqt
 }
 
-CONFIG( debug, debug|release ) {
-    # debug
-    DEPLOY_PATH = $${OUT_PWD}/debug
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${DEPLOY_PATH}/$${TARGET}$${TARGET_CUSTOM_EXT}))
-    DEPLOY_TARGET += $$shell_quote($$shell_path($${OUT_PWD}/../ffs2core/debug/ffs2core.dll))
-} else {
-    # release
-    DEPLOY_PATH = $${OUT_PWD}/release
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${DEPLOY_PATH}/$${TARGET}$${TARGET_CUSTOM_EXT}))
-    DEPLOY_TARGET += $$shell_quote($$shell_path($${OUT_PWD}/../ffs2core/release/ffs2core.dll))
-}
-
-#  # Uncomment the following line to help debug the deploy command when running qmake
-  warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
-
+DEPLOY_TARGET = $$shell_quote($$shell_path($${DESTDIR}/$${TARGET}$${TARGET_CUSTOM_EXT}))
+DEPLOY_TARGET += $$shell_quote($$shell_path($${DESTDIR}/ffs2core.dll))
 # Use += instead of = if you use multiple QMAKE_POST_LINKs
 QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\n\t))
-
-#copy depends DLLs
-win32 {
-    EXTRA_DLLS += $${OPENSSL_LIB_PATH}/libeay32.dll
-CONFIG( debug, debug|release ) {
-    # debug
-    EXTRA_DLLS += $${OUT_PWD}/../ffs2core/debug/ffs2core.dll
-} else {
-    # release
-    EXTRA_DLLS += $${OUT_PWD}/../ffs2core/release/ffs2core.dll
-}
-    EXTRA_DLLS ~= s,/,\\,g
-    DESTDIR_DLLS = $${DEPLOY_PATH}
-    DESTDIR_DLLS ~= s,/,\\,g
-    for(FILE,EXTRA_DLLS){
-                QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${FILE} $${DESTDIR_DLLS}$$escape_expand(\n\t))
-    }
-}
-
-#install language files
-win32 {
-    EXTRA_LANGFILES += $${OUT_PWD}/../../intl/ffs2play_fr_FR.qm
-    EXTRA_LANGFILES += $${OUT_PWD}/../../intl/ffs2core_fr_FR.qm
-    EXTRA_LANGFILES ~= s,/,\\,g
-    DESTDIR_TRANSLATION = $${DEPLOY_PATH}/translations
-    DESTDIR_TRANSLATION ~= s,/,\\,g
-    for(FILE,EXTRA_LANGFILES){
-                QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${FILE} $${DESTDIR_TRANSLATION}$$escape_expand(\n\t))
-    }
-}
-
-warning($${QMAKE_POST_LINK})
 
 # Application Version
 

@@ -80,8 +80,6 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     Log->log("WebManager : " + tr("AES Key generated = ") + QString(Crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
-    connect(this, SIGNAL(FireConnected()),this, SLOT( OnConnected()));
-    connect(this, SIGNAL(FireDisconnected()),this, SLOT( OnDisconnected()));
 
     ATCTimer.setInterval(5000);
     LiveUpdateTimer.setInterval(30000);
@@ -239,7 +237,7 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             xmlLatitude.appendChild(Doc.createTextNode(QString::number(State.Latitude,'f',5)));
             xmlLiveUpdate.appendChild(xmlLatitude);
             QDomElement xmlLongitude = Doc.createElement("longitude");
-            xmlLongitude.appendChild(Doc.createTextNode(QString::number(State.Latitude,'f',5)));
+            xmlLongitude.appendChild(Doc.createTextNode(QString::number(State.Longitude,'f',5)));
             xmlLiveUpdate.appendChild(xmlLongitude);
             QDomElement xmlHeading = Doc.createElement("heading");
             xmlHeading.appendChild(Doc.createTextNode(QString::number(State.PlaneHeading,'f',0)));
