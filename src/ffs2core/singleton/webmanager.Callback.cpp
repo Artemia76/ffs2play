@@ -32,7 +32,7 @@
 
 void CWebManager::HelloCallback (CHttpRequest* Request)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get HelloCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QDomDocument Doc;
@@ -41,7 +41,7 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
         QDomNode NodeCert = Doc.elementsByTagName("certificat").at(0);
         QString SCert = NodeCert.firstChild().nodeValue();
         m_sCrypted_AESKey = Crypto.RSA_EncryptToBase64(SCert, Crypto.EncryptionKey());
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
         Log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
 #endif
         emit (FireHelloCallback());
@@ -56,7 +56,7 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
 
 void CWebManager::ConnectCallback(CHttpRequest *Request)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get ConnectCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QDomDocument Doc;
@@ -74,7 +74,7 @@ void CWebManager::ConnectCallback(CHttpRequest *Request)
                 if (!xmlExternalIP.isNull())
                 {
                     QHostAddress ExternalIP (xmlExternalIP.firstChild().nodeValue());
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
                     if (ExternalIP.isNull())
                     {
                         Log->log("WebManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
@@ -114,7 +114,7 @@ void CWebManager::ConnectCallback(CHttpRequest *Request)
 
 void CWebManager::LiveUpdateCallback(CHttpRequest *Request)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 }
@@ -126,7 +126,7 @@ void CWebManager::LiveUpdateCallback(CHttpRequest *Request)
 
 void CWebManager::LogoutCallback(CHttpRequest *Request)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get LogoutCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 }
@@ -137,7 +137,7 @@ void CWebManager::LogoutCallback(CHttpRequest *Request)
 
 void CWebManager::OnATCUpdate()
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get ATCUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 }
@@ -148,7 +148,7 @@ void CWebManager::OnATCUpdate()
 
 void CWebManager::OnLiveUpdate()
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get LiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (m_bConnected && SimManager->isConnected())

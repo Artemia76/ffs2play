@@ -44,7 +44,6 @@ private:
     static CLogger* createInstance();
     CL_DEBUG_LEVEL  m_DebugLevel;
     QSettings       s;
-    quint32         m_maxLine;
     bool            m_logToFile;
 
 public:

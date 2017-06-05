@@ -38,7 +38,7 @@
 #include "singleton/p2pmanager.h"
 #include "net/chttprequest.h"
 #include "tools/crypto.h"
-#include "tools/aircraftstate.h"
+#include "sim/aircraftstate.h"
 
 #include "tools/ffs2core_global.h"
 

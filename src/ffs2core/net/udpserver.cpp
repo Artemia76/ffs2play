@@ -34,7 +34,7 @@ UDPServer::UDPServer(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<const QNetworkDatagram*>("const QNetworkDatagram*");
     Logger = CLogger::instance();
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Logger->log("UPDServer : " + tr("constructor"), Qt::darkBlue,LEVEL_NORMAL);
 #endif
     m_running = false;
@@ -64,7 +64,7 @@ void UDPServer::start ()
     {
         if (m_pListenner->isOpen()) stop();
         m_running = m_pListenner->bind (QHostAddress::LocalHost, m_port);
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
         Logger->log("UPDServer : " + tr("listenning on port ") + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
@@ -101,7 +101,7 @@ void UDPServer::incomingData()
     while (m_pListenner->hasPendingDatagrams())
     {
         QNetworkDatagram datagram = m_pListenner->receiveDatagram();
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
         Logger->log("UPDServer : " + tr("receive datagram = ") +
                     QTextCodec::codecForMib(106)->toUnicode(datagram.data().toHex()),
                     Qt::darkBlue,LEVEL_VERBOSE);

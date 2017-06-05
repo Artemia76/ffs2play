@@ -34,7 +34,6 @@ CLogger::CLogger(QObject* parent):
     qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
     s.beginGroup("Log");
     m_DebugLevel = (CL_DEBUG_LEVEL)s.value("DebugLevel",LEVEL_NONE).toLongLong();
-    m_maxLine = s.value("MaxLine",200).toUInt();
     m_logToFile = s.value("LogToFile",false).toBool();
     s.endGroup();
 }
@@ -57,7 +56,6 @@ CLogger::~CLogger()
 {
     s.beginGroup("Log");
     s.setValue("DebugLevel",m_DebugLevel);
-    s.setValue("MaxLine",m_maxLine);
     s.setValue("LogToFile",m_logToFile);
     s.endGroup();
 }

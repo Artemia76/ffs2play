@@ -161,7 +161,7 @@ void CSCManager::process(SIMCONNECT_RECV *pData, DWORD cbData)
         }
         default:
         {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
             Log->log("SCManager : " + tr("Get an unknown Event ID"), Qt::darkMagenta,LEVEL_VERBOSE);
 #endif
             break;
@@ -323,7 +323,7 @@ void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
 
 void CSCManager::OnRecvQuit(SIMCONNECT_RECV* data)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("SCManager : " + tr("Receive SIMCONNECT_RECV event"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     close();
@@ -336,7 +336,7 @@ void CSCManager::OnRecvQuit(SIMCONNECT_RECV* data)
 
 void CSCManager::OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("SCManager : " + tr("Receive SIMCONNECT_RECV_SYSTEM_STATE event"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     SimEvent Event;
@@ -386,7 +386,7 @@ void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 
 void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT event"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     SimEvent Event;
@@ -445,18 +445,18 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
             State.ElevatorPos = Data->ElevatorPos;
             State.Fuel = Data->FuelQty;
             State.GForce = Data->GForce;
-            State.GndAltitude = Data->GndAltitude;
-            State.GndSpeed = Data->GndSpeed;
+            State.GroundAltitude = Data->GndAltitude;
+            State.GroundSpeed = Data->GndSpeed;
             State.IASSpeed = Data->IASSpeed;
             State.Latitude = Data->Latitude;
             State.Longitude = Data->Longitude;
             State.Model = Data->Model;
             State.NumEngine = Data->NumEngine;
-            State.PlaneAltitude = Data->PlaneAltitude;
-            State.PlaneBank = Data->PlaneBank;
-            State.PlaneHeading = Data->PlaneHeading;
-            State.PlanePitch = Data->PlanePitch;
-            State.PlaneWeight = Data->PlaneWeight;
+            State.Altitude = Data->PlaneAltitude;
+            State.Bank = Data->PlaneBank;
+            State.Heading = Data->PlaneHeading;
+            State.Pitch = Data->PlanePitch;
+            State.Weight = Data->PlaneWeight;
             State.Realism = Data->Realism;
             State.RudderPos = Data->RudderPos;
             State.SeaLevelPressure = Data->SeaLevelPressure;
@@ -468,7 +468,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
             State.TimeFactor = Data->TimeFactor;
             State.Title = Data->Title;
             State.TotalFuelCapacity = Data->TotalFuelCapacity;
-            State.Transponder = Data->Squawk;
+            State.Squawk = Data->Squawk;
             State.Type = Data->Type;
             State.Vario = Data->Vario*60;
             emit(fireSimVariableEvent(State));
@@ -603,7 +603,7 @@ void CSCManager::OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data)
 
 void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE event"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 }
@@ -615,7 +615,7 @@ void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMO
 
 void CSCManager::OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data)
 {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("SCManager : " + tr("Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID event"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 }

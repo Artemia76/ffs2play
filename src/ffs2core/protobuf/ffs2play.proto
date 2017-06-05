@@ -5,3 +5,45 @@ package ffs2play;
 message LocalIPList {
 	repeated string IP = 1;
 }
+
+message AirData {
+	int64		Timestamp = 1;
+	string		Title = 2;
+	string		Model = 3;
+	string		Type = 4;
+	string		Category = 5;
+	double		Altitude = 6;
+	double		GroundAltitude = 7;
+    double		Heading = 8;
+    double		Longitude = 9;
+    double		Latitude = 10;
+    double		IASSpeed = 11;
+    double		Pitch = 12;
+    double		Bank = 13;
+    int32		Squawk = 14;
+    double		ElevatorPos = 15;
+    double		AileronPos = 16;
+    double		RudderPos = 17;
+    int32		Door1Pos = 18;
+	int32		Door2Pos = 19;
+	int32		Door3Pos = 20;
+	int32		Door4Pos = 21;
+	int32		FlapsIndex = 22;
+    int32		NumEngine = 23;
+    int32		ThrottleEng1 = 24;
+    int32		ThrottleEng2 = 25;
+    int32		ThrottleEng3 = 26;
+    int32		ThrottleEng4 = 27;
+    bool		OnGround = 28;
+    bool		GearPos = 29;
+    bool		LandingLight = 30;
+    bool		BeaconLight = 31;
+    bool		StrobeLight = 32;
+    bool		NavLight = 33;
+    bool		RecoLight = 34;
+    bool		StateEng1 = 35;
+    bool		StateEng2 = 36;
+    bool		StateEng3 = 37;
+    bool		StateEng4 = 38;
+    bool		Smoke = 39;
+}

@@ -68,6 +68,7 @@ private:
     CWebManager* WebManager;
     QSettings s;
     QTimer Update;
+    quint32         m_maxLine;
     void closeEvent(QCloseEvent *event);
 };
 #endif // MAINWINDOW_H

@@ -26,6 +26,8 @@
 #include "dialogprofils.h"
 #include "tools/getappversion.h"
 
+#include "net/peer.h"
+
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent
@@ -42,12 +44,15 @@ MainWindow::MainWindow(QWidget *parent) :
     restoreGeometry(s.value("Geometry").toByteArray());
     restoreState(s.value("State").toByteArray());
     s.endGroup();
-
+    s.beginGroup("log");
+    m_maxLine = s.value("MaxLine",200).toUInt();
+    s.endGroup();
     QPalette p = ui->pteLogger->palette();
     p.setColor(QPalette::Text,Qt::darkBlue);
     Log = CLogger::instance();
     connect(Log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)));
     ui->pteLogger->setPalette(p);
+    ui->pteLogger->setMaximumBlockCount(m_maxLine);
     Log->log(tr("Welcome to FFS2Play"),Qt::blue);
     // Simconnect Manager Init
     SimManager = simbasemanager::instance();
@@ -65,6 +70,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(WebManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
     connect(WebManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
     connect(SimManager, SIGNAL(fireSimEvent(SimEvent)),SLOT(OnSimEvent(SimEvent)));
+
+    Peer* Pair = new Peer(this);
+
 }
 
 ///
@@ -86,10 +94,20 @@ void MainWindow::closeEvent(QCloseEvent*)
     s.setValue("Geometry",saveGeometry());
     s.setValue("State",saveState());
     s.endGroup();
+    s.beginGroup("Log");
+    s.setValue("MaxLine",m_maxLine);
+    s.endGroup();
     P2PManager->init(false);
     SimManager->close();
 }
 
+///
+/// \brief MainWindow::onLog
+/// \param Texte
+/// \param pColor
+/// \param pLevel
+///
+/// Redirect Log Text flow to Plain Text Edit on main Window
 
 void MainWindow::onLog (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {
@@ -168,12 +186,12 @@ void MainWindow::onUpdate()
             }
             case 4:
             {
-                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneAltitude)+ " ft");
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Altitude)+ " ft");
                 break;
             }
             case 5:
             {
-                ui->twSIMData->item(i,0)->setText(QString::number(State.GndAltitude)+ " ft");
+                ui->twSIMData->item(i,0)->setText(QString::number(State.GroundAltitude)+ " ft");
                 break;
             }
             case 6:
@@ -183,7 +201,7 @@ void MainWindow::onUpdate()
             }
             case 7:
             {
-                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneHeading)+ " °");
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Heading)+ " °");
                 break;
             }
             case 8:
@@ -198,7 +216,7 @@ void MainWindow::onUpdate()
             }
             case 10:
             {
-                ui->twSIMData->item(i,0)->setText(QString::number(State.GndSpeed)+ " Kt");
+                ui->twSIMData->item(i,0)->setText(QString::number(State.GroundSpeed)+ " Kt");
                 break;
             }
             case 11:
@@ -223,12 +241,12 @@ void MainWindow::onUpdate()
             }
             case 15:
             {
-                ui->twSIMData->item(i,0)->setText(QString::number(State.PlanePitch)+ " °");
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Pitch)+ " °");
                 break;
             }
             case 16:
             {
-                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneBank)+ " °");
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Bank)+ " °");
                 break;
             }
             case 17:
@@ -238,7 +256,7 @@ void MainWindow::onUpdate()
             }
             case 18:
             {
-                ui->twSIMData->item(i,0)->setText(QString::number(State.PlaneWeight)+" lbs");
+                ui->twSIMData->item(i,0)->setText(QString::number(State.Weight)+" lbs");
                 break;
             }
             case 19:

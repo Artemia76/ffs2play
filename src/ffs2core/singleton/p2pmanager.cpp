@@ -121,7 +121,7 @@ void CP2PManager::initUPNP(bool flag)
         devlist = upnpDiscover( 1000, multicastif, minissdpdpath, 0, 0,255, &error);
         if (devlist != NULL)
         {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
             for (UPNPDev* device = devlist; device !=NULL; device = device->pNext)
             {
                 m_logger->log("P2PManager : " + tr("IGP Desc = ") + QString(device->descURL) + tr(" st: ") + QString(device->st),Qt::darkBlue,LEVEL_NORMAL);
@@ -129,7 +129,7 @@ void CP2PManager::initUPNP(bool flag)
 #endif
             if ((error = UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, 64)) != 0)
             {
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
                 switch (error)
                 {
                     case 1:
@@ -157,7 +157,7 @@ void CP2PManager::initUPNP(bool flag)
                 m_InternalIP.add_ip(lanaddr);
                 UPNP_GetExternalIPAddress(urls.controlURL,data.first.servicetype,wanaddr);
                 m_ExternalIP = QString(wanaddr);
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
                 m_logger->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
                 for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
                 {

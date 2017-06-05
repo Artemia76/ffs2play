@@ -61,7 +61,7 @@ void CHttpRequest::execute(QString URL, QDomDocument& Doc)
     QByteArray content = Doc.toByteArray();
     m_reply = m_ptNetworkManager->post(m_request,content);
     connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("HttpRequest : URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
     Log->log("HttpRequest Post = " + QString(content),Qt::darkGreen,LEVEL_VERBOSE );
 #endif
@@ -77,7 +77,7 @@ void CHttpRequest::execute(QString URL)
     m_request.setUrl(QUrl(URL));
     m_reply = m_ptNetworkManager->get(m_request);
     connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("HttpRequest Get URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
 #endif
 }
@@ -89,7 +89,7 @@ void CHttpRequest::execute(QString URL)
 void CHttpRequest::callback()
 {
     if (m_reply!= NULL) Reponse = (QString) m_reply->readAll();
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("HttpRequest Response = " + Reponse,Qt::darkRed,LEVEL_VERBOSE );
 #endif
     emit(finished(this));

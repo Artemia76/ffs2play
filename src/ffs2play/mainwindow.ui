@@ -247,6 +247,9 @@
      </disabled>
     </palette>
    </property>
+   <property name="windowTitle">
+    <string>Tool Bar</string>
+   </property>
    <property name="styleSheet">
     <string notr="true">Background:#7fb3d9;</string>
    </property>

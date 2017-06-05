@@ -12,6 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 
 TARGET = ffs2play
 DEPENDPATH += ../ffs2core
+DEFINES += FFS_DEBUG
 
 Release:DESTDIR = release
 Release:OBJECTS_DIR = release/.obj
@@ -26,7 +27,8 @@ Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
 
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
-PROTOBUF_PATH = "E:\devel\protobuf"
+PROTOBUF_LIB_PATH = "D:\Program Files (x86)\protobuf\lib"
+PROTOBUF_INCLUDE_PATH = "E:\devel\git\protobuf\src"
 OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
 OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
 CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
@@ -44,7 +46,7 @@ INCLUDEPATH +=	\
                 $${MINIUPNPC_PATH} \
                 $${OPENSSL_INCLUDE_PATH} \
                 $${CRYPTOPP_INCLUDE_PATH} \
-                $${PROTOBUF_PATH} \
+                $${PROTOBUF_INCLUDE_PATH} \
                 ../ffs2core
 
 SOURCES +=	main.cpp \
@@ -66,7 +68,7 @@ trans.files = ../../intl/*.qm
 INSTALLS += trans
 
 #Libs Path
-LIBS	+= -L../ffs2core/DESTDIR -lffs2core
+LIBS	+= -L../ffs2core/$${DESTDIR} -lffs2core
 LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
 #LIBS	+= -L"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\lib"
 LIBS	+= -lSimConnect

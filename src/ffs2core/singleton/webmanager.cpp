@@ -76,7 +76,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     }
     s.endGroup();
     CurrentUser = num;
-#ifdef QT_DEBUG
+#ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("AES Key generated = ") + QString(Crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
@@ -149,6 +149,10 @@ void CWebManager::SetCurrentUser(int num)
     if ((num<1) || (num>Users.count())) return;
     CurrentUser = num;
 }
+
+///
+/// \brief CWebManager::connect_disconnect
+///
 
 void CWebManager::connect_disconnect()
 {
@@ -240,13 +244,13 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             xmlLongitude.appendChild(Doc.createTextNode(QString::number(State.Longitude,'f',5)));
             xmlLiveUpdate.appendChild(xmlLongitude);
             QDomElement xmlHeading = Doc.createElement("heading");
-            xmlHeading.appendChild(Doc.createTextNode(QString::number(State.PlaneHeading,'f',0)));
+            xmlHeading.appendChild(Doc.createTextNode(QString::number(State.Heading,'f',0)));
             xmlLiveUpdate.appendChild(xmlHeading);
             QDomElement xmlAltitude = Doc.createElement("altitude");
-            xmlAltitude.appendChild(Doc.createTextNode(QString::number(State.PlaneAltitude,'f',0)));
+            xmlAltitude.appendChild(Doc.createTextNode(QString::number(State.Altitude,'f',0)));
             xmlLiveUpdate.appendChild(xmlAltitude);
             QDomElement xmlGroundSpeed = Doc.createElement("groundSpeed");
-            xmlGroundSpeed.appendChild(Doc.createTextNode(QString::number(State.GndSpeed,'f',0)));
+            xmlGroundSpeed.appendChild(Doc.createTextNode(QString::number(State.GroundSpeed,'f',0)));
             xmlLiveUpdate.appendChild(xmlGroundSpeed);
             QDomElement xmlIASpeed = Doc.createElement("iaspeed");
             xmlIASpeed.appendChild(Doc.createTextNode(QString::number(State.IASSpeed,'f',0)));
