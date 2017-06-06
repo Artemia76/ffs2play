@@ -81,7 +81,7 @@ void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
     else if (pLevel > LEVEL_VERBOSE) m_DebugLevel=LEVEL_VERBOSE;
     else m_DebugLevel = pLevel;
     s.beginGroup("Log");
-    s.setValue("DebugLevel",(long)m_DebugLevel);
+    s.setValue("DebugLevel",QVariant(m_DebugLevel));
     s.endGroup();
 }
 

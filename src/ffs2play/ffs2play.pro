@@ -26,6 +26,7 @@ Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
 
+win32 {
 MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
 PROTOBUF_LIB_PATH = "D:\Program Files (x86)\protobuf\lib"
 PROTOBUF_INCLUDE_PATH = "E:\devel\git\protobuf\src"
@@ -47,7 +48,8 @@ INCLUDEPATH +=	\
                 $${OPENSSL_INCLUDE_PATH} \
                 $${CRYPTOPP_INCLUDE_PATH} \
                 $${PROTOBUF_INCLUDE_PATH} \
-                ../ffs2core
+}
+INCLUDEPATH += ../ffs2core
 
 SOURCES +=	main.cpp \
                 mainwindow.cpp \
@@ -69,6 +71,8 @@ INSTALLS += trans
 
 #Libs Path
 LIBS	+= -L../ffs2core/$${DESTDIR} -lffs2core
+
+win32 {
 LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
 #LIBS	+= -L"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\lib"
 LIBS	+= -lSimConnect
@@ -76,6 +80,7 @@ LIBS	+= -lSimConnect
 RESOURCES += ressources.qrc
 
 RC_FILE = ffs2play.rc
+}
 
 DISTFILES += \
     ffs2play.rc \

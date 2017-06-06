@@ -23,7 +23,9 @@
 #include "singleton/p2pmanager.h"
 #include <QNetworkDatagram>
 #include "singleton/singleton.h"
+#ifdef Q_OS_WIN
 #include "WinSock2.h"
+#endif
 
 #include <sstream>
 
@@ -106,19 +108,27 @@ void CP2PManager::initUPNP(bool flag)
     if (flag)
     {
         if (m_bUPNP) return;
+#if Q_OS_WIN
         WSADATA wsaData;
         int nResult = WSAStartup(MAKEWORD(2,2), &wsaData);
         if(nResult != NO_ERROR) {
             m_logger->log("P2PManager : "+ tr("UPNP Windows Socket failed."),Qt::red);
             return;
         }
+#endif
         UPNPDev* devlist;
         char lanaddr[64]; // IP address on the LAN
         char wanaddr[64]; // IP address on the Internet
         const char* multicastif = 0;
         const char* minissdpdpath = 0;
         int error;
-        devlist = upnpDiscover( 1000, multicastif, minissdpdpath, 0, 0,255, &error);
+        devlist = upnpDiscover(
+                    1000,
+                    multicastif,
+                    minissdpdpath,
+                    0,
+                    0,
+                    &error);
         if (devlist != NULL)
         {
 #ifdef FFS_DEBUG
