@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>gfx/close2.png</file>
+        <file>gfx/connect.png</file>
+        <file>gfx/console.png</file>
+        <file>gfx/help.png</file>
+        <file>gfx/Outils.png</file>
+        <file>gfx/plane.png</file>
+        <file>gfx/plane_green.png</file>
+        <file>gfx/plane_gris.png</file>
+        <file>gfx/save.png</file>
+        <file>gfx/connect2.png</file>
+        <file>gfx/connect2_R.png</file>
+        <file>gfx/connect2_V.png</file>
+        <file>gfx/network.png</file>
+    </qresource>
+</RCC>
