@@ -27,14 +27,14 @@
 #endif
 
 Peer::Peer(
-        QObject *parent,
         UDPServer* pServer,
         QHostAddress pExternalIP,
         int pPort,
         QString CallSign,
         bool pDisabled,
         bool pLocal,
-        QList<QHostAddress> pInternalIP
+        const QList<QHostAddress>* pInternalIP,
+        QObject *parent
         ) : QObject(parent)
 {
     Log = CLogger::instance();
@@ -44,7 +44,7 @@ Peer::Peer(
     m_CallSign = CallSign;
     Server = pServer;
     m_ExternalIP = pExternalIP;
-    m_InternalIP = pInternalIP;
+    m_InternalIP = *pInternalIP;
     m_Port = pPort;
     m_bLocal = pLocal;
     m_bDisabled = true;

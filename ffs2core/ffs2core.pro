@@ -8,18 +8,19 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += network xml
 
-Release:DESTDIR = release
-Release:OBJECTS_DIR = release/.obj
-Release:MOC_DIR = release/.moc
-Release:RCC_DIR = release/.rcc
-Release:UI_DIR = release/.ui
-
-Debug:DESTDIR = debug
-Debug:OBJECTS_DIR = debug/.obj
-Debug:MOC_DIR = debug/.moc
-Debug:RCC_DIR = debug/.rcc
-Debug:UI_DIR = debug/.ui
-
+CONFIG(release, debug|release) {
+    DESTDIR = release
+    OBJECTS_DIR = release/.obj
+    MOC_DIR = release/.moc
+    RCC_DIR = release/.rcc
+    UI_DIR = release/.ui
+} else {
+    DESTDIR = debug
+    OBJECTS_DIR = debug/.obj
+    MOC_DIR = debug/.moc
+    RCC_DIR = debug/.rcc
+    UI_DIR = debug/.ui
+}
 TARGET = ffs2core
 TEMPLATE = lib
 DEFINES += MINIUPNP_STATICLIB
@@ -117,6 +118,7 @@ LIBS	+= -llibprotobufd
 LIBS	+= -llibprotobuf
 }
 }
+
 # Application Version
 
 VERSION_MAJOR = 2

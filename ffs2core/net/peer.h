@@ -68,15 +68,16 @@ class FFS2CORE_EXPORT Peer : public QObject
 {
     Q_OBJECT
 public:
-    explicit Peer(
-            QObject *parent = nullptr,
-            UDPServer* pServer,
-            QHostAddress pExternalIP,
-            int pPort,
-            QString CallSign,
-            bool pDisabled=false,
-            bool pLocal = false,
-            LocalIPList* pInternalIP=NULL);
+    Peer(
+        UDPServer* pServer,
+        QHostAddress pExternalIP,
+        int pPort,
+        QString CallSign,
+        bool pDisabled=false,
+        bool pLocal = false,
+        const QList<QHostAddress>* pInternalIP=NULL,
+        QObject *parent = nullptr
+        );
     ~Peer ();
 private:
     QTimer                  HeartBeat;
