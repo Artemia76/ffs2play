@@ -26,8 +26,6 @@
 #include "dialogprofils.h"
 #include "tools/getappversion.h"
 
-#include "net/peer.h"
-
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent
@@ -70,9 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(WebManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
     connect(WebManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
     connect(SimManager, SIGNAL(fireSimEvent(SimEvent)),SLOT(OnSimEvent(SimEvent)));
-
-    Peer* Pair = new Peer(this);
-
 }
 
 ///

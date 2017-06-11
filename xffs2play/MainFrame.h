@@ -4,6 +4,7 @@
 #include <QObject>
 #include "XPLMDisplay.h"
 #include "XPLMGraphics.h"
+#include "singleton/webmanager.h"
 
 class MainFrame : public QObject
 {
@@ -36,7 +37,7 @@ private:
 		int                  y,
 		XPLMMouseStatus      inMouse,
 		void *               inRefcon);
-
+    CWebManager*    WebManager;
 };
 
 #endif

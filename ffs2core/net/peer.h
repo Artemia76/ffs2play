@@ -64,11 +64,11 @@ struct Deltas
 
 const byte PROTO_VERSION = 14;
 
-class FFS2CORE_EXPORT Peer : public QObject
+class FFS2CORE_EXPORT CPeer : public QObject
 {
     Q_OBJECT
 public:
-    Peer(
+    CPeer(
         UDPServer* pServer,
         QHostAddress pExternalIP,
         int pPort,
@@ -78,7 +78,7 @@ public:
         const QList<QHostAddress>* pInternalIP=NULL,
         QObject *parent = nullptr
         );
-    ~Peer ();
+    ~CPeer ();
 private:
     QTimer                  HeartBeat;
     int                     m_Counter;

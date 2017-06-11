@@ -108,7 +108,7 @@ void CP2PManager::initUPNP(bool flag)
     if (flag)
     {
         if (m_bUPNP) return;
-#if Q_OS_WIN
+#ifdef Q_OS_WIN
         WSADATA wsaData;
         int nResult = WSAStartup(MAKEWORD(2,2), &wsaData);
         if(nResult != NO_ERROR) {
@@ -128,6 +128,9 @@ void CP2PManager::initUPNP(bool flag)
                     minissdpdpath,
                     0,
                     0,
+#if MINIUPNPC_API_VERSION >= 14
+                    4,
+#endif
                     &error);
         if (devlist != NULL)
         {

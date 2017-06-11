@@ -104,6 +104,7 @@ void CWebManager::ConnectCallback(CHttpRequest *Request)
                 {
                     m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
                 }
+                CheckWhazzup(Doc);
                 emit (FireConnected());
             }
         }
@@ -117,6 +118,11 @@ void CWebManager::LiveUpdateCallback(CHttpRequest *Request)
 #ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
+    QDomDocument Doc;
+    if (Request->getAsXml(Doc))
+    {
+        CheckWhazzup(Doc);
+    }
 }
 
 ///

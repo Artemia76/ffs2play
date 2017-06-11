@@ -94,6 +94,7 @@ private:
     CCrypto             Crypto;
     void                XmlBuild(QDomDocument& Doc, XmlCode Code);
     bool                CheckError(QDomDocument& Doc);
+    void                CheckWhazzup (QDomDocument& Doc);
 
 protected:
     void                SaveConfig();

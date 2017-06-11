@@ -5,23 +5,7 @@
 #-------------------------------------------------
 
 QT += core
-
-TEMPLATE = lib
-DEPENDPATH += ../ffs2core
-CONFIG += warn_on release shared
-#CONFIG -= rtti exceptions thread qt
-DEFINES += XFFS2PLAY_LIBRARY FFS_DEBUG
-
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked as deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
-
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+greaterThan(QT_MAJOR_VERSION, 4): QT += network xml
 
 CONFIG(release, debug|release) {
     DESTDIR = release
@@ -37,11 +21,37 @@ CONFIG(release, debug|release) {
     UI_DIR = debug/.ui
 }
 
+TEMPLATE = lib
+CONFIG += warn_on shared
+#CONFIG -= rtti exceptions thread qt
+DEFINES += XFFS2PLAY_LIBRARY FFS_DEBUG
+
+DEFINES += QT_DEPRECATED_WARNINGS
+
 win32 {
     TARGET = win.xpl
     DEFINES += APL=0 IBM=1 LIN=0 WIN_32
 
     XPSDK_FOLDER = E:\devel\XPSDK213\SDK
+    MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
+    PROTOBUF_LIB_PATH = "D:\Program Files (x86)\protobuf\lib"
+    PROTOBUF_INCLUDE_PATH = "E:\devel\git\protobuf\src"
+    OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
+    OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
+    CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
+    CONFIG( debug, debug|release ) {
+        CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Debug"
+        MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Debug
+    } else {
+        CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\build\Release"
+        MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Release
+    }
+
+    INCLUDEPATH +=	\
+        $${MINIUPNPC_PATH} \
+        $${OPENSSL_INCLUDE_PATH} \
+        $${CRYPTOPP_INCLUDE_PATH} \
+        $${PROTOBUF_INCLUDE_PATH}
     LIBS += -L$${XPSDK_FOLDER}/Libraries/Win
     LIBS += -lXPLM -lXPWidgets
 }
@@ -56,18 +66,18 @@ macx {
     TARGET = mac.xpl
     DEFINES += APL=1 IBM=0 LIN=0
     QMAKE_LFLAGS += -flat_namespace -undefined suppress
-
-    # Build for multiple architectures.
-    # The following line is only needed to build universal on PPC architectures.
-    # QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.4u.sdk
-    # This line defines for which architectures we build.
     CONFIG += x86 ppc
 }
+
+DEPENDPATH += ../ffs2core
+
 INCLUDEPATH += $${XPSDK_FOLDER}/CHeaders/XPLM
 #INCLUDEPATH += $${XPSDK_FOLDER}/CHeaders/Wrappers
 INCLUDEPATH += $${XPSDK_FOLDER}/CHeaders/Widgets
 
 INCLUDEPATH += ../ffs2core
+
+LIBS	+= -L../ffs2core/$${DESTDIR} -lffs2core
 
 SOURCES += \
         xffs2play.cpp \

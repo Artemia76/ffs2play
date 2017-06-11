@@ -26,6 +26,7 @@ MainFrame::MainFrame() : QObject (NULL)
 		&MainFrame::HandleKeyCallback,
 		&MainFrame::HandleMouseClickCallback,
 		NULL);
+    WebManager = CWebManager::instance();
 }
 
 

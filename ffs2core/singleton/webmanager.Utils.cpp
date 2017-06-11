@@ -97,3 +97,24 @@ bool CWebManager::CheckError(QDomDocument& Doc)
     }
     return false;
 }
+
+void CWebManager::CheckWhazzup(QDomDocument &Doc)
+{
+    QDomElement Element = Doc.elementsByTagName("whazzup").at(0).toElement();
+    if (!Element.isNull())
+    {
+        QList<WhazzupItem> wazzhup;
+        for (int i = 0; i< Element.childNodes().count();i++)
+        {
+            if (Element.childNodes().at(i).isElement())
+            {
+                QDomElement Player = Element.childNodes().at(i).toElement();
+                WhazzupItem item;
+                item.CallSign = Player.nodeName();
+                QDomAttr xPort = Player.attributeNode("port");
+                item.Port=xPort.value().toUShort();
+                Log->log("WebManager : Peer = " + item.CallSign + " , Port = " + QString::number(item.Port));
+            }
+        }
+    }
+}

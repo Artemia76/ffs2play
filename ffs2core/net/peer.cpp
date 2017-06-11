@@ -26,7 +26,7 @@
     #include <windows.h>
 #endif
 
-Peer::Peer(
+CPeer::CPeer(
         UDPServer* pServer,
         QHostAddress pExternalIP,
         int pPort,
@@ -55,6 +55,6 @@ Peer::Peer(
     m_bSpawnable = false;
 }
 
-Peer::~Peer()
+CPeer::~CPeer()
 {
 }

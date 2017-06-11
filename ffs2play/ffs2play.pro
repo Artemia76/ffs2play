@@ -65,10 +65,10 @@ HEADERS  +=     mainwindow.h \
 FORMS	+=	mainwindow.ui \
                 dialogprofils.ui
 
-TRANSLATIONS += ../../intl/ffs2play_fr_FR.ts
+TRANSLATIONS += ../intl/ffs2play_fr_FR.ts
 
 trans.path = $${DESTDIR}/translations
-trans.files = ../../intl/*.qm
+trans.files = ../intl/*.qm
 INSTALLS += trans
 
 #Libs Path
@@ -86,7 +86,7 @@ RC_FILE = ffs2play.rc
 
 DISTFILES += \
     ffs2play.rc \
-    ../../intl/ffs2play_fr_FR.ts
+    ../intl/ffs2play_fr_FR.ts
 
 
 isEmpty(TARGET_EXT) {
