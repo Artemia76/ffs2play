@@ -44,10 +44,11 @@ public:
     void        start();
     void        stop();
     void        setPort(int pPort);
+    void        send(const QNetworkDatagram& pData);
 signals:
-    void fireIncomingData (const QNetworkDatagram*);
+    void        fireIncomingData (const QNetworkDatagram*);
 private slots:
-    void incomingData () ;
+    void        incomingData () ;
 };
 
 #endif // UDPSERVER_H

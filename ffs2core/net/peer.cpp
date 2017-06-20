@@ -40,7 +40,6 @@ CPeer::CPeer(
     Log = CLogger::instance();
     m_AIMapping = AIMapping::instance();
     SIM = simbasemanager::instance();
-    WM = CWebManager::instance();
     m_CallSign = CallSign;
     Server = pServer;
     m_ExternalIP = pExternalIP;

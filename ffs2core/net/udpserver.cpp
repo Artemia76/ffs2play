@@ -63,7 +63,7 @@ void UDPServer::start ()
     if ((!m_running) && (m_pListenner!=NULL))
     {
         if (m_pListenner->isOpen()) stop();
-        m_running = m_pListenner->bind (QHostAddress::LocalHost, m_port);
+        m_running = m_pListenner->bind (QHostAddress::AnyIPv4, m_port);
 #ifdef FFS_DEBUG
         Logger->log("UPDServer : " + tr("listenning on port ") + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -107,5 +107,18 @@ void UDPServer::incomingData()
                     Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         emit fireIncomingData(&datagram);
+    }
+}
+
+///
+/// \brief UDPServer::send
+/// \param pData
+///
+
+void UDPServer::send(const QNetworkDatagram& pData)
+{
+    if ((m_running) && (m_pListenner !=NULL))
+    {
+        m_pListenner->writeDatagram(pData);
     }
 }

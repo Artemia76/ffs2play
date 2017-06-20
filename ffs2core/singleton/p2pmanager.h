@@ -31,16 +31,9 @@
 #include "upnpcommands.h"
 #include "protobuf/ffs2play.pb.h"
 #include "tools/ffs2core_global.h"
-//#include "net/peer.h"
+#include "net/peer.h"
 
 using namespace ffs2play;
-
-struct WhazzupItem
-{
-    QString CallSign;
-    QHostAddress IP;
-    quint16 Port;
-};
 
 class FFS2CORE_EXPORT CP2PManager : public QObject
 {

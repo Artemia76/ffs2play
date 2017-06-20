@@ -203,6 +203,7 @@ void CP2PManager::initUPNP(bool flag)
         {
             m_logger->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
         }
+
     }
     else
     {

@@ -28,15 +28,16 @@
 #include <QHostAddress>
 #include <QDateTime>
 #include <sstream>
+#include <cstddef>
 
 #include "tools/ffs2core_global.h"
 #include "singleton/simbasemanager.h"
 #include "singleton/aimapping.h"
-#include "singleton/webmanager.h"
 #include "protobuf/ffs2play.pb.h"
 #include "singleton/clogger.h"
 #include "net/udpserver.h"
 #include "sim/aircraftstate.h"
+
 
 using namespace ffs2play;
 using namespace std;
@@ -61,6 +62,16 @@ struct Deltas
     double Pitch;
     double Bank;
 };
+
+struct PeerData
+{
+    QString CallSign;
+    QHostAddress externalIP;
+    QList<QHostAddress> localIPs;
+    quint16 Port;
+};
+
+typedef unsigned char byte;
 
 const byte PROTO_VERSION = 14;
 
@@ -103,8 +114,6 @@ private:
     QDateTime               m_LastStateEvent;
     UDPServer*              Server;
     CLogger*                Log;
-    CP2PManager*            P2P;
-    CWebManager*            WM;
     int                     m_Latence;
     double                  m_Distance;
     int                     m_RefreshRate;

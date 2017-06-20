@@ -22,7 +22,6 @@
 
 #include "singleton/webmanager.h"
 #include "singleton/singleton.h"
-
 #include <QXmlStreamWriter>
 
 /// Build Users Profils to Setting file
@@ -98,22 +97,28 @@ bool CWebManager::CheckError(QDomDocument& Doc)
     return false;
 }
 
+///
+/// \brief CWebManager::CheckWhazzup
+/// \param Doc
+///
+
 void CWebManager::CheckWhazzup(QDomDocument &Doc)
 {
     QDomElement Element = Doc.elementsByTagName("whazzup").at(0).toElement();
     if (!Element.isNull())
     {
-        QList<WhazzupItem> wazzhup;
+        QList<PeerData> wazzhup;
         for (int i = 0; i< Element.childNodes().count();i++)
         {
             if (Element.childNodes().at(i).isElement())
             {
                 QDomElement Player = Element.childNodes().at(i).toElement();
-                WhazzupItem item;
+                PeerData item;
                 item.CallSign = Player.nodeName();
-                QDomAttr xPort = Player.attributeNode("port");
-                item.Port=xPort.value().toUShort();
-                Log->log("WebManager : Peer = " + item.CallSign + " , Port = " + QString::number(item.Port));
+                item.Port=Player.attributeNode("port").value().toUShort();
+                item.externalIP=Crypto.DecryptFromBase64(Player.attributeNode("ip").value());
+                Log->log("WebManager : Peer = " + item.CallSign + " , Port = " + QString::number(item.Port) + " , IP = " + item.externalIP.toString());
+                wazzhup.append(item);
             }
         }
     }
