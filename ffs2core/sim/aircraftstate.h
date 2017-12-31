@@ -22,8 +22,8 @@
 
 #ifndef AIRCRAFTSTATE_H
 #define AIRCRAFTSTATE_H
-
-#include <QDateTime>
+#include <qstring.h>
+#include "tools/datetime.h"
 #include "sim/aibase.h"
 
 using namespace ffs2play;
@@ -35,7 +35,7 @@ public:
     ~CAircraftState();
     virtual void toAirData (AirData& pAirData);
     virtual void fromAirData (const AirData& pAirData);
-    QDateTime   TimeStamp;
+    datetime    TimeStamp;
     QString     Title;
     QString     Model;
     QString     Type;

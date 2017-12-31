@@ -75,10 +75,16 @@ typedef unsigned char byte;
 
 const byte PROTO_VERSION = 14;
 
+// Déclaration of Singleton manager to have recursion access and friendly protection
+
+
+class CP2PManager;
+
 class FFS2CORE_EXPORT CPeer : public QObject
 {
     Q_OBJECT
-public:
+    friend class CP2PManager;
+protected:
     CPeer(
         UDPServer* pServer,
         QHostAddress pExternalIP,
@@ -89,6 +95,7 @@ public:
         const QList<QHostAddress>* pInternalIP=NULL,
         QObject *parent = nullptr
         );
+public:
     ~CPeer ();
 private:
     QTimer                  HeartBeat;

@@ -107,7 +107,7 @@ void CWebManager::CheckWhazzup(QDomDocument &Doc)
     QDomElement Element = Doc.elementsByTagName("whazzup").at(0).toElement();
     if (!Element.isNull())
     {
-        QList<PeerData> wazzhup;
+        QList<PeerData> whazzup;
         for (int i = 0; i< Element.childNodes().count();i++)
         {
             if (Element.childNodes().at(i).isElement())
@@ -115,11 +115,23 @@ void CWebManager::CheckWhazzup(QDomDocument &Doc)
                 QDomElement Player = Element.childNodes().at(i).toElement();
                 PeerData item;
                 item.CallSign = Player.nodeName();
-                item.Port=Player.attributeNode("port").value().toUShort();
-                item.externalIP=Crypto.DecryptFromBase64(Player.attributeNode("ip").value());
-                Log->log("WebManager : Peer = " + item.CallSign + " , Port = " + QString::number(item.Port) + " , IP = " + item.externalIP.toString());
-                wazzhup.append(item);
+                item.Port=Player.attribute("port").toUShort();
+                item.externalIP=Crypto.DecryptFromBase64(Player.attribute("ip"));
+                ffs2play::LocalIPList LocalIP;
+                LocalIP.ParseFromString(
+                            QByteArray::fromBase64(
+                                Crypto.DecryptFromBase64(Player.attribute("local_ip")).toLatin1()
+                                ).toStdString());
+                for (int j=0; j<LocalIP.ip_size();j++)
+                {
+                    item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.ip(j))));
+                }
+                whazzup.append(item);
             }
+        }
+        if (whazzup.count()>0)
+        {
+            P2P->whazzup_Update(whazzup);
         }
     }
 }

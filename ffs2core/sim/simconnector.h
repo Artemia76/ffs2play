@@ -27,6 +27,7 @@
 #include "sim/aircraftstate.h"
 #include "singleton/clogger.h"
 #include "tools/ffs2core_global.h"
+#include "tools/datetime.h"
 
 /// <summary>
 /// Enumération des évenements du simulateur à traiter
@@ -62,19 +63,19 @@ class FFS2CORE_EXPORT SimEvent
 public:
     SimEvent()
     {
-        Time = QDateTime::currentDateTimeUtc();
+        Time = Now();
     }
 
     SimEvent(SIM_EVENT_ID pEvt_ID, int pData )
     {
-        Time = QDateTime::currentDateTimeUtc();
+        Time = Now();
         Data = pData;
         Evt_Id = pEvt_ID;
     }
 
     SIM_EVENT_ID Evt_Id;
     int Data;
-    QDateTime Time;
+    datetime Time;
 };
 
 class FFS2CORE_EXPORT SimConnector : public QObject

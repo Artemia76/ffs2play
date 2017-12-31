@@ -43,7 +43,10 @@ CPeer::CPeer(
     m_CallSign = CallSign;
     Server = pServer;
     m_ExternalIP = pExternalIP;
-    m_InternalIP = *pInternalIP;
+    if (pInternalIP != NULL)
+    {
+        m_InternalIP = *pInternalIP;
+    }
     m_Port = pPort;
     m_bLocal = pLocal;
     m_bDisabled = true;

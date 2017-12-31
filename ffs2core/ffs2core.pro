@@ -86,7 +86,8 @@ HEADERS  +=     net/udpserver.h \
                 sim/simconnector.h \
                 net/peer.h \
                 singleton/aimapping.h \
-                sim/aibase.h
+                sim/aibase.h \
+    tools/datetime.h
 
 TRANSLATIONS += ../../intl/ffs2core_fr_FR.ts
 

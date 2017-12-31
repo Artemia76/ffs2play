@@ -76,6 +76,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     }
     s.endGroup();
     CurrentUser = num;
+    //P2P->setCallsign(getCallSign());
 #ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("AES Key generated = ") + QString(Crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -148,6 +149,7 @@ void CWebManager::SetCurrentUser(int num)
 {
     if ((num<1) || (num>Users.count())) return;
     CurrentUser = num;
+    //P2P->setCallsign(getCallSign());
 }
 
 ///
@@ -222,7 +224,7 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             xmlPort.appendChild(Doc.createTextNode(QString::number(P2P->getPort())));
             xmlVerify.appendChild(xmlPort);
             QDomElement xmlLocalIP = Doc.createElement("local_ip");
-            xmlLocalIP.appendChild(Doc.createTextNode(P2P->getLocalIPs()));
+            xmlLocalIP.appendChild(Doc.createTextNode(Crypto.EncryptToBase64(P2P->getLocalIPs())));
             xmlVerify.appendChild(xmlLocalIP);
             break;
         }

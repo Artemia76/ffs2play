@@ -47,20 +47,26 @@ private:
     QSettings           s;
     int                 m_port;
     bool                m_bUPNP;
+    bool                m_Shadow;
     LocalIPList         m_InternalIP;
     QString             m_ExternalIP;
+    QString             m_CallSign;
     UPNPUrls            urls;
     IGDdatas            data;
+    QList<CPeer>        Peers;
 public:
     ~CP2PManager();
     static CP2PManager* instance();
     void                init (bool flag);
     int                 getPort();
     QString             getLocalIPs();
-    //void                wazzup_Update(QList<WhazzupItem>& pUsers);
+    void                setCallsign(const QString& pCallSign);
+    void                whazzup_Update(QList<PeerData>& pWhazzup);
 
 signals:
-
+    void                onPeerAdd();
+    void                onPeerRemove();
+    void                onPeerChange();
 private slots:
     void OnReceiveDatagram(const QNetworkDatagram* data);
 };

@@ -432,7 +432,8 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
         case REQUEST_ID::PERIODIQUE:
         {
             UserState* Data =  (UserState*)(&data->dwData);
-            State.TimeStamp = QDateTime::currentDateTimeUtc();
+            State.TimeStamp = Now();
+            Log->log("SCManager : Timestamp =" + QString::number(State.TimeStamp.time_since_epoch().count()));
             State.AileronPos = Data->AileronPos;
             State.AmbiantPrecipState = Data->AmbiantPrecipState;
             State.AmbiantWindDirection = Data->AmbiantWindDirection;

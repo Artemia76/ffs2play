@@ -89,6 +89,7 @@ void CP2PManager::init(bool flag)
         {
             initUPNP(true);
         }
+        m_Shadow = s.value("ShadowEnable", false).toBool();
         s.endGroup();
     }
     else
@@ -242,4 +243,30 @@ QString CP2PManager::getLocalIPs()
     m_InternalIP.SerializeToOstream(&out);
     QByteArray OutPut(out.str().c_str());
     return QString(OutPut.toBase64());
+}
+
+void CP2PManager::setCallsign(const QString &pCallSign)
+{
+    m_CallSign = pCallSign;
+}
+
+void CP2PManager::whazzup_Update(QList<PeerData> &pWhazzup)
+{
+    QString UserName = m_CallSign.replace('[','_');
+    UserName = UserName.replace(']','_');
+    UserName = UserName.toLower();
+    for (PeerData data : pWhazzup)
+    {
+        bool Shadow = false;
+        // Shadow Detection
+        if (UserName == data.CallSign.toLower())
+        {
+#ifdef FFS_DEBUG
+            if (m_Shadow) Shadow = true;
+            else
+#endif
+                continue;
+        }
+
+    }
 }

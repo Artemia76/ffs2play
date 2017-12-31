@@ -24,7 +24,7 @@
 
 CAircraftState::CAircraftState ()
 {
-    TimeStamp = QDateTime::currentDateTimeUtc();
+    TimeStamp = Now();
     Title = "";
     Model = "";
     Type = "";
@@ -80,7 +80,7 @@ void CAircraftState::toAirData(AirData &data)
     data.set_model(Model.toStdString());
     data.set_numengine(NumEngine);
     data.set_onground(OnGround);
-    data.set_timestamp(TimeStamp.toMSecsSinceEpoch());
+    data.set_timestamp(TimeStamp.time_since_epoch().count());
     data.set_title(Title.toStdString());
     data.set_type(Type.toStdString());
 
@@ -95,7 +95,7 @@ void CAircraftState::fromAirData(const AirData &data)
     Model = QString::fromStdString(data.model());
     NumEngine = data.numengine();
     OnGround = data.onground();
-    TimeStamp.fromMSecsSinceEpoch(data.timestamp());
+    TimeStamp = fromTimeStamp(data.timestamp());
     Title = QString::fromStdString(data.title());
     Type = QString::fromStdString(data.type());
 }
