@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 FSFranceSimulateur team.
+** Copyright (C) 2018 FSFranceSimulateur team.
 ** Contact: https://github.com/ffs2/ffs2play
 **
 ** FFS2Play is free software; you can redistribute it and/or modify
@@ -20,51 +20,58 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
-#ifndef AIBASE_H
-#define AIBASE_H
+#include "xpmanager.h"
+#include "singleton/singleton.h"
 
-#include "tools/ffs2core_global.h"
-#include "protobuf/ffs2play.pb.h"
+#include <QCoreApplication>
 
-using namespace ffs2play;
+///
+/// \brief CSCManager::CSCManager
+/// \param parent
+///
 
-class FFS2CORE_EXPORT CAIBase
+CXPManager::CXPManager(QObject* parent):
+    SimConnector(parent)
 {
-public:
-    CAIBase();
-    ~CAIBase();
-    virtual void toAirData (AirData& data);
-    virtual void fromAirData (const AirData& data);
-	double Latitude;
-	double Longitude;
-	double Altitude;
-	double Pitch;
-	double Bank;
-	double Heading;
-	double ElevatorPos;
-	double AileronPos;
-	double RudderPos;
-	int Door1Pos;
-	int Door2Pos;
-	int Door3Pos;
-	int Door4Pos;
-	int StateEng1;
-	int StateEng2;
-	int StateEng3;
-	int StateEng4;
-	int ThrottleEng1;
-	int ThrottleEng2;
-	int ThrottleEng3;
-	int ThrottleEng4;
-	int Squawk;
-	int GearPos;
-	int FlapsIndex;
-	int LandingLight;
-	int StrobeLight;
-	int BeaconLight;
-	int NavLight;
-	int RecoLight;
-	int Smoke;
-};
+    // Initialisation de l'état de connexion avec le simulateur
+}
 
-#endif // AIRCRAFTSTATE_H
+CXPManager::~CXPManager()
+{
+    close();
+}
+
+///
+/// \brief CXPManager::open
+///
+
+bool CXPManager::open ()
+{
+    if (!m_bConnected)
+    {
+       Log->log(tr("XPlane is not yet implemented."),Qt::darkMagenta);
+    }
+    return false;
+}
+
+///
+/// \brief CXPManager::close
+///
+
+void CXPManager::close ()
+{
+    if (m_bConnected)
+    {
+        Log->log(tr("Disconnected from XPlane."));
+        emit(closed());
+    }
+}
+
+
+///
+/// \brief CXPManager::main_loop()
+///
+
+void CXPManager::main_loop()
+{
+}

@@ -80,7 +80,7 @@ const byte PROTO_VERSION = 14;
 
 class CP2PManager;
 
-class FFS2CORE_EXPORT CPeer : public QObject
+class CPeer : public QObject
 {
     Q_OBJECT
     friend class CP2PManager;

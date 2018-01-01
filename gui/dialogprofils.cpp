@@ -138,7 +138,7 @@ void DialogProfils::on_btnDelete_pressed()
 /// \param previous
 ///
 
-void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem*)
 {
     // Let's check if changes are currently operating
     // If Yes, we ask if user want cancel current modifications
@@ -283,7 +283,7 @@ void DialogProfils::on_lineEdit_ProfilName_textChanged(const QString&)
 /// \param arg1
 ///
 
-void DialogProfils::on_lineEdit_Login_textChanged(const QString &arg1)
+void DialogProfils::on_lineEdit_Login_textChanged(const QString&)
 {
     checkIfChanged();
 }
@@ -293,7 +293,7 @@ void DialogProfils::on_lineEdit_Login_textChanged(const QString &arg1)
 /// \param arg1
 ///
 
-void DialogProfils::on_lineEdit_Password_textChanged(const QString &arg1)
+void DialogProfils::on_lineEdit_Password_textChanged(const QString& )
 {
     checkIfChanged();
 }
@@ -303,7 +303,7 @@ void DialogProfils::on_lineEdit_Password_textChanged(const QString &arg1)
 /// \param arg1
 ///
 
-void DialogProfils::on_lineEdit_URL_textChanged(const QString &arg1)
+void DialogProfils::on_lineEdit_URL_textChanged(const QString&)
 {
     checkIfChanged();
 }

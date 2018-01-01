@@ -32,7 +32,7 @@
 /// <summary>
 /// Enumération des évenements du simulateur à traiter
 /// </summary>
-enum class FFS2CORE_EXPORT SIM_EVENT_ID
+enum class SIM_EVENT_ID
 {
     PAUSE,
     PARKING_BRAKE,
@@ -58,7 +58,7 @@ enum class FFS2CORE_EXPORT SIM_EVENT_ID
     UNUSED = 0xFFFFFFF,
 };
 
-class FFS2CORE_EXPORT SimEvent
+class SimEvent
 {
 public:
     SimEvent()
@@ -78,7 +78,7 @@ public:
     datetime Time;
 };
 
-class FFS2CORE_EXPORT SimConnector : public QObject
+class SimConnector : public QObject
 {
     Q_OBJECT
     friend class simbasemanager;

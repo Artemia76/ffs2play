@@ -28,7 +28,7 @@
 
 using namespace ffs2play;
 
-class FFS2CORE_EXPORT CAircraftState : public CAIBase
+class CAircraftState : public CAIBase
 {
 public:
     CAircraftState();

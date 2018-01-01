@@ -165,7 +165,7 @@
    <string>FFS2Play</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="ressources.qrc">
+   <iconset resource="../ressources.qrc">
     <normaloff>:/gfx/plane.png</normaloff>:/gfx/plane.png</iconset>
   </property>
   <property name="styleSheet">
@@ -1212,7 +1212,7 @@
   </widget>
   <action name="afFSCon">
    <property name="icon">
-    <iconset resource="ressources.qrc">
+    <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/plane_gris.png</normaloff>
      <normalon>:/gfx/plane_green.png</normalon>:/gfx/plane_gris.png</iconset>
    </property>
@@ -1225,7 +1225,7 @@
   </action>
   <action name="afServeurCon">
    <property name="icon">
-    <iconset resource="ressources.qrc">
+    <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/connect2_R.png</normaloff>
      <normalon>:/gfx/connect2_V.png</normalon>:/gfx/connect2_R.png</iconset>
    </property>
@@ -1238,7 +1238,7 @@
   </action>
   <action name="afAide">
    <property name="icon">
-    <iconset resource="ressources.qrc">
+    <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/help.png</normaloff>:/gfx/help.png</iconset>
    </property>
    <property name="text">
@@ -1247,7 +1247,7 @@
   </action>
   <action name="afProfil">
    <property name="icon">
-    <iconset resource="ressources.qrc">
+    <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/Outils.png</normaloff>:/gfx/Outils.png</iconset>
    </property>
    <property name="text">
@@ -1256,7 +1256,7 @@
   </action>
   <action name="afLogger">
    <property name="icon">
-    <iconset resource="ressources.qrc">
+    <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/console.png</normaloff>:/gfx/console.png</iconset>
    </property>
    <property name="text">
@@ -1265,7 +1265,7 @@
   </action>
   <action name="afP2P">
    <property name="icon">
-    <iconset resource="ressources.qrc">
+    <iconset resource="../ressources.qrc">
      <normaloff>:/gfx/network.png</normaloff>:/gfx/network.png</iconset>
    </property>
    <property name="text">
@@ -1278,7 +1278,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="ressources.qrc"/>
+  <include location="../ressources.qrc"/>
  </resources>
  <connections/>
 </ui>

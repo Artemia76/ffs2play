@@ -29,7 +29,10 @@
 #include <QTimer>
 
 #include "singleton/clogger.h"
-#include "scmanager.h"
+#ifdef Q_OS_WIN
+    #include "sim/scmanager.h"
+#endif
+#include "sim/xpmanager.h"
 #include "singleton/simbasemanager.h"
 #include "net/chttprequest.h"
 #include "singleton/p2pmanager.h"

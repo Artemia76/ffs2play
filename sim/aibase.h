@@ -20,26 +20,51 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
-#ifndef DATETIME_H
-#define DATETIME_H
+#ifndef AIBASE_H
+#define AIBASE_H
 
-#include <chrono>
+#include "tools/ffs2core_global.h"
+#include "protobuf/ffs2play.pb.h"
 
-using datetime = std::chrono::time_point<std::chrono::system_clock,
-                                            std::chrono::microseconds>;
+using namespace ffs2play;
 
-using namespace std::chrono;
-
-static datetime Now()
+class CAIBase
 {
-    return time_point_cast<microseconds>(system_clock::now());
-}
+public:
+    CAIBase();
+    ~CAIBase();
+    virtual void toAirData (AirData& data);
+    virtual void fromAirData (const AirData& data);
+	double Latitude;
+	double Longitude;
+	double Altitude;
+	double Pitch;
+	double Bank;
+	double Heading;
+	double ElevatorPos;
+	double AileronPos;
+	double RudderPos;
+	int Door1Pos;
+	int Door2Pos;
+	int Door3Pos;
+	int Door4Pos;
+	int StateEng1;
+	int StateEng2;
+	int StateEng3;
+	int StateEng4;
+	int ThrottleEng1;
+	int ThrottleEng2;
+	int ThrottleEng3;
+	int ThrottleEng4;
+	int Squawk;
+	int GearPos;
+	int FlapsIndex;
+	int LandingLight;
+	int StrobeLight;
+	int BeaconLight;
+	int NavLight;
+	int RecoLight;
+	int Smoke;
+};
 
-static datetime fromTimeStamp(uint64_t pTS)
-{
-    auto epoch = time_point<system_clock>();
-    auto since_epoch = microseconds(pTS);
-    return time_point_cast<microseconds>(epoch + since_epoch);
-}
-
-#endif
+#endif // AIRCRAFTSTATE_H

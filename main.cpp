@@ -20,7 +20,7 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
 #include <QApplication>
 #include <QSettings>
 #include <QTranslator>

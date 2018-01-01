@@ -35,7 +35,7 @@
 
 using namespace ffs2play;
 
-class FFS2CORE_EXPORT CP2PManager : public QObject
+class CP2PManager : public QObject
 {
     Q_OBJECT
 private:

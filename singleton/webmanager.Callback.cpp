@@ -130,7 +130,7 @@ void CWebManager::LiveUpdateCallback(CHttpRequest *Request)
 /// \param Request
 ///
 
-void CWebManager::LogoutCallback(CHttpRequest *Request)
+void CWebManager::LogoutCallback(CHttpRequest*)
 {
 #ifdef FFS_DEBUG
     Log->log("WebManager : " + tr("Get LogoutCallback"),Qt::darkBlue,LEVEL_VERBOSE);
