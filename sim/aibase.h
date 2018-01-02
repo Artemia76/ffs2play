@@ -23,7 +23,6 @@
 #ifndef AIBASE_H
 #define AIBASE_H
 
-#include "tools/ffs2core_global.h"
 #include "protobuf/ffs2play.pb.h"
 
 using namespace ffs2play;

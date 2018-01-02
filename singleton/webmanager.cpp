@@ -58,7 +58,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     else if (result == Check)
     {
         QDataStream stream(Profils);
-        stream.setVersion(QDataStream::Qt_5_8);
+        stream.setVersion(QDataStream::Qt_5_10);
         Users.clear();
         stream >> Users;
         if ((num > Users.count()) || (num <1))
@@ -126,7 +126,7 @@ void CWebManager::SaveConfig()
 {
     QByteArray profils;
     QDataStream stream(&profils,QIODevice::WriteOnly);
-    stream.setVersion(QDataStream::Qt_5_8);
+    stream.setVersion(QDataStream::Qt_5_10);
     stream << Users;
     QCryptographicHash Hash(QCryptographicHash::Md5);
     Hash.addData(profils);
@@ -224,7 +224,7 @@ void CWebManager::XmlBuild (QDomDocument& Doc, XmlCode Code)
             xmlPort.appendChild(Doc.createTextNode(QString::number(P2P->getPort())));
             xmlVerify.appendChild(xmlPort);
             QDomElement xmlLocalIP = Doc.createElement("local_ip");
-            xmlLocalIP.appendChild(Doc.createTextNode(Crypto.EncryptToBase64(P2P->getLocalIPs())));
+            xmlLocalIP.appendChild(Doc.createTextNode(P2P->getLocalIPs()));
             xmlVerify.appendChild(xmlLocalIP);
             break;
         }

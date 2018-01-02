@@ -25,9 +25,8 @@
 
 #include <QString>
 #include <QTextStream>
-#include "tools/ffs2core_global.h"
 
-struct FFS2CORE_EXPORT sVersion
+struct sVersion
 {
     QString Name;
     QString FullVersion;
@@ -36,6 +35,6 @@ struct FFS2CORE_EXPORT sVersion
     int Build;
 };
 
-FFS2CORE_EXPORT sVersion GetAppVersion();
+sVersion GetAppVersion();
 
 #endif

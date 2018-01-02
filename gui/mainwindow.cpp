@@ -57,9 +57,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(SimManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
     connect(SimManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
 #ifdef Q_OS_WIN
-    SimManager->init(new CSCManager());
+    SimManager->init(new ffs2p_simconnect::CSCManager());
 #else
-    SimManager->init(new CXPManager());
+    SimManager->init(new ffs2p_xplane::CXPManager());
 #endif
     //Start timer to updating GUI
     connect(&Update,SIGNAL(timeout()),this,SLOT(onUpdate()));

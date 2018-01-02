@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
@@ -30,6 +31,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 }  // namespace
 
 
+void protobuf_AssignDesc_ffs2play_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AssignDesc_ffs2play_2eproto() {
   protobuf_AddDesc_ffs2play_2eproto();
   const ::google::protobuf::FileDescriptor* file =
@@ -41,16 +43,16 @@ void protobuf_AssignDesc_ffs2play_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, ip_),
   };
   LocalIPList_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
       LocalIPList_descriptor_,
       LocalIPList::default_instance_,
       LocalIPList_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(LocalIPList));
+      -1,
+      sizeof(LocalIPList),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _internal_metadata_),
+      -1);
   AirData_descriptor_ = file->message_type(1);
   static const int AirData_offsets_[39] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, timestamp_),
@@ -94,16 +96,16 @@ void protobuf_AssignDesc_ffs2play_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, smoke_),
   };
   AirData_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
       AirData_descriptor_,
       AirData::default_instance_,
       AirData_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(AirData));
+      -1,
+      sizeof(AirData),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, _internal_metadata_),
+      -1);
 }
 
 namespace {
@@ -114,12 +116,13 @@ inline void protobuf_AssignDescriptorsOnce() {
                  &protobuf_AssignDesc_ffs2play_2eproto);
 }
 
+void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    LocalIPList_descriptor_, &LocalIPList::default_instance());
+      LocalIPList_descriptor_, &LocalIPList::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    AirData_descriptor_, &AirData::default_instance());
+      AirData_descriptor_, &AirData::default_instance());
 }
 
 }  // namespace
@@ -131,6 +134,7 @@ void protobuf_ShutdownFile_ffs2play_2eproto() {
   delete AirData_reflection_;
 }
 
+void protobuf_AddDesc_ffs2play_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AddDesc_ffs2play_2eproto() {
   static bool already_here = false;
   if (already_here) return;
@@ -176,12 +180,12 @@ struct StaticDescriptorInitializer_ffs2play_2eproto {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int LocalIPList::kIPFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 LocalIPList::LocalIPList()
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:ffs2play.LocalIPList)
 }
@@ -190,7 +194,8 @@ void LocalIPList::InitAsDefaultInstance() {
 }
 
 LocalIPList::LocalIPList(const LocalIPList& from)
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:ffs2play.LocalIPList)
@@ -229,19 +234,26 @@ const LocalIPList& LocalIPList::default_instance() {
 
 LocalIPList* LocalIPList::default_instance_ = NULL;
 
-LocalIPList* LocalIPList::New() const {
-  return new LocalIPList;
+LocalIPList* LocalIPList::New(::google::protobuf::Arena* arena) const {
+  LocalIPList* n = new LocalIPList;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void LocalIPList::Clear() {
+// @@protoc_insertion_point(message_clear_start:ffs2play.LocalIPList)
   ip_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
+  if (_internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->Clear();
+  }
 }
 
 bool LocalIPList::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:ffs2play.LocalIPList)
   for (;;) {
@@ -259,7 +271,7 @@ bool LocalIPList::MergePartialFromCodedStream(
             this->ip(this->ip_size() - 1).data(),
             this->ip(this->ip_size() - 1).length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "ip");
+            "ffs2play.LocalIPList.IP");
         } else {
           goto handle_unusual;
         }
@@ -295,35 +307,35 @@ void LocalIPList::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:ffs2play.LocalIPList)
   // repeated string IP = 1;
   for (int i = 0; i < this->ip_size(); i++) {
-  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-    this->ip(i).data(), this->ip(i).length(),
-    ::google::protobuf::internal::WireFormat::SERIALIZE,
-    "ip");
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->ip(i).data(), this->ip(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "ffs2play.LocalIPList.IP");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       1, this->ip(i), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:ffs2play.LocalIPList)
 }
 
-::google::protobuf::uint8* LocalIPList::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8* LocalIPList::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:ffs2play.LocalIPList)
   // repeated string IP = 1;
   for (int i = 0; i < this->ip_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->ip(i).data(), this->ip(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ip");
+      "ffs2play.LocalIPList.IP");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(1, this->ip(i), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -332,6 +344,7 @@ void LocalIPList::SerializeWithCachedSizes(
 }
 
 int LocalIPList::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:ffs2play.LocalIPList)
   int total_size = 0;
 
   // repeated string IP = 1;
@@ -341,7 +354,7 @@ int LocalIPList::ByteSize() const {
       this->ip(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
@@ -353,30 +366,42 @@ int LocalIPList::ByteSize() const {
 }
 
 void LocalIPList::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const LocalIPList* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const LocalIPList*>(
-      &from);
+// @@protoc_insertion_point(generalized_merge_from_start:ffs2play.LocalIPList)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const LocalIPList* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const LocalIPList>(
+          &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ffs2play.LocalIPList)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ffs2play.LocalIPList)
     MergeFrom(*source);
   }
 }
 
 void LocalIPList::MergeFrom(const LocalIPList& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:ffs2play.LocalIPList)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   ip_.MergeFrom(from.ip_);
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  if (from._internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  }
 }
 
 void LocalIPList::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ffs2play.LocalIPList)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void LocalIPList::CopyFrom(const LocalIPList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ffs2play.LocalIPList)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -388,12 +413,14 @@ bool LocalIPList::IsInitialized() const {
 }
 
 void LocalIPList::Swap(LocalIPList* other) {
-  if (other != this) {
-    ip_.Swap(&other->ip_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void LocalIPList::InternalSwap(LocalIPList* other) {
+  ip_.UnsafeArenaSwap(&other->ip_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata LocalIPList::GetMetadata() const {
@@ -404,10 +431,69 @@ void LocalIPList::Swap(LocalIPList* other) {
   return metadata;
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// LocalIPList
+
+// repeated string IP = 1;
+int LocalIPList::ip_size() const {
+  return ip_.size();
+}
+void LocalIPList::clear_ip() {
+  ip_.Clear();
+}
+ const ::std::string& LocalIPList::ip(int index) const {
+  // @@protoc_insertion_point(field_get:ffs2play.LocalIPList.IP)
+  return ip_.Get(index);
+}
+ ::std::string* LocalIPList::mutable_ip(int index) {
+  // @@protoc_insertion_point(field_mutable:ffs2play.LocalIPList.IP)
+  return ip_.Mutable(index);
+}
+ void LocalIPList::set_ip(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:ffs2play.LocalIPList.IP)
+  ip_.Mutable(index)->assign(value);
+}
+ void LocalIPList::set_ip(int index, const char* value) {
+  ip_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:ffs2play.LocalIPList.IP)
+}
+ void LocalIPList::set_ip(int index, const char* value, size_t size) {
+  ip_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.LocalIPList.IP)
+}
+ ::std::string* LocalIPList::add_ip() {
+  // @@protoc_insertion_point(field_add_mutable:ffs2play.LocalIPList.IP)
+  return ip_.Add();
+}
+ void LocalIPList::add_ip(const ::std::string& value) {
+  ip_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:ffs2play.LocalIPList.IP)
+}
+ void LocalIPList::add_ip(const char* value) {
+  ip_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:ffs2play.LocalIPList.IP)
+}
+ void LocalIPList::add_ip(const char* value, size_t size) {
+  ip_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:ffs2play.LocalIPList.IP)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+LocalIPList::ip() const {
+  // @@protoc_insertion_point(field_list:ffs2play.LocalIPList.IP)
+  return ip_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+LocalIPList::mutable_ip() {
+  // @@protoc_insertion_point(field_mutable_list:ffs2play.LocalIPList.IP)
+  return &ip_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int AirData::kTimestampFieldNumber;
 const int AirData::kTitleFieldNumber;
 const int AirData::kModelFieldNumber;
@@ -447,10 +533,10 @@ const int AirData::kStateEng2FieldNumber;
 const int AirData::kStateEng3FieldNumber;
 const int AirData::kStateEng4FieldNumber;
 const int AirData::kSmokeFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 AirData::AirData()
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:ffs2play.AirData)
 }
@@ -459,7 +545,8 @@ void AirData::InitAsDefaultInstance() {
 }
 
 AirData::AirData(const AirData& from)
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:ffs2play.AirData)
@@ -469,10 +556,10 @@ void AirData::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   timestamp_ = GOOGLE_LONGLONG(0);
-  title_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  model_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  type_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  category_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  title_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  category_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   altitude_ = 0;
   groundaltitude_ = 0;
   heading_ = 0;
@@ -516,18 +603,10 @@ AirData::~AirData() {
 }
 
 void AirData::SharedDtor() {
-  if (title_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete title_;
-  }
-  if (model_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_;
-  }
-  if (type_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete type_;
-  }
-  if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete category_;
-  }
+  title_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  category_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -549,68 +628,73 @@ const AirData& AirData::default_instance() {
 
 AirData* AirData::default_instance_ = NULL;
 
-AirData* AirData::New() const {
-  return new AirData;
+AirData* AirData::New(::google::protobuf::Arena* arena) const {
+  AirData* n = new AirData;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void AirData::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<AirData*>(16)->f) - \
-   reinterpret_cast<char*>(16))
+// @@protoc_insertion_point(message_clear_start:ffs2play.AirData)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(AirData, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<AirData*>(16)->f)
+#endif
 
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
 
-  if (_has_bits_[0 / 32] & 255) {
+  if (_has_bits_[0 / 32] & 255u) {
     ZR_(altitude_, heading_);
     timestamp_ = GOOGLE_LONGLONG(0);
     if (has_title()) {
-      if (title_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        title_->clear();
-      }
+      title_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
     if (has_model()) {
-      if (model_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        model_->clear();
-      }
+      model_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
     if (has_type()) {
-      if (type_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        type_->clear();
-      }
+      type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
     if (has_category()) {
-      if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        category_->clear();
-      }
+      category_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
-  if (_has_bits_[8 / 32] & 65280) {
+  if (_has_bits_[8 / 32] & 65280u) {
     ZR_(longitude_, squawk_);
   }
-  if (_has_bits_[16 / 32] & 16711680) {
+  if (_has_bits_[16 / 32] & 16711680u) {
     ZR_(door1pos_, throttleeng1_);
   }
-  if (_has_bits_[24 / 32] & 4278190080) {
+  if (_has_bits_[24 / 32] & 4278190080u) {
     ZR_(throttleeng2_, strobelight_);
   }
-  if (_has_bits_[32 / 32] & 127) {
+  if (_has_bits_[32 / 32] & 127u) {
     ZR_(navlight_, smoke_);
   }
 
-#undef OFFSET_OF_FIELD_
+#undef ZR_HELPER_
 #undef ZR_
 
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
+  if (_internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->Clear();
+  }
 }
 
 bool AirData::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:ffs2play.AirData)
   for (;;) {
@@ -641,7 +725,7 @@ bool AirData::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->title().data(), this->title().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "title");
+            "ffs2play.AirData.Title");
         } else {
           goto handle_unusual;
         }
@@ -658,7 +742,7 @@ bool AirData::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->model().data(), this->model().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "model");
+            "ffs2play.AirData.Model");
         } else {
           goto handle_unusual;
         }
@@ -675,7 +759,7 @@ bool AirData::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->type().data(), this->type().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "type");
+            "ffs2play.AirData.Type");
         } else {
           goto handle_unusual;
         }
@@ -692,7 +776,7 @@ bool AirData::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->category().data(), this->category().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "category");
+            "ffs2play.AirData.Category");
         } else {
           goto handle_unusual;
         }
@@ -1245,7 +1329,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->title().data(), this->title().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "title");
+      "ffs2play.AirData.Title");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->title(), output);
   }
@@ -1255,7 +1339,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->model().data(), this->model().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model");
+      "ffs2play.AirData.Model");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       3, this->model(), output);
   }
@@ -1265,7 +1349,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->type().data(), this->type().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "type");
+      "ffs2play.AirData.Type");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       4, this->type(), output);
   }
@@ -1275,7 +1359,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->category().data(), this->category().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "category");
+      "ffs2play.AirData.Category");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       5, this->category(), output);
   }
@@ -1450,15 +1534,15 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(39, this->smoke(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:ffs2play.AirData)
 }
 
-::google::protobuf::uint8* AirData::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8* AirData::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:ffs2play.AirData)
   // required int64 Timestamp = 1;
   if (has_timestamp()) {
@@ -1470,7 +1554,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->title().data(), this->title().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "title");
+      "ffs2play.AirData.Title");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->title(), target);
@@ -1481,7 +1565,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->model().data(), this->model().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model");
+      "ffs2play.AirData.Model");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         3, this->model(), target);
@@ -1492,7 +1576,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->type().data(), this->type().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "type");
+      "ffs2play.AirData.Type");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         4, this->type(), target);
@@ -1503,7 +1587,7 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->category().data(), this->category().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "category");
+      "ffs2play.AirData.Category");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         5, this->category(), target);
@@ -1679,7 +1763,7 @@ void AirData::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(39, this->smoke(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -1687,247 +1771,398 @@ void AirData::SerializeWithCachedSizes(
   return target;
 }
 
-int AirData::ByteSize() const {
+int AirData::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:ffs2play.AirData)
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (has_timestamp()) {
     // required int64 Timestamp = 1;
-    if (has_timestamp()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int64Size(
-          this->timestamp());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->timestamp());
+  }
+
+  if (has_title()) {
+    // required string Title = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->title());
+  }
+
+  if (has_model()) {
+    // required string Model = 3;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->model());
+  }
+
+  if (has_type()) {
+    // required string Type = 4;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->type());
+  }
+
+  if (has_category()) {
+    // required string Category = 5;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->category());
+  }
+
+  if (has_altitude()) {
+    // required double Altitude = 6;
+    total_size += 1 + 8;
+  }
+
+  if (has_groundaltitude()) {
+    // required double GroundAltitude = 7;
+    total_size += 1 + 8;
+  }
+
+  if (has_heading()) {
+    // required double Heading = 8;
+    total_size += 1 + 8;
+  }
+
+  if (has_longitude()) {
+    // required double Longitude = 9;
+    total_size += 1 + 8;
+  }
+
+  if (has_latitude()) {
+    // required double Latitude = 10;
+    total_size += 1 + 8;
+  }
+
+  if (has_iasspeed()) {
+    // required double IASSpeed = 11;
+    total_size += 1 + 8;
+  }
+
+  if (has_pitch()) {
+    // required double Pitch = 12;
+    total_size += 1 + 8;
+  }
+
+  if (has_bank()) {
+    // required double Bank = 13;
+    total_size += 1 + 8;
+  }
+
+  if (has_squawk()) {
+    // required int32 Squawk = 14;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->squawk());
+  }
+
+  if (has_elevatorpos()) {
+    // required double ElevatorPos = 15;
+    total_size += 1 + 8;
+  }
+
+  if (has_aileronpos()) {
+    // required double AileronPos = 16;
+    total_size += 2 + 8;
+  }
+
+  if (has_rudderpos()) {
+    // required double RudderPos = 17;
+    total_size += 2 + 8;
+  }
+
+  if (has_door1pos()) {
+    // required int32 Door1Pos = 18;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door1pos());
+  }
+
+  if (has_door2pos()) {
+    // required int32 Door2Pos = 19;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door2pos());
+  }
+
+  if (has_door3pos()) {
+    // required int32 Door3Pos = 20;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door3pos());
+  }
+
+  if (has_door4pos()) {
+    // required int32 Door4Pos = 21;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door4pos());
+  }
+
+  if (has_flapsindex()) {
+    // required int32 FlapsIndex = 22;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->flapsindex());
+  }
+
+  if (has_numengine()) {
+    // required int32 NumEngine = 23;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->numengine());
+  }
+
+  if (has_throttleeng1()) {
+    // required int32 ThrottleEng1 = 24;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng1());
+  }
+
+  if (has_throttleeng2()) {
+    // required int32 ThrottleEng2 = 25;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng2());
+  }
+
+  if (has_throttleeng3()) {
+    // required int32 ThrottleEng3 = 26;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng3());
+  }
+
+  if (has_throttleeng4()) {
+    // required int32 ThrottleEng4 = 27;
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng4());
+  }
+
+  if (has_onground()) {
+    // required bool OnGround = 28;
+    total_size += 2 + 1;
+  }
+
+  if (has_gearpos()) {
+    // required bool GearPos = 29;
+    total_size += 2 + 1;
+  }
+
+  if (has_landinglight()) {
+    // required bool LandingLight = 30;
+    total_size += 2 + 1;
+  }
+
+  if (has_beaconlight()) {
+    // required bool BeaconLight = 31;
+    total_size += 2 + 1;
+  }
+
+  if (has_strobelight()) {
+    // required bool StrobeLight = 32;
+    total_size += 2 + 1;
+  }
+
+  if (has_navlight()) {
+    // required bool NavLight = 33;
+    total_size += 2 + 1;
+  }
+
+  if (has_recolight()) {
+    // required bool RecoLight = 34;
+    total_size += 2 + 1;
+  }
+
+  if (has_stateeng1()) {
+    // required bool StateEng1 = 35;
+    total_size += 2 + 1;
+  }
+
+  if (has_stateeng2()) {
+    // required bool StateEng2 = 36;
+    total_size += 2 + 1;
+  }
+
+  if (has_stateeng3()) {
+    // required bool StateEng3 = 37;
+    total_size += 2 + 1;
+  }
+
+  if (has_stateeng4()) {
+    // required bool StateEng4 = 38;
+    total_size += 2 + 1;
+  }
+
+  if (has_smoke()) {
+    // required bool Smoke = 39;
+    total_size += 2 + 1;
+  }
+
+  return total_size;
+}
+int AirData::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:ffs2play.AirData)
+  int total_size = 0;
+
+  if ((((_has_bits_[0] & 0xffffffff) ^ 0xffffffff)
+         | ((_has_bits_[1] & 0x0000007f) ^ 0x0000007f)) == 0) {  // All required fields are present.
+    // required int64 Timestamp = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->timestamp());
 
     // required string Title = 2;
-    if (has_title()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->title());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->title());
 
     // required string Model = 3;
-    if (has_model()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->model());
 
     // required string Type = 4;
-    if (has_type()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->type());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->type());
 
     // required string Category = 5;
-    if (has_category()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->category());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->category());
 
     // required double Altitude = 6;
-    if (has_altitude()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required double GroundAltitude = 7;
-    if (has_groundaltitude()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required double Heading = 8;
-    if (has_heading()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // required double Longitude = 9;
-    if (has_longitude()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required double Latitude = 10;
-    if (has_latitude()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required double IASSpeed = 11;
-    if (has_iasspeed()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required double Pitch = 12;
-    if (has_pitch()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required double Bank = 13;
-    if (has_bank()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required int32 Squawk = 14;
-    if (has_squawk()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->squawk());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->squawk());
 
     // required double ElevatorPos = 15;
-    if (has_elevatorpos()) {
-      total_size += 1 + 8;
-    }
+    total_size += 1 + 8;
 
     // required double AileronPos = 16;
-    if (has_aileronpos()) {
-      total_size += 2 + 8;
-    }
+    total_size += 2 + 8;
 
-  }
-  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     // required double RudderPos = 17;
-    if (has_rudderpos()) {
-      total_size += 2 + 8;
-    }
+    total_size += 2 + 8;
 
     // required int32 Door1Pos = 18;
-    if (has_door1pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door1pos());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door1pos());
 
     // required int32 Door2Pos = 19;
-    if (has_door2pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door2pos());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door2pos());
 
     // required int32 Door3Pos = 20;
-    if (has_door3pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door3pos());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door3pos());
 
     // required int32 Door4Pos = 21;
-    if (has_door4pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door4pos());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door4pos());
 
     // required int32 FlapsIndex = 22;
-    if (has_flapsindex()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->flapsindex());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->flapsindex());
 
     // required int32 NumEngine = 23;
-    if (has_numengine()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->numengine());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->numengine());
 
     // required int32 ThrottleEng1 = 24;
-    if (has_throttleeng1()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng1());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng1());
 
-  }
-  if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     // required int32 ThrottleEng2 = 25;
-    if (has_throttleeng2()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng2());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng2());
 
     // required int32 ThrottleEng3 = 26;
-    if (has_throttleeng3()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng3());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng3());
 
     // required int32 ThrottleEng4 = 27;
-    if (has_throttleeng4()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng4());
-    }
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng4());
 
     // required bool OnGround = 28;
-    if (has_onground()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool GearPos = 29;
-    if (has_gearpos()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool LandingLight = 30;
-    if (has_landinglight()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool BeaconLight = 31;
-    if (has_beaconlight()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool StrobeLight = 32;
-    if (has_strobelight()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
-  }
-  if (_has_bits_[32 / 32] & (0xffu << (32 % 32))) {
     // required bool NavLight = 33;
-    if (has_navlight()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool RecoLight = 34;
-    if (has_recolight()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool StateEng1 = 35;
-    if (has_stateeng1()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool StateEng2 = 36;
-    if (has_stateeng2()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool StateEng3 = 37;
-    if (has_stateeng3()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool StateEng4 = 38;
-    if (has_stateeng4()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
     // required bool Smoke = 39;
-    if (has_smoke()) {
-      total_size += 2 + 1;
-    }
+    total_size += 2 + 1;
 
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
   }
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
@@ -1939,34 +2174,46 @@ int AirData::ByteSize() const {
 }
 
 void AirData::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AirData* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AirData*>(
-      &from);
+// @@protoc_insertion_point(generalized_merge_from_start:ffs2play.AirData)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const AirData* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const AirData>(
+          &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ffs2play.AirData)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ffs2play.AirData)
     MergeFrom(*source);
   }
 }
 
 void AirData::MergeFrom(const AirData& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:ffs2play.AirData)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_timestamp()) {
       set_timestamp(from.timestamp());
     }
     if (from.has_title()) {
-      set_title(from.title());
+      set_has_title();
+      title_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.title_);
     }
     if (from.has_model()) {
-      set_model(from.model());
+      set_has_model();
+      model_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.model_);
     }
     if (from.has_type()) {
-      set_type(from.type());
+      set_has_type();
+      type_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.type_);
     }
     if (from.has_category()) {
-      set_category(from.category());
+      set_has_category();
+      category_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.category_);
     }
     if (from.has_altitude()) {
       set_altitude(from.altitude());
@@ -2079,16 +2326,20 @@ void AirData::MergeFrom(const AirData& from) {
       set_smoke(from.smoke());
     }
   }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  if (from._internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  }
 }
 
 void AirData::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ffs2play.AirData)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void AirData::CopyFrom(const AirData& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ffs2play.AirData)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2102,51 +2353,53 @@ bool AirData::IsInitialized() const {
 }
 
 void AirData::Swap(AirData* other) {
-  if (other != this) {
-    std::swap(timestamp_, other->timestamp_);
-    std::swap(title_, other->title_);
-    std::swap(model_, other->model_);
-    std::swap(type_, other->type_);
-    std::swap(category_, other->category_);
-    std::swap(altitude_, other->altitude_);
-    std::swap(groundaltitude_, other->groundaltitude_);
-    std::swap(heading_, other->heading_);
-    std::swap(longitude_, other->longitude_);
-    std::swap(latitude_, other->latitude_);
-    std::swap(iasspeed_, other->iasspeed_);
-    std::swap(pitch_, other->pitch_);
-    std::swap(bank_, other->bank_);
-    std::swap(squawk_, other->squawk_);
-    std::swap(elevatorpos_, other->elevatorpos_);
-    std::swap(aileronpos_, other->aileronpos_);
-    std::swap(rudderpos_, other->rudderpos_);
-    std::swap(door1pos_, other->door1pos_);
-    std::swap(door2pos_, other->door2pos_);
-    std::swap(door3pos_, other->door3pos_);
-    std::swap(door4pos_, other->door4pos_);
-    std::swap(flapsindex_, other->flapsindex_);
-    std::swap(numengine_, other->numengine_);
-    std::swap(throttleeng1_, other->throttleeng1_);
-    std::swap(throttleeng2_, other->throttleeng2_);
-    std::swap(throttleeng3_, other->throttleeng3_);
-    std::swap(throttleeng4_, other->throttleeng4_);
-    std::swap(onground_, other->onground_);
-    std::swap(gearpos_, other->gearpos_);
-    std::swap(landinglight_, other->landinglight_);
-    std::swap(beaconlight_, other->beaconlight_);
-    std::swap(strobelight_, other->strobelight_);
-    std::swap(navlight_, other->navlight_);
-    std::swap(recolight_, other->recolight_);
-    std::swap(stateeng1_, other->stateeng1_);
-    std::swap(stateeng2_, other->stateeng2_);
-    std::swap(stateeng3_, other->stateeng3_);
-    std::swap(stateeng4_, other->stateeng4_);
-    std::swap(smoke_, other->smoke_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    std::swap(_has_bits_[1], other->_has_bits_[1]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void AirData::InternalSwap(AirData* other) {
+  std::swap(timestamp_, other->timestamp_);
+  title_.Swap(&other->title_);
+  model_.Swap(&other->model_);
+  type_.Swap(&other->type_);
+  category_.Swap(&other->category_);
+  std::swap(altitude_, other->altitude_);
+  std::swap(groundaltitude_, other->groundaltitude_);
+  std::swap(heading_, other->heading_);
+  std::swap(longitude_, other->longitude_);
+  std::swap(latitude_, other->latitude_);
+  std::swap(iasspeed_, other->iasspeed_);
+  std::swap(pitch_, other->pitch_);
+  std::swap(bank_, other->bank_);
+  std::swap(squawk_, other->squawk_);
+  std::swap(elevatorpos_, other->elevatorpos_);
+  std::swap(aileronpos_, other->aileronpos_);
+  std::swap(rudderpos_, other->rudderpos_);
+  std::swap(door1pos_, other->door1pos_);
+  std::swap(door2pos_, other->door2pos_);
+  std::swap(door3pos_, other->door3pos_);
+  std::swap(door4pos_, other->door4pos_);
+  std::swap(flapsindex_, other->flapsindex_);
+  std::swap(numengine_, other->numengine_);
+  std::swap(throttleeng1_, other->throttleeng1_);
+  std::swap(throttleeng2_, other->throttleeng2_);
+  std::swap(throttleeng3_, other->throttleeng3_);
+  std::swap(throttleeng4_, other->throttleeng4_);
+  std::swap(onground_, other->onground_);
+  std::swap(gearpos_, other->gearpos_);
+  std::swap(landinglight_, other->landinglight_);
+  std::swap(beaconlight_, other->beaconlight_);
+  std::swap(strobelight_, other->strobelight_);
+  std::swap(navlight_, other->navlight_);
+  std::swap(recolight_, other->recolight_);
+  std::swap(stateeng1_, other->stateeng1_);
+  std::swap(stateeng2_, other->stateeng2_);
+  std::swap(stateeng3_, other->stateeng3_);
+  std::swap(stateeng4_, other->stateeng4_);
+  std::swap(smoke_, other->smoke_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  std::swap(_has_bits_[1], other->_has_bits_[1]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata AirData::GetMetadata() const {
@@ -2157,6 +2410,1066 @@ void AirData::Swap(AirData* other) {
   return metadata;
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// AirData
+
+// required int64 Timestamp = 1;
+bool AirData::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void AirData::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void AirData::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void AirData::clear_timestamp() {
+  timestamp_ = GOOGLE_LONGLONG(0);
+  clear_has_timestamp();
+}
+ ::google::protobuf::int64 AirData::timestamp() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Timestamp)
+  return timestamp_;
+}
+ void AirData::set_timestamp(::google::protobuf::int64 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Timestamp)
+}
+
+// required string Title = 2;
+bool AirData::has_title() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void AirData::set_has_title() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void AirData::clear_has_title() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void AirData::clear_title() {
+  title_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_title();
+}
+ const ::std::string& AirData::title() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Title)
+  return title_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_title(const ::std::string& value) {
+  set_has_title();
+  title_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Title)
+}
+ void AirData::set_title(const char* value) {
+  set_has_title();
+  title_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Title)
+}
+ void AirData::set_title(const char* value, size_t size) {
+  set_has_title();
+  title_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Title)
+}
+ ::std::string* AirData::mutable_title() {
+  set_has_title();
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Title)
+  return title_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_title() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Title)
+  clear_has_title();
+  return title_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_title(::std::string* title) {
+  if (title != NULL) {
+    set_has_title();
+  } else {
+    clear_has_title();
+  }
+  title_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), title);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Title)
+}
+
+// required string Model = 3;
+bool AirData::has_model() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+void AirData::set_has_model() {
+  _has_bits_[0] |= 0x00000004u;
+}
+void AirData::clear_has_model() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+void AirData::clear_model() {
+  model_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_model();
+}
+ const ::std::string& AirData::model() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Model)
+  return model_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_model(const ::std::string& value) {
+  set_has_model();
+  model_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Model)
+}
+ void AirData::set_model(const char* value) {
+  set_has_model();
+  model_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Model)
+}
+ void AirData::set_model(const char* value, size_t size) {
+  set_has_model();
+  model_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Model)
+}
+ ::std::string* AirData::mutable_model() {
+  set_has_model();
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Model)
+  return model_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_model() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Model)
+  clear_has_model();
+  return model_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_model(::std::string* model) {
+  if (model != NULL) {
+    set_has_model();
+  } else {
+    clear_has_model();
+  }
+  model_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), model);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Model)
+}
+
+// required string Type = 4;
+bool AirData::has_type() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+void AirData::set_has_type() {
+  _has_bits_[0] |= 0x00000008u;
+}
+void AirData::clear_has_type() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+void AirData::clear_type() {
+  type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_type();
+}
+ const ::std::string& AirData::type() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Type)
+  return type_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_type(const ::std::string& value) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Type)
+}
+ void AirData::set_type(const char* value) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Type)
+}
+ void AirData::set_type(const char* value, size_t size) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Type)
+}
+ ::std::string* AirData::mutable_type() {
+  set_has_type();
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Type)
+  return type_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_type() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Type)
+  clear_has_type();
+  return type_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_type(::std::string* type) {
+  if (type != NULL) {
+    set_has_type();
+  } else {
+    clear_has_type();
+  }
+  type_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), type);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Type)
+}
+
+// required string Category = 5;
+bool AirData::has_category() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+void AirData::set_has_category() {
+  _has_bits_[0] |= 0x00000010u;
+}
+void AirData::clear_has_category() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+void AirData::clear_category() {
+  category_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_category();
+}
+ const ::std::string& AirData::category() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Category)
+  return category_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_category(const ::std::string& value) {
+  set_has_category();
+  category_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Category)
+}
+ void AirData::set_category(const char* value) {
+  set_has_category();
+  category_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Category)
+}
+ void AirData::set_category(const char* value, size_t size) {
+  set_has_category();
+  category_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Category)
+}
+ ::std::string* AirData::mutable_category() {
+  set_has_category();
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Category)
+  return category_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_category() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Category)
+  clear_has_category();
+  return category_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_category(::std::string* category) {
+  if (category != NULL) {
+    set_has_category();
+  } else {
+    clear_has_category();
+  }
+  category_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), category);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Category)
+}
+
+// required double Altitude = 6;
+bool AirData::has_altitude() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+void AirData::set_has_altitude() {
+  _has_bits_[0] |= 0x00000020u;
+}
+void AirData::clear_has_altitude() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+void AirData::clear_altitude() {
+  altitude_ = 0;
+  clear_has_altitude();
+}
+ double AirData::altitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Altitude)
+  return altitude_;
+}
+ void AirData::set_altitude(double value) {
+  set_has_altitude();
+  altitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Altitude)
+}
+
+// required double GroundAltitude = 7;
+bool AirData::has_groundaltitude() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+void AirData::set_has_groundaltitude() {
+  _has_bits_[0] |= 0x00000040u;
+}
+void AirData::clear_has_groundaltitude() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+void AirData::clear_groundaltitude() {
+  groundaltitude_ = 0;
+  clear_has_groundaltitude();
+}
+ double AirData::groundaltitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.GroundAltitude)
+  return groundaltitude_;
+}
+ void AirData::set_groundaltitude(double value) {
+  set_has_groundaltitude();
+  groundaltitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.GroundAltitude)
+}
+
+// required double Heading = 8;
+bool AirData::has_heading() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+void AirData::set_has_heading() {
+  _has_bits_[0] |= 0x00000080u;
+}
+void AirData::clear_has_heading() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+void AirData::clear_heading() {
+  heading_ = 0;
+  clear_has_heading();
+}
+ double AirData::heading() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Heading)
+  return heading_;
+}
+ void AirData::set_heading(double value) {
+  set_has_heading();
+  heading_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Heading)
+}
+
+// required double Longitude = 9;
+bool AirData::has_longitude() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+void AirData::set_has_longitude() {
+  _has_bits_[0] |= 0x00000100u;
+}
+void AirData::clear_has_longitude() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+void AirData::clear_longitude() {
+  longitude_ = 0;
+  clear_has_longitude();
+}
+ double AirData::longitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Longitude)
+  return longitude_;
+}
+ void AirData::set_longitude(double value) {
+  set_has_longitude();
+  longitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Longitude)
+}
+
+// required double Latitude = 10;
+bool AirData::has_latitude() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+void AirData::set_has_latitude() {
+  _has_bits_[0] |= 0x00000200u;
+}
+void AirData::clear_has_latitude() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+void AirData::clear_latitude() {
+  latitude_ = 0;
+  clear_has_latitude();
+}
+ double AirData::latitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Latitude)
+  return latitude_;
+}
+ void AirData::set_latitude(double value) {
+  set_has_latitude();
+  latitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Latitude)
+}
+
+// required double IASSpeed = 11;
+bool AirData::has_iasspeed() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+void AirData::set_has_iasspeed() {
+  _has_bits_[0] |= 0x00000400u;
+}
+void AirData::clear_has_iasspeed() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+void AirData::clear_iasspeed() {
+  iasspeed_ = 0;
+  clear_has_iasspeed();
+}
+ double AirData::iasspeed() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.IASSpeed)
+  return iasspeed_;
+}
+ void AirData::set_iasspeed(double value) {
+  set_has_iasspeed();
+  iasspeed_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.IASSpeed)
+}
+
+// required double Pitch = 12;
+bool AirData::has_pitch() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+void AirData::set_has_pitch() {
+  _has_bits_[0] |= 0x00000800u;
+}
+void AirData::clear_has_pitch() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+void AirData::clear_pitch() {
+  pitch_ = 0;
+  clear_has_pitch();
+}
+ double AirData::pitch() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Pitch)
+  return pitch_;
+}
+ void AirData::set_pitch(double value) {
+  set_has_pitch();
+  pitch_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Pitch)
+}
+
+// required double Bank = 13;
+bool AirData::has_bank() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+void AirData::set_has_bank() {
+  _has_bits_[0] |= 0x00001000u;
+}
+void AirData::clear_has_bank() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+void AirData::clear_bank() {
+  bank_ = 0;
+  clear_has_bank();
+}
+ double AirData::bank() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Bank)
+  return bank_;
+}
+ void AirData::set_bank(double value) {
+  set_has_bank();
+  bank_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Bank)
+}
+
+// required int32 Squawk = 14;
+bool AirData::has_squawk() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+void AirData::set_has_squawk() {
+  _has_bits_[0] |= 0x00002000u;
+}
+void AirData::clear_has_squawk() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+void AirData::clear_squawk() {
+  squawk_ = 0;
+  clear_has_squawk();
+}
+ ::google::protobuf::int32 AirData::squawk() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Squawk)
+  return squawk_;
+}
+ void AirData::set_squawk(::google::protobuf::int32 value) {
+  set_has_squawk();
+  squawk_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Squawk)
+}
+
+// required double ElevatorPos = 15;
+bool AirData::has_elevatorpos() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+void AirData::set_has_elevatorpos() {
+  _has_bits_[0] |= 0x00004000u;
+}
+void AirData::clear_has_elevatorpos() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+void AirData::clear_elevatorpos() {
+  elevatorpos_ = 0;
+  clear_has_elevatorpos();
+}
+ double AirData::elevatorpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ElevatorPos)
+  return elevatorpos_;
+}
+ void AirData::set_elevatorpos(double value) {
+  set_has_elevatorpos();
+  elevatorpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ElevatorPos)
+}
+
+// required double AileronPos = 16;
+bool AirData::has_aileronpos() const {
+  return (_has_bits_[0] & 0x00008000u) != 0;
+}
+void AirData::set_has_aileronpos() {
+  _has_bits_[0] |= 0x00008000u;
+}
+void AirData::clear_has_aileronpos() {
+  _has_bits_[0] &= ~0x00008000u;
+}
+void AirData::clear_aileronpos() {
+  aileronpos_ = 0;
+  clear_has_aileronpos();
+}
+ double AirData::aileronpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.AileronPos)
+  return aileronpos_;
+}
+ void AirData::set_aileronpos(double value) {
+  set_has_aileronpos();
+  aileronpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.AileronPos)
+}
+
+// required double RudderPos = 17;
+bool AirData::has_rudderpos() const {
+  return (_has_bits_[0] & 0x00010000u) != 0;
+}
+void AirData::set_has_rudderpos() {
+  _has_bits_[0] |= 0x00010000u;
+}
+void AirData::clear_has_rudderpos() {
+  _has_bits_[0] &= ~0x00010000u;
+}
+void AirData::clear_rudderpos() {
+  rudderpos_ = 0;
+  clear_has_rudderpos();
+}
+ double AirData::rudderpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.RudderPos)
+  return rudderpos_;
+}
+ void AirData::set_rudderpos(double value) {
+  set_has_rudderpos();
+  rudderpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.RudderPos)
+}
+
+// required int32 Door1Pos = 18;
+bool AirData::has_door1pos() const {
+  return (_has_bits_[0] & 0x00020000u) != 0;
+}
+void AirData::set_has_door1pos() {
+  _has_bits_[0] |= 0x00020000u;
+}
+void AirData::clear_has_door1pos() {
+  _has_bits_[0] &= ~0x00020000u;
+}
+void AirData::clear_door1pos() {
+  door1pos_ = 0;
+  clear_has_door1pos();
+}
+ ::google::protobuf::int32 AirData::door1pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door1Pos)
+  return door1pos_;
+}
+ void AirData::set_door1pos(::google::protobuf::int32 value) {
+  set_has_door1pos();
+  door1pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door1Pos)
+}
+
+// required int32 Door2Pos = 19;
+bool AirData::has_door2pos() const {
+  return (_has_bits_[0] & 0x00040000u) != 0;
+}
+void AirData::set_has_door2pos() {
+  _has_bits_[0] |= 0x00040000u;
+}
+void AirData::clear_has_door2pos() {
+  _has_bits_[0] &= ~0x00040000u;
+}
+void AirData::clear_door2pos() {
+  door2pos_ = 0;
+  clear_has_door2pos();
+}
+ ::google::protobuf::int32 AirData::door2pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door2Pos)
+  return door2pos_;
+}
+ void AirData::set_door2pos(::google::protobuf::int32 value) {
+  set_has_door2pos();
+  door2pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door2Pos)
+}
+
+// required int32 Door3Pos = 20;
+bool AirData::has_door3pos() const {
+  return (_has_bits_[0] & 0x00080000u) != 0;
+}
+void AirData::set_has_door3pos() {
+  _has_bits_[0] |= 0x00080000u;
+}
+void AirData::clear_has_door3pos() {
+  _has_bits_[0] &= ~0x00080000u;
+}
+void AirData::clear_door3pos() {
+  door3pos_ = 0;
+  clear_has_door3pos();
+}
+ ::google::protobuf::int32 AirData::door3pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door3Pos)
+  return door3pos_;
+}
+ void AirData::set_door3pos(::google::protobuf::int32 value) {
+  set_has_door3pos();
+  door3pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door3Pos)
+}
+
+// required int32 Door4Pos = 21;
+bool AirData::has_door4pos() const {
+  return (_has_bits_[0] & 0x00100000u) != 0;
+}
+void AirData::set_has_door4pos() {
+  _has_bits_[0] |= 0x00100000u;
+}
+void AirData::clear_has_door4pos() {
+  _has_bits_[0] &= ~0x00100000u;
+}
+void AirData::clear_door4pos() {
+  door4pos_ = 0;
+  clear_has_door4pos();
+}
+ ::google::protobuf::int32 AirData::door4pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door4Pos)
+  return door4pos_;
+}
+ void AirData::set_door4pos(::google::protobuf::int32 value) {
+  set_has_door4pos();
+  door4pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door4Pos)
+}
+
+// required int32 FlapsIndex = 22;
+bool AirData::has_flapsindex() const {
+  return (_has_bits_[0] & 0x00200000u) != 0;
+}
+void AirData::set_has_flapsindex() {
+  _has_bits_[0] |= 0x00200000u;
+}
+void AirData::clear_has_flapsindex() {
+  _has_bits_[0] &= ~0x00200000u;
+}
+void AirData::clear_flapsindex() {
+  flapsindex_ = 0;
+  clear_has_flapsindex();
+}
+ ::google::protobuf::int32 AirData::flapsindex() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.FlapsIndex)
+  return flapsindex_;
+}
+ void AirData::set_flapsindex(::google::protobuf::int32 value) {
+  set_has_flapsindex();
+  flapsindex_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.FlapsIndex)
+}
+
+// required int32 NumEngine = 23;
+bool AirData::has_numengine() const {
+  return (_has_bits_[0] & 0x00400000u) != 0;
+}
+void AirData::set_has_numengine() {
+  _has_bits_[0] |= 0x00400000u;
+}
+void AirData::clear_has_numengine() {
+  _has_bits_[0] &= ~0x00400000u;
+}
+void AirData::clear_numengine() {
+  numengine_ = 0;
+  clear_has_numengine();
+}
+ ::google::protobuf::int32 AirData::numengine() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.NumEngine)
+  return numengine_;
+}
+ void AirData::set_numengine(::google::protobuf::int32 value) {
+  set_has_numengine();
+  numengine_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.NumEngine)
+}
+
+// required int32 ThrottleEng1 = 24;
+bool AirData::has_throttleeng1() const {
+  return (_has_bits_[0] & 0x00800000u) != 0;
+}
+void AirData::set_has_throttleeng1() {
+  _has_bits_[0] |= 0x00800000u;
+}
+void AirData::clear_has_throttleeng1() {
+  _has_bits_[0] &= ~0x00800000u;
+}
+void AirData::clear_throttleeng1() {
+  throttleeng1_ = 0;
+  clear_has_throttleeng1();
+}
+ ::google::protobuf::int32 AirData::throttleeng1() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng1)
+  return throttleeng1_;
+}
+ void AirData::set_throttleeng1(::google::protobuf::int32 value) {
+  set_has_throttleeng1();
+  throttleeng1_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng1)
+}
+
+// required int32 ThrottleEng2 = 25;
+bool AirData::has_throttleeng2() const {
+  return (_has_bits_[0] & 0x01000000u) != 0;
+}
+void AirData::set_has_throttleeng2() {
+  _has_bits_[0] |= 0x01000000u;
+}
+void AirData::clear_has_throttleeng2() {
+  _has_bits_[0] &= ~0x01000000u;
+}
+void AirData::clear_throttleeng2() {
+  throttleeng2_ = 0;
+  clear_has_throttleeng2();
+}
+ ::google::protobuf::int32 AirData::throttleeng2() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng2)
+  return throttleeng2_;
+}
+ void AirData::set_throttleeng2(::google::protobuf::int32 value) {
+  set_has_throttleeng2();
+  throttleeng2_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng2)
+}
+
+// required int32 ThrottleEng3 = 26;
+bool AirData::has_throttleeng3() const {
+  return (_has_bits_[0] & 0x02000000u) != 0;
+}
+void AirData::set_has_throttleeng3() {
+  _has_bits_[0] |= 0x02000000u;
+}
+void AirData::clear_has_throttleeng3() {
+  _has_bits_[0] &= ~0x02000000u;
+}
+void AirData::clear_throttleeng3() {
+  throttleeng3_ = 0;
+  clear_has_throttleeng3();
+}
+ ::google::protobuf::int32 AirData::throttleeng3() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng3)
+  return throttleeng3_;
+}
+ void AirData::set_throttleeng3(::google::protobuf::int32 value) {
+  set_has_throttleeng3();
+  throttleeng3_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng3)
+}
+
+// required int32 ThrottleEng4 = 27;
+bool AirData::has_throttleeng4() const {
+  return (_has_bits_[0] & 0x04000000u) != 0;
+}
+void AirData::set_has_throttleeng4() {
+  _has_bits_[0] |= 0x04000000u;
+}
+void AirData::clear_has_throttleeng4() {
+  _has_bits_[0] &= ~0x04000000u;
+}
+void AirData::clear_throttleeng4() {
+  throttleeng4_ = 0;
+  clear_has_throttleeng4();
+}
+ ::google::protobuf::int32 AirData::throttleeng4() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng4)
+  return throttleeng4_;
+}
+ void AirData::set_throttleeng4(::google::protobuf::int32 value) {
+  set_has_throttleeng4();
+  throttleeng4_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng4)
+}
+
+// required bool OnGround = 28;
+bool AirData::has_onground() const {
+  return (_has_bits_[0] & 0x08000000u) != 0;
+}
+void AirData::set_has_onground() {
+  _has_bits_[0] |= 0x08000000u;
+}
+void AirData::clear_has_onground() {
+  _has_bits_[0] &= ~0x08000000u;
+}
+void AirData::clear_onground() {
+  onground_ = false;
+  clear_has_onground();
+}
+ bool AirData::onground() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.OnGround)
+  return onground_;
+}
+ void AirData::set_onground(bool value) {
+  set_has_onground();
+  onground_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.OnGround)
+}
+
+// required bool GearPos = 29;
+bool AirData::has_gearpos() const {
+  return (_has_bits_[0] & 0x10000000u) != 0;
+}
+void AirData::set_has_gearpos() {
+  _has_bits_[0] |= 0x10000000u;
+}
+void AirData::clear_has_gearpos() {
+  _has_bits_[0] &= ~0x10000000u;
+}
+void AirData::clear_gearpos() {
+  gearpos_ = false;
+  clear_has_gearpos();
+}
+ bool AirData::gearpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.GearPos)
+  return gearpos_;
+}
+ void AirData::set_gearpos(bool value) {
+  set_has_gearpos();
+  gearpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.GearPos)
+}
+
+// required bool LandingLight = 30;
+bool AirData::has_landinglight() const {
+  return (_has_bits_[0] & 0x20000000u) != 0;
+}
+void AirData::set_has_landinglight() {
+  _has_bits_[0] |= 0x20000000u;
+}
+void AirData::clear_has_landinglight() {
+  _has_bits_[0] &= ~0x20000000u;
+}
+void AirData::clear_landinglight() {
+  landinglight_ = false;
+  clear_has_landinglight();
+}
+ bool AirData::landinglight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.LandingLight)
+  return landinglight_;
+}
+ void AirData::set_landinglight(bool value) {
+  set_has_landinglight();
+  landinglight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.LandingLight)
+}
+
+// required bool BeaconLight = 31;
+bool AirData::has_beaconlight() const {
+  return (_has_bits_[0] & 0x40000000u) != 0;
+}
+void AirData::set_has_beaconlight() {
+  _has_bits_[0] |= 0x40000000u;
+}
+void AirData::clear_has_beaconlight() {
+  _has_bits_[0] &= ~0x40000000u;
+}
+void AirData::clear_beaconlight() {
+  beaconlight_ = false;
+  clear_has_beaconlight();
+}
+ bool AirData::beaconlight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.BeaconLight)
+  return beaconlight_;
+}
+ void AirData::set_beaconlight(bool value) {
+  set_has_beaconlight();
+  beaconlight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.BeaconLight)
+}
+
+// required bool StrobeLight = 32;
+bool AirData::has_strobelight() const {
+  return (_has_bits_[0] & 0x80000000u) != 0;
+}
+void AirData::set_has_strobelight() {
+  _has_bits_[0] |= 0x80000000u;
+}
+void AirData::clear_has_strobelight() {
+  _has_bits_[0] &= ~0x80000000u;
+}
+void AirData::clear_strobelight() {
+  strobelight_ = false;
+  clear_has_strobelight();
+}
+ bool AirData::strobelight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StrobeLight)
+  return strobelight_;
+}
+ void AirData::set_strobelight(bool value) {
+  set_has_strobelight();
+  strobelight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StrobeLight)
+}
+
+// required bool NavLight = 33;
+bool AirData::has_navlight() const {
+  return (_has_bits_[1] & 0x00000001u) != 0;
+}
+void AirData::set_has_navlight() {
+  _has_bits_[1] |= 0x00000001u;
+}
+void AirData::clear_has_navlight() {
+  _has_bits_[1] &= ~0x00000001u;
+}
+void AirData::clear_navlight() {
+  navlight_ = false;
+  clear_has_navlight();
+}
+ bool AirData::navlight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.NavLight)
+  return navlight_;
+}
+ void AirData::set_navlight(bool value) {
+  set_has_navlight();
+  navlight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.NavLight)
+}
+
+// required bool RecoLight = 34;
+bool AirData::has_recolight() const {
+  return (_has_bits_[1] & 0x00000002u) != 0;
+}
+void AirData::set_has_recolight() {
+  _has_bits_[1] |= 0x00000002u;
+}
+void AirData::clear_has_recolight() {
+  _has_bits_[1] &= ~0x00000002u;
+}
+void AirData::clear_recolight() {
+  recolight_ = false;
+  clear_has_recolight();
+}
+ bool AirData::recolight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.RecoLight)
+  return recolight_;
+}
+ void AirData::set_recolight(bool value) {
+  set_has_recolight();
+  recolight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.RecoLight)
+}
+
+// required bool StateEng1 = 35;
+bool AirData::has_stateeng1() const {
+  return (_has_bits_[1] & 0x00000004u) != 0;
+}
+void AirData::set_has_stateeng1() {
+  _has_bits_[1] |= 0x00000004u;
+}
+void AirData::clear_has_stateeng1() {
+  _has_bits_[1] &= ~0x00000004u;
+}
+void AirData::clear_stateeng1() {
+  stateeng1_ = false;
+  clear_has_stateeng1();
+}
+ bool AirData::stateeng1() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng1)
+  return stateeng1_;
+}
+ void AirData::set_stateeng1(bool value) {
+  set_has_stateeng1();
+  stateeng1_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng1)
+}
+
+// required bool StateEng2 = 36;
+bool AirData::has_stateeng2() const {
+  return (_has_bits_[1] & 0x00000008u) != 0;
+}
+void AirData::set_has_stateeng2() {
+  _has_bits_[1] |= 0x00000008u;
+}
+void AirData::clear_has_stateeng2() {
+  _has_bits_[1] &= ~0x00000008u;
+}
+void AirData::clear_stateeng2() {
+  stateeng2_ = false;
+  clear_has_stateeng2();
+}
+ bool AirData::stateeng2() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng2)
+  return stateeng2_;
+}
+ void AirData::set_stateeng2(bool value) {
+  set_has_stateeng2();
+  stateeng2_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng2)
+}
+
+// required bool StateEng3 = 37;
+bool AirData::has_stateeng3() const {
+  return (_has_bits_[1] & 0x00000010u) != 0;
+}
+void AirData::set_has_stateeng3() {
+  _has_bits_[1] |= 0x00000010u;
+}
+void AirData::clear_has_stateeng3() {
+  _has_bits_[1] &= ~0x00000010u;
+}
+void AirData::clear_stateeng3() {
+  stateeng3_ = false;
+  clear_has_stateeng3();
+}
+ bool AirData::stateeng3() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng3)
+  return stateeng3_;
+}
+ void AirData::set_stateeng3(bool value) {
+  set_has_stateeng3();
+  stateeng3_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng3)
+}
+
+// required bool StateEng4 = 38;
+bool AirData::has_stateeng4() const {
+  return (_has_bits_[1] & 0x00000020u) != 0;
+}
+void AirData::set_has_stateeng4() {
+  _has_bits_[1] |= 0x00000020u;
+}
+void AirData::clear_has_stateeng4() {
+  _has_bits_[1] &= ~0x00000020u;
+}
+void AirData::clear_stateeng4() {
+  stateeng4_ = false;
+  clear_has_stateeng4();
+}
+ bool AirData::stateeng4() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng4)
+  return stateeng4_;
+}
+ void AirData::set_stateeng4(bool value) {
+  set_has_stateeng4();
+  stateeng4_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng4)
+}
+
+// required bool Smoke = 39;
+bool AirData::has_smoke() const {
+  return (_has_bits_[1] & 0x00000040u) != 0;
+}
+void AirData::set_has_smoke() {
+  _has_bits_[1] |= 0x00000040u;
+}
+void AirData::clear_has_smoke() {
+  _has_bits_[1] &= ~0x00000040u;
+}
+void AirData::clear_smoke() {
+  smoke_ = false;
+  clear_has_smoke();
+}
+ bool AirData::smoke() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Smoke)
+  return smoke_;
+}
+ void AirData::set_smoke(bool value) {
+  set_has_smoke();
+  smoke_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Smoke)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 

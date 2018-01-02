@@ -30,7 +30,6 @@
 #include <sstream>
 #include <cstddef>
 
-#include "tools/ffs2core_global.h"
 #include "singleton/simbasemanager.h"
 #include "singleton/aimapping.h"
 #include "protobuf/ffs2play.pb.h"

@@ -26,7 +26,6 @@
 #include <QObject>
 #include "sim/aircraftstate.h"
 #include "singleton/clogger.h"
-#include "tools/ffs2core_global.h"
 #include "tools/datetime.h"
 
 /// <summary>

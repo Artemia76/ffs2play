@@ -25,53 +25,56 @@
 
 #include <QCoreApplication>
 
-///
-/// \brief CSCManager::CSCManager
-/// \param parent
-///
-
-CXPManager::CXPManager(QObject* parent):
-    SimConnector(parent)
+namespace ffs2p_xplane
 {
-    // Initialisation de l'état de connexion avec le simulateur
-}
+    ///
+    /// \brief CXPManager::CXPManager
+    /// \param parent
+    ///
 
-CXPManager::~CXPManager()
-{
-    close();
-}
-
-///
-/// \brief CXPManager::open
-///
-
-bool CXPManager::open ()
-{
-    if (!m_bConnected)
+    CXPManager::CXPManager(QObject* parent):
+        SimConnector(parent)
     {
-       Log->log(tr("XPlane is not yet implemented."),Qt::darkMagenta);
+        // Initialisation de l'état de connexion avec le simulateur
     }
-    return false;
-}
 
-///
-/// \brief CXPManager::close
-///
-
-void CXPManager::close ()
-{
-    if (m_bConnected)
+    CXPManager::~CXPManager()
     {
-        Log->log(tr("Disconnected from XPlane."));
-        emit(closed());
+        close();
     }
-}
+
+    ///
+    /// \brief CXPManager::open
+    ///
+
+    bool CXPManager::open ()
+    {
+        if (!m_bConnected)
+        {
+           Log->log(tr("XPlane is not yet implemented."),Qt::darkMagenta);
+        }
+        return false;
+    }
+
+    ///
+    /// \brief CXPManager::close
+    ///
+
+    void CXPManager::close ()
+    {
+        if (m_bConnected)
+        {
+            Log->log(tr("Disconnected from XPlane."));
+            emit(closed());
+        }
+    }
 
 
-///
-/// \brief CXPManager::main_loop()
-///
+    ///
+    /// \brief CXPManager::main_loop()
+    ///
 
-void CXPManager::main_loop()
-{
+    void CXPManager::main_loop()
+    {
+    }
 }

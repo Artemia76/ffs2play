@@ -26,7 +26,6 @@
 #include <QObject>
 #include <QSettings>
 #include <QColor>
-#include "tools/ffs2core_global.h"
 
 enum CL_DEBUG_LEVEL
 {

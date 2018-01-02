@@ -40,8 +40,6 @@
 #include "tools/crypto.h"
 #include "sim/aircraftstate.h"
 
-#include "tools/ffs2core_global.h"
-
 struct SUser
 {
     QString Profil;

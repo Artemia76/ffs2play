@@ -27,7 +27,6 @@
 #include <QThread>
 #include "singleton/clogger.h"
 #include "sim/simconnector.h"
-#include "tools/ffs2core_global.h"
 
 class simbasemanager : public QObject
 {

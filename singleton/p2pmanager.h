@@ -30,7 +30,6 @@
 #include "miniupnpc.h"
 #include "upnpcommands.h"
 #include "protobuf/ffs2play.pb.h"
-#include "tools/ffs2core_global.h"
 #include "net/peer.h"
 
 using namespace ffs2play;
