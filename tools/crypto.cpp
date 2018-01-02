@@ -27,12 +27,18 @@
 /// \param parent
 ///
 
+#ifdef Q_OS_WIN32
+    #define BYTE CryptoPP::byte
+#else
+    #define BYTE byte
+#endif
+
 CCrypto::CCrypto(QObject *parent) : QObject(parent)
 {
     Log = CLogger::instance();
     m_key.resize(32);
     AutoSeededRandomPool prng;
-    prng.GenerateBlock((CryptoPP::byte*)m_key.data(),32);
+    prng.GenerateBlock((BYTE*)m_key.data(),32);
 }
 
 ///
@@ -67,10 +73,10 @@ QString CCrypto::EncryptToBase64(const QString& Data)
     // Generate a random IV
     QByteArray iv (AES::BLOCKSIZE,'\0');
     AutoSeededRandomPool rnd;
-    rnd.GenerateBlock((CryptoPP::byte*)iv.data(), AES::BLOCKSIZE);
+    rnd.GenerateBlock((BYTE*)iv.data(), AES::BLOCKSIZE);
     try
     {
-        CFB_Mode<AES>::Encryption cfbEncryption((const CryptoPP::byte*) m_key.data(),m_key.size(),(const CryptoPP::byte*)iv.data());
+        CFB_Mode<AES>::Encryption cfbEncryption((const BYTE*) m_key.data(),m_key.size(),(const BYTE*)iv.data());
         StringSource ss(Data.toStdString(), true,
                     new StreamTransformationFilter ( cfbEncryption,
                         new StringSink(cipher)
@@ -104,7 +110,7 @@ QString CCrypto::DecryptFromBase64(const QString& Data)
     std::string Decoded;
     try
     {
-        CFB_Mode<AES>::Decryption cfbDecryption((const CryptoPP::byte*) m_key.data(),m_key.size(),(const CryptoPP::byte*)iv.data());
+        CFB_Mode<AES>::Decryption cfbDecryption((const BYTE*) m_key.data(),m_key.size(),(const BYTE*)iv.data());
         StringSource ss( ToDecode, true,
                     new StreamTransformationFilter( cfbDecryption,
                         new StringSink(Decoded)

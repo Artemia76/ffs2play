@@ -155,10 +155,12 @@ LIBS += -lssl
 LIBS += -lcrypto
 }
 
-DISTFILES += \
-    ffs2play.rc \
-    intl/ffs2play_fr_FR.ts \
-    protobuf/ffs2play.proto
+win {
+    DISTFILES += ffs2play.rc
+}
+
+DISTFILES += intl/ffs2play_fr_FR.ts
+DISTFILES += protobuf/ffs2play.proto
 
 
 isEmpty(TARGET_EXT) {
