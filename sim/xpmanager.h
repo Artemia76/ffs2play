@@ -28,136 +28,20 @@
 #include <QDateTime>
 
 #include "sim/simconnector.h"
+#include "net/udpserver.h"
+#include "protobuf/ffs2play.pb.h"
 
 #pragma pack(1)
 
 namespace ffs2p_xplane
 {
-    struct SAI_Data
+    enum FFS2Proto
     {
-        char    title[256];
-        double  kohlsmann;
-        double  altitude;
-        double  latitude;
-        double  longitude;
-    };
-    #pragma pack ()
-
-    enum GROUP_ID{
-        JOYSTICK,
-        AI,
-    };
-
-    /// <summary>
-    /// Enumération des évenements du simulateur à traiter
-    /// </summary>
-    enum class EVENT_ID
-    {
-        PERIODIQUE,
-        PAUSE,
-        PARKING_BRAKE,
-        SIMSTART,
-        SIMSTOP,
-        OVERSPEED,
-        STALLING,
-        CRASH,
-        SLEW,
-        PUSHBACK,
-        ON_GROUND,
-        GEAR_HANDLE_POSITION,
-        FLAPS_HANDLE_PERCENT,
-        FLAPS_HANDLE_INDEX,
-        ALTIMETER_SETTING,
-        LANDING_LIGHT,
-        BEACON_LIGHT,
-        STROBE_LIGHT,
-        NAV_LIGHT,
-        RECOGNITION_LIGHT,
-        SMOKE_ENABLE,
-        FREEZE_LATLONG,
-        FREEZE_ALTITUDE,
-        FREEZE_ATTITUDE,
-        OBJECT_REMOVED,
-        SLEW_ON,
-        ADDED_AIRCRAFT,
-        REMOVED_AIRCRAFT,
-        FRAME,
-        TEXT_SCROLL,
-        SLIDER = 100,
-        XAXIS,
-        YAXIS,
-        RZAXIS,
-        HAT,
-        SLIDER2 = 110,
-        XAXIS2,
-        YAXIS2,
-        RZAXIS2,
-        HAT2,
-        SLIDER3 = 120,
-        XAXIS3,
-        YAXIS3,
-        RZAXIS3,
-        HAT3,
-        UNUSED = 0xFFFFFFF,
-    };
-
-    /// <summary>
-    /// Enumération des requêtes
-    /// à partir de 100, réservé pour les requetes de création et destruction d'avion
-    /// </summary>
-    enum class REQUEST_ID
-    {
-        PERIODIQUE,
-        PAUSE,
-        PARKING_BRAKE,
-        SIMSTART,
-        SIMSTOP,
-        OVERSPEED,
-        STALLING,
-        CRASH,
-        SLEW,
-        PUSHBACK,
-        ON_GROUND,
-        GEAR_HANDLE_POSITION,
-        FLAPS_HANDLE_PERCENT,
-        FLAPS_HANDLE_INDEX,
-        ALTIMETER_SETTING,
-        LANDING_LIGHT,
-        BEACON_LIGHT,
-        STROBE_LIGHT,
-        NAV_LIGHT,
-        RECOGNITION_LIGHT,
-        SMOKE_ENABLE,
-        SYSTEM,
-        JOY_INFO,
-        AI_RELEASE,
-        AI_CREATE = 0x100000,
-        AI_UPDATE = 0x200000,
-    };
-
-    enum DEFINITION_ID
-    {
-        PERIODIQUE,
-        PARKING_BRAKE,
-        OVERSPEED,
-        STALLING,
-        CRASH,
-        SLEW,
-        PUSHBACK,
-        ON_GROUND,
-        GEAR_HANDLE_POSITION,
-        FLAPS_HANDLE_PERCENT,
-        FLAPS_HANDLE_INDEX,
-        ALTIMETER_SETTING,
-        LANDING_LIGHT,
-        BEACON_LIGHT,
-        STROBE_LIGHT,
-        NAV_LIGHT,
-        RECOGNITION_LIGHT,
-        SMOKE_ENABLE,
-        IS_SLEW_ACTIVE,
-        AI_MOVE,
-        AI_INIT
+        PING = 0x00, // Ping receive
+        PONG = 0x01, // Pong With protocol Version
+        DATA = 0x02, // Ask start or stop receive data
+        DATA_SEND = 0x03, // Contain data of user plane
+        DISC = 0x04 // Disconnect client
     };
 
     /// <summary>
@@ -227,13 +111,19 @@ namespace ffs2p_xplane
     private:
         qint64      m_SimRate;
         qint64      m_VariableRate;
+        quint16     m_DestPort;
+        quint16     m_LocalPort;
         QDateTime   m_LastVariable;
         QDateTime   m_LastSim;
+        UDPServer*  Server;
+        AirData     PlayerData;
 
     protected:
         bool        open();
         void        close();
         void        main_loop();
+    private slots:
+        void OnReceiveDatagram(const QNetworkDatagram* datagram);
     };
 }
 #endif // XPMANAGER_H

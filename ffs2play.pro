@@ -71,7 +71,6 @@ SOURCES +=		main.cpp \
                 sim/aibase.cpp \
                 sim/aircraftstate.cpp \
                 sim/simconnector.cpp \
-                sim/xpmanage.cpp \
                 singleton/aimapping.cpp \
                 singleton/clogger.cpp \
                 singleton/p2pmanager.cpp \
@@ -83,7 +82,8 @@ SOURCES +=		main.cpp \
                 tools/crypto.cpp \
                 tools/getappversion.cpp \
                 tools/datetime.cpp \
-                sim/scmanager.cpp
+                sim/scmanager.cpp \
+    sim/xpmanager.cpp
 				
 HEADERS  +=     gui/dialogprofils.h \
                 gui/mainwindow.h \

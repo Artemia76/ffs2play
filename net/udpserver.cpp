@@ -101,11 +101,6 @@ void UDPServer::incomingData()
     while (m_pListenner->hasPendingDatagrams())
     {
         QNetworkDatagram datagram = m_pListenner->receiveDatagram();
-#ifdef FFS_DEBUG
-        Logger->log("UPDServer : " + tr("receive datagram = ") +
-                    QTextCodec::codecForMib(106)->toUnicode(datagram.data().toHex()),
-                    Qt::darkBlue,LEVEL_VERBOSE);
-#endif
         emit fireIncomingData(&datagram);
     }
 }
