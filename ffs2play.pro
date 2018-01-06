@@ -11,7 +11,6 @@ TEMPLATE = app
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 
 TARGET = ffs2play
-DEFINES += FFS_DEBUG
 DEFINES += MINIUPNP_STATICLIB
 
 win32 {
@@ -30,6 +29,7 @@ CONFIG(release, debug|release) {
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
     UI_DIR = debug/.ui
+	DEFINES += FFS_DEBUG
 }
 
 win32 {

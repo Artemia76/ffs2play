@@ -155,7 +155,7 @@ void CWebManager::OnATCUpdate()
 void CWebManager::OnLiveUpdate()
 {
 #ifdef FFS_DEBUG
-    Log->log("WebManager : " + tr("Get LiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
+    Log->log("WebManager : " + tr("Get OnLiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (m_bConnected && SimManager->isConnected())
     {

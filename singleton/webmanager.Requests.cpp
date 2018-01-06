@@ -70,7 +70,7 @@ void CWebManager::SendVerify()
 }
 
 ///
-/// \brief CWebManager::SendVerify
+/// \brief CWebManager::SendLiveUpdate
 ///
 
 void CWebManager::SendLiveUpdate()
