@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    //delete ui;
 }
 
 ///
@@ -96,6 +96,7 @@ void MainWindow::closeEvent(QCloseEvent*)
     s.beginGroup("Log");
     s.setValue("MaxLine",m_maxLine);
     s.endGroup();
+    WebManager->disconnect();
     P2PManager->init(false);
     SimManager->close();
 }

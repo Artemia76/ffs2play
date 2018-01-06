@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
@@ -30,6 +31,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 }  // namespace
 
 
+void protobuf_AssignDesc_ffs2play_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AssignDesc_ffs2play_2eproto() {
   protobuf_AddDesc_ffs2play_2eproto();
   const ::google::protobuf::FileDescriptor* file =
@@ -41,16 +43,16 @@ void protobuf_AssignDesc_ffs2play_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, ip_),
   };
   LocalIPList_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
       LocalIPList_descriptor_,
       LocalIPList::default_instance_,
       LocalIPList_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(LocalIPList));
+      -1,
+      -1,
+      sizeof(LocalIPList),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _is_default_instance_));
   AirData_descriptor_ = file->message_type(1);
   static const int AirData_offsets_[39] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, timestamp_),
@@ -94,16 +96,16 @@ void protobuf_AssignDesc_ffs2play_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, smoke_),
   };
   AirData_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
       AirData_descriptor_,
       AirData::default_instance_,
       AirData_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(AirData));
+      -1,
+      -1,
+      sizeof(AirData),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, _is_default_instance_));
 }
 
 namespace {
@@ -114,12 +116,13 @@ inline void protobuf_AssignDescriptorsOnce() {
                  &protobuf_AssignDesc_ffs2play_2eproto);
 }
 
+void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    LocalIPList_descriptor_, &LocalIPList::default_instance());
+      LocalIPList_descriptor_, &LocalIPList::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    AirData_descriptor_, &AirData::default_instance());
+      AirData_descriptor_, &AirData::default_instance());
 }
 
 }  // namespace
@@ -131,6 +134,7 @@ void protobuf_ShutdownFile_ffs2play_2eproto() {
   delete AirData_reflection_;
 }
 
+void protobuf_AddDesc_ffs2play_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AddDesc_ffs2play_2eproto() {
   static bool already_here = false;
   if (already_here) return;
@@ -140,24 +144,24 @@ void protobuf_AddDesc_ffs2play_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\016ffs2play.proto\022\010ffs2play\"\031\n\013LocalIPLis"
     "t\022\n\n\002IP\030\001 \003(\t\"\337\005\n\007AirData\022\021\n\tTimestamp\030\001"
-    " \002(\003\022\r\n\005Title\030\002 \002(\t\022\r\n\005Model\030\003 \002(\t\022\014\n\004Ty"
-    "pe\030\004 \002(\t\022\020\n\010Category\030\005 \002(\t\022\020\n\010Altitude\030\006"
-    " \002(\001\022\026\n\016GroundAltitude\030\007 \002(\001\022\017\n\007Heading\030"
-    "\010 \002(\001\022\021\n\tLongitude\030\t \002(\001\022\020\n\010Latitude\030\n \002"
-    "(\001\022\020\n\010IASSpeed\030\013 \002(\001\022\r\n\005Pitch\030\014 \002(\001\022\014\n\004B"
-    "ank\030\r \002(\001\022\016\n\006Squawk\030\016 \002(\005\022\023\n\013ElevatorPos"
-    "\030\017 \002(\001\022\022\n\nAileronPos\030\020 \002(\001\022\021\n\tRudderPos\030"
-    "\021 \002(\001\022\020\n\010Door1Pos\030\022 \002(\005\022\020\n\010Door2Pos\030\023 \002("
-    "\005\022\020\n\010Door3Pos\030\024 \002(\005\022\020\n\010Door4Pos\030\025 \002(\005\022\022\n"
-    "\nFlapsIndex\030\026 \002(\005\022\021\n\tNumEngine\030\027 \002(\005\022\024\n\014"
-    "ThrottleEng1\030\030 \002(\005\022\024\n\014ThrottleEng2\030\031 \002(\005"
-    "\022\024\n\014ThrottleEng3\030\032 \002(\005\022\024\n\014ThrottleEng4\030\033"
-    " \002(\005\022\020\n\010OnGround\030\034 \002(\010\022\017\n\007GearPos\030\035 \002(\010\022"
-    "\024\n\014LandingLight\030\036 \002(\010\022\023\n\013BeaconLight\030\037 \002"
-    "(\010\022\023\n\013StrobeLight\030  \002(\010\022\020\n\010NavLight\030! \002("
-    "\010\022\021\n\tRecoLight\030\" \002(\010\022\021\n\tStateEng1\030# \002(\010\022"
-    "\021\n\tStateEng2\030$ \002(\010\022\021\n\tStateEng3\030% \002(\010\022\021\n"
-    "\tStateEng4\030& \002(\010\022\r\n\005Smoke\030\' \002(\010", 791);
+    " \001(\003\022\r\n\005Title\030\002 \001(\t\022\r\n\005Model\030\003 \001(\t\022\014\n\004Ty"
+    "pe\030\004 \001(\t\022\020\n\010Category\030\005 \001(\t\022\020\n\010Altitude\030\006"
+    " \001(\001\022\026\n\016GroundAltitude\030\007 \001(\001\022\017\n\007Heading\030"
+    "\010 \001(\001\022\021\n\tLongitude\030\t \001(\001\022\020\n\010Latitude\030\n \001"
+    "(\001\022\020\n\010IASSpeed\030\013 \001(\001\022\r\n\005Pitch\030\014 \001(\001\022\014\n\004B"
+    "ank\030\r \001(\001\022\016\n\006Squawk\030\016 \001(\005\022\023\n\013ElevatorPos"
+    "\030\017 \001(\001\022\022\n\nAileronPos\030\020 \001(\001\022\021\n\tRudderPos\030"
+    "\021 \001(\001\022\020\n\010Door1Pos\030\022 \001(\005\022\020\n\010Door2Pos\030\023 \001("
+    "\005\022\020\n\010Door3Pos\030\024 \001(\005\022\020\n\010Door4Pos\030\025 \001(\005\022\022\n"
+    "\nFlapsIndex\030\026 \001(\005\022\021\n\tNumEngine\030\027 \001(\005\022\024\n\014"
+    "ThrottleEng1\030\030 \001(\005\022\024\n\014ThrottleEng2\030\031 \001(\005"
+    "\022\024\n\014ThrottleEng3\030\032 \001(\005\022\024\n\014ThrottleEng4\030\033"
+    " \001(\005\022\020\n\010OnGround\030\034 \001(\010\022\017\n\007GearPos\030\035 \001(\010\022"
+    "\024\n\014LandingLight\030\036 \001(\010\022\023\n\013BeaconLight\030\037 \001"
+    "(\010\022\023\n\013StrobeLight\030  \001(\010\022\020\n\010NavLight\030! \001("
+    "\010\022\021\n\tRecoLight\030\" \001(\010\022\021\n\tStateEng1\030# \001(\010\022"
+    "\021\n\tStateEng2\030$ \001(\010\022\021\n\tStateEng3\030% \001(\010\022\021\n"
+    "\tStateEng4\030& \001(\010\022\r\n\005Smoke\030\' \001(\010b\006proto3", 799);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ffs2play.proto", &protobuf_RegisterTypes);
   LocalIPList::default_instance_ = new LocalIPList();
@@ -176,30 +180,32 @@ struct StaticDescriptorInitializer_ffs2play_2eproto {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int LocalIPList::kIPFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 LocalIPList::LocalIPList()
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:ffs2play.LocalIPList)
 }
 
 void LocalIPList::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
 }
 
 LocalIPList::LocalIPList(const LocalIPList& from)
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:ffs2play.LocalIPList)
 }
 
 void LocalIPList::SharedCtor() {
+    _is_default_instance_ = false;
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 LocalIPList::~LocalIPList() {
@@ -229,19 +235,22 @@ const LocalIPList& LocalIPList::default_instance() {
 
 LocalIPList* LocalIPList::default_instance_ = NULL;
 
-LocalIPList* LocalIPList::New() const {
-  return new LocalIPList;
+LocalIPList* LocalIPList::New(::google::protobuf::Arena* arena) const {
+  LocalIPList* n = new LocalIPList;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void LocalIPList::Clear() {
+// @@protoc_insertion_point(message_clear_start:ffs2play.LocalIPList)
   ip_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
 }
 
 bool LocalIPList::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:ffs2play.LocalIPList)
   for (;;) {
@@ -255,11 +264,11 @@ bool LocalIPList::MergePartialFromCodedStream(
          parse_IP:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->add_ip()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->ip(this->ip_size() - 1).data(),
             this->ip(this->ip_size() - 1).length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "ip");
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ffs2play.LocalIPList.IP"));
         } else {
           goto handle_unusual;
         }
@@ -275,8 +284,7 @@ bool LocalIPList::MergePartialFromCodedStream(
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
         break;
       }
     }
@@ -295,43 +303,37 @@ void LocalIPList::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:ffs2play.LocalIPList)
   // repeated string IP = 1;
   for (int i = 0; i < this->ip_size(); i++) {
-  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-    this->ip(i).data(), this->ip(i).length(),
-    ::google::protobuf::internal::WireFormat::SERIALIZE,
-    "ip");
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->ip(i).data(), this->ip(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.LocalIPList.IP");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       1, this->ip(i), output);
   }
 
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
   // @@protoc_insertion_point(serialize_end:ffs2play.LocalIPList)
 }
 
-::google::protobuf::uint8* LocalIPList::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8* LocalIPList::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
   // @@protoc_insertion_point(serialize_to_array_start:ffs2play.LocalIPList)
   // repeated string IP = 1;
   for (int i = 0; i < this->ip_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->ip(i).data(), this->ip(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ip");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.LocalIPList.IP");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(1, this->ip(i), target);
   }
 
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
   // @@protoc_insertion_point(serialize_to_array_end:ffs2play.LocalIPList)
   return target;
 }
 
 int LocalIPList::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:ffs2play.LocalIPList)
   int total_size = 0;
 
   // repeated string IP = 1;
@@ -341,11 +343,6 @@ int LocalIPList::ByteSize() const {
       this->ip(i));
   }
 
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -353,30 +350,39 @@ int LocalIPList::ByteSize() const {
 }
 
 void LocalIPList::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const LocalIPList* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const LocalIPList*>(
-      &from);
+// @@protoc_insertion_point(generalized_merge_from_start:ffs2play.LocalIPList)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const LocalIPList* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const LocalIPList>(
+          &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ffs2play.LocalIPList)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ffs2play.LocalIPList)
     MergeFrom(*source);
   }
 }
 
 void LocalIPList::MergeFrom(const LocalIPList& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:ffs2play.LocalIPList)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   ip_.MergeFrom(from.ip_);
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
 void LocalIPList::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ffs2play.LocalIPList)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void LocalIPList::CopyFrom(const LocalIPList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ffs2play.LocalIPList)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -388,12 +394,13 @@ bool LocalIPList::IsInitialized() const {
 }
 
 void LocalIPList::Swap(LocalIPList* other) {
-  if (other != this) {
-    ip_.Swap(&other->ip_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void LocalIPList::InternalSwap(LocalIPList* other) {
+  ip_.UnsafeArenaSwap(&other->ip_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata LocalIPList::GetMetadata() const {
@@ -404,10 +411,69 @@ void LocalIPList::Swap(LocalIPList* other) {
   return metadata;
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// LocalIPList
+
+// repeated string IP = 1;
+int LocalIPList::ip_size() const {
+  return ip_.size();
+}
+void LocalIPList::clear_ip() {
+  ip_.Clear();
+}
+ const ::std::string& LocalIPList::ip(int index) const {
+  // @@protoc_insertion_point(field_get:ffs2play.LocalIPList.IP)
+  return ip_.Get(index);
+}
+ ::std::string* LocalIPList::mutable_ip(int index) {
+  // @@protoc_insertion_point(field_mutable:ffs2play.LocalIPList.IP)
+  return ip_.Mutable(index);
+}
+ void LocalIPList::set_ip(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:ffs2play.LocalIPList.IP)
+  ip_.Mutable(index)->assign(value);
+}
+ void LocalIPList::set_ip(int index, const char* value) {
+  ip_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:ffs2play.LocalIPList.IP)
+}
+ void LocalIPList::set_ip(int index, const char* value, size_t size) {
+  ip_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.LocalIPList.IP)
+}
+ ::std::string* LocalIPList::add_ip() {
+  // @@protoc_insertion_point(field_add_mutable:ffs2play.LocalIPList.IP)
+  return ip_.Add();
+}
+ void LocalIPList::add_ip(const ::std::string& value) {
+  ip_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:ffs2play.LocalIPList.IP)
+}
+ void LocalIPList::add_ip(const char* value) {
+  ip_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:ffs2play.LocalIPList.IP)
+}
+ void LocalIPList::add_ip(const char* value, size_t size) {
+  ip_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:ffs2play.LocalIPList.IP)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+LocalIPList::ip() const {
+  // @@protoc_insertion_point(field_list:ffs2play.LocalIPList.IP)
+  return ip_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+LocalIPList::mutable_ip() {
+  // @@protoc_insertion_point(field_mutable_list:ffs2play.LocalIPList.IP)
+  return &ip_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int AirData::kTimestampFieldNumber;
 const int AirData::kTitleFieldNumber;
 const int AirData::kModelFieldNumber;
@@ -447,32 +513,35 @@ const int AirData::kStateEng2FieldNumber;
 const int AirData::kStateEng3FieldNumber;
 const int AirData::kStateEng4FieldNumber;
 const int AirData::kSmokeFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 AirData::AirData()
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:ffs2play.AirData)
 }
 
 void AirData::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
 }
 
 AirData::AirData(const AirData& from)
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:ffs2play.AirData)
 }
 
 void AirData::SharedCtor() {
+    _is_default_instance_ = false;
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   timestamp_ = GOOGLE_LONGLONG(0);
-  title_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  model_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  type_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  category_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  title_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  category_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   altitude_ = 0;
   groundaltitude_ = 0;
   heading_ = 0;
@@ -507,7 +576,6 @@ void AirData::SharedCtor() {
   stateeng3_ = false;
   stateeng4_ = false;
   smoke_ = false;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 AirData::~AirData() {
@@ -516,18 +584,10 @@ AirData::~AirData() {
 }
 
 void AirData::SharedDtor() {
-  if (title_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete title_;
-  }
-  if (model_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete model_;
-  }
-  if (type_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete type_;
-  }
-  if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete category_;
-  }
+  title_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  category_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -549,68 +609,51 @@ const AirData& AirData::default_instance() {
 
 AirData* AirData::default_instance_ = NULL;
 
-AirData* AirData::New() const {
-  return new AirData;
+AirData* AirData::New(::google::protobuf::Arena* arena) const {
+  AirData* n = new AirData;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void AirData::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<AirData*>(16)->f) - \
-   reinterpret_cast<char*>(16))
+// @@protoc_insertion_point(message_clear_start:ffs2play.AirData)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(AirData, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<AirData*>(16)->f)
+#endif
 
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
 
-  if (_has_bits_[0 / 32] & 255) {
-    ZR_(altitude_, heading_);
-    timestamp_ = GOOGLE_LONGLONG(0);
-    if (has_title()) {
-      if (title_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        title_->clear();
-      }
-    }
-    if (has_model()) {
-      if (model_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        model_->clear();
-      }
-    }
-    if (has_type()) {
-      if (type_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        type_->clear();
-      }
-    }
-    if (has_category()) {
-      if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        category_->clear();
-      }
-    }
-  }
-  if (_has_bits_[8 / 32] & 65280) {
-    ZR_(longitude_, squawk_);
-  }
-  if (_has_bits_[16 / 32] & 16711680) {
-    ZR_(door1pos_, throttleeng1_);
-  }
-  if (_has_bits_[24 / 32] & 4278190080) {
-    ZR_(throttleeng2_, strobelight_);
-  }
-  if (_has_bits_[32 / 32] & 127) {
-    ZR_(navlight_, smoke_);
-  }
+  ZR_(altitude_, heading_);
+  timestamp_ = GOOGLE_LONGLONG(0);
+  title_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  model_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  category_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ZR_(longitude_, squawk_);
+  ZR_(door1pos_, throttleeng1_);
+  ZR_(throttleeng2_, strobelight_);
+  ZR_(navlight_, smoke_);
 
-#undef OFFSET_OF_FIELD_
+#undef ZR_HELPER_
 #undef ZR_
 
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
 }
 
 bool AirData::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:ffs2play.AirData)
   for (;;) {
@@ -618,13 +661,13 @@ bool AirData::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int64 Timestamp = 1;
+      // optional int64 Timestamp = 1;
       case 1: {
         if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &timestamp_)));
-          set_has_timestamp();
+
         } else {
           goto handle_unusual;
         }
@@ -632,16 +675,16 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required string Title = 2;
+      // optional string Title = 2;
       case 2: {
         if (tag == 18) {
          parse_Title:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_title()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->title().data(), this->title().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "title");
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ffs2play.AirData.Title"));
         } else {
           goto handle_unusual;
         }
@@ -649,16 +692,16 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required string Model = 3;
+      // optional string Model = 3;
       case 3: {
         if (tag == 26) {
          parse_Model:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_model()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->model().data(), this->model().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "model");
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ffs2play.AirData.Model"));
         } else {
           goto handle_unusual;
         }
@@ -666,16 +709,16 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required string Type = 4;
+      // optional string Type = 4;
       case 4: {
         if (tag == 34) {
          parse_Type:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_type()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->type().data(), this->type().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "type");
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ffs2play.AirData.Type"));
         } else {
           goto handle_unusual;
         }
@@ -683,16 +726,16 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required string Category = 5;
+      // optional string Category = 5;
       case 5: {
         if (tag == 42) {
          parse_Category:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_category()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->category().data(), this->category().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "category");
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ffs2play.AirData.Category"));
         } else {
           goto handle_unusual;
         }
@@ -700,14 +743,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double Altitude = 6;
+      // optional double Altitude = 6;
       case 6: {
         if (tag == 49) {
          parse_Altitude:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &altitude_)));
-          set_has_altitude();
+
         } else {
           goto handle_unusual;
         }
@@ -715,14 +758,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double GroundAltitude = 7;
+      // optional double GroundAltitude = 7;
       case 7: {
         if (tag == 57) {
          parse_GroundAltitude:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &groundaltitude_)));
-          set_has_groundaltitude();
+
         } else {
           goto handle_unusual;
         }
@@ -730,14 +773,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double Heading = 8;
+      // optional double Heading = 8;
       case 8: {
         if (tag == 65) {
          parse_Heading:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &heading_)));
-          set_has_heading();
+
         } else {
           goto handle_unusual;
         }
@@ -745,14 +788,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double Longitude = 9;
+      // optional double Longitude = 9;
       case 9: {
         if (tag == 73) {
          parse_Longitude:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &longitude_)));
-          set_has_longitude();
+
         } else {
           goto handle_unusual;
         }
@@ -760,14 +803,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double Latitude = 10;
+      // optional double Latitude = 10;
       case 10: {
         if (tag == 81) {
          parse_Latitude:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &latitude_)));
-          set_has_latitude();
+
         } else {
           goto handle_unusual;
         }
@@ -775,14 +818,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double IASSpeed = 11;
+      // optional double IASSpeed = 11;
       case 11: {
         if (tag == 89) {
          parse_IASSpeed:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &iasspeed_)));
-          set_has_iasspeed();
+
         } else {
           goto handle_unusual;
         }
@@ -790,14 +833,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double Pitch = 12;
+      // optional double Pitch = 12;
       case 12: {
         if (tag == 97) {
          parse_Pitch:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &pitch_)));
-          set_has_pitch();
+
         } else {
           goto handle_unusual;
         }
@@ -805,14 +848,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double Bank = 13;
+      // optional double Bank = 13;
       case 13: {
         if (tag == 105) {
          parse_Bank:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &bank_)));
-          set_has_bank();
+
         } else {
           goto handle_unusual;
         }
@@ -820,14 +863,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 Squawk = 14;
+      // optional int32 Squawk = 14;
       case 14: {
         if (tag == 112) {
          parse_Squawk:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &squawk_)));
-          set_has_squawk();
+
         } else {
           goto handle_unusual;
         }
@@ -835,14 +878,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double ElevatorPos = 15;
+      // optional double ElevatorPos = 15;
       case 15: {
         if (tag == 121) {
          parse_ElevatorPos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &elevatorpos_)));
-          set_has_elevatorpos();
+
         } else {
           goto handle_unusual;
         }
@@ -850,14 +893,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double AileronPos = 16;
+      // optional double AileronPos = 16;
       case 16: {
         if (tag == 129) {
          parse_AileronPos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &aileronpos_)));
-          set_has_aileronpos();
+
         } else {
           goto handle_unusual;
         }
@@ -865,14 +908,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required double RudderPos = 17;
+      // optional double RudderPos = 17;
       case 17: {
         if (tag == 137) {
          parse_RudderPos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &rudderpos_)));
-          set_has_rudderpos();
+
         } else {
           goto handle_unusual;
         }
@@ -880,14 +923,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 Door1Pos = 18;
+      // optional int32 Door1Pos = 18;
       case 18: {
         if (tag == 144) {
          parse_Door1Pos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &door1pos_)));
-          set_has_door1pos();
+
         } else {
           goto handle_unusual;
         }
@@ -895,14 +938,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 Door2Pos = 19;
+      // optional int32 Door2Pos = 19;
       case 19: {
         if (tag == 152) {
          parse_Door2Pos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &door2pos_)));
-          set_has_door2pos();
+
         } else {
           goto handle_unusual;
         }
@@ -910,14 +953,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 Door3Pos = 20;
+      // optional int32 Door3Pos = 20;
       case 20: {
         if (tag == 160) {
          parse_Door3Pos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &door3pos_)));
-          set_has_door3pos();
+
         } else {
           goto handle_unusual;
         }
@@ -925,14 +968,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 Door4Pos = 21;
+      // optional int32 Door4Pos = 21;
       case 21: {
         if (tag == 168) {
          parse_Door4Pos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &door4pos_)));
-          set_has_door4pos();
+
         } else {
           goto handle_unusual;
         }
@@ -940,14 +983,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 FlapsIndex = 22;
+      // optional int32 FlapsIndex = 22;
       case 22: {
         if (tag == 176) {
          parse_FlapsIndex:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &flapsindex_)));
-          set_has_flapsindex();
+
         } else {
           goto handle_unusual;
         }
@@ -955,14 +998,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 NumEngine = 23;
+      // optional int32 NumEngine = 23;
       case 23: {
         if (tag == 184) {
          parse_NumEngine:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &numengine_)));
-          set_has_numengine();
+
         } else {
           goto handle_unusual;
         }
@@ -970,14 +1013,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 ThrottleEng1 = 24;
+      // optional int32 ThrottleEng1 = 24;
       case 24: {
         if (tag == 192) {
          parse_ThrottleEng1:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &throttleeng1_)));
-          set_has_throttleeng1();
+
         } else {
           goto handle_unusual;
         }
@@ -985,14 +1028,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 ThrottleEng2 = 25;
+      // optional int32 ThrottleEng2 = 25;
       case 25: {
         if (tag == 200) {
          parse_ThrottleEng2:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &throttleeng2_)));
-          set_has_throttleeng2();
+
         } else {
           goto handle_unusual;
         }
@@ -1000,14 +1043,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 ThrottleEng3 = 26;
+      // optional int32 ThrottleEng3 = 26;
       case 26: {
         if (tag == 208) {
          parse_ThrottleEng3:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &throttleeng3_)));
-          set_has_throttleeng3();
+
         } else {
           goto handle_unusual;
         }
@@ -1015,14 +1058,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 ThrottleEng4 = 27;
+      // optional int32 ThrottleEng4 = 27;
       case 27: {
         if (tag == 216) {
          parse_ThrottleEng4:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &throttleeng4_)));
-          set_has_throttleeng4();
+
         } else {
           goto handle_unusual;
         }
@@ -1030,14 +1073,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool OnGround = 28;
+      // optional bool OnGround = 28;
       case 28: {
         if (tag == 224) {
          parse_OnGround:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &onground_)));
-          set_has_onground();
+
         } else {
           goto handle_unusual;
         }
@@ -1045,14 +1088,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool GearPos = 29;
+      // optional bool GearPos = 29;
       case 29: {
         if (tag == 232) {
          parse_GearPos:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &gearpos_)));
-          set_has_gearpos();
+
         } else {
           goto handle_unusual;
         }
@@ -1060,14 +1103,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool LandingLight = 30;
+      // optional bool LandingLight = 30;
       case 30: {
         if (tag == 240) {
          parse_LandingLight:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &landinglight_)));
-          set_has_landinglight();
+
         } else {
           goto handle_unusual;
         }
@@ -1075,14 +1118,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool BeaconLight = 31;
+      // optional bool BeaconLight = 31;
       case 31: {
         if (tag == 248) {
          parse_BeaconLight:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &beaconlight_)));
-          set_has_beaconlight();
+
         } else {
           goto handle_unusual;
         }
@@ -1090,14 +1133,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool StrobeLight = 32;
+      // optional bool StrobeLight = 32;
       case 32: {
         if (tag == 256) {
          parse_StrobeLight:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &strobelight_)));
-          set_has_strobelight();
+
         } else {
           goto handle_unusual;
         }
@@ -1105,14 +1148,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool NavLight = 33;
+      // optional bool NavLight = 33;
       case 33: {
         if (tag == 264) {
          parse_NavLight:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &navlight_)));
-          set_has_navlight();
+
         } else {
           goto handle_unusual;
         }
@@ -1120,14 +1163,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool RecoLight = 34;
+      // optional bool RecoLight = 34;
       case 34: {
         if (tag == 272) {
          parse_RecoLight:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &recolight_)));
-          set_has_recolight();
+
         } else {
           goto handle_unusual;
         }
@@ -1135,14 +1178,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool StateEng1 = 35;
+      // optional bool StateEng1 = 35;
       case 35: {
         if (tag == 280) {
          parse_StateEng1:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &stateeng1_)));
-          set_has_stateeng1();
+
         } else {
           goto handle_unusual;
         }
@@ -1150,14 +1193,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool StateEng2 = 36;
+      // optional bool StateEng2 = 36;
       case 36: {
         if (tag == 288) {
          parse_StateEng2:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &stateeng2_)));
-          set_has_stateeng2();
+
         } else {
           goto handle_unusual;
         }
@@ -1165,14 +1208,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool StateEng3 = 37;
+      // optional bool StateEng3 = 37;
       case 37: {
         if (tag == 296) {
          parse_StateEng3:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &stateeng3_)));
-          set_has_stateeng3();
+
         } else {
           goto handle_unusual;
         }
@@ -1180,14 +1223,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool StateEng4 = 38;
+      // optional bool StateEng4 = 38;
       case 38: {
         if (tag == 304) {
          parse_StateEng4:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &stateeng4_)));
-          set_has_stateeng4();
+
         } else {
           goto handle_unusual;
         }
@@ -1195,14 +1238,14 @@ bool AirData::MergePartialFromCodedStream(
         break;
       }
 
-      // required bool Smoke = 39;
+      // optional bool Smoke = 39;
       case 39: {
         if (tag == 312) {
          parse_Smoke:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &smoke_)));
-          set_has_smoke();
+
         } else {
           goto handle_unusual;
         }
@@ -1217,8 +1260,7 @@ bool AirData::MergePartialFromCodedStream(
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
         break;
       }
     }
@@ -1235,703 +1277,682 @@ failure:
 void AirData::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:ffs2play.AirData)
-  // required int64 Timestamp = 1;
-  if (has_timestamp()) {
+  // optional int64 Timestamp = 1;
+  if (this->timestamp() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->timestamp(), output);
   }
 
-  // required string Title = 2;
-  if (has_title()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Title = 2;
+  if (this->title().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->title().data(), this->title().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "title");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Title");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->title(), output);
   }
 
-  // required string Model = 3;
-  if (has_model()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Model = 3;
+  if (this->model().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->model().data(), this->model().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Model");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       3, this->model(), output);
   }
 
-  // required string Type = 4;
-  if (has_type()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Type = 4;
+  if (this->type().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->type().data(), this->type().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "type");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Type");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       4, this->type(), output);
   }
 
-  // required string Category = 5;
-  if (has_category()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Category = 5;
+  if (this->category().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->category().data(), this->category().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "category");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Category");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       5, this->category(), output);
   }
 
-  // required double Altitude = 6;
-  if (has_altitude()) {
+  // optional double Altitude = 6;
+  if (this->altitude() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(6, this->altitude(), output);
   }
 
-  // required double GroundAltitude = 7;
-  if (has_groundaltitude()) {
+  // optional double GroundAltitude = 7;
+  if (this->groundaltitude() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(7, this->groundaltitude(), output);
   }
 
-  // required double Heading = 8;
-  if (has_heading()) {
+  // optional double Heading = 8;
+  if (this->heading() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(8, this->heading(), output);
   }
 
-  // required double Longitude = 9;
-  if (has_longitude()) {
+  // optional double Longitude = 9;
+  if (this->longitude() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(9, this->longitude(), output);
   }
 
-  // required double Latitude = 10;
-  if (has_latitude()) {
+  // optional double Latitude = 10;
+  if (this->latitude() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(10, this->latitude(), output);
   }
 
-  // required double IASSpeed = 11;
-  if (has_iasspeed()) {
+  // optional double IASSpeed = 11;
+  if (this->iasspeed() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(11, this->iasspeed(), output);
   }
 
-  // required double Pitch = 12;
-  if (has_pitch()) {
+  // optional double Pitch = 12;
+  if (this->pitch() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(12, this->pitch(), output);
   }
 
-  // required double Bank = 13;
-  if (has_bank()) {
+  // optional double Bank = 13;
+  if (this->bank() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(13, this->bank(), output);
   }
 
-  // required int32 Squawk = 14;
-  if (has_squawk()) {
+  // optional int32 Squawk = 14;
+  if (this->squawk() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(14, this->squawk(), output);
   }
 
-  // required double ElevatorPos = 15;
-  if (has_elevatorpos()) {
+  // optional double ElevatorPos = 15;
+  if (this->elevatorpos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(15, this->elevatorpos(), output);
   }
 
-  // required double AileronPos = 16;
-  if (has_aileronpos()) {
+  // optional double AileronPos = 16;
+  if (this->aileronpos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(16, this->aileronpos(), output);
   }
 
-  // required double RudderPos = 17;
-  if (has_rudderpos()) {
+  // optional double RudderPos = 17;
+  if (this->rudderpos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(17, this->rudderpos(), output);
   }
 
-  // required int32 Door1Pos = 18;
-  if (has_door1pos()) {
+  // optional int32 Door1Pos = 18;
+  if (this->door1pos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(18, this->door1pos(), output);
   }
 
-  // required int32 Door2Pos = 19;
-  if (has_door2pos()) {
+  // optional int32 Door2Pos = 19;
+  if (this->door2pos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(19, this->door2pos(), output);
   }
 
-  // required int32 Door3Pos = 20;
-  if (has_door3pos()) {
+  // optional int32 Door3Pos = 20;
+  if (this->door3pos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->door3pos(), output);
   }
 
-  // required int32 Door4Pos = 21;
-  if (has_door4pos()) {
+  // optional int32 Door4Pos = 21;
+  if (this->door4pos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(21, this->door4pos(), output);
   }
 
-  // required int32 FlapsIndex = 22;
-  if (has_flapsindex()) {
+  // optional int32 FlapsIndex = 22;
+  if (this->flapsindex() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(22, this->flapsindex(), output);
   }
 
-  // required int32 NumEngine = 23;
-  if (has_numengine()) {
+  // optional int32 NumEngine = 23;
+  if (this->numengine() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(23, this->numengine(), output);
   }
 
-  // required int32 ThrottleEng1 = 24;
-  if (has_throttleeng1()) {
+  // optional int32 ThrottleEng1 = 24;
+  if (this->throttleeng1() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(24, this->throttleeng1(), output);
   }
 
-  // required int32 ThrottleEng2 = 25;
-  if (has_throttleeng2()) {
+  // optional int32 ThrottleEng2 = 25;
+  if (this->throttleeng2() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(25, this->throttleeng2(), output);
   }
 
-  // required int32 ThrottleEng3 = 26;
-  if (has_throttleeng3()) {
+  // optional int32 ThrottleEng3 = 26;
+  if (this->throttleeng3() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(26, this->throttleeng3(), output);
   }
 
-  // required int32 ThrottleEng4 = 27;
-  if (has_throttleeng4()) {
+  // optional int32 ThrottleEng4 = 27;
+  if (this->throttleeng4() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(27, this->throttleeng4(), output);
   }
 
-  // required bool OnGround = 28;
-  if (has_onground()) {
+  // optional bool OnGround = 28;
+  if (this->onground() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(28, this->onground(), output);
   }
 
-  // required bool GearPos = 29;
-  if (has_gearpos()) {
+  // optional bool GearPos = 29;
+  if (this->gearpos() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(29, this->gearpos(), output);
   }
 
-  // required bool LandingLight = 30;
-  if (has_landinglight()) {
+  // optional bool LandingLight = 30;
+  if (this->landinglight() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(30, this->landinglight(), output);
   }
 
-  // required bool BeaconLight = 31;
-  if (has_beaconlight()) {
+  // optional bool BeaconLight = 31;
+  if (this->beaconlight() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(31, this->beaconlight(), output);
   }
 
-  // required bool StrobeLight = 32;
-  if (has_strobelight()) {
+  // optional bool StrobeLight = 32;
+  if (this->strobelight() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(32, this->strobelight(), output);
   }
 
-  // required bool NavLight = 33;
-  if (has_navlight()) {
+  // optional bool NavLight = 33;
+  if (this->navlight() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(33, this->navlight(), output);
   }
 
-  // required bool RecoLight = 34;
-  if (has_recolight()) {
+  // optional bool RecoLight = 34;
+  if (this->recolight() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(34, this->recolight(), output);
   }
 
-  // required bool StateEng1 = 35;
-  if (has_stateeng1()) {
+  // optional bool StateEng1 = 35;
+  if (this->stateeng1() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(35, this->stateeng1(), output);
   }
 
-  // required bool StateEng2 = 36;
-  if (has_stateeng2()) {
+  // optional bool StateEng2 = 36;
+  if (this->stateeng2() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(36, this->stateeng2(), output);
   }
 
-  // required bool StateEng3 = 37;
-  if (has_stateeng3()) {
+  // optional bool StateEng3 = 37;
+  if (this->stateeng3() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(37, this->stateeng3(), output);
   }
 
-  // required bool StateEng4 = 38;
-  if (has_stateeng4()) {
+  // optional bool StateEng4 = 38;
+  if (this->stateeng4() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(38, this->stateeng4(), output);
   }
 
-  // required bool Smoke = 39;
-  if (has_smoke()) {
+  // optional bool Smoke = 39;
+  if (this->smoke() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(39, this->smoke(), output);
   }
 
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
   // @@protoc_insertion_point(serialize_end:ffs2play.AirData)
 }
 
-::google::protobuf::uint8* AirData::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8* AirData::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
   // @@protoc_insertion_point(serialize_to_array_start:ffs2play.AirData)
-  // required int64 Timestamp = 1;
-  if (has_timestamp()) {
+  // optional int64 Timestamp = 1;
+  if (this->timestamp() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->timestamp(), target);
   }
 
-  // required string Title = 2;
-  if (has_title()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Title = 2;
+  if (this->title().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->title().data(), this->title().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "title");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Title");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->title(), target);
   }
 
-  // required string Model = 3;
-  if (has_model()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Model = 3;
+  if (this->model().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->model().data(), this->model().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "model");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Model");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         3, this->model(), target);
   }
 
-  // required string Type = 4;
-  if (has_type()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Type = 4;
+  if (this->type().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->type().data(), this->type().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "type");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Type");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         4, this->type(), target);
   }
 
-  // required string Category = 5;
-  if (has_category()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // optional string Category = 5;
+  if (this->category().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->category().data(), this->category().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "category");
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ffs2play.AirData.Category");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         5, this->category(), target);
   }
 
-  // required double Altitude = 6;
-  if (has_altitude()) {
+  // optional double Altitude = 6;
+  if (this->altitude() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(6, this->altitude(), target);
   }
 
-  // required double GroundAltitude = 7;
-  if (has_groundaltitude()) {
+  // optional double GroundAltitude = 7;
+  if (this->groundaltitude() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(7, this->groundaltitude(), target);
   }
 
-  // required double Heading = 8;
-  if (has_heading()) {
+  // optional double Heading = 8;
+  if (this->heading() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(8, this->heading(), target);
   }
 
-  // required double Longitude = 9;
-  if (has_longitude()) {
+  // optional double Longitude = 9;
+  if (this->longitude() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(9, this->longitude(), target);
   }
 
-  // required double Latitude = 10;
-  if (has_latitude()) {
+  // optional double Latitude = 10;
+  if (this->latitude() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(10, this->latitude(), target);
   }
 
-  // required double IASSpeed = 11;
-  if (has_iasspeed()) {
+  // optional double IASSpeed = 11;
+  if (this->iasspeed() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(11, this->iasspeed(), target);
   }
 
-  // required double Pitch = 12;
-  if (has_pitch()) {
+  // optional double Pitch = 12;
+  if (this->pitch() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(12, this->pitch(), target);
   }
 
-  // required double Bank = 13;
-  if (has_bank()) {
+  // optional double Bank = 13;
+  if (this->bank() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(13, this->bank(), target);
   }
 
-  // required int32 Squawk = 14;
-  if (has_squawk()) {
+  // optional int32 Squawk = 14;
+  if (this->squawk() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(14, this->squawk(), target);
   }
 
-  // required double ElevatorPos = 15;
-  if (has_elevatorpos()) {
+  // optional double ElevatorPos = 15;
+  if (this->elevatorpos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(15, this->elevatorpos(), target);
   }
 
-  // required double AileronPos = 16;
-  if (has_aileronpos()) {
+  // optional double AileronPos = 16;
+  if (this->aileronpos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(16, this->aileronpos(), target);
   }
 
-  // required double RudderPos = 17;
-  if (has_rudderpos()) {
+  // optional double RudderPos = 17;
+  if (this->rudderpos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(17, this->rudderpos(), target);
   }
 
-  // required int32 Door1Pos = 18;
-  if (has_door1pos()) {
+  // optional int32 Door1Pos = 18;
+  if (this->door1pos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(18, this->door1pos(), target);
   }
 
-  // required int32 Door2Pos = 19;
-  if (has_door2pos()) {
+  // optional int32 Door2Pos = 19;
+  if (this->door2pos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(19, this->door2pos(), target);
   }
 
-  // required int32 Door3Pos = 20;
-  if (has_door3pos()) {
+  // optional int32 Door3Pos = 20;
+  if (this->door3pos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(20, this->door3pos(), target);
   }
 
-  // required int32 Door4Pos = 21;
-  if (has_door4pos()) {
+  // optional int32 Door4Pos = 21;
+  if (this->door4pos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(21, this->door4pos(), target);
   }
 
-  // required int32 FlapsIndex = 22;
-  if (has_flapsindex()) {
+  // optional int32 FlapsIndex = 22;
+  if (this->flapsindex() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(22, this->flapsindex(), target);
   }
 
-  // required int32 NumEngine = 23;
-  if (has_numengine()) {
+  // optional int32 NumEngine = 23;
+  if (this->numengine() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(23, this->numengine(), target);
   }
 
-  // required int32 ThrottleEng1 = 24;
-  if (has_throttleeng1()) {
+  // optional int32 ThrottleEng1 = 24;
+  if (this->throttleeng1() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(24, this->throttleeng1(), target);
   }
 
-  // required int32 ThrottleEng2 = 25;
-  if (has_throttleeng2()) {
+  // optional int32 ThrottleEng2 = 25;
+  if (this->throttleeng2() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(25, this->throttleeng2(), target);
   }
 
-  // required int32 ThrottleEng3 = 26;
-  if (has_throttleeng3()) {
+  // optional int32 ThrottleEng3 = 26;
+  if (this->throttleeng3() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(26, this->throttleeng3(), target);
   }
 
-  // required int32 ThrottleEng4 = 27;
-  if (has_throttleeng4()) {
+  // optional int32 ThrottleEng4 = 27;
+  if (this->throttleeng4() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(27, this->throttleeng4(), target);
   }
 
-  // required bool OnGround = 28;
-  if (has_onground()) {
+  // optional bool OnGround = 28;
+  if (this->onground() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(28, this->onground(), target);
   }
 
-  // required bool GearPos = 29;
-  if (has_gearpos()) {
+  // optional bool GearPos = 29;
+  if (this->gearpos() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(29, this->gearpos(), target);
   }
 
-  // required bool LandingLight = 30;
-  if (has_landinglight()) {
+  // optional bool LandingLight = 30;
+  if (this->landinglight() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(30, this->landinglight(), target);
   }
 
-  // required bool BeaconLight = 31;
-  if (has_beaconlight()) {
+  // optional bool BeaconLight = 31;
+  if (this->beaconlight() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(31, this->beaconlight(), target);
   }
 
-  // required bool StrobeLight = 32;
-  if (has_strobelight()) {
+  // optional bool StrobeLight = 32;
+  if (this->strobelight() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(32, this->strobelight(), target);
   }
 
-  // required bool NavLight = 33;
-  if (has_navlight()) {
+  // optional bool NavLight = 33;
+  if (this->navlight() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(33, this->navlight(), target);
   }
 
-  // required bool RecoLight = 34;
-  if (has_recolight()) {
+  // optional bool RecoLight = 34;
+  if (this->recolight() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(34, this->recolight(), target);
   }
 
-  // required bool StateEng1 = 35;
-  if (has_stateeng1()) {
+  // optional bool StateEng1 = 35;
+  if (this->stateeng1() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(35, this->stateeng1(), target);
   }
 
-  // required bool StateEng2 = 36;
-  if (has_stateeng2()) {
+  // optional bool StateEng2 = 36;
+  if (this->stateeng2() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(36, this->stateeng2(), target);
   }
 
-  // required bool StateEng3 = 37;
-  if (has_stateeng3()) {
+  // optional bool StateEng3 = 37;
+  if (this->stateeng3() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(37, this->stateeng3(), target);
   }
 
-  // required bool StateEng4 = 38;
-  if (has_stateeng4()) {
+  // optional bool StateEng4 = 38;
+  if (this->stateeng4() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(38, this->stateeng4(), target);
   }
 
-  // required bool Smoke = 39;
-  if (has_smoke()) {
+  // optional bool Smoke = 39;
+  if (this->smoke() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(39, this->smoke(), target);
   }
 
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
   // @@protoc_insertion_point(serialize_to_array_end:ffs2play.AirData)
   return target;
 }
 
 int AirData::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:ffs2play.AirData)
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int64 Timestamp = 1;
-    if (has_timestamp()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int64Size(
-          this->timestamp());
-    }
-
-    // required string Title = 2;
-    if (has_title()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->title());
-    }
-
-    // required string Model = 3;
-    if (has_model()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model());
-    }
-
-    // required string Type = 4;
-    if (has_type()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->type());
-    }
-
-    // required string Category = 5;
-    if (has_category()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->category());
-    }
-
-    // required double Altitude = 6;
-    if (has_altitude()) {
-      total_size += 1 + 8;
-    }
-
-    // required double GroundAltitude = 7;
-    if (has_groundaltitude()) {
-      total_size += 1 + 8;
-    }
-
-    // required double Heading = 8;
-    if (has_heading()) {
-      total_size += 1 + 8;
-    }
-
+  // optional int64 Timestamp = 1;
+  if (this->timestamp() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->timestamp());
   }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // required double Longitude = 9;
-    if (has_longitude()) {
-      total_size += 1 + 8;
-    }
 
-    // required double Latitude = 10;
-    if (has_latitude()) {
-      total_size += 1 + 8;
-    }
-
-    // required double IASSpeed = 11;
-    if (has_iasspeed()) {
-      total_size += 1 + 8;
-    }
-
-    // required double Pitch = 12;
-    if (has_pitch()) {
-      total_size += 1 + 8;
-    }
-
-    // required double Bank = 13;
-    if (has_bank()) {
-      total_size += 1 + 8;
-    }
-
-    // required int32 Squawk = 14;
-    if (has_squawk()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->squawk());
-    }
-
-    // required double ElevatorPos = 15;
-    if (has_elevatorpos()) {
-      total_size += 1 + 8;
-    }
-
-    // required double AileronPos = 16;
-    if (has_aileronpos()) {
-      total_size += 2 + 8;
-    }
-
+  // optional string Title = 2;
+  if (this->title().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->title());
   }
-  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
-    // required double RudderPos = 17;
-    if (has_rudderpos()) {
-      total_size += 2 + 8;
-    }
 
-    // required int32 Door1Pos = 18;
-    if (has_door1pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door1pos());
-    }
-
-    // required int32 Door2Pos = 19;
-    if (has_door2pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door2pos());
-    }
-
-    // required int32 Door3Pos = 20;
-    if (has_door3pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door3pos());
-    }
-
-    // required int32 Door4Pos = 21;
-    if (has_door4pos()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->door4pos());
-    }
-
-    // required int32 FlapsIndex = 22;
-    if (has_flapsindex()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->flapsindex());
-    }
-
-    // required int32 NumEngine = 23;
-    if (has_numengine()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->numengine());
-    }
-
-    // required int32 ThrottleEng1 = 24;
-    if (has_throttleeng1()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng1());
-    }
-
+  // optional string Model = 3;
+  if (this->model().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->model());
   }
-  if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
-    // required int32 ThrottleEng2 = 25;
-    if (has_throttleeng2()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng2());
-    }
 
-    // required int32 ThrottleEng3 = 26;
-    if (has_throttleeng3()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng3());
-    }
-
-    // required int32 ThrottleEng4 = 27;
-    if (has_throttleeng4()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->throttleeng4());
-    }
-
-    // required bool OnGround = 28;
-    if (has_onground()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool GearPos = 29;
-    if (has_gearpos()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool LandingLight = 30;
-    if (has_landinglight()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool BeaconLight = 31;
-    if (has_beaconlight()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool StrobeLight = 32;
-    if (has_strobelight()) {
-      total_size += 2 + 1;
-    }
-
+  // optional string Type = 4;
+  if (this->type().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->type());
   }
-  if (_has_bits_[32 / 32] & (0xffu << (32 % 32))) {
-    // required bool NavLight = 33;
-    if (has_navlight()) {
-      total_size += 2 + 1;
-    }
 
-    // required bool RecoLight = 34;
-    if (has_recolight()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool StateEng1 = 35;
-    if (has_stateeng1()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool StateEng2 = 36;
-    if (has_stateeng2()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool StateEng3 = 37;
-    if (has_stateeng3()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool StateEng4 = 38;
-    if (has_stateeng4()) {
-      total_size += 2 + 1;
-    }
-
-    // required bool Smoke = 39;
-    if (has_smoke()) {
-      total_size += 2 + 1;
-    }
-
+  // optional string Category = 5;
+  if (this->category().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->category());
   }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+
+  // optional double Altitude = 6;
+  if (this->altitude() != 0) {
+    total_size += 1 + 8;
   }
+
+  // optional double GroundAltitude = 7;
+  if (this->groundaltitude() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional double Heading = 8;
+  if (this->heading() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional double Longitude = 9;
+  if (this->longitude() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional double Latitude = 10;
+  if (this->latitude() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional double IASSpeed = 11;
+  if (this->iasspeed() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional double Pitch = 12;
+  if (this->pitch() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional double Bank = 13;
+  if (this->bank() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional int32 Squawk = 14;
+  if (this->squawk() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->squawk());
+  }
+
+  // optional double ElevatorPos = 15;
+  if (this->elevatorpos() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // optional double AileronPos = 16;
+  if (this->aileronpos() != 0) {
+    total_size += 2 + 8;
+  }
+
+  // optional double RudderPos = 17;
+  if (this->rudderpos() != 0) {
+    total_size += 2 + 8;
+  }
+
+  // optional int32 Door1Pos = 18;
+  if (this->door1pos() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door1pos());
+  }
+
+  // optional int32 Door2Pos = 19;
+  if (this->door2pos() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door2pos());
+  }
+
+  // optional int32 Door3Pos = 20;
+  if (this->door3pos() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door3pos());
+  }
+
+  // optional int32 Door4Pos = 21;
+  if (this->door4pos() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->door4pos());
+  }
+
+  // optional int32 FlapsIndex = 22;
+  if (this->flapsindex() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->flapsindex());
+  }
+
+  // optional int32 NumEngine = 23;
+  if (this->numengine() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->numengine());
+  }
+
+  // optional int32 ThrottleEng1 = 24;
+  if (this->throttleeng1() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng1());
+  }
+
+  // optional int32 ThrottleEng2 = 25;
+  if (this->throttleeng2() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng2());
+  }
+
+  // optional int32 ThrottleEng3 = 26;
+  if (this->throttleeng3() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng3());
+  }
+
+  // optional int32 ThrottleEng4 = 27;
+  if (this->throttleeng4() != 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->throttleeng4());
+  }
+
+  // optional bool OnGround = 28;
+  if (this->onground() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool GearPos = 29;
+  if (this->gearpos() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool LandingLight = 30;
+  if (this->landinglight() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool BeaconLight = 31;
+  if (this->beaconlight() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool StrobeLight = 32;
+  if (this->strobelight() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool NavLight = 33;
+  if (this->navlight() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool RecoLight = 34;
+  if (this->recolight() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool StateEng1 = 35;
+  if (this->stateeng1() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool StateEng2 = 36;
+  if (this->stateeng2() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool StateEng3 = 37;
+  if (this->stateeng3() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool StateEng4 = 38;
+  if (this->stateeng4() != 0) {
+    total_size += 2 + 1;
+  }
+
+  // optional bool Smoke = 39;
+  if (this->smoke() != 0) {
+    total_size += 2 + 1;
+  }
+
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -1939,214 +1960,215 @@ int AirData::ByteSize() const {
 }
 
 void AirData::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AirData* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AirData*>(
-      &from);
+// @@protoc_insertion_point(generalized_merge_from_start:ffs2play.AirData)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const AirData* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const AirData>(
+          &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ffs2play.AirData)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ffs2play.AirData)
     MergeFrom(*source);
   }
 }
 
 void AirData::MergeFrom(const AirData& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_timestamp()) {
-      set_timestamp(from.timestamp());
-    }
-    if (from.has_title()) {
-      set_title(from.title());
-    }
-    if (from.has_model()) {
-      set_model(from.model());
-    }
-    if (from.has_type()) {
-      set_type(from.type());
-    }
-    if (from.has_category()) {
-      set_category(from.category());
-    }
-    if (from.has_altitude()) {
-      set_altitude(from.altitude());
-    }
-    if (from.has_groundaltitude()) {
-      set_groundaltitude(from.groundaltitude());
-    }
-    if (from.has_heading()) {
-      set_heading(from.heading());
-    }
+// @@protoc_insertion_point(class_specific_merge_from_start:ffs2play.AirData)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    if (from.has_longitude()) {
-      set_longitude(from.longitude());
-    }
-    if (from.has_latitude()) {
-      set_latitude(from.latitude());
-    }
-    if (from.has_iasspeed()) {
-      set_iasspeed(from.iasspeed());
-    }
-    if (from.has_pitch()) {
-      set_pitch(from.pitch());
-    }
-    if (from.has_bank()) {
-      set_bank(from.bank());
-    }
-    if (from.has_squawk()) {
-      set_squawk(from.squawk());
-    }
-    if (from.has_elevatorpos()) {
-      set_elevatorpos(from.elevatorpos());
-    }
-    if (from.has_aileronpos()) {
-      set_aileronpos(from.aileronpos());
-    }
+  if (from.timestamp() != 0) {
+    set_timestamp(from.timestamp());
   }
-  if (from._has_bits_[16 / 32] & (0xffu << (16 % 32))) {
-    if (from.has_rudderpos()) {
-      set_rudderpos(from.rudderpos());
-    }
-    if (from.has_door1pos()) {
-      set_door1pos(from.door1pos());
-    }
-    if (from.has_door2pos()) {
-      set_door2pos(from.door2pos());
-    }
-    if (from.has_door3pos()) {
-      set_door3pos(from.door3pos());
-    }
-    if (from.has_door4pos()) {
-      set_door4pos(from.door4pos());
-    }
-    if (from.has_flapsindex()) {
-      set_flapsindex(from.flapsindex());
-    }
-    if (from.has_numengine()) {
-      set_numengine(from.numengine());
-    }
-    if (from.has_throttleeng1()) {
-      set_throttleeng1(from.throttleeng1());
-    }
+  if (from.title().size() > 0) {
+
+    title_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.title_);
   }
-  if (from._has_bits_[24 / 32] & (0xffu << (24 % 32))) {
-    if (from.has_throttleeng2()) {
-      set_throttleeng2(from.throttleeng2());
-    }
-    if (from.has_throttleeng3()) {
-      set_throttleeng3(from.throttleeng3());
-    }
-    if (from.has_throttleeng4()) {
-      set_throttleeng4(from.throttleeng4());
-    }
-    if (from.has_onground()) {
-      set_onground(from.onground());
-    }
-    if (from.has_gearpos()) {
-      set_gearpos(from.gearpos());
-    }
-    if (from.has_landinglight()) {
-      set_landinglight(from.landinglight());
-    }
-    if (from.has_beaconlight()) {
-      set_beaconlight(from.beaconlight());
-    }
-    if (from.has_strobelight()) {
-      set_strobelight(from.strobelight());
-    }
+  if (from.model().size() > 0) {
+
+    model_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.model_);
   }
-  if (from._has_bits_[32 / 32] & (0xffu << (32 % 32))) {
-    if (from.has_navlight()) {
-      set_navlight(from.navlight());
-    }
-    if (from.has_recolight()) {
-      set_recolight(from.recolight());
-    }
-    if (from.has_stateeng1()) {
-      set_stateeng1(from.stateeng1());
-    }
-    if (from.has_stateeng2()) {
-      set_stateeng2(from.stateeng2());
-    }
-    if (from.has_stateeng3()) {
-      set_stateeng3(from.stateeng3());
-    }
-    if (from.has_stateeng4()) {
-      set_stateeng4(from.stateeng4());
-    }
-    if (from.has_smoke()) {
-      set_smoke(from.smoke());
-    }
+  if (from.type().size() > 0) {
+
+    type_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.type_);
   }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  if (from.category().size() > 0) {
+
+    category_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.category_);
+  }
+  if (from.altitude() != 0) {
+    set_altitude(from.altitude());
+  }
+  if (from.groundaltitude() != 0) {
+    set_groundaltitude(from.groundaltitude());
+  }
+  if (from.heading() != 0) {
+    set_heading(from.heading());
+  }
+  if (from.longitude() != 0) {
+    set_longitude(from.longitude());
+  }
+  if (from.latitude() != 0) {
+    set_latitude(from.latitude());
+  }
+  if (from.iasspeed() != 0) {
+    set_iasspeed(from.iasspeed());
+  }
+  if (from.pitch() != 0) {
+    set_pitch(from.pitch());
+  }
+  if (from.bank() != 0) {
+    set_bank(from.bank());
+  }
+  if (from.squawk() != 0) {
+    set_squawk(from.squawk());
+  }
+  if (from.elevatorpos() != 0) {
+    set_elevatorpos(from.elevatorpos());
+  }
+  if (from.aileronpos() != 0) {
+    set_aileronpos(from.aileronpos());
+  }
+  if (from.rudderpos() != 0) {
+    set_rudderpos(from.rudderpos());
+  }
+  if (from.door1pos() != 0) {
+    set_door1pos(from.door1pos());
+  }
+  if (from.door2pos() != 0) {
+    set_door2pos(from.door2pos());
+  }
+  if (from.door3pos() != 0) {
+    set_door3pos(from.door3pos());
+  }
+  if (from.door4pos() != 0) {
+    set_door4pos(from.door4pos());
+  }
+  if (from.flapsindex() != 0) {
+    set_flapsindex(from.flapsindex());
+  }
+  if (from.numengine() != 0) {
+    set_numengine(from.numengine());
+  }
+  if (from.throttleeng1() != 0) {
+    set_throttleeng1(from.throttleeng1());
+  }
+  if (from.throttleeng2() != 0) {
+    set_throttleeng2(from.throttleeng2());
+  }
+  if (from.throttleeng3() != 0) {
+    set_throttleeng3(from.throttleeng3());
+  }
+  if (from.throttleeng4() != 0) {
+    set_throttleeng4(from.throttleeng4());
+  }
+  if (from.onground() != 0) {
+    set_onground(from.onground());
+  }
+  if (from.gearpos() != 0) {
+    set_gearpos(from.gearpos());
+  }
+  if (from.landinglight() != 0) {
+    set_landinglight(from.landinglight());
+  }
+  if (from.beaconlight() != 0) {
+    set_beaconlight(from.beaconlight());
+  }
+  if (from.strobelight() != 0) {
+    set_strobelight(from.strobelight());
+  }
+  if (from.navlight() != 0) {
+    set_navlight(from.navlight());
+  }
+  if (from.recolight() != 0) {
+    set_recolight(from.recolight());
+  }
+  if (from.stateeng1() != 0) {
+    set_stateeng1(from.stateeng1());
+  }
+  if (from.stateeng2() != 0) {
+    set_stateeng2(from.stateeng2());
+  }
+  if (from.stateeng3() != 0) {
+    set_stateeng3(from.stateeng3());
+  }
+  if (from.stateeng4() != 0) {
+    set_stateeng4(from.stateeng4());
+  }
+  if (from.smoke() != 0) {
+    set_smoke(from.smoke());
+  }
 }
 
 void AirData::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ffs2play.AirData)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void AirData::CopyFrom(const AirData& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ffs2play.AirData)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 bool AirData::IsInitialized() const {
-  if ((_has_bits_[0] & 0xffffffff) != 0xffffffff) return false;
-  if ((_has_bits_[1] & 0x0000007f) != 0x0000007f) return false;
 
   return true;
 }
 
 void AirData::Swap(AirData* other) {
-  if (other != this) {
-    std::swap(timestamp_, other->timestamp_);
-    std::swap(title_, other->title_);
-    std::swap(model_, other->model_);
-    std::swap(type_, other->type_);
-    std::swap(category_, other->category_);
-    std::swap(altitude_, other->altitude_);
-    std::swap(groundaltitude_, other->groundaltitude_);
-    std::swap(heading_, other->heading_);
-    std::swap(longitude_, other->longitude_);
-    std::swap(latitude_, other->latitude_);
-    std::swap(iasspeed_, other->iasspeed_);
-    std::swap(pitch_, other->pitch_);
-    std::swap(bank_, other->bank_);
-    std::swap(squawk_, other->squawk_);
-    std::swap(elevatorpos_, other->elevatorpos_);
-    std::swap(aileronpos_, other->aileronpos_);
-    std::swap(rudderpos_, other->rudderpos_);
-    std::swap(door1pos_, other->door1pos_);
-    std::swap(door2pos_, other->door2pos_);
-    std::swap(door3pos_, other->door3pos_);
-    std::swap(door4pos_, other->door4pos_);
-    std::swap(flapsindex_, other->flapsindex_);
-    std::swap(numengine_, other->numengine_);
-    std::swap(throttleeng1_, other->throttleeng1_);
-    std::swap(throttleeng2_, other->throttleeng2_);
-    std::swap(throttleeng3_, other->throttleeng3_);
-    std::swap(throttleeng4_, other->throttleeng4_);
-    std::swap(onground_, other->onground_);
-    std::swap(gearpos_, other->gearpos_);
-    std::swap(landinglight_, other->landinglight_);
-    std::swap(beaconlight_, other->beaconlight_);
-    std::swap(strobelight_, other->strobelight_);
-    std::swap(navlight_, other->navlight_);
-    std::swap(recolight_, other->recolight_);
-    std::swap(stateeng1_, other->stateeng1_);
-    std::swap(stateeng2_, other->stateeng2_);
-    std::swap(stateeng3_, other->stateeng3_);
-    std::swap(stateeng4_, other->stateeng4_);
-    std::swap(smoke_, other->smoke_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    std::swap(_has_bits_[1], other->_has_bits_[1]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void AirData::InternalSwap(AirData* other) {
+  std::swap(timestamp_, other->timestamp_);
+  title_.Swap(&other->title_);
+  model_.Swap(&other->model_);
+  type_.Swap(&other->type_);
+  category_.Swap(&other->category_);
+  std::swap(altitude_, other->altitude_);
+  std::swap(groundaltitude_, other->groundaltitude_);
+  std::swap(heading_, other->heading_);
+  std::swap(longitude_, other->longitude_);
+  std::swap(latitude_, other->latitude_);
+  std::swap(iasspeed_, other->iasspeed_);
+  std::swap(pitch_, other->pitch_);
+  std::swap(bank_, other->bank_);
+  std::swap(squawk_, other->squawk_);
+  std::swap(elevatorpos_, other->elevatorpos_);
+  std::swap(aileronpos_, other->aileronpos_);
+  std::swap(rudderpos_, other->rudderpos_);
+  std::swap(door1pos_, other->door1pos_);
+  std::swap(door2pos_, other->door2pos_);
+  std::swap(door3pos_, other->door3pos_);
+  std::swap(door4pos_, other->door4pos_);
+  std::swap(flapsindex_, other->flapsindex_);
+  std::swap(numengine_, other->numengine_);
+  std::swap(throttleeng1_, other->throttleeng1_);
+  std::swap(throttleeng2_, other->throttleeng2_);
+  std::swap(throttleeng3_, other->throttleeng3_);
+  std::swap(throttleeng4_, other->throttleeng4_);
+  std::swap(onground_, other->onground_);
+  std::swap(gearpos_, other->gearpos_);
+  std::swap(landinglight_, other->landinglight_);
+  std::swap(beaconlight_, other->beaconlight_);
+  std::swap(strobelight_, other->strobelight_);
+  std::swap(navlight_, other->navlight_);
+  std::swap(recolight_, other->recolight_);
+  std::swap(stateeng1_, other->stateeng1_);
+  std::swap(stateeng2_, other->stateeng2_);
+  std::swap(stateeng3_, other->stateeng3_);
+  std::swap(stateeng4_, other->stateeng4_);
+  std::swap(smoke_, other->smoke_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata AirData::GetMetadata() const {
@@ -2157,6 +2179,676 @@ void AirData::Swap(AirData* other) {
   return metadata;
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// AirData
+
+// optional int64 Timestamp = 1;
+void AirData::clear_timestamp() {
+  timestamp_ = GOOGLE_LONGLONG(0);
+}
+ ::google::protobuf::int64 AirData::timestamp() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Timestamp)
+  return timestamp_;
+}
+ void AirData::set_timestamp(::google::protobuf::int64 value) {
+  
+  timestamp_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Timestamp)
+}
+
+// optional string Title = 2;
+void AirData::clear_title() {
+  title_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& AirData::title() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Title)
+  return title_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_title(const ::std::string& value) {
+  
+  title_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Title)
+}
+ void AirData::set_title(const char* value) {
+  
+  title_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Title)
+}
+ void AirData::set_title(const char* value, size_t size) {
+  
+  title_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Title)
+}
+ ::std::string* AirData::mutable_title() {
+  
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Title)
+  return title_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_title() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Title)
+  
+  return title_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_title(::std::string* title) {
+  if (title != NULL) {
+    
+  } else {
+    
+  }
+  title_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), title);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Title)
+}
+
+// optional string Model = 3;
+void AirData::clear_model() {
+  model_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& AirData::model() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Model)
+  return model_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_model(const ::std::string& value) {
+  
+  model_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Model)
+}
+ void AirData::set_model(const char* value) {
+  
+  model_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Model)
+}
+ void AirData::set_model(const char* value, size_t size) {
+  
+  model_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Model)
+}
+ ::std::string* AirData::mutable_model() {
+  
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Model)
+  return model_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_model() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Model)
+  
+  return model_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_model(::std::string* model) {
+  if (model != NULL) {
+    
+  } else {
+    
+  }
+  model_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), model);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Model)
+}
+
+// optional string Type = 4;
+void AirData::clear_type() {
+  type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& AirData::type() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Type)
+  return type_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_type(const ::std::string& value) {
+  
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Type)
+}
+ void AirData::set_type(const char* value) {
+  
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Type)
+}
+ void AirData::set_type(const char* value, size_t size) {
+  
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Type)
+}
+ ::std::string* AirData::mutable_type() {
+  
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Type)
+  return type_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_type() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Type)
+  
+  return type_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_type(::std::string* type) {
+  if (type != NULL) {
+    
+  } else {
+    
+  }
+  type_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), type);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Type)
+}
+
+// optional string Category = 5;
+void AirData::clear_category() {
+  category_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& AirData::category() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Category)
+  return category_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_category(const ::std::string& value) {
+  
+  category_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Category)
+}
+ void AirData::set_category(const char* value) {
+  
+  category_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ffs2play.AirData.Category)
+}
+ void AirData::set_category(const char* value, size_t size) {
+  
+  category_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ffs2play.AirData.Category)
+}
+ ::std::string* AirData::mutable_category() {
+  
+  // @@protoc_insertion_point(field_mutable:ffs2play.AirData.Category)
+  return category_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* AirData::release_category() {
+  // @@protoc_insertion_point(field_release:ffs2play.AirData.Category)
+  
+  return category_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void AirData::set_allocated_category(::std::string* category) {
+  if (category != NULL) {
+    
+  } else {
+    
+  }
+  category_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), category);
+  // @@protoc_insertion_point(field_set_allocated:ffs2play.AirData.Category)
+}
+
+// optional double Altitude = 6;
+void AirData::clear_altitude() {
+  altitude_ = 0;
+}
+ double AirData::altitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Altitude)
+  return altitude_;
+}
+ void AirData::set_altitude(double value) {
+  
+  altitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Altitude)
+}
+
+// optional double GroundAltitude = 7;
+void AirData::clear_groundaltitude() {
+  groundaltitude_ = 0;
+}
+ double AirData::groundaltitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.GroundAltitude)
+  return groundaltitude_;
+}
+ void AirData::set_groundaltitude(double value) {
+  
+  groundaltitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.GroundAltitude)
+}
+
+// optional double Heading = 8;
+void AirData::clear_heading() {
+  heading_ = 0;
+}
+ double AirData::heading() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Heading)
+  return heading_;
+}
+ void AirData::set_heading(double value) {
+  
+  heading_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Heading)
+}
+
+// optional double Longitude = 9;
+void AirData::clear_longitude() {
+  longitude_ = 0;
+}
+ double AirData::longitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Longitude)
+  return longitude_;
+}
+ void AirData::set_longitude(double value) {
+  
+  longitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Longitude)
+}
+
+// optional double Latitude = 10;
+void AirData::clear_latitude() {
+  latitude_ = 0;
+}
+ double AirData::latitude() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Latitude)
+  return latitude_;
+}
+ void AirData::set_latitude(double value) {
+  
+  latitude_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Latitude)
+}
+
+// optional double IASSpeed = 11;
+void AirData::clear_iasspeed() {
+  iasspeed_ = 0;
+}
+ double AirData::iasspeed() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.IASSpeed)
+  return iasspeed_;
+}
+ void AirData::set_iasspeed(double value) {
+  
+  iasspeed_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.IASSpeed)
+}
+
+// optional double Pitch = 12;
+void AirData::clear_pitch() {
+  pitch_ = 0;
+}
+ double AirData::pitch() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Pitch)
+  return pitch_;
+}
+ void AirData::set_pitch(double value) {
+  
+  pitch_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Pitch)
+}
+
+// optional double Bank = 13;
+void AirData::clear_bank() {
+  bank_ = 0;
+}
+ double AirData::bank() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Bank)
+  return bank_;
+}
+ void AirData::set_bank(double value) {
+  
+  bank_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Bank)
+}
+
+// optional int32 Squawk = 14;
+void AirData::clear_squawk() {
+  squawk_ = 0;
+}
+ ::google::protobuf::int32 AirData::squawk() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Squawk)
+  return squawk_;
+}
+ void AirData::set_squawk(::google::protobuf::int32 value) {
+  
+  squawk_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Squawk)
+}
+
+// optional double ElevatorPos = 15;
+void AirData::clear_elevatorpos() {
+  elevatorpos_ = 0;
+}
+ double AirData::elevatorpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ElevatorPos)
+  return elevatorpos_;
+}
+ void AirData::set_elevatorpos(double value) {
+  
+  elevatorpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ElevatorPos)
+}
+
+// optional double AileronPos = 16;
+void AirData::clear_aileronpos() {
+  aileronpos_ = 0;
+}
+ double AirData::aileronpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.AileronPos)
+  return aileronpos_;
+}
+ void AirData::set_aileronpos(double value) {
+  
+  aileronpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.AileronPos)
+}
+
+// optional double RudderPos = 17;
+void AirData::clear_rudderpos() {
+  rudderpos_ = 0;
+}
+ double AirData::rudderpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.RudderPos)
+  return rudderpos_;
+}
+ void AirData::set_rudderpos(double value) {
+  
+  rudderpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.RudderPos)
+}
+
+// optional int32 Door1Pos = 18;
+void AirData::clear_door1pos() {
+  door1pos_ = 0;
+}
+ ::google::protobuf::int32 AirData::door1pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door1Pos)
+  return door1pos_;
+}
+ void AirData::set_door1pos(::google::protobuf::int32 value) {
+  
+  door1pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door1Pos)
+}
+
+// optional int32 Door2Pos = 19;
+void AirData::clear_door2pos() {
+  door2pos_ = 0;
+}
+ ::google::protobuf::int32 AirData::door2pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door2Pos)
+  return door2pos_;
+}
+ void AirData::set_door2pos(::google::protobuf::int32 value) {
+  
+  door2pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door2Pos)
+}
+
+// optional int32 Door3Pos = 20;
+void AirData::clear_door3pos() {
+  door3pos_ = 0;
+}
+ ::google::protobuf::int32 AirData::door3pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door3Pos)
+  return door3pos_;
+}
+ void AirData::set_door3pos(::google::protobuf::int32 value) {
+  
+  door3pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door3Pos)
+}
+
+// optional int32 Door4Pos = 21;
+void AirData::clear_door4pos() {
+  door4pos_ = 0;
+}
+ ::google::protobuf::int32 AirData::door4pos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Door4Pos)
+  return door4pos_;
+}
+ void AirData::set_door4pos(::google::protobuf::int32 value) {
+  
+  door4pos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Door4Pos)
+}
+
+// optional int32 FlapsIndex = 22;
+void AirData::clear_flapsindex() {
+  flapsindex_ = 0;
+}
+ ::google::protobuf::int32 AirData::flapsindex() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.FlapsIndex)
+  return flapsindex_;
+}
+ void AirData::set_flapsindex(::google::protobuf::int32 value) {
+  
+  flapsindex_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.FlapsIndex)
+}
+
+// optional int32 NumEngine = 23;
+void AirData::clear_numengine() {
+  numengine_ = 0;
+}
+ ::google::protobuf::int32 AirData::numengine() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.NumEngine)
+  return numengine_;
+}
+ void AirData::set_numengine(::google::protobuf::int32 value) {
+  
+  numengine_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.NumEngine)
+}
+
+// optional int32 ThrottleEng1 = 24;
+void AirData::clear_throttleeng1() {
+  throttleeng1_ = 0;
+}
+ ::google::protobuf::int32 AirData::throttleeng1() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng1)
+  return throttleeng1_;
+}
+ void AirData::set_throttleeng1(::google::protobuf::int32 value) {
+  
+  throttleeng1_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng1)
+}
+
+// optional int32 ThrottleEng2 = 25;
+void AirData::clear_throttleeng2() {
+  throttleeng2_ = 0;
+}
+ ::google::protobuf::int32 AirData::throttleeng2() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng2)
+  return throttleeng2_;
+}
+ void AirData::set_throttleeng2(::google::protobuf::int32 value) {
+  
+  throttleeng2_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng2)
+}
+
+// optional int32 ThrottleEng3 = 26;
+void AirData::clear_throttleeng3() {
+  throttleeng3_ = 0;
+}
+ ::google::protobuf::int32 AirData::throttleeng3() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng3)
+  return throttleeng3_;
+}
+ void AirData::set_throttleeng3(::google::protobuf::int32 value) {
+  
+  throttleeng3_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng3)
+}
+
+// optional int32 ThrottleEng4 = 27;
+void AirData::clear_throttleeng4() {
+  throttleeng4_ = 0;
+}
+ ::google::protobuf::int32 AirData::throttleeng4() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.ThrottleEng4)
+  return throttleeng4_;
+}
+ void AirData::set_throttleeng4(::google::protobuf::int32 value) {
+  
+  throttleeng4_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.ThrottleEng4)
+}
+
+// optional bool OnGround = 28;
+void AirData::clear_onground() {
+  onground_ = false;
+}
+ bool AirData::onground() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.OnGround)
+  return onground_;
+}
+ void AirData::set_onground(bool value) {
+  
+  onground_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.OnGround)
+}
+
+// optional bool GearPos = 29;
+void AirData::clear_gearpos() {
+  gearpos_ = false;
+}
+ bool AirData::gearpos() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.GearPos)
+  return gearpos_;
+}
+ void AirData::set_gearpos(bool value) {
+  
+  gearpos_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.GearPos)
+}
+
+// optional bool LandingLight = 30;
+void AirData::clear_landinglight() {
+  landinglight_ = false;
+}
+ bool AirData::landinglight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.LandingLight)
+  return landinglight_;
+}
+ void AirData::set_landinglight(bool value) {
+  
+  landinglight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.LandingLight)
+}
+
+// optional bool BeaconLight = 31;
+void AirData::clear_beaconlight() {
+  beaconlight_ = false;
+}
+ bool AirData::beaconlight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.BeaconLight)
+  return beaconlight_;
+}
+ void AirData::set_beaconlight(bool value) {
+  
+  beaconlight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.BeaconLight)
+}
+
+// optional bool StrobeLight = 32;
+void AirData::clear_strobelight() {
+  strobelight_ = false;
+}
+ bool AirData::strobelight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StrobeLight)
+  return strobelight_;
+}
+ void AirData::set_strobelight(bool value) {
+  
+  strobelight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StrobeLight)
+}
+
+// optional bool NavLight = 33;
+void AirData::clear_navlight() {
+  navlight_ = false;
+}
+ bool AirData::navlight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.NavLight)
+  return navlight_;
+}
+ void AirData::set_navlight(bool value) {
+  
+  navlight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.NavLight)
+}
+
+// optional bool RecoLight = 34;
+void AirData::clear_recolight() {
+  recolight_ = false;
+}
+ bool AirData::recolight() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.RecoLight)
+  return recolight_;
+}
+ void AirData::set_recolight(bool value) {
+  
+  recolight_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.RecoLight)
+}
+
+// optional bool StateEng1 = 35;
+void AirData::clear_stateeng1() {
+  stateeng1_ = false;
+}
+ bool AirData::stateeng1() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng1)
+  return stateeng1_;
+}
+ void AirData::set_stateeng1(bool value) {
+  
+  stateeng1_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng1)
+}
+
+// optional bool StateEng2 = 36;
+void AirData::clear_stateeng2() {
+  stateeng2_ = false;
+}
+ bool AirData::stateeng2() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng2)
+  return stateeng2_;
+}
+ void AirData::set_stateeng2(bool value) {
+  
+  stateeng2_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng2)
+}
+
+// optional bool StateEng3 = 37;
+void AirData::clear_stateeng3() {
+  stateeng3_ = false;
+}
+ bool AirData::stateeng3() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng3)
+  return stateeng3_;
+}
+ void AirData::set_stateeng3(bool value) {
+  
+  stateeng3_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng3)
+}
+
+// optional bool StateEng4 = 38;
+void AirData::clear_stateeng4() {
+  stateeng4_ = false;
+}
+ bool AirData::stateeng4() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.StateEng4)
+  return stateeng4_;
+}
+ void AirData::set_stateeng4(bool value) {
+  
+  stateeng4_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.StateEng4)
+}
+
+// optional bool Smoke = 39;
+void AirData::clear_smoke() {
+  smoke_ = false;
+}
+ bool AirData::smoke() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.Smoke)
+  return smoke_;
+}
+ void AirData::set_smoke(bool value) {
+  
+  smoke_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.Smoke)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 

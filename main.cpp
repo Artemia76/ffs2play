@@ -34,11 +34,12 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication::setDesktopSettingsAware(false);
+    QApplication app(argc, argv);
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QCoreApplication::setOrganizationName("FFS2P");
     QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
     QCoreApplication::setApplicationName("FFS2Play");
-    QApplication app(argc, argv);
     QString locale = QLocale::system().name();
     QTranslator FFS2PlayTS;
     FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");

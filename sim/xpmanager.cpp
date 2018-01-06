@@ -51,7 +51,7 @@ namespace ffs2p_xplane
     {
         close();
         Server->stop();
-        delete Server;
+        //delete Server;
     }
 
     ///

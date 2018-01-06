@@ -34,7 +34,7 @@ simbasemanager::simbasemanager(QObject* parent):
     qRegisterMetaType<SimEvent>("SimEvent");
     qRegisterMetaType<CAircraftState>("CAircraftState");
     m_logger = CLogger::instance();
-    m_connector =NULL;
+    m_connector =nullptr;
     m_initialized = false;
     m_bRunning = false;
     m_thread = new QThread();
@@ -59,11 +59,7 @@ simbasemanager* simbasemanager::createInstance()
 
 simbasemanager::~simbasemanager()
 {
-    if (m_thread != NULL)
-    {
-        m_thread->quit();
-        m_thread->wait();
-    }
+    close();
 }
 
 ///

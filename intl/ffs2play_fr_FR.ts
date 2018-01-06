@@ -118,7 +118,7 @@
     </message>
     <message>
         <location filename="../singleton/webmanager.Callback.cpp" line="158"/>
-        <source>Get LiveUpdate</source>
+        <source>Get OnLiveUpdate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -139,19 +139,6 @@
     <message>
         <location filename="../singleton/webmanager.cpp" line="81"/>
         <source>AES Key generated = </source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CXPManager</name>
-    <message>
-        <location filename="../sim/xpmanage.cpp" line="52"/>
-        <source>XPlane is not yet implemented.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanage.cpp" line="65"/>
-        <source>Disconnected from XPlane.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -538,7 +525,7 @@
         <translation>Bienvenue sur FFS2Play</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="367"/>
+        <location filename="../gui/mainwindow.cpp" line="368"/>
         <source>FFS2Play Version : </source>
         <translation>Version de FFS2Play : </translation>
     </message>
@@ -555,21 +542,87 @@
         <source>listenning on port </source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>ffs2p_simconnect::CSCManager</name>
     <message>
-        <location filename="../net/udpserver.cpp" line="105"/>
-        <source>receive datagram = </source>
+        <location filename="../sim/scmanager.cpp" line="68"/>
+        <source>Connexion to FS failed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="84"/>
+        <source>Disconnected from FS.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="170"/>
+        <source>Get an unknown Event ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="320"/>
+        <source>Connected to simulator.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="332"/>
+        <source>Receive SIMCONNECT_RECV event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="345"/>
+        <source>Receive SIMCONNECT_RECV_SYSTEM_STATE event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="384"/>
+        <source>Get a SimConnect exception = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="395"/>
+        <source>Receive SIMCONNECT_RECV_EVENT event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="613"/>
+        <source>Receive SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="625"/>
+        <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID event</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ffs2p_xplane::CXPManager</name>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="96"/>
+        <source>Disconnected from XPlane.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="141"/>
+        <source>DataSend Error : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="148"/>
+        <source>unknown code = </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>simbasemanager</name>
     <message>
-        <location filename="../singleton/simbasemanager.cpp" line="115"/>
+        <location filename="../singleton/simbasemanager.cpp" line="111"/>
         <source>Connexion to simulator failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../singleton/simbasemanager.cpp" line="131"/>
+        <location filename="../singleton/simbasemanager.cpp" line="127"/>
         <source>Disconnected from simulator.</source>
         <translation type="unfinished"></translation>
     </message>

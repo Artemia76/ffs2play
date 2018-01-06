@@ -45,7 +45,6 @@ CHttpRequest::CHttpRequest(QObject *parent) : QObject(parent)
 
 CHttpRequest::~CHttpRequest()
 {
-
 }
 
 ///

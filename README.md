@@ -25,3 +25,23 @@ Foundation and appearing in the file LICENSE.GPL3
 included in the packaging of this software. Please review the following
 information to ensure the GNU General Public License requirements will
 be met: https://www.gnu.org/licenses/gpl-3.0.html.
+1. DEPENDENCIES
+
+- Last Qt Release (QT5.10 at this date)
+ - Protobuf : 3.0.2 is advised, older can produce double free SIGABRT signal
+ - miniupnpc : 1.9+
+ - openssl : 1.0.2
+
+2. BUILD
+2.1 LINUX(UBUNTU)
+
+ * On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play :
+
+ sudo apt-get install build-essential libprotobuf-dev protobuf-compiler libssl-dev libminiupnpc-dev
+
+ * on some qt installation you will need opengl devel :
+	sudo apt-get install mesa-common-dev
+
+2.2 WIN(Visual studio community edition)
+
+coming ...

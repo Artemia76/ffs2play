@@ -135,7 +135,7 @@ win32 {
     LIBS	+= -lcryptlib
     LIBS	+= -llibeay32
 CONFIG( debug, debug|release ) {
-    LIBS	+= -llibprotobufd
+	LIBS	+= -llibprotobufd
 } else {
     LIBS	+= -llibprotobuf
 }
@@ -159,7 +159,8 @@ win {
     DISTFILES += ffs2play.rc
 }
 
-DISTFILES += intl/ffs2play_fr_FR.ts
+DISTFILES += intl/ffs2play_fr_FR.ts \
+    README.md
 DISTFILES += protobuf/ffs2play.proto
 
 
