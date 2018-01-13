@@ -24,114 +24,117 @@
 #include "singleton/singleton.h"
 #include <QXmlStreamWriter>
 
-/// Build Users Profils to Setting file
-/// \brief operator <<
-/// \param out
-/// \param v
-/// \return
-///
-
-QDataStream& operator<<(QDataStream& out, const QList<SUser>& v)
+namespace ffs2play
 {
-    out << v.count();
-    for (QList<SUser>::const_iterator it = v.constBegin(); it != v.constEnd(); ++it)
-    {
-        out << it->Profil << it->Login << it->Password << it->URL;
-    }
-    return out;
-}
+	/// Build Users Profils to Setting file
+	/// \brief operator <<
+	/// \param out
+	/// \param v
+	/// \return
+	///
 
-/// Extraction of Users profils data from Setting file
-/// \brief operator >>
-/// \param in
-/// \param v
-/// \return
-///
+	QDataStream& operator<<(QDataStream& out, const QList<SUser>& v)
+	{
+		out << v.count();
+		for (QList<SUser>::const_iterator it = v.constBegin(); it != v.constEnd(); ++it)
+		{
+			out << it->Profil << it->Login << it->Password << it->URL;
+		}
+		return out;
+	}
 
-QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
-{
-    v.clear();
-    int num;
-    in >> num;
-    for (int i=0; i < num; i++)
-    {
-        SUser User;
-        in >> User.Profil;
-        in >> User.Login;
-        in >> User.Password;
-        in >> User.URL;
-        v.append(User);
-    }
-    return in;
-}
+	/// Extraction of Users profils data from Setting file
+	/// \brief operator >>
+	/// \param in
+	/// \param v
+	/// \return
+	///
 
-///
-/// \brief CWebManager::CheckError
-/// \param Doc
-/// \return
-///
+	QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
+	{
+		v.clear();
+		int num;
+		in >> num;
+		for (int i=0; i < num; i++)
+		{
+			SUser User;
+			in >> User.Profil;
+			in >> User.Login;
+			in >> User.Password;
+			in >> User.URL;
+			v.append(User);
+		}
+		return in;
+	}
 
-bool CWebManager::CheckError(QDomDocument& Doc)
-{
-    QDomElement Element = Doc.elementsByTagName("erreur").at(0).toElement();
-    if (!Element.isNull())
-    {
-        int Level = Element.attribute("error").toInt();
-        QColor Couleur = Qt::black;
-        switch (Level)
-        {
-            case 0:
-                Couleur = Qt::black;
-                break;
-            case 1:
-                Couleur = Qt::darkRed;
-                break;
-            case 2:
-                Couleur = Qt::darkRed;
-                //Disconnect();
-                break;
-        }
-        Log->log(tr("Server : ") + Element.firstChild().nodeValue(),Couleur);
-        if (Level >= 2) return true;
-    }
-    return false;
-}
+	///
+	/// \brief CWebManager::CheckError
+	/// \param Doc
+	/// \return
+	///
 
-///
-/// \brief CWebManager::CheckWhazzup
-/// \param Doc
-///
+	bool CWebManager::CheckError(QDomDocument& pDoc)
+	{
+		QDomElement Element = pDoc.elementsByTagName("erreur").at(0).toElement();
+		if (!Element.isNull())
+		{
+			int Level = Element.attribute("error").toInt();
+			QColor Couleur = Qt::black;
+			switch (Level)
+			{
+				case 0:
+					Couleur = Qt::black;
+					break;
+				case 1:
+					Couleur = Qt::darkRed;
+					break;
+				case 2:
+					Couleur = Qt::darkRed;
+					//Disconnect();
+					break;
+			}
+			m_log->log(tr("Server : ") + Element.firstChild().nodeValue(),Couleur);
+			if (Level >= 2) return true;
+		}
+		return false;
+	}
 
-void CWebManager::CheckWhazzup(QDomDocument &Doc)
-{
-    QDomElement Element = Doc.elementsByTagName("whazzup").at(0).toElement();
-    if (!Element.isNull())
-    {
-        QList<PeerData> whazzup;
-        for (int i = 0; i< Element.childNodes().count();i++)
-        {
-            if (Element.childNodes().at(i).isElement())
-            {
-                QDomElement Player = Element.childNodes().at(i).toElement();
-                PeerData item;
-                item.CallSign = Player.nodeName();
-                item.Port=Player.attribute("port").toUShort();
-                item.externalIP=Crypto.DecryptFromBase64(Player.attribute("ip"));
-                ffs2play::LocalIPList LocalIP;
-                LocalIP.ParseFromString(
-                            QByteArray::fromBase64(
-                                Crypto.DecryptFromBase64(Player.attribute("local_ip")).toLatin1()
-                                ).toStdString());
-                for (int j=0; j<LocalIP.ip_size();j++)
-                {
-                    item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.ip(j))));
-                }
-                whazzup.append(item);
-            }
-        }
-        if (whazzup.count()>0)
-        {
-            P2P->whazzup_Update(whazzup);
-        }
-    }
+	///
+	/// \brief CWebManager::CheckWhazzup
+	/// \param Doc
+	///
+
+	void CWebManager::CheckWhazzup(QDomDocument& pDoc)
+	{
+		QDomElement Element = pDoc.elementsByTagName("whazzup").at(0).toElement();
+		if (!Element.isNull())
+		{
+			QList<PeerData> whazzup;
+			for (int i = 0; i< Element.childNodes().count();i++)
+			{
+				if (Element.childNodes().at(i).isElement())
+				{
+					QDomElement Player = Element.childNodes().at(i).toElement();
+					PeerData item;
+					item.CallSign = Player.nodeName();
+					item.Port=Player.attribute("port").toUShort();
+					item.externalIP=m_crypto.DecryptFromBase64(Player.attribute("ip"));
+					ffs2play::LocalIPList LocalIP;
+					LocalIP.ParseFromString(
+								QByteArray::fromBase64(
+									m_crypto.DecryptFromBase64(Player.attribute("local_ip")).toLatin1()
+									).toStdString());
+					for (int j=0; j<LocalIP.ip_size();j++)
+					{
+						item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.ip(j))));
+					}
+					whazzup.append(item);
+				}
+			}
+			if (whazzup.count()>0)
+			{
+				m_P2P->whazzup_Update(whazzup);
+			}
+		}
+	}
 }

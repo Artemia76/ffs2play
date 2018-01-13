@@ -25,140 +25,146 @@
 
 #include <QCryptographicHash>
 
-///
-/// \brief CWebManager::HelloCallback
-/// \param Request
-///
-
-void CWebManager::HelloCallback (CHttpRequest* Request)
+namespace ffs2play
 {
-#ifdef FFS_DEBUG
-    Log->log("WebManager : " + tr("Get HelloCallback"),Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-    QDomDocument Doc;
-    if (Request->getAsXml(Doc))
-    {
-        QDomNode NodeCert = Doc.elementsByTagName("certificat").at(0);
-        QString SCert = NodeCert.firstChild().nodeValue();
-        m_sCrypted_AESKey = Crypto.RSA_EncryptToBase64(SCert, Crypto.EncryptionKey());
-#ifdef FFS_DEBUG
-        Log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
-#endif
-        emit (FireHelloCallback());
-    }
-    Request->deleteLater();
-}
 
-///
-/// \brief CWebManager::ConnectCallback
-/// \param Request
-///
+	///
+	/// \brief CWebManager::HelloCallback
+	/// \param Request
+	///
 
-void CWebManager::ConnectCallback(CHttpRequest *Request)
-{
-#ifdef FFS_DEBUG
-    Log->log("WebManager : " + tr("Get ConnectCallback"),Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-    QDomDocument Doc;
-    if (Request->getAsXml(Doc))
-    {
-        bool bError = CheckError(Doc);
-        QDomElement Element = Doc.elementsByTagName("loginStatus").at(0).toElement();
-        if (!Element.isNull())
-        {
-            m_bConnected = Element.firstChild().nodeValue().toInt()==1;
-            if (m_bConnected && (!bError))
-            {
-                Log->log(tr("FFS2Play is connected on server"));
-                QDomElement xmlExternalIP = Doc.elementsByTagName("your_ip").at(0).toElement();
-                if (!xmlExternalIP.isNull())
-                {
-                    QHostAddress ExternalIP (xmlExternalIP.firstChild().nodeValue());
-#ifdef FFS_DEBUG
-                    if (ExternalIP.isNull())
-                    {
-                        Log->log("WebManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
-                    }
-                    else
-                    {
-                        Log->log("WebManager : " + tr("Get external IP = ") + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
-                    }
-#endif
-                }
-                QDomElement xmlKey = Doc.elementsByTagName("key").at(0).toElement();
-                if (!xmlKey.isNull())
-                {
-                    Key = xmlKey.firstChild().nodeValue();
-                    OnLiveUpdate();
-                }
-                QDomElement xmlAtc = Doc.elementsByTagName("atc").at(0).toElement();
-                if (!xmlAtc.isNull())
-                {
-                    if (xmlAtc.firstChild().nodeValue().toInt()==1)
-                    {
-                        ATCTimer.start();
-                    }
-                }
-                QDomElement AIManagement = Doc.elementsByTagName("AI_Management").at(0).toElement();
-                if (!AIManagement.isNull())
-                {
-                    m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
-                }
-                CheckWhazzup(Doc);
-                emit (FireConnected());
-            }
-        }
+	void CWebManager::HelloCallback (CHttpRequest* Request)
+	{
+	#ifdef FFS_DEBUG
+		m_log->log("WebManager : " + tr("Get HelloCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+	#endif
+		QDomDocument Doc;
+		if (Request->getAsXml(Doc))
+		{
+			QDomNode NodeCert = Doc.elementsByTagName("certificat").at(0);
+			QString SCert = NodeCert.firstChild().nodeValue();
+			m_sCrypted_AESKey = m_crypto.RSA_EncryptToBase64(SCert, m_crypto.EncryptionKey());
+	#ifdef FFS_DEBUG
+			m_log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
+	#endif
+			emit (FireHelloCallback());
+		}
+		Request->deleteLater();
+	}
 
-    }
-    Request->deleteLater();
-}
+	///
+	/// \brief CWebManager::ConnectCallback
+	/// \param Request
+	///
 
-void CWebManager::LiveUpdateCallback(CHttpRequest *Request)
-{
-#ifdef FFS_DEBUG
-    Log->log("WebManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-    QDomDocument Doc;
-    if (Request->getAsXml(Doc))
-    {
-        CheckWhazzup(Doc);
-    }
-}
+	void CWebManager::ConnectCallback(CHttpRequest *pRequest)
+	{
+	#ifdef FFS_DEBUG
+		m_log->log("WebManager : " + tr("Get ConnectCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+	#endif
+		QDomDocument Doc;
+		if (pRequest->getAsXml(Doc))
+		{
+			bool bError = CheckError(Doc);
+			QDomElement Element = Doc.elementsByTagName("loginStatus").at(0).toElement();
+			if (!Element.isNull())
+			{
+				m_bConnected = Element.firstChild().nodeValue().toInt()==1;
+				if (m_bConnected && (!bError))
+				{
+					m_log->log(tr("FFS2Play is connected on server"));
+					QDomElement xmlExternalIP = Doc.elementsByTagName("your_ip").at(0).toElement();
+					if (!xmlExternalIP.isNull())
+					{
+						QHostAddress ExternalIP (xmlExternalIP.firstChild().nodeValue());
+	#ifdef FFS_DEBUG
+						if (ExternalIP.isNull())
+						{
+							m_log->log("WebManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
+						}
+						else
+						{
+							m_log->log("WebManager : " + tr("Get external IP = ") + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
+						}
+	#endif
+					}
+					QDomElement xmlKey = Doc.elementsByTagName("key").at(0).toElement();
+					if (!xmlKey.isNull())
+					{
+						m_key = xmlKey.firstChild().nodeValue();
+						OnLiveUpdate();
+					}
+					QDomElement xmlAtc = Doc.elementsByTagName("atc").at(0).toElement();
+					if (!xmlAtc.isNull())
+					{
+						if (xmlAtc.firstChild().nodeValue().toInt()==1)
+						{
+							m_ATCTimer.start();
+						}
+					}
+					QDomElement AIManagement = Doc.elementsByTagName("AI_Management").at(0).toElement();
+					if (!AIManagement.isNull())
+					{
+						m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
+					}
+					CheckWhazzup(Doc);
+					emit (FireConnected());
+				}
+			}
 
-///
-/// \brief CWebManager::LogoutCallback
-/// \param Request
-///
+		}
+		pRequest->deleteLater();
+	}
 
-void CWebManager::LogoutCallback(CHttpRequest*)
-{
-#ifdef FFS_DEBUG
-    Log->log("WebManager : " + tr("Get LogoutCallback"),Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-}
+	void CWebManager::LiveUpdateCallback(CHttpRequest* pRequest)
+	{
+	#ifdef FFS_DEBUG
+		m_log->log("WebManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+	#endif
+		QDomDocument Doc;
+		if (pRequest->getAsXml(Doc))
+		{
+			CheckWhazzup(Doc);
+		}
+		pRequest->deleteLater();
+	}
 
-///
-/// \brief CWebManager::OnATCUpdate
-///
+	///
+	/// \brief CWebManager::LogoutCallback
+	/// \param Request
+	///
 
-void CWebManager::OnATCUpdate()
-{
-#ifdef FFS_DEBUG
-    Log->log("WebManager : " + tr("Get ATCUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-}
+	void CWebManager::LogoutCallback(CHttpRequest* 	pRequest)
+	{
+	#ifdef FFS_DEBUG
+		m_log->log("WebManager : " + tr("Get LogoutCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+	#endif
+		pRequest->deleteLater();
+	}
 
-///
-/// \brief CWebManager::OnLiveUpdate
-///
+	///
+	/// \brief CWebManager::OnATCUpdate
+	///
 
-void CWebManager::OnLiveUpdate()
-{
-#ifdef FFS_DEBUG
-    Log->log("WebManager : " + tr("Get OnLiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-    if (m_bConnected && SimManager->isConnected())
-    {
-        SendLiveUpdate();
-    }
+	void CWebManager::OnATCUpdate()
+	{
+	#ifdef FFS_DEBUG
+		m_log->log("WebManager : " + tr("Get ATCUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
+	#endif
+	}
+
+	///
+	/// \brief CWebManager::OnLiveUpdate
+	///
+
+	void CWebManager::OnLiveUpdate()
+	{
+	#ifdef FFS_DEBUG
+		m_log->log("WebManager : " + tr("Get OnLiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
+	#endif
+		if (m_bConnected && m_simManager->isConnected())
+		{
+			SendLiveUpdate();
+		}
+	}
 }

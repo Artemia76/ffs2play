@@ -23,40 +23,44 @@
 #include "peer.h"
 
 #ifdef Q_OS_WIN
-    #include <windows.h>
+	#include <windows.h>
 #endif
 
-CPeer::CPeer(
-        UDPServer* pServer,
-        QHostAddress pExternalIP,
-        int pPort,
-        QString CallSign,
-        bool pDisabled,
-        bool pLocal,
-        const QList<QHostAddress>* pInternalIP,
-        QObject *parent
-        ) : QObject(parent)
+namespace ffs2play
 {
-    Log = CLogger::instance();
-    m_AIMapping = AIMapping::instance();
-    SIM = simbasemanager::instance();
-    m_CallSign = CallSign;
-    Server = pServer;
-    m_ExternalIP = pExternalIP;
-    if (pInternalIP != NULL)
-    {
-        m_InternalIP = *pInternalIP;
-    }
-    m_Port = pPort;
-    m_bLocal = pLocal;
-    m_bDisabled = true;
-    m_sel_iplocal = 0;
-    m_TrySimpleAI = false;
-    m_bDisabled = pDisabled;
-    m_Visible = false;
-    m_bSpawnable = false;
-}
+	CPeer::CPeer(
+			UDPServer* pServer,
+			QHostAddress pExternalIP,
+			int pPort,
+			QString CallSign,
+			bool pDisabled,
+			bool pLocal,
+			const QList<QHostAddress>* pInternalIP,
+			QObject *parent
+			) : QObject(parent),
+				CallSign (m_CallSign)
+	{
+		m_log = CLogger::instance();
+		m_AIMapping = AIMapping::instance();
+		m_simManager = simbasemanager::instance();
+		m_CallSign = CallSign;
+		m_server = pServer;
+		m_ExternalIP = pExternalIP;
+		if (pInternalIP != NULL)
+		{
+			m_InternalIP = *pInternalIP;
+		}
+		m_Port = pPort;
+		m_bLocal = pLocal;
+		m_bDisabled = true;
+		m_sel_iplocal = 0;
+		m_TrySimpleAI = false;
+		m_bDisabled = pDisabled;
+		m_Visible = false;
+		m_bSpawnable = false;
+	}
 
-CPeer::~CPeer()
-{
+	CPeer::~CPeer()
+	{
+	}
 }

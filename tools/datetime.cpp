@@ -22,14 +22,17 @@
 
 #include "tools/datetime.h"
 
-datetime Now()
+namespace ffs2play
 {
-    return time_point_cast<microseconds>(system_clock::now());
-}
+	datetime Now()
+	{
+		return std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
+	}
 
-datetime fromTimeStamp(uint64_t pTS)
-{
-    auto epoch = time_point<system_clock>();
-    auto since_epoch = microseconds(pTS);
-    return time_point_cast<microseconds>(epoch + since_epoch);
+	datetime fromTimeStamp(uint64_t pTS)
+	{
+		auto epoch = std::chrono::time_point<std::chrono::system_clock>();
+		auto since_epoch = std::chrono::microseconds(pTS);
+		return std::chrono::time_point_cast<std::chrono::microseconds>(epoch + since_epoch);
+	}
 }

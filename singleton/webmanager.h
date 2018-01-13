@@ -40,84 +40,92 @@
 #include "tools/crypto.h"
 #include "sim/aircraftstate.h"
 
-struct SUser
+namespace ffs2play
 {
-    QString Profil;
-    QString Login;
-    QString Password;
-    QString URL;
-};
 
-Q_DECLARE_METATYPE(QList<SUser>)
+	struct SUser
+	{
+		QString Profil;
+		QString Login;
+		QString Password;
+		QString URL;
+	};
+}
 
-QDataStream& operator<<(QDataStream& out, const QList<SUser>& v);
-QDataStream& operator>>(QDataStream& in, QList<SUser>& v);
+Q_DECLARE_METATYPE(QList<ffs2play::SUser>)
 
-class CWebManager : public QObject
+namespace ffs2play
 {
-    Q_OBJECT
-    friend class DialogProfils;
-public:
-    enum XmlCode
-    {
-        hello,
-        verify,
-        liveupdate,
-        atc,
-        logout
-    };
-    Q_ENUM(XmlCode)
+	QDataStream& operator<<(QDataStream& out, const QList<SUser>& v);
+	QDataStream& operator>>(QDataStream& in, QList<SUser>& v);
 
-private:
-                        CWebManager(QObject *parent = 0);
-    static CWebManager* createInstance();
-    QSettings           s;
-    QTimer              LiveUpdateTimer;
-    QTimer              ATCTimer;
-    simbasemanager*     SimManager;
-    CP2PManager*        P2P;
-    CLogger*            Log;
-    QMetaEnum           metaXmlCode;
+	class CWebManager : public QObject
+	{
+		Q_OBJECT
+		friend class		DialogProfils;
+	public:
+		enum XmlCode
+		{
+			hello,
+			verify,
+			liveupdate,
+			atc,
+			logout
+		};
+		Q_ENUM(XmlCode)
 
-    // Etat de la connexion
-    bool                m_bConnected;
-    bool                m_SyncAIDone;
-    bool                m_AIManagement;
-    QString             m_sURL;
-    QString             m_sCrypted_AESKey;
-    QDateTime           LastGoodUpdate;
-    QList<SUser>        Users;
-    int                 CurrentUser;
-    QString             Key;
-    CCrypto             Crypto;
-    void                XmlBuild(QDomDocument& Doc, XmlCode Code);
-    bool                CheckError(QDomDocument& Doc);
-    void                CheckWhazzup (QDomDocument& Doc);
+	private:
+							CWebManager(QObject *parent = 0);
+		static CWebManager*	createInstance();
+		QSettings			m_settings;
+		QTimer				m_liveUpdateTimer;
+		QTimer				m_ATCTimer;
+		simbasemanager*		m_simManager;
+		CP2PManager*		m_P2P;
+		CLogger*			m_log;
+		QMetaEnum			m_metaXmlCode;
 
-protected:
-    void                SaveConfig();
-    void                SetCurrentUser(int num);
+		// Etat de la connexion
+		bool				m_bConnected;
+		bool				m_SyncAIDone;
+		bool				m_AIManagement;
+		QString				m_sURL;
+		QString				m_sCrypted_AESKey;
+		QDateTime			m_lastGoodUpdate;
+		int					m_currentUser;
+		QString				m_key;
+		CCrypto				m_crypto;
+		void				XmlBuild(QDomDocument& pDoc, XmlCode pCode);
+		bool				CheckError(QDomDocument& pDoc);
+		void				CheckWhazzup (QDomDocument& pDoc);
 
-public:
-                        ~CWebManager();
-    static CWebManager* instance();
-    bool                DelayedExit;
-    void                Connect();
-    void                Disconnect();
-signals:
-    void                FireHelloCallback();
-    void                FireConnected();
-    void                FireDisconnected();
-public slots:
-    void                connect_disconnect();
-private slots:
-    void                HelloCallback (CHttpRequest* Request);
-    void                ConnectCallback (CHttpRequest* Request);
-    void                LiveUpdateCallback (CHttpRequest* Request);
-    void                LogoutCallback (CHttpRequest* Request);
-    void                SendVerify();
-    void                SendLiveUpdate();
-    void                OnATCUpdate();
-    void                OnLiveUpdate();
-};
+	protected:
+		QList<SUser>		m_users;
+		void				SaveConfig();
+		void				SetCurrentUser(int pNum);
+
+	public:
+							~CWebManager();
+		static CWebManager*	instance();
+		bool				DelayedExit;
+		void				Connect();
+		void				Disconnect();
+	signals:
+		void				FireHelloCallback();
+		void				FireConnected();
+		void				FireDisconnected();
+	public slots:
+		void				connect_disconnect();
+	private slots:
+		void				HelloCallback (CHttpRequest* pRequest);
+		void				ConnectCallback (CHttpRequest* pRequest);
+		void				LiveUpdateCallback (CHttpRequest* pRequest);
+		void				LogoutCallback (CHttpRequest* pRequest);
+		void				SendVerify();
+		void				SendLiveUpdate();
+		void				OnATCUpdate();
+		void				OnLiveUpdate();
+	};
+}
+
 #endif // WEBMANAGER_H

@@ -4,27 +4,29 @@
 #include <QObject>
 #include "singleton/clogger.h"
 
-struct AIResol
+namespace ffs2play
 {
-    QString Titre;
-    double  CG_Height;
-    double  Pitch;
-};
+	struct AIResol
+	{
+		QString Titre;
+		double  CG_Height;
+		double  Pitch;
+	};
 
-class AIMapping : public QObject
-{
-    Q_OBJECT
-private:
-    explicit AIMapping(QObject *parent = nullptr);
-    static AIMapping* createInstance();
-    CLogger*     Log;
+	class AIMapping : public QObject
+	{
+		Q_OBJECT
+	private:
+		explicit AIMapping(QObject *parent = nullptr);
+		static AIMapping* createInstance();
+		CLogger*     Log;
 
-public:
-    ~AIMapping();
-    static AIMapping* instance();
-signals:
+	public:
+		~AIMapping();
+		static AIMapping* instance();
+	signals:
 
-public slots:
-};
-
+	public slots:
+	};
+}
 #endif // AIMAPPING_H

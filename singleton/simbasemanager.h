@@ -28,41 +28,43 @@
 #include "singleton/clogger.h"
 #include "sim/simconnector.h"
 
-class simbasemanager : public QObject
+namespace ffs2play
 {
-    Q_OBJECT
-private:
-static simbasemanager* createInstance();
-    explicit simbasemanager(QObject *parent = nullptr);
-    CLogger*    m_logger;
-    bool        m_initialized;
-    SimConnector* m_connector;
-    QThread*    m_thread;
-    bool        m_bRunning;
+	class simbasemanager : public QObject
+	{
+		Q_OBJECT
+	private:
+	static	simbasemanager*		createInstance();
+		explicit				simbasemanager(QObject *parent = nullptr);
+		CLogger*				m_log;
+		bool					m_initialized;
+		SimConnector*			m_connector;
+		QThread*				m_thread;
+		bool					m_bRunning;
 
-public:
-static simbasemanager* instance();
-                ~simbasemanager();
-    void        init(SimConnector* p_connector);
-    void        open();
-    void        close();
-    bool        isConnected();
-    bool        isInitialized();
-    const CAircraftState getAircraftState();
+	public:
+	static simbasemanager*		instance();
+								~simbasemanager();
+		void					init(SimConnector* p_connector);
+		void					open();
+		void					close();
+		bool					isConnected();
+		bool					isInitialized();
+		const CAircraftState	getAircraftState();
 
-private slots:
-    void        mainThread();
-    void        OnSimVariableEvent(CAircraftState);
-    void        OnSimEvent(SimEvent);
-public slots:
-    void        open_close();
+	private slots:
+		void					mainThread();
+		void					OnSimVariableEvent(CAircraftState);
+		void					OnSimEvent(SimEvent);
+	public slots:
+		void					open_close();
 
-signals:
-    void        finished();
-    void        opened();
-    void        closed();
-    void        fireSimVariableEvent(CAircraftState);
-    void        fireSimEvent(SimEvent);
-};
-
+	signals:
+		void					finished();
+		void					opened();
+		void					closed();
+		void					fireSimVariableEvent(CAircraftState);
+		void					fireSimEvent(SimEvent);
+	};
+}
 #endif // SIMBASEMANAGER_H

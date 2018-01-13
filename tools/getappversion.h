@@ -26,15 +26,17 @@
 #include <QString>
 #include <QTextStream>
 
-struct sVersion
+namespace ffs2play
 {
-    QString Name;
-    QString FullVersion;
-    int Major;
-    int Minor;
-    int Build;
-};
+	struct sVersion
+	{
+		QString Name;
+		QString FullVersion;
+		int Major;
+		int Minor;
+		int Build;
+	};
 
-sVersion GetAppVersion();
-
+	sVersion GetAppVersion();
+}
 #endif

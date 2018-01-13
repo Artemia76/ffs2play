@@ -27,32 +27,34 @@
 #include <QSettings>
 #include <QColor>
 
-enum CL_DEBUG_LEVEL
+namespace ffs2play
 {
-    LEVEL_NONE,
-    LEVEL_NORMAL,
-    LEVEL_VERBOSE
-};
+	enum CL_DEBUG_LEVEL
+	{
+		LEVEL_NONE,
+		LEVEL_NORMAL,
+		LEVEL_VERBOSE
+	};
 
-class CLogger : public QObject
-{
-    Q_OBJECT
+	class CLogger : public QObject
+	{
+		Q_OBJECT
 
-private:
-                    CLogger(QObject* parent = 0);
-    static CLogger* createInstance();
-    CL_DEBUG_LEVEL  m_DebugLevel;
-    QSettings       s;
-    bool            m_logToFile;
+	private:
+						CLogger(QObject* pParent = 0);
+		static CLogger* createInstance();
+		CL_DEBUG_LEVEL  m_DebugLevel;
+		QSettings		m_settings;
+		bool            m_logToFile;
 
-public:
-                    ~CLogger();
-    static CLogger* instance();
-    void            setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-    void            log (const QString& Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+	public:
+						~CLogger();
+		static CLogger* instance();
+		void            setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+		void            log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 
-signals:
-    void            fireLog (QString Texte="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-};
-
+	signals:
+		void            fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+	};
+}
 #endif // CLOGGER_H

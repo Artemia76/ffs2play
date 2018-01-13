@@ -42,60 +42,62 @@ namespace Ui {
 class DialogProfils;
 }
 
-class DialogProfils : public QDialog
+namespace ffs2play
 {
-    Q_OBJECT
+	class DialogProfils : public QDialog
+	{
+		Q_OBJECT
 
-public:
-    // Constructor whith QT Widget inherit
-    explicit DialogProfils(QWidget *parent = 0);
+	public:
+		// Constructor whith QT Widget inherit
+		explicit			DialogProfils(QWidget *parent = 0);
 
-    // Destructor
-    ~DialogProfils();
+		// Destructor
+		~DialogProfils();
 
-private:
+	private:
 
-    // UI Designer GUI
-    Ui::DialogProfils *ui;
+		// UI Designer GUI
+		Ui::DialogProfils*	ui;
 
-    // Logger singleton instance
-    CLogger*        Log;
+		// Logger singleton instance
+		CLogger*			m_log;
 
-    // Web Manager singleton instance
-    CWebManager*    WebManager;
+		// Web Manager singleton instance
+		CWebManager*		m_webManager;
 
-    // Configuration file Access
-    QSettings       s;
+		// Configuration file Access
+		QSettings			m_settings;
 
-    // Flag to memorize if something is changed on current profil edition
-    bool Changed = false;
-    QListWidgetItem* CurrentProfil;
-    // Method to enable or disable all texts entries
-    void lineEditEnable(bool flag);
+		// Flag to memorize if something is changed on current profil edition
+		bool				m_changed;
+		QListWidgetItem*	m_currentProfil;
+		// Method to enable or disable all texts entries
+		void				lineEditEnable(bool pFlag);
 
-    void checkIfChanged();
+		void				checkIfChanged();
 
-    void applyChangedItem();
+		void				applyChangedItem();
 
-    int getCurrentRow();
-private slots:
-    // Button Add Profil Pressed Slot
-    void on_btnAdd_pressed();
+		int					getCurrentRow();
+	private slots:
+		// Button Add Profil Pressed Slot
+		void				on_btnAdd_pressed();
 
-    // Button Delete Profil Pressed Slot
-    void on_btnDelete_pressed();
+		// Button Delete Profil Pressed Slot
+		void				on_btnDelete_pressed();
 
-    // Selection change in Profil list
-    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+		// Selection change in Profil list
+		void				on_listWidget_currentItemChanged(QListWidgetItem *pCurrent, QListWidgetItem *pPrevious);
 
-    // Button in ButtonBox is clicked
-    void on_buttonBox_clicked(QAbstractButton *button);
+		// Button in ButtonBox is clicked
+		void				on_buttonBox_clicked(QAbstractButton* button);
 
-    // Profil name line edit content changed
-    void on_lineEdit_ProfilName_textChanged(const QString &arg1);
-    void on_lineEdit_Login_textChanged(const QString &arg1);
-    void on_lineEdit_Password_textChanged(const QString &arg1);
-    void on_lineEdit_URL_textChanged(const QString &arg1);
-};
-
+		// Profil name line edit content changed
+		void				on_lineEdit_ProfilName_textChanged(const QString&);
+		void				on_lineEdit_Login_textChanged(const QString&);
+		void				on_lineEdit_Password_textChanged(const QString&);
+		void				on_lineEdit_URL_textChanged(const QString&);
+	};
+}
 #endif // DIALOGPROFILS_H

@@ -22,18 +22,21 @@
 
 #include "simconnector.h"
 
-SimConnector::SimConnector(QObject *parent) : QObject(parent)
+namespace ffs2play
 {
-    Log=CLogger::instance();
-    m_bConnected = false;
-}
+	SimConnector::SimConnector(QObject *parent) : QObject(parent)
+	{
+		Log=CLogger::instance();
+		m_bConnected = false;
+	}
 
-SimConnector::~SimConnector()
-{
+	SimConnector::~SimConnector()
+	{
 
-}
+	}
 
-bool SimConnector::isConnected()
-{
-    return m_bConnected;
+	bool SimConnector::isConnected()
+	{
+		return m_bConnected;
+	}
 }

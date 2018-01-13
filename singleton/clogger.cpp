@@ -23,77 +23,80 @@
 #include "singleton/clogger.h"
 #include "singleton/singleton.h"
 
-///
-/// \brief CLogger::CLogger
-/// \param parent
-///
-
-CLogger::CLogger(QObject* parent):
-    QObject(parent)
+namespace ffs2play
 {
-    qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
-    s.beginGroup("Log");
-    m_DebugLevel = (CL_DEBUG_LEVEL)s.value("DebugLevel",LEVEL_NONE).toLongLong();
-    m_logToFile = s.value("LogToFile",false).toBool();
-    s.endGroup();
-}
+	///
+	/// \brief CLogger::CLogger
+	/// \param parent
+	///
 
-///
-/// \brief CLogger::createInstance
-/// \return
-///
+	CLogger::CLogger(QObject* parent):
+		QObject(parent)
+	{
+		qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
+		m_settings.beginGroup("Log");
+		m_DebugLevel = (CL_DEBUG_LEVEL)m_settings.value("DebugLevel",LEVEL_NONE).toLongLong();
+		m_logToFile = m_settings.value("LogToFile",false).toBool();
+		m_settings.endGroup();
+	}
 
-CLogger* CLogger::createInstance()
-{
-    return new CLogger();
-}
+	///
+	/// \brief CLogger::createInstance
+	/// \return
+	///
 
-///
-/// \brief CLogger::~CLogger
-///
+	CLogger* CLogger::createInstance()
+	{
+		return new CLogger();
+	}
 
-CLogger::~CLogger()
-{
-    s.beginGroup("Log");
-    s.setValue("DebugLevel",m_DebugLevel);
-    s.setValue("LogToFile",m_logToFile);
-    s.endGroup();
-}
+	///
+	/// \brief CLogger::~CLogger
+	///
 
-///
-/// \brief CLogger::instance
-/// \return
-///
+	CLogger::~CLogger()
+	{
+		m_settings.beginGroup("Log");
+		m_settings.setValue("DebugLevel",m_DebugLevel);
+		m_settings.setValue("LogToFile",m_logToFile);
+		m_settings.endGroup();
+	}
 
-CLogger* CLogger::instance()
-{
-    return Singleton<CLogger>::instance(CLogger::createInstance);
-}
+	///
+	/// \brief CLogger::instance
+	/// \return
+	///
 
-///
-/// \brief CLogger::setDebugLevel
-/// \param pLevel
-///
+	CLogger* CLogger::instance()
+	{
+		return Singleton<CLogger>::instance(CLogger::createInstance);
+	}
 
-void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
-{
-    if (pLevel < LEVEL_NONE ) m_DebugLevel=LEVEL_NONE;
-    else if (pLevel > LEVEL_VERBOSE) m_DebugLevel=LEVEL_VERBOSE;
-    else m_DebugLevel = pLevel;
-    s.beginGroup("Log");
-    s.setValue("DebugLevel",QVariant(m_DebugLevel));
-    s.endGroup();
-}
+	///
+	/// \brief CLogger::setDebugLevel
+	/// \param pLevel
+	///
 
-///
-/// \brief CLogger::log
-/// \param Texte
-/// \param pColor
-/// \param pLevel
-///
+	void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
+	{
+		if (pLevel < LEVEL_NONE ) m_DebugLevel=LEVEL_NONE;
+		else if (pLevel > LEVEL_VERBOSE) m_DebugLevel=LEVEL_VERBOSE;
+		else m_DebugLevel = pLevel;
+		m_settings.beginGroup("Log");
+		m_settings.setValue("DebugLevel",QVariant(m_DebugLevel));
+		m_settings.endGroup();
+	}
 
-void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
-{
-    if (pLevel > m_DebugLevel) return;
-    emit(fireLog(Texte,pColor,pLevel));
+	///
+	/// \brief CLogger::log
+	/// \param Texte
+	/// \param pColor
+	/// \param pLevel
+	///
+
+	void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
+	{
+		if (pLevel > m_DebugLevel) return;
+		emit(fireLog(Texte,pColor,pLevel));
+	}
 }

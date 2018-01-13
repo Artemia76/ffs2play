@@ -26,53 +26,53 @@
 #include "tools/datetime.h"
 #include "sim/aibase.h"
 
-using namespace ffs2play;
-
-class CAircraftState : public CAIBase
+namespace ffs2play
 {
-public:
-    CAircraftState();
-    ~CAircraftState();
-    virtual void toAirData (AirData& pAirData);
-    virtual void fromAirData (const AirData& pAirData);
-    datetime    TimeStamp;
-    QString     Title;
-    QString     Model;
-    QString     Type;
-    QString     Category;
-    double      GroundAltitude;
-    double      Weight;
-    double      TotalFuelCapacity;
-    double      Vario;
-    qint32      TimeFactor;
-    double      GroundSpeed;
-    double      TASSpeed;
-    double      IASSpeed;
-    double      Fuel;
-    double      GForce;
-    double      AmbiantWindVelocity;
-    double      AmbiantWindDirection;
-    double      SeaLevelPressure;
-    qint32      XAxis;
-    qint32      YAxis;
-    qint32      Slider;
-    qint32      RZAxis;
-    qint32      HatAxis;
-    qint32      Squawk;
-    qint32      Realism;
-    quint32     AmbiantPrecipState;
-    qint32      AltimeterSetting;
-    qint32      NumEngine;
-    //Etat
-    bool        ParkingBrake;
-    bool        Pause;
-    bool        Crash;
-    bool        RunState;
-    bool        Pushback;
-    bool        OverSpeed;
-    bool        Slew;
-    bool        OnGround;
-    bool        Stalling;
-};
-
+	class CAircraftState : public CAIBase
+	{
+	public:
+		CAircraftState();
+		~CAircraftState();
+		virtual void toAirData (AirData& pAirData);
+		virtual void fromAirData (const AirData& pAirData);
+		datetime    TimeStamp;
+		QString     Title;
+		QString     Model;
+		QString     Type;
+		QString     Category;
+		double      GroundAltitude;
+		double      Weight;
+		double      TotalFuelCapacity;
+		double      Vario;
+		qint32      TimeFactor;
+		double      GroundSpeed;
+		double      TASSpeed;
+		double      IASSpeed;
+		double      Fuel;
+		double      GForce;
+		double      AmbiantWindVelocity;
+		double      AmbiantWindDirection;
+		double      SeaLevelPressure;
+		qint32      XAxis;
+		qint32      YAxis;
+		qint32      Slider;
+		qint32      RZAxis;
+		qint32      HatAxis;
+		qint32      Squawk;
+		qint32      Realism;
+		quint32     AmbiantPrecipState;
+		qint32      AltimeterSetting;
+		qint32      NumEngine;
+		//Etat
+		bool        ParkingBrake;
+		bool        Pause;
+		bool        Crash;
+		bool        RunState;
+		bool        Pushback;
+		bool        OverSpeed;
+		bool        Slew;
+		bool        OnGround;
+		bool        Stalling;
+	};
+}
 #endif // AIRCRAFTSTATE_H

@@ -23,62 +23,64 @@
 #include "singleton/webmanager.h"
 #include "singleton/singleton.h"
 
-///
-/// \brief CWebManager::Connect
-///
-
-void CWebManager::Connect()
+namespace ffs2play
 {
-    if (m_bConnected) return;
-    if (CurrentUser == 0) return;
-    QDomDocument SendHello;
-    XmlBuild(SendHello, hello);
-    CHttpRequest* Request = new CHttpRequest(this);
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
-    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendHello);
+	///
+	/// \brief CWebManager::Connect
+	///
+
+	void CWebManager::Connect()
+	{
+		if (m_bConnected) return;
+		if (m_currentUser == 0) return;
+		QDomDocument SendHello;
+		XmlBuild(SendHello, hello);
+		CHttpRequest* Request = new CHttpRequest(this);
+		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
+		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendHello);
+	}
+
+	///
+	/// \brief CWebManager::Disconnect
+	///
+
+	void CWebManager::Disconnect()
+	{
+		if (!m_bConnected) return;
+		m_ATCTimer.stop();
+		OnLiveUpdate();
+		QDomDocument SendLogout;
+		XmlBuild(SendLogout, logout);
+		CHttpRequest* Request = new CHttpRequest(this);
+		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
+		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
+		m_bConnected = false;
+		emit (FireDisconnected());
+	}
+
+	///
+	/// \brief CWebManager::SendVerify
+	///
+
+	void CWebManager::SendVerify()
+	{
+		QDomDocument SendVerify;
+		XmlBuild(SendVerify, verify);
+		CHttpRequest* Request = new CHttpRequest(this);
+		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)));
+		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendVerify);
+	}
+
+	///
+	/// \brief CWebManager::SendLiveUpdate
+	///
+
+	void CWebManager::SendLiveUpdate()
+	{
+		QDomDocument SendLiveUpdate;
+		XmlBuild(SendLiveUpdate, liveupdate);
+		CHttpRequest* Request = new CHttpRequest(this);
+		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
+		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLiveUpdate);
+	}
 }
-
-///
-/// \brief CWebManager::Disconnect
-///
-
-void CWebManager::Disconnect()
-{
-    if (!m_bConnected) return;
-    ATCTimer.stop();
-    OnLiveUpdate();
-    QDomDocument SendLogout;
-    XmlBuild(SendLogout, logout);
-    CHttpRequest* Request = new CHttpRequest(this);
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
-    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendLogout);
-    m_bConnected = false;
-    emit (FireDisconnected());
-}
-
-///
-/// \brief CWebManager::SendVerify
-///
-
-void CWebManager::SendVerify()
-{
-    QDomDocument SendVerify;
-    XmlBuild(SendVerify, verify);
-    CHttpRequest* Request = new CHttpRequest(this);
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)));
-    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendVerify);
-}
-
-///
-/// \brief CWebManager::SendLiveUpdate
-///
-
-void CWebManager::SendLiveUpdate()
-{
-    QDomDocument SendLiveUpdate;
-    XmlBuild(SendLiveUpdate, liveupdate);
-    CHttpRequest* Request = new CHttpRequest(this);
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
-    Request->execute(Users[CurrentUser-1].URL+"/action.php",SendLiveUpdate);
-}
-

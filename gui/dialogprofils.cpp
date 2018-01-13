@@ -32,278 +32,282 @@
 
 #include <QMessageBox>
 
-///
-/// \brief DialogBox constructor
-/// \param parent
-///
-/// Constructor read users list previously loaded by webmanager constructor
-/// Then it sync the List Widget with profil name as key
-///
-
-DialogProfils::DialogProfils(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::DialogProfils)
+namespace ffs2play
 {
-    // Init GUI Part
-    ui->setupUi(this);
 
-    // Get Logger instance
-    Log = CLogger::instance();
+	///
+	/// \brief DialogBox constructor
+	/// \param parent
+	///
+	/// Constructor read users list previously loaded by webmanager constructor
+	/// Then it sync the List Widget with profil name as key
+	///
 
-    // Get WebManage instance to access profils list
-    WebManager = CWebManager::instance();
+	DialogProfils::DialogProfils(QWidget *parent) :
+		QDialog(parent),
+		ui(new Ui::DialogProfils)
+	{
+		// Init GUI Part
+		ui->setupUi(this);
 
-    // Profil list widget is filled with each User in Profil List content
-    for (const SUser& User : WebManager->Users)
-    {
-        // List item creation with profil name of current
-        ui->listWidget->addItem(new QListWidgetItem(User.Profil));
-    }
-    // Get the default profil selected in configuration file
-    s.beginGroup("Web");
-    int num = s.value("Default",0).toInt();
-    s.endGroup();
+		// Get Logger instance
+		m_log = CLogger::instance();
 
-    // If Default profil is defined the correspondant row is selected
-    if ((num>0) && (num<=ui->listWidget->count()))
-    {
-         ui->listWidget->setCurrentItem(ui->listWidget->item(num-1));
-    }
-    // Else we ensure that lines edit are disabled
-    else lineEditEnable(false);
+		// Get WebManage instance to access profils list
+		m_webManager = CWebManager::instance();
 
-    // Apply button is disabled at start
-    ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
-    Changed = false;
-}
+		// Profil list widget is filled with each User in Profil List content
+		for (const SUser& User : m_webManager->m_users)
+		{
+			// List item creation with profil name of current
+			ui->listWidget->addItem(new QListWidgetItem(User.Profil));
+		}
+		// Get the default profil selected in configuration file
+		m_settings.beginGroup("Web");
+		int num = m_settings.value("Default",0).toInt();
+		m_settings.endGroup();
 
-///
-/// \brief DialogProfils::~DialogProfils
-///
-/// Destructor
-///
+		// If Default profil is defined the correspondant row is selected
+		if ((num>0) && (num<=ui->listWidget->count()))
+		{
+			 ui->listWidget->setCurrentItem(ui->listWidget->item(num-1));
+		}
+		// Else we ensure that lines edit are disabled
+		else lineEditEnable(false);
 
-DialogProfils::~DialogProfils()
-{
-    delete ui;
-}
+		// Apply button is disabled at start
+		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+		m_changed = false;
+	}
 
+	///
+	/// \brief DialogProfils::~DialogProfils
+	///
+	/// Destructor
+	///
 
-///
-/// \brief DialogProfils::lineEditEnable
-/// \param flag
-/// Enable or Disable line texts widgets for modification
-///
-
-void DialogProfils::lineEditEnable(bool flag)
-{
-    ui->lineEdit_ProfilName->setEnabled(flag);
-    ui->lineEdit_Login->setEnabled(flag);
-    ui->lineEdit_Password->setEnabled(flag);
-    ui->lineEdit_URL->setEnabled(flag);
-}
-
-///
-/// \brief DialogProfils::on_btnAdd_pressed
-///
-
-void DialogProfils::on_btnAdd_pressed()
-{
-    SUser User;
-    User.Profil = "Profil";
-    int Row = ui->listWidget->currentRow();
-    WebManager->Users.insert(Row+1,User);
-    QListWidgetItem* item = new QListWidgetItem("Profil");
-    ui->listWidget->insertItem(Row+1,item);
-    ui->listWidget->setCurrentRow(Row+1);
-}
-
-///
-/// \brief DialogProfils::on_btnDelete_pressed
-///
-
-void DialogProfils::on_btnDelete_pressed()
-{
-    int row = ui->listWidget->currentRow();
-    WebManager->Users.removeAt(row);
-    QListWidgetItem *item = ui->listWidget->takeItem(row);
-    delete item;
-    WebManager->SaveConfig();
-}
+	DialogProfils::~DialogProfils()
+	{
+		delete ui;
+	}
 
 
-///
-/// \brief DialogProfils::on_listWidget_currentItemChanged
-/// \param current
-/// \param previous
-///
+	///
+	/// \brief DialogProfils::lineEditEnable
+	/// \param flag
+	/// Enable or Disable line texts widgets for modification
+	///
 
-void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem*)
-{
-    // Let's check if changes are currently operating
-    // If Yes, we ask if user want cancel current modifications
-    if (current != CurrentProfil)
-    {
-        if (Changed)
-        {
-            int ret = QMessageBox::warning(this,tr("Warning"),
-                                           tr("There is some modifications on selected profil. Do you want apply them?"),
-                                           QMessageBox::Yes |QMessageBox::No);
-            if (ret == QMessageBox::Yes)
-            {
-                applyChangedItem();
-            }
-        }
-        if ((ui->listWidget->count() >0) && (current!=NULL))
-        {
-            SUser user = WebManager->Users.at(getCurrentRow());
-            ui->lineEdit_Login->setText(user.Login);
-            ui->lineEdit_Password->setText(user.Password);
-            ui->lineEdit_ProfilName->setText(user.Profil);
-            ui->lineEdit_URL->setText(user.URL);
-            lineEditEnable(true);
-        }
-        else
-        {
-            ui->lineEdit_Login->clear();
-            ui->lineEdit_Password->clear();
-            ui->lineEdit_ProfilName->clear();
-            ui->lineEdit_URL->clear();
-            lineEditEnable(false);
-        }
-        CurrentProfil = current;
-    }
-}
+	void DialogProfils::lineEditEnable(bool pFlag)
+	{
+		ui->lineEdit_ProfilName->setEnabled(pFlag);
+		ui->lineEdit_Login->setEnabled(pFlag);
+		ui->lineEdit_Password->setEnabled(pFlag);
+		ui->lineEdit_URL->setEnabled(pFlag);
+	}
 
-///
-/// \brief DialogProfils::applyChangedItem
-///
+	///
+	/// \brief DialogProfils::on_btnAdd_pressed
+	///
 
-void DialogProfils::applyChangedItem()
-{
-    if (CurrentProfil != NULL)
-    {
-        SUser& user = WebManager->Users[ui->listWidget->row(CurrentProfil)];
-        if (!ui->lineEdit_ProfilName->text().isEmpty())
-        {
-            user.Profil = ui->lineEdit_ProfilName->text();
-            CurrentProfil->setText(user.Profil);
-        }
-        if (!ui->lineEdit_Login->text().isEmpty())
-        {
-            user.Login = ui->lineEdit_Login->text();
-        }
-        if (!ui->lineEdit_Password->text().isEmpty())
-        {
-            user.Password = ui->lineEdit_Password->text();
-        }
-        if (!ui->lineEdit_URL->text().isEmpty())
-        {
-            user.URL = ui->lineEdit_URL->text();
-        }
-        Changed = false;
-        WebManager->SaveConfig();
-    }
-}
+	void DialogProfils::on_btnAdd_pressed()
+	{
+		SUser User;
+		User.Profil = "Profil";
+		int Row = ui->listWidget->currentRow();
+		m_webManager->m_users.insert(Row+1,User);
+		QListWidgetItem* item = new QListWidgetItem("Profil");
+		ui->listWidget->insertItem(Row+1,item);
+		ui->listWidget->setCurrentRow(Row+1);
+	}
 
-///
-/// \brief DialogProfils::on_buttonBox_clicked
-/// \param button
-///
+	///
+	/// \brief DialogProfils::on_btnDelete_pressed
+	///
 
-void DialogProfils::on_buttonBox_clicked(QAbstractButton *button)
-{
-    if (button == ui->buttonBox->button(QDialogButtonBox::Apply))
-    {
-       applyChangedItem();
-       checkIfChanged();
-    }
-    if (button == ui->buttonBox->button(QDialogButtonBox::Ok))
-    {
-        if (Changed)
-        {
-            int ret = QMessageBox::warning(this,tr("Warning"),
-                                           tr("There is some modifications on selected profil. Do you want apply them?"),
-                                           QMessageBox::Yes |QMessageBox::No);
-            if (ret == QMessageBox::Yes)
-            {
-                applyChangedItem();
-            }
-        }
-        WebManager->SetCurrentUser(ui->listWidget->currentRow()+1);
-        WebManager->SaveConfig();
-        this->close();
-    }
-    if (button == ui->buttonBox->button(QDialogButtonBox::Cancel))
-    {
-        this->close();
-    }
+	void DialogProfils::on_btnDelete_pressed()
+	{
+		int row = ui->listWidget->currentRow();
+		m_webManager->m_users.removeAt(row);
+		QListWidgetItem *item = ui->listWidget->takeItem(row);
+		delete item;
+		m_webManager->SaveConfig();
+	}
 
-}
 
-///
-/// \brief DialogProfils::getCurrentRow
-/// \return
-///
+	///
+	/// \brief DialogProfils::on_listWidget_currentItemChanged
+	/// \param current
+	/// \param previous
+	///
 
-int DialogProfils::getCurrentRow()
-{
-    int row = ui->listWidget->currentRow();
-    if (row >= WebManager->Users.count()) row = WebManager->Users.count()-1;
-    return row;
-}
+	void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem* pCurrent, QListWidgetItem*)
+	{
+		// Let's check if changes are currently operating
+		// If Yes, we ask if user want cancel current modifications
+		if (pCurrent != m_currentProfil)
+		{
+			if (m_changed)
+			{
+				int ret = QMessageBox::warning(this,tr("Warning"),
+											   tr("There is some modifications on selected profil. Do you want apply them?"),
+											   QMessageBox::Yes |QMessageBox::No);
+				if (ret == QMessageBox::Yes)
+				{
+					applyChangedItem();
+				}
+			}
+			if ((ui->listWidget->count() >0) && (pCurrent!=NULL))
+			{
+				SUser user = m_webManager->m_users.at(getCurrentRow());
+				ui->lineEdit_Login->setText(user.Login);
+				ui->lineEdit_Password->setText(user.Password);
+				ui->lineEdit_ProfilName->setText(user.Profil);
+				ui->lineEdit_URL->setText(user.URL);
+				lineEditEnable(true);
+			}
+			else
+			{
+				ui->lineEdit_Login->clear();
+				ui->lineEdit_Password->clear();
+				ui->lineEdit_ProfilName->clear();
+				ui->lineEdit_URL->clear();
+				lineEditEnable(false);
+			}
+			m_currentProfil = pCurrent;
+		}
+	}
 
-///
-/// \brief DialogProfils::checkIfChanged
-/// Check if something is changed in current profil edition
+	///
+	/// \brief DialogProfils::applyChangedItem
+	///
 
-void DialogProfils::checkIfChanged()
-{
-    Changed = false;
-    SUser User = WebManager->Users.at(getCurrentRow());
-    if (ui->lineEdit_ProfilName->text() != User.Profil) Changed =true;
-    if (ui->lineEdit_Login->text() != User.Login) Changed =true;
-    if (ui->lineEdit_Password->text() != User.Password) Changed =true;
-    if (ui->lineEdit_URL->text() != User.URL) Changed =true;
-    ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(Changed);
-}
+	void DialogProfils::applyChangedItem()
+	{
+		if (m_currentProfil != NULL)
+		{
+			SUser& user = m_webManager->m_users[ui->listWidget->row(m_currentProfil)];
+			if (!ui->lineEdit_ProfilName->text().isEmpty())
+			{
+				user.Profil = ui->lineEdit_ProfilName->text();
+				m_currentProfil->setText(user.Profil);
+			}
+			if (!ui->lineEdit_Login->text().isEmpty())
+			{
+				user.Login = ui->lineEdit_Login->text();
+			}
+			if (!ui->lineEdit_Password->text().isEmpty())
+			{
+				user.Password = ui->lineEdit_Password->text();
+			}
+			if (!ui->lineEdit_URL->text().isEmpty())
+			{
+				user.URL = ui->lineEdit_URL->text();
+			}
+			m_changed = false;
+			m_webManager->SaveConfig();
+		}
+	}
 
-///
-/// \brief DialogProfils::on_lineEdit_ProfilName_textChanged
-/// \param arg1
-///
+	///
+	/// \brief DialogProfils::on_buttonBox_clicked
+	/// \param button
+	///
 
-void DialogProfils::on_lineEdit_ProfilName_textChanged(const QString&)
-{
-    checkIfChanged();
-}
+	void DialogProfils::on_buttonBox_clicked(QAbstractButton *button)
+	{
+		if (button == ui->buttonBox->button(QDialogButtonBox::Apply))
+		{
+		   applyChangedItem();
+		   checkIfChanged();
+		}
+		if (button == ui->buttonBox->button(QDialogButtonBox::Ok))
+		{
+			if (m_changed)
+			{
+				int ret = QMessageBox::warning(this,tr("Warning"),
+											   tr("There is some modifications on selected profil. Do you want apply them?"),
+											   QMessageBox::Yes |QMessageBox::No);
+				if (ret == QMessageBox::Yes)
+				{
+					applyChangedItem();
+				}
+			}
+			m_webManager->SetCurrentUser(ui->listWidget->currentRow()+1);
+			m_webManager->SaveConfig();
+			this->close();
+		}
+		if (button == ui->buttonBox->button(QDialogButtonBox::Cancel))
+		{
+			this->close();
+		}
 
-///
-/// \brief DialogProfils::on_lineEdit_Login_textChanged
-/// \param arg1
-///
+	}
 
-void DialogProfils::on_lineEdit_Login_textChanged(const QString&)
-{
-    checkIfChanged();
-}
+	///
+	/// \brief DialogProfils::getCurrentRow
+	/// \return
+	///
 
-///
-/// \brief DialogProfils::on_lineEdit_Password_textChanged
-/// \param arg1
-///
+	int DialogProfils::getCurrentRow()
+	{
+		int row = ui->listWidget->currentRow();
+		if (row >= m_webManager->m_users.count()) row = m_webManager->m_users.count()-1;
+		return row;
+	}
 
-void DialogProfils::on_lineEdit_Password_textChanged(const QString& )
-{
-    checkIfChanged();
-}
+	///
+	/// \brief DialogProfils::checkIfChanged
+	/// Check if something is changed in current profil edition
 
-///
-/// \brief DialogProfils::on_lineEdit_URL_textChanged
-/// \param arg1
-///
+	void DialogProfils::checkIfChanged()
+	{
+		m_changed = false;
+		SUser User = m_webManager->m_users.at(getCurrentRow());
+		if (ui->lineEdit_ProfilName->text() != User.Profil) m_changed =true;
+		if (ui->lineEdit_Login->text() != User.Login) m_changed =true;
+		if (ui->lineEdit_Password->text() != User.Password) m_changed =true;
+		if (ui->lineEdit_URL->text() != User.URL) m_changed =true;
+		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(m_changed);
+	}
 
-void DialogProfils::on_lineEdit_URL_textChanged(const QString&)
-{
-    checkIfChanged();
+	///
+	/// \brief DialogProfils::on_lineEdit_ProfilName_textChanged
+	/// \param arg1
+	///
+
+	void DialogProfils::on_lineEdit_ProfilName_textChanged(const QString&)
+	{
+		checkIfChanged();
+	}
+
+	///
+	/// \brief DialogProfils::on_lineEdit_Login_textChanged
+	/// \param arg1
+	///
+
+	void DialogProfils::on_lineEdit_Login_textChanged(const QString&)
+	{
+		checkIfChanged();
+	}
+
+	///
+	/// \brief DialogProfils::on_lineEdit_Password_textChanged
+	/// \param arg1
+	///
+
+	void DialogProfils::on_lineEdit_Password_textChanged(const QString& )
+	{
+		checkIfChanged();
+	}
+
+	///
+	/// \brief DialogProfils::on_lineEdit_URL_textChanged
+	/// \param arg1
+	///
+
+	void DialogProfils::on_lineEdit_URL_textChanged(const QString&)
+	{
+		checkIfChanged();
+	}
 }

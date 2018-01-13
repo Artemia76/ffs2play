@@ -30,7 +30,7 @@
 
 #include "singleton/clogger.h"
 #ifdef Q_OS_WIN
-    #include "sim/scmanager.h"
+	#include "sim/scmanager.h"
 #endif
 #include "sim/xpmanager.h"
 #include "singleton/simbasemanager.h"
@@ -42,36 +42,39 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+namespace ffs2play
 {
-    Q_OBJECT
+	class MainWindow : public QMainWindow
+	{
+		Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-private slots:
-    void onLog(const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel);
-    void onSCM_Opened();
-    void onSCM_Closed();
-    void onWM_Connected();
-    void onWM_Disconnected();
-    void onUpdate();
-    void on_afServeurCon_triggered();
-    void on_afProfil_triggered();
-    void on_afAide_triggered();
-    void on_afFSCon_triggered();
-    void on_afP2P_triggered();
+	public:
+		explicit		MainWindow(QWidget *pParent = 0);
+						~MainWindow();
+	private slots:
+		void			onLog(const QString& pMessage,QColor pColor, CL_DEBUG_LEVEL pLevel);
+		void			onSCM_Opened();
+		void			onSCM_Closed();
+		void			onWM_Connected();
+		void			onWM_Disconnected();
+		void			onUpdate();
+		void			on_afServeurCon_triggered();
+		void			on_afProfil_triggered();
+		void			on_afAide_triggered();
+		void			on_afFSCon_triggered();
+		void			on_afP2P_triggered();
 
-    void OnSimEvent(SimEvent);
-private:
-    Ui::MainWindow *ui;
-    CLogger* Log;
-    simbasemanager* SimManager;
-    CP2PManager* P2PManager;
-    CWebManager* WebManager;
-    QSettings s;
-    QTimer Update;
-    quint32         m_maxLine;
-    void closeEvent(QCloseEvent *event);
-};
+		void			OnSimEvent(SimEvent);
+	private:
+		Ui::MainWindow*	ui;
+		CLogger*		m_log;
+		simbasemanager*	m_simManager;
+		CP2PManager*	m_P2PManager;
+		CWebManager*	m_webManager;
+		QSettings		m_settings;
+		QTimer			m_updateTimer;
+		quint32			m_maxLine;
+		void			closeEvent(QCloseEvent* pEvent);
+	};
+}
 #endif // MAINWINDOW_H

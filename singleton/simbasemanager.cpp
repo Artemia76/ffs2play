@@ -23,152 +23,155 @@
 #include "simbasemanager.h"
 #include "singleton/singleton.h"
 
-///
-/// \brief CSCManager::CSCManager
-/// \param parent
-///
-
-simbasemanager::simbasemanager(QObject* parent):
-    QObject(parent)
+namespace ffs2play
 {
-    qRegisterMetaType<SimEvent>("SimEvent");
-    qRegisterMetaType<CAircraftState>("CAircraftState");
-    m_logger = CLogger::instance();
-    m_connector =nullptr;
-    m_initialized = false;
-    m_bRunning = false;
-    m_thread = new QThread();
-    this->moveToThread(m_thread);
-    connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()));
-    connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
-}
+	///
+	/// \brief CSCManager::CSCManager
+	/// \param parent
+	///
 
-///
-/// \brief CSCManager::createInstance
-/// \return
-///
+	simbasemanager::simbasemanager(QObject* parent):
+		QObject(parent)
+	{
+		qRegisterMetaType<SimEvent>("SimEvent");
+		qRegisterMetaType<CAircraftState>("CAircraftState");
+		m_log = CLogger::instance();
+		m_connector =nullptr;
+		m_initialized = false;
+		m_bRunning = false;
+		m_thread = new QThread();
+		this->moveToThread(m_thread);
+		connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()));
+		connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
+	}
 
-simbasemanager* simbasemanager::createInstance()
-{
-    return new simbasemanager();
-}
+	///
+	/// \brief CSCManager::createInstance
+	/// \return
+	///
 
-///
-/// \brief CSCManager::~CSCManager
-///
+	simbasemanager* simbasemanager::createInstance()
+	{
+		return new simbasemanager();
+	}
 
-simbasemanager::~simbasemanager()
-{
-    close();
-}
+	///
+	/// \brief CSCManager::~CSCManager
+	///
 
-///
-/// \brief CSCManager::instance
-/// \return
-///
+	simbasemanager::~simbasemanager()
+	{
+		close();
+	}
 
-simbasemanager* simbasemanager::instance()
-{
-    return Singleton<simbasemanager>::instance(simbasemanager::createInstance);
-}
+	///
+	/// \brief CSCManager::instance
+	/// \return
+	///
 
-void simbasemanager::init(SimConnector *p_connector)
-{
-    if ((p_connector==NULL)||(m_initialized)) return;
-    m_connector=p_connector;
-    m_initialized=true;
-    connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
-    connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
-}
+	simbasemanager* simbasemanager::instance()
+	{
+		return Singleton<simbasemanager>::instance(simbasemanager::createInstance);
+	}
 
-///
-/// \brief CSCManager::open_close
-///
+	void simbasemanager::init(SimConnector *p_connector)
+	{
+		if ((p_connector==NULL)||(m_initialized)) return;
+		m_connector=p_connector;
+		m_initialized=true;
+		connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
+		connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+	}
 
-void simbasemanager::open_close()
-{
-    if (!isConnected()) open();
-    else close();
-}
+	///
+	/// \brief CSCManager::open_close
+	///
 
-///
-/// \brief CSCManager::open
-///
+	void simbasemanager::open_close()
+	{
+		if (!isConnected()) open();
+		else close();
+	}
 
-void simbasemanager::open ()
-{
-    if (!isInitialized()) return;
-    if (!m_connector->isConnected())
-    {
-        if (m_connector->open())
-        {
-            // Thread starting
-            m_thread->start();
-            emit(opened());
-        }
-        else
-        {
-            m_logger->log(tr("Connexion to simulator failed."),Qt::darkMagenta);
-        }
-    }
-}
+	///
+	/// \brief CSCManager::open
+	///
 
-///
-/// \brief CSCManager::close
-///
+	void simbasemanager::open ()
+	{
+		if (!isInitialized()) return;
+		if (!m_connector->isConnected())
+		{
+			if (m_connector->open())
+			{
+				// Thread starting
+				m_thread->start();
+				emit(opened());
+			}
+			else
+			{
+				m_log->log(tr("Connexion to simulator failed."),Qt::darkMagenta);
+			}
+		}
+	}
 
-void simbasemanager::close ()
-{
-    if (!isInitialized()) return;
-    if (m_connector->isConnected())
-    {
-        m_connector->close();
-        m_thread->wait(0);
-        m_logger->log(tr("Disconnected from simulator."));
-        emit(closed());
-    }
-}
+	///
+	/// \brief CSCManager::close
+	///
 
-bool simbasemanager::isInitialized()
-{
-    if (m_connector==NULL) return false;
-    return m_initialized;
-}
+	void simbasemanager::close ()
+	{
+		if (!isInitialized()) return;
+		if (m_connector->isConnected())
+		{
+			m_connector->close();
+			m_thread->wait(0);
+			m_log->log(tr("Disconnected from simulator."));
+			emit(closed());
+		}
+	}
 
-bool simbasemanager::isConnected()
-{
-    if (m_connector==NULL) return false;
-    return m_connector->isConnected();
-}
+	bool simbasemanager::isInitialized()
+	{
+		if (m_connector==NULL) return false;
+		return m_initialized;
+	}
 
-///
-/// \brief CSCManager::mainThread
-///
+	bool simbasemanager::isConnected()
+	{
+		if (m_connector==NULL) return false;
+		return m_connector->isConnected();
+	}
 
-void simbasemanager::mainThread()
-{
-    while (m_connector->isConnected())
-    {
-        m_connector->main_loop();
-        m_thread->msleep(1);
-    }
-    emit(finished());
-}
+	///
+	/// \brief CSCManager::mainThread
+	///
 
-const CAircraftState simbasemanager::getAircraftState()
-{
-    CAircraftState State;
-    if (m_initialized && (m_connector!=NULL))
-        State = m_connector->State;
-    return State;
-}
+	void simbasemanager::mainThread()
+	{
+		while (m_connector->isConnected())
+		{
+			m_connector->main_loop();
+			m_thread->msleep(1);
+		}
+		emit(finished());
+	}
 
-void simbasemanager::OnSimVariableEvent(CAircraftState pState)
-{
-    emit(fireSimVariableEvent(pState));
-}
+	const CAircraftState simbasemanager::getAircraftState()
+	{
+		CAircraftState State;
+		if (m_initialized && (m_connector!=NULL))
+			State = m_connector->State;
+		return State;
+	}
 
-void simbasemanager::OnSimEvent(SimEvent pEvent)
-{
-    emit(fireSimEvent(pEvent));
+	void simbasemanager::OnSimVariableEvent(CAircraftState pState)
+	{
+		emit(fireSimVariableEvent(pState));
+	}
+
+	void simbasemanager::OnSimEvent(SimEvent pEvent)
+	{
+		emit(fireSimEvent(pEvent));
+	}
 }

@@ -32,42 +32,43 @@
 #include "protobuf/ffs2play.pb.h"
 #include "net/peer.h"
 
-using namespace ffs2play;
-
-class CP2PManager : public QObject
+namespace ffs2play
 {
-    Q_OBJECT
-private:
-                        CP2PManager(QObject *parent = 0);
-    static CP2PManager* createInstance();
-    void                initUPNP(bool flag);
-    CLogger*            m_logger;
-    UDPServer*          m_server;
-    QSettings           s;
-    int                 m_port;
-    bool                m_bUPNP;
-    bool                m_Shadow;
-    LocalIPList         m_InternalIP;
-    QString             m_ExternalIP;
-    QString             m_CallSign;
-    UPNPUrls            urls;
-    IGDdatas            data;
-    QList<CPeer>        Peers;
-public:
-    ~CP2PManager();
-    static CP2PManager* instance();
-    void                init (bool flag);
-    int                 getPort();
-    QString             getLocalIPs();
-    void                setCallsign(const QString& pCallSign);
-    void                whazzup_Update(QList<PeerData>& pWhazzup);
+	class CP2PManager : public QObject
+	{
+		Q_OBJECT
+	private:
+							CP2PManager(QObject *parent = 0);
+		static CP2PManager*	createInstance();
+		void				initUPNP(bool flag);
+		CLogger*			m_logger;
+		UDPServer*			m_server;
+		QSettings			m_settings;
+		int					m_port;
+		bool				m_bUPNP;
+		bool				m_Shadow;
+		LocalIPList			m_InternalIP;
+		QString				m_ExternalIP;
+		QString				m_CallSign;
+		UPNPUrls			m_urls;
+		IGDdatas			m_data;
+		QList<CPeer*>		m_peers;
+	public:
+		~CP2PManager();
+		static CP2PManager*	instance();
+		void				init (bool pFlag);
+		int					getPort();
+		QString				getLocalIPs();
+		void				setCallsign(const QString& pCallSign);
+		void				whazzup_Update(QList<PeerData>& pWhazzup);
+		bool				isDisabled(const QString& pCallsign);
 
-signals:
-    void                onPeerAdd();
-    void                onPeerRemove();
-    void                onPeerChange();
-private slots:
-    void OnReceiveDatagram(const QNetworkDatagram* data);
-};
-
+	signals:
+		void				onPeerAdd();
+		void				onPeerRemove();
+		void				onPeerChange();
+	private slots:
+		void				OnReceiveDatagram(const QNetworkDatagram* pData);
+	};
+}
 #endif // P2PMANAGER_H

@@ -26,12 +26,12 @@
 #include <chrono>
 
 using datetime = std::chrono::time_point<std::chrono::system_clock,
-                                            std::chrono::microseconds>;
+										std::chrono::microseconds>;
 
-using namespace std::chrono;
+namespace ffs2play
+{
+	datetime Now();
 
-datetime Now();
-
-datetime fromTimeStamp(uint64_t pTS);
-
+	datetime fromTimeStamp(uint64_t pTS);
+}
 #endif

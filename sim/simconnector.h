@@ -28,77 +28,80 @@
 #include "singleton/clogger.h"
 #include "tools/datetime.h"
 
-/// <summary>
-/// Enumération des évenements du simulateur à traiter
-/// </summary>
-enum class SIM_EVENT_ID
+namespace ffs2play
 {
-    PAUSE,
-    PARKING_BRAKE,
-    SIMSTART,
-    SIMSTOP,
-    OVERSPEED,
-    STALLING,
-    CRASH,
-    SLEW,
-    PUSHBACK,
-    ON_GROUND,
-    GEAR_HANDLE_POSITION,
-    FLAPS_HANDLE_PERCENT,
-    FLAPS_HANDLE_INDEX,
-    ALTIMETER_SETTING,
-    LANDING_LIGHT,
-    BEACON_LIGHT,
-    STROBE_LIGHT,
-    NAV_LIGHT,
-    RECOGNITION_LIGHT,
-    SMOKE_ENABLE,
-    SLEW_ON,
-    UNUSED = 0xFFFFFFF,
-};
 
-class SimEvent
-{
-public:
-    SimEvent()
-    {
-        Time = Now();
-    }
+	/// <summary>
+	/// Enumération des évenements du simulateur à traiter
+	/// </summary>
+	enum class SIM_EVENT_ID
+	{
+		PAUSE,
+		PARKING_BRAKE,
+		SIMSTART,
+		SIMSTOP,
+		OVERSPEED,
+		STALLING,
+		CRASH,
+		SLEW,
+		PUSHBACK,
+		ON_GROUND,
+		GEAR_HANDLE_POSITION,
+		FLAPS_HANDLE_PERCENT,
+		FLAPS_HANDLE_INDEX,
+		ALTIMETER_SETTING,
+		LANDING_LIGHT,
+		BEACON_LIGHT,
+		STROBE_LIGHT,
+		NAV_LIGHT,
+		RECOGNITION_LIGHT,
+		SMOKE_ENABLE,
+		SLEW_ON,
+		UNUSED = 0xFFFFFFF,
+	};
 
-    SimEvent(SIM_EVENT_ID pEvt_ID, int pData )
-    {
-        Time = Now();
-        Data = pData;
-        Evt_Id = pEvt_ID;
-    }
+	class SimEvent
+	{
+	public:
+		SimEvent()
+		{
+			Time = Now();
+		}
 
-    SIM_EVENT_ID Evt_Id;
-    int Data;
-    datetime Time;
-};
+		SimEvent(SIM_EVENT_ID pEvt_ID, int pData )
+		{
+			Time = Now();
+			Data = pData;
+			Evt_Id = pEvt_ID;
+		}
 
-class SimConnector : public QObject
-{
-    Q_OBJECT
-    friend class simbasemanager;
-public:
-    explicit        SimConnector(QObject *parent = nullptr);
-    virtual         ~SimConnector();
-    bool            isConnected();
-protected:
-    CLogger*        Log;
-    bool            m_bConnected;
-    CAircraftState  State;
-    virtual bool    open()=0;
-    virtual void    close()=0;
-    virtual void    main_loop()=0;
-signals:
-    void            finished();
-    void            opened();
-    void            closed();
-    void            fireSimVariableEvent(CAircraftState);
-    void            fireSimEvent(SimEvent);
-public slots:
-};
+		SIM_EVENT_ID Evt_Id;
+		int Data;
+		datetime Time;
+	};
 
+	class SimConnector : public QObject
+	{
+		Q_OBJECT
+		friend class simbasemanager;
+	public:
+		explicit        SimConnector(QObject *parent = nullptr);
+		virtual         ~SimConnector();
+		bool            isConnected();
+	protected:
+		CLogger*        Log;
+		bool            m_bConnected;
+		CAircraftState  State;
+		virtual bool    open()=0;
+		virtual void    close()=0;
+		virtual void    main_loop()=0;
+	signals:
+		void            finished();
+		void            opened();
+		void            closed();
+		void            fireSimVariableEvent(CAircraftState);
+		void            fireSimEvent(SimEvent);
+	public slots:
+	};
+}
 #endif // SIMCONNECTOR_H

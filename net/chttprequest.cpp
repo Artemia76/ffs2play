@@ -22,100 +22,103 @@
 
 #include "net/chttprequest.h"
 
-QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = NULL;
-int CHttpRequest::m_nbInstance =0;
-///
-/// \brief CHttpRequest::CHttpRequest
-/// \param parent
-///
-
-CHttpRequest::CHttpRequest(QObject *parent) : QObject(parent)
+namespace ffs2play
 {
-    qRegisterMetaType<CHttpRequest*>("CHttpRequest*");
-    if (m_ptNetworkManager==NULL) m_ptNetworkManager=new QNetworkAccessManager(parent);
-    //m_nbInstance++;
-    m_request.setRawHeader("User-Agent","FFS2Play");
-    Log = CLogger::instance();
-    m_reply=NULL;
-}
+	QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = NULL;
+	int CHttpRequest::m_nbInstance =0;
+	///
+	/// \brief CHttpRequest::CHttpRequest
+	/// \param parent
+	///
 
-///
-/// \brief CHttpRequest::~CHttpRequest
-///
+	CHttpRequest::CHttpRequest(QObject *pParent) : QObject(pParent)
+	{
+		qRegisterMetaType<CHttpRequest*>("CHttpRequest*");
+		if (m_ptNetworkManager==NULL) m_ptNetworkManager=new QNetworkAccessManager(pParent);
+		//m_nbInstance++;
+		m_request.setRawHeader("User-Agent","FFS2Play");
+		m_log = CLogger::instance();
+		m_reply=NULL;
+	}
 
-CHttpRequest::~CHttpRequest()
-{
-}
+	///
+	/// \brief CHttpRequest::~CHttpRequest
+	///
 
-///
-/// \brief CHttpRequest::execute
-/// \param URL
-/// \param Doc
-///
+	CHttpRequest::~CHttpRequest()
+	{
+	}
 
-void CHttpRequest::execute(QString URL, QDomDocument& Doc)
-{
-    m_request.setUrl(QUrl(URL));
-    m_request.setHeader(QNetworkRequest::ContentTypeHeader, "text/xml; encoding='utf-8'");
-    QByteArray content = Doc.toByteArray();
-    m_reply = m_ptNetworkManager->post(m_request,content);
-    connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
-#ifdef FFS_DEBUG
-    Log->log("HttpRequest : URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
-    Log->log("HttpRequest Post = " + QString(content),Qt::darkGreen,LEVEL_VERBOSE );
-#endif
-}
+	///
+	/// \brief CHttpRequest::execute
+	/// \param URL
+	/// \param Doc
+	///
 
-///
-/// \brief CHttpRequest::execute
-/// \param URL
-///
+	void CHttpRequest::execute(const QString& pURL, QDomDocument& pDoc)
+	{
+		m_request.setUrl(QUrl(pURL));
+		m_request.setHeader(QNetworkRequest::ContentTypeHeader, "text/xml; encoding='utf-8'");
+		QByteArray content = pDoc.toByteArray();
+		m_reply = m_ptNetworkManager->post(m_request,content);
+		connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
+	#ifdef FFS_DEBUG
+		m_log->log("HttpRequest : URL = " + pURL,Qt::darkGreen,LEVEL_VERBOSE );
+		m_log->log("HttpRequest Post = " + QString(content),Qt::darkGreen,LEVEL_VERBOSE );
+	#endif
+	}
 
-void CHttpRequest::execute(QString URL)
-{
-    m_request.setUrl(QUrl(URL));
-    m_reply = m_ptNetworkManager->get(m_request);
-    connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
-#ifdef FFS_DEBUG
-    Log->log("HttpRequest Get URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
-#endif
-}
+	///
+	/// \brief CHttpRequest::execute
+	/// \param URL
+	///
 
-///
-/// \brief CHttpRequest::callback
-///
+	void CHttpRequest::execute(const QString& URL)
+	{
+		m_request.setUrl(QUrl(URL));
+		m_reply = m_ptNetworkManager->get(m_request);
+		connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
+	#ifdef FFS_DEBUG
+		m_log->log("HttpRequest Get URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
+	#endif
+	}
 
-void CHttpRequest::callback()
-{
-    if (m_reply!= NULL) Reponse = (QString) m_reply->readAll();
-#ifdef FFS_DEBUG
-    Log->log("HttpRequest Response = " + Reponse,Qt::darkRed,LEVEL_VERBOSE );
-#endif
-    emit(finished(this));
-}
+	///
+	/// \brief CHttpRequest::callback
+	///
 
-///
-/// \brief CHttpRequest::getAsString
-/// \return
-///
+	void CHttpRequest::callback()
+	{
+		if (m_reply!= NULL) m_response = (QString) m_reply->readAll();
+	#ifdef FFS_DEBUG
+		m_log->log("HttpRequest Response = " + m_response,Qt::darkRed,LEVEL_VERBOSE );
+	#endif
+		emit(finished(this));
+	}
 
-QString CHttpRequest::getAsString()
-{
-    return Reponse;
-}
+	///
+	/// \brief CHttpRequest::getAsString
+	/// \return
+	///
 
-bool CHttpRequest::getAsXml(QDomDocument& Doc)
-{
-    if (!Reponse.isEmpty())
-    {
-        QString ErrorMessage;
-        Doc.setContent(Reponse,&ErrorMessage);
-        if (!ErrorMessage.isEmpty())
-        {
-            Log->log("HttpRequest error : " + ErrorMessage);
-            return false;
-        }
-        return true;
-    }
-    return false;
+	QString CHttpRequest::getAsString()
+	{
+		return m_response;
+	}
+
+	bool CHttpRequest::getAsXml(QDomDocument& pDoc)
+	{
+		if (!m_response.isEmpty())
+		{
+			QString ErrorMessage;
+			pDoc.setContent(m_response,&ErrorMessage);
+			if (!ErrorMessage.isEmpty())
+			{
+				m_log->log("HttpRequest error : " + ErrorMessage);
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
 }

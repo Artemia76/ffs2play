@@ -45,21 +45,24 @@ using CryptoPP::AutoSeededRandomPool;
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
-class CCrypto : public QObject
+namespace ffs2play
 {
-    QByteArray  m_key;
-    CLogger*    Log;
-    Q_OBJECT
-public:
-    explicit CCrypto(QObject *parent = 0);
-    const QByteArray& EncryptionKey();
-    QString EncryptionKeyString();
-    QString EncryptToBase64(const QString& Data);
-    QString DecryptFromBase64(const QString& Data);
-    QString RSA_EncryptToBase64(const QString& Cert, const QByteArray& Data);
-signals:
+	class CCrypto : public QObject
+	{
+		QByteArray			m_key;
+		CLogger*			m_log;
+		Q_OBJECT
+	public:
+		explicit			CCrypto(QObject *pParent = 0);
+		const QByteArray&	EncryptionKey();
+		QString				EncryptionKeyString();
+		QString				EncryptToBase64(const QString& pData);
+		QString				DecryptFromBase64(const QString& pData);
+		QString				RSA_EncryptToBase64(const QString& pCert, const QByteArray& pData);
+	signals:
 
-public slots:
-};
+	public slots:
+	};
+}
 
 #endif // CRYPTO_H

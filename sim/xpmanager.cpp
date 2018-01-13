@@ -29,127 +29,128 @@
 #include <QTextCodec>
 #include <QApplication>
 
-namespace ffs2p_xplane
+namespace ffs2play_xplane
 {
-    ///
-    /// \brief CXPManager::CXPManager
-    /// \param parent
-    ///
+	using namespace ffs2play;
+	///
+	/// \brief CXPManager::CXPManager
+	/// \param parent
+	///
 
-    CXPManager::CXPManager(QObject* parent):
-        SimConnector(parent)
-    {
-        m_LocalPort=47600;
-        m_DestPort=47500;
-        Server = new UDPServer(this);
-        connect (Server,&UDPServer::fireIncomingData, this,&CXPManager::OnReceiveDatagram);
-        Server->setPort(m_LocalPort);
-        Server->start();
-    }
+	CXPManager::CXPManager(QObject* parent):
+		SimConnector(parent)
+	{
+		m_LocalPort=47600;
+		m_DestPort=47500;
+		Server = new UDPServer(this);
+		connect (Server,&UDPServer::fireIncomingData, this,&CXPManager::OnReceiveDatagram);
+		Server->setPort(m_LocalPort);
+		Server->start();
+	}
 
-    CXPManager::~CXPManager()
-    {
-        close();
-        Server->stop();
-        //delete Server;
-    }
+	CXPManager::~CXPManager()
+	{
+		close();
+		Server->stop();
+		//delete Server;
+	}
 
-    ///
-    /// \brief CXPManager::open
-    ///
+	///
+	/// \brief CXPManager::open
+	///
 
-    bool CXPManager::open ()
-    {
-        if (!m_bConnected)
-        {
-            QByteArray Data;
-            QDataStream stream(&Data,QIODevice::WriteOnly);
-            stream << (quint8)PING;
-            QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
-            Server->send(Output);
-            int wait=0;
-            while ((!m_bConnected) && (wait < 5))
-            {
-                QThread::sleep(1);
-                QApplication::processEvents();
-                wait++;
-            }
-            return m_bConnected;
-        }
-        return false;
-    }
+	bool CXPManager::open ()
+	{
+		if (!m_bConnected)
+		{
+			QByteArray Data;
+			QDataStream stream(&Data,QIODevice::WriteOnly);
+			stream << (quint8)PING;
+			QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
+			Server->send(Output);
+			int wait=0;
+			while ((!m_bConnected) && (wait < 5))
+			{
+				QThread::sleep(1);
+				QApplication::processEvents();
+				wait++;
+			}
+			return m_bConnected;
+		}
+		return false;
+	}
 
-    ///
-    /// \brief CXPManager::close
-    ///
+	///
+	/// \brief CXPManager::close
+	///
 
-    void CXPManager::close ()
-    {
-        if (m_bConnected)
-        {
-            QByteArray Data;
-            QDataStream stream(&Data,QIODevice::WriteOnly);
-            stream << (quint8)DISC;
-            QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
-            Server->send(Output);
-            m_bConnected=false;
-            Log->log(tr("Disconnected from XPlane."));
-            emit(closed());
-        }
-    }
+	void CXPManager::close ()
+	{
+		if (m_bConnected)
+		{
+			QByteArray Data;
+			QDataStream stream(&Data,QIODevice::WriteOnly);
+			stream << (quint8)DISC;
+			QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
+			Server->send(Output);
+			m_bConnected=false;
+			Log->log(tr("Disconnected from XPlane."));
+			emit(closed());
+		}
+	}
 
 
-    ///
-    /// \brief CXPManager::main_loop()
-    ///
+	///
+	/// \brief CXPManager::main_loop()
+	///
 
-    void CXPManager::main_loop()
-    {
-    }
+	void CXPManager::main_loop()
+	{
+	}
 
-    ///
-    /// \brief CXPManager::OnReceiveDatagram
-    ///
+	///
+	/// \brief CXPManager::OnReceiveDatagram
+	///
 
-    void CXPManager::OnReceiveDatagram(const QNetworkDatagram* datagram)
-    {
-        QByteArray data(datagram->data());
-        QDataStream stream(&data,QIODevice::ReadOnly);
-        quint8 Code;
-        stream>>Code;
-        data.remove(0,1);
-        switch ((FFS2Proto)Code)
-        {
-            case PONG:
-            {
-                if (!m_bConnected)
-                {
-                    m_bConnected=true;
-                }
-                break;
-            }
-            case DATA_SEND:
-            {
-                try
-                {
-                    PlayerData.ParseFromString(data.toStdString());
-                    State.fromAirData(PlayerData);
-                    emit(fireSimVariableEvent(State));
-                }
-                catch (std::exception& e)
-                {
-                    Log->log(tr("DataSend Error : ") + QString(e.what()),Qt::magenta);
-                }
-                break;
-            }
-            default:
-            {
+	void CXPManager::OnReceiveDatagram(const QNetworkDatagram* datagram)
+	{
+		QByteArray data(datagram->data());
+		QDataStream stream(&data,QIODevice::ReadOnly);
+		quint8 Code;
+		stream>>Code;
+		data.remove(0,1);
+		switch ((FFS2Proto)Code)
+		{
+			case PONG:
+			{
+				if (!m_bConnected)
+				{
+					m_bConnected=true;
+				}
+				break;
+			}
+			case DATA_SEND:
+			{
+				try
+				{
+					PlayerData.ParseFromString(data.toStdString());
+					State.fromAirData(PlayerData);
+					emit(fireSimVariableEvent(State));
+				}
+				catch (std::exception& e)
+				{
+					Log->log(tr("DataSend Error : ") + QString(e.what()),Qt::magenta);
+				}
+				break;
+			}
+			default:
+			{
 #ifdef FFS_DEBUG
-            Log->log("CXPManager : " + tr("unknown code = ") +
-                    QString(Code),
-                    Qt::darkBlue,LEVEL_VERBOSE);
+			Log->log("CXPManager : " + tr("unknown code = ") +
+					QString(Code),
+					Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-            }
-        }
-    }
+			}
+		}
+	}
 }

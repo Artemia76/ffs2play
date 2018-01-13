@@ -33,97 +33,98 @@
 
 #pragma pack(1)
 
-namespace ffs2p_xplane
+namespace ffs2play_xplane
 {
-    enum FFS2Proto
-    {
-        PING = 0x00, // Ping receive
-        PONG = 0x01, // Pong With protocol Version
-        DATA = 0x02, // Ask start or stop receive data
-        DATA_SEND = 0x03, // Contain data of user plane
-        DISC = 0x04 // Disconnect client
-    };
+using namespace ffs2play;
+	enum FFS2Proto
+	{
+		PING = 0x00, // Ping receive
+		PONG = 0x01, // Pong With protocol Version
+		DATA = 0x02, // Ask start or stop receive data
+		DATA_SEND = 0x03, // Contain data of user plane
+		DISC = 0x04 // Disconnect client
+	};
 
-    /// <summary>
-    /// Structure d'importation des données envoyées par
-    /// la librairie simconnect
-    /// </summary>
-    #pragma pack(1)
-    struct UserState
-    {
-        char Title[256];
-        char Type[256];
-        char Model[256];
-        char Category[256];
-        double PlaneAltitude;
-        double GndAltitude;
-        double Vario;
-        double PlaneHeading;
-        double Longitude;
-        double Latitude;
-        double GndSpeed;
-        double TASSpeed;
-        double FuelQty;
-        double TotalFuelCapacity;
-        double FuelWeightGallon;
-        double PlanePitch;
-        double PlaneBank;
-        double GForce;
-        double PlaneWeight;
-        quint32  Realism;
-        double AmbiantWindVelocity;
-        double AmbiantWindDirection;
-        quint32    AmbiantPrecipState;
-        double SeaLevelPressure;
-        double IASSpeed;
-        double ElevatorPos;
-        double AileronPos;
-        double RudderPos;
-        quint32   TimeFactor;
-        qint32    Door1Pos;
-        qint32    Door2Pos;
-        qint32    Door3Pos;
-        qint32 Door4Pos;
-        qint32 NumEngine;
-        qint32 StateEng1;
-        qint32 StateEng2;
-        qint32 StateEng3;
-        qint32 StateEng4;
-        qint32 ThrottleEng1;
-        qint32 ThrottleEng2;
-        qint32 ThrottleEng3;
-        qint32 ThrottleEng4;
-        qint32 Squawk;
-    };
-    #pragma pack ()
+	/// <summary>
+	/// Structure d'importation des données envoyées par
+	/// la librairie simconnect
+	/// </summary>
+	#pragma pack(1)
+	struct UserState
+	{
+		char Title[256];
+		char Type[256];
+		char Model[256];
+		char Category[256];
+		double PlaneAltitude;
+		double GndAltitude;
+		double Vario;
+		double PlaneHeading;
+		double Longitude;
+		double Latitude;
+		double GndSpeed;
+		double TASSpeed;
+		double FuelQty;
+		double TotalFuelCapacity;
+		double FuelWeightGallon;
+		double PlanePitch;
+		double PlaneBank;
+		double GForce;
+		double PlaneWeight;
+		quint32  Realism;
+		double AmbiantWindVelocity;
+		double AmbiantWindDirection;
+		quint32    AmbiantPrecipState;
+		double SeaLevelPressure;
+		double IASSpeed;
+		double ElevatorPos;
+		double AileronPos;
+		double RudderPos;
+		quint32   TimeFactor;
+		qint32    Door1Pos;
+		qint32    Door2Pos;
+		qint32    Door3Pos;
+		qint32 Door4Pos;
+		qint32 NumEngine;
+		qint32 StateEng1;
+		qint32 StateEng2;
+		qint32 StateEng3;
+		qint32 StateEng4;
+		qint32 ThrottleEng1;
+		qint32 ThrottleEng2;
+		qint32 ThrottleEng3;
+		qint32 ThrottleEng4;
+		qint32 Squawk;
+	};
+	#pragma pack ()
 
 
-    ///
-    /// \brief The CSCManager class
-    ///
+	///
+	/// \brief The CSCManager class
+	///
 
-    class CXPManager : public SimConnector
-    {
-        Q_OBJECT
-    public:
-        explicit CXPManager(QObject *parent = 0);
-        ~CXPManager();
-    private:
-        qint64      m_SimRate;
-        qint64      m_VariableRate;
-        quint16     m_DestPort;
-        quint16     m_LocalPort;
-        QDateTime   m_LastVariable;
-        QDateTime   m_LastSim;
-        UDPServer*  Server;
-        AirData     PlayerData;
+	class CXPManager : public ffs2play::SimConnector
+	{
+		Q_OBJECT
+	public:
+		explicit CXPManager(QObject *parent = 0);
+		~CXPManager();
+	private:
+		qint64      m_SimRate;
+		qint64      m_VariableRate;
+		quint16     m_DestPort;
+		quint16     m_LocalPort;
+		QDateTime   m_LastVariable;
+		QDateTime   m_LastSim;
+		UDPServer*  Server;
+		AirData     PlayerData;
 
-    protected:
-        bool        open();
-        void        close();
-        void        main_loop();
-    private slots:
-        void OnReceiveDatagram(const QNetworkDatagram* datagram);
-    };
+	protected:
+		bool        open();
+		void        close();
+		void        main_loop();
+	private slots:
+		void OnReceiveDatagram(const QNetworkDatagram* datagram);
+	};
 }
 #endif // XPMANAGER_H

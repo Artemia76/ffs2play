@@ -25,45 +25,47 @@
 
 #include "protobuf/ffs2play.pb.h"
 
-using namespace ffs2play;
-
-class CAIBase
+namespace ffs2play
 {
-public:
-    CAIBase();
-    ~CAIBase();
-    virtual void toAirData (AirData& data);
-    virtual void fromAirData (const AirData& data);
-	double Latitude;
-	double Longitude;
-	double Altitude;
-	double Pitch;
-	double Bank;
-	double Heading;
-	double ElevatorPos;
-	double AileronPos;
-	double RudderPos;
-	int Door1Pos;
-	int Door2Pos;
-	int Door3Pos;
-	int Door4Pos;
-	int StateEng1;
-	int StateEng2;
-	int StateEng3;
-	int StateEng4;
-	int ThrottleEng1;
-	int ThrottleEng2;
-	int ThrottleEng3;
-	int ThrottleEng4;
-	int Squawk;
-	int GearPos;
-	int FlapsIndex;
-	int LandingLight;
-	int StrobeLight;
-	int BeaconLight;
-	int NavLight;
-	int RecoLight;
-	int Smoke;
-};
+
+	class CAIBase
+	{
+	public:
+		CAIBase();
+		~CAIBase();
+		virtual void toAirData (AirData& data);
+		virtual void fromAirData (const AirData& data);
+		double Latitude;
+		double Longitude;
+		double Altitude;
+		double Pitch;
+		double Bank;
+		double Heading;
+		double ElevatorPos;
+		double AileronPos;
+		double RudderPos;
+		int Door1Pos;
+		int Door2Pos;
+		int Door3Pos;
+		int Door4Pos;
+		int StateEng1;
+		int StateEng2;
+		int StateEng3;
+		int StateEng4;
+		int ThrottleEng1;
+		int ThrottleEng2;
+		int ThrottleEng3;
+		int ThrottleEng4;
+		int Squawk;
+		int GearPos;
+		int FlapsIndex;
+		int LandingLight;
+		int StrobeLight;
+		int BeaconLight;
+		int NavLight;
+		int RecoLight;
+		int Smoke;
+	};
+}
 
 #endif // AIRCRAFTSTATE_H

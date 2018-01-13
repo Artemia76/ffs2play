@@ -33,27 +33,29 @@
 
 #include "singleton/clogger.h"
 
-class CHttpRequest : public QObject
+namespace ffs2play
 {
-    Q_OBJECT
-public:
-    explicit CHttpRequest(QObject *parent = 0);
-    ~CHttpRequest();
-    void execute(QString URL, QDomDocument& Doc);
-    void execute(QString URL);
-    QString getAsString();
-    bool getAsXml(QDomDocument& Doc);
-private:
-    QString Reponse;
-    CLogger* Log;
-    QNetworkRequest m_request;
-    QNetworkReply* m_reply;
-static    QNetworkAccessManager* m_ptNetworkManager;
-static  int m_nbInstance;
-private slots:
-    void callback();
-signals:
-    void finished(CHttpRequest*);
-};
-
+	class CHttpRequest : public QObject
+	{
+		Q_OBJECT
+	public:
+		explicit					CHttpRequest(QObject *pParent = 0);
+									~CHttpRequest();
+		void						execute(const QString& pURL, QDomDocument& pDoc);
+		void						execute(const QString& pURL);
+		QString						getAsString();
+		bool						getAsXml(QDomDocument& pDoc);
+	private:
+		QString						m_response;
+		CLogger*					m_log;
+		QNetworkRequest				m_request;
+		QNetworkReply*				m_reply;
+	static	QNetworkAccessManager*	m_ptNetworkManager;
+	static	int						m_nbInstance;
+	private slots:
+		void						callback();
+	signals:
+		void						finished(CHttpRequest*);
+	};
+}
 #endif // CHTTPREQUEST_H
