@@ -79,8 +79,8 @@ namespace ffs2play
 		if ((p_connector==NULL)||(m_initialized)) return;
 		m_connector=p_connector;
 		m_initialized=true;
-		connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
-		connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+		connect(m_connector,&SimConnector::fireSimEvent,this,&simbasemanager::OnSimEvent);
+		connect(m_connector,&SimConnector::fireSimVariableEvent,this,&simbasemanager::OnSimVariableEvent);
 	}
 
 	///
@@ -157,6 +157,11 @@ namespace ffs2play
 		emit(finished());
 	}
 
+	///
+	/// \brief simbasemanager::getAircraftState
+	/// \return
+	///
+
 	const CAircraftState simbasemanager::getAircraftState()
 	{
 		CAircraftState State;
@@ -165,12 +170,35 @@ namespace ffs2play
 		return State;
 	}
 
-	void simbasemanager::OnSimVariableEvent(CAircraftState pState)
+	///
+	/// \brief simbasemanager::sendScrollingText
+	/// \param pMessage
+	///
+
+	void simbasemanager::sendScrollingText(const QString &pMessage)
+	{
+		if (m_initialized && (m_connector!=nullptr))
+		{
+
+		}
+	}
+
+	SIM_VERSION simbasemanager::getVersion()
+	{
+		SIM_VERSION Version = SIM_VERSION::UNKNOWN;
+		if (m_initialized && (m_connector!=nullptr))
+		{
+			Version = m_connector->getVersion();
+		}
+		return Version;
+	}
+
+	void simbasemanager::OnSimVariableEvent(ffs2play::CAircraftState pState)
 	{
 		emit(fireSimVariableEvent(pState));
 	}
 
-	void simbasemanager::OnSimEvent(SimEvent pEvent)
+	void simbasemanager::OnSimEvent(ffs2play::SimEvent pEvent)
 	{
 		emit(fireSimEvent(pEvent));
 	}

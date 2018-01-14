@@ -28,6 +28,7 @@
 #include "singleton/clogger.h"
 #include "sim/simconnector.h"
 
+
 namespace ffs2play
 {
 	class simbasemanager : public QObject
@@ -51,6 +52,8 @@ namespace ffs2play
 		bool					isConnected();
 		bool					isInitialized();
 		const CAircraftState	getAircraftState();
+		void					sendScrollingText(const QString& pMessage);
+		SIM_VERSION				getVersion();
 
 	private slots:
 		void					mainThread();

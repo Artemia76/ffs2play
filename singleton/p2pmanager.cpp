@@ -37,7 +37,7 @@ namespace ffs2play {
 
 	CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
 	{
-		m_logger=CLogger::instance();
+		m_log=CLogger::instance();
 		m_server = new UDPServer(this);
 		connect (m_server,&UDPServer::fireIncomingData, this,&CP2PManager::OnReceiveDatagram);
 	}
@@ -138,7 +138,7 @@ namespace ffs2play {
 	#ifdef FFS_DEBUG
 				for (UPNPDev* device = devlist; device !=NULL; device = device->pNext)
 				{
-					m_logger->log("P2PManager : " + tr("IGP Desc = ") + QString(device->descURL) + tr(" st: ") + QString(device->st),Qt::darkBlue,LEVEL_NORMAL);
+					m_log->log("P2PManager : " + tr("IGP Desc = ") + QString(device->descURL) + tr(" st: ") + QString(device->st),Qt::darkBlue,LEVEL_NORMAL);
 				}
 	#endif
 				if ((error = UPNP_GetValidIGD(devlist, &m_urls, &m_data, lanaddr, 64)) != 0)
@@ -148,22 +148,22 @@ namespace ffs2play {
 					{
 						case 1:
 						{
-							m_logger->log("P2PManager : " + tr("Found valid IGD : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
+							m_log->log("P2PManager : " + tr("Found valid IGD : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
 							break;
 						}
 						case 2:
 						{
-							m_logger->log("P2PManager : " + tr("Found a (not connected?) IGD : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
+							m_log->log("P2PManager : " + tr("Found a (not connected?) IGD : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
 							break;
 						}
 						case 3:
 						{
-							m_logger->log("P2PManager : " + tr("UPnP device found. Is it an IGD ? : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
+							m_log->log("P2PManager : " + tr("UPnP device found. Is it an IGD ? : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
 							break;
 						}
 						default:
 						{
-							m_logger->log("P2PManager : " + tr("Found device (IGD ?) : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
+							m_log->log("P2PManager : " + tr("Found device (IGD ?) : ") + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
 							break;
 						}
 					}
@@ -172,12 +172,12 @@ namespace ffs2play {
 					UPNP_GetExternalIPAddress(m_urls.controlURL,m_data.first.servicetype,wanaddr);
 					m_ExternalIP = QString(wanaddr);
 	#ifdef FFS_DEBUG
-					m_logger->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
+					m_log->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
 					for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
 					{
-						m_logger->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
+						m_log->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
 					}
-					m_logger->log("P2PManager : " + tr("Internet IP address : ") + QString(m_ExternalIP),Qt::darkBlue,LEVEL_NORMAL);
+					m_log->log("P2PManager : " + tr("Internet IP address : ") + QString(m_ExternalIP),Qt::darkBlue,LEVEL_NORMAL);
 	#endif
 					error = UPNP_AddPortMapping(
 							m_urls.controlURL,
@@ -191,18 +191,18 @@ namespace ffs2play {
 							"0"
 					);
 					if (error != UPNPCOMMAND_SUCCESS)
-						m_logger->log("P2PManager : " + tr("Adding port mappping failed with code ") + QString::number(error),Qt::red);
+						m_log->log("P2PManager : " + tr("Adding port mappping failed with code ") + QString::number(error),Qt::red);
 					else m_bUPNP=true;
 				}
 				else
 				{
-					m_logger->log("P2PManager : " + tr("No valid UPNP Internet Gateway Device found."),Qt::red);
+					m_log->log("P2PManager : " + tr("No valid UPNP Internet Gateway Device found."),Qt::red);
 				}
 				freeUPNPDevlist(devlist);
 			}
 			else
 			{
-				m_logger->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
+				m_log->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
 			}
 
 		}
@@ -217,7 +217,7 @@ namespace ffs2play {
 						NULL
 			);
 			if (error != UPNPCOMMAND_SUCCESS)
-				m_logger->log("P2PManager : " + tr("Delete port mapping failed with code ") + QString::number(error),Qt::red);
+				m_log->log("P2PManager : " + tr("Delete port mapping failed with code ") + QString::number(error),Qt::red);
 			m_bUPNP = false;
 		}
 	}
@@ -268,22 +268,20 @@ namespace ffs2play {
 	#endif
 					continue;
 			}
+			QVector<CPeer*>::iterator it;
 			QHostAddress IP;
-			CPeer* Peer=nullptr;
 			//Find any existing peer in list
-			for (CPeer* it : m_peers)
+			for (it = m_peers.begin();it != m_peers.end(); ++it )
 			{
 				//If we found existing peer in list
-				if (it->CallSign == data.CallSign)
+				if ((*it)->CallSign == data.CallSign)
 				{
-					Peer = it;
-					//Exiting for loop
 					break;
 				}
 			}
-			// if pointer is null, peer does not yet exist
+			// if iteraotr reach end of vector, that mean peer does not yet exist
 			// so we create it...
-			if (Peer==nullptr)
+			if (it==m_peers.end())
 			{
 				if (Shadow) IP = QHostAddress("127.0.0.1");
 				else
@@ -291,18 +289,76 @@ namespace ffs2play {
 					IP = QHostAddress(data.externalIP);
 					if (IP.isNull())
 					{
-						m_logger->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
+						m_log->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
 					}
 				}
 				if ((!IP.isNull()) && (data.Port>0))
 				{
-					m_peers.append(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,data.externalIP.isEqual(IP),&data.localIPs));
-
+					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,!data.externalIP.isEqual(IP),&data.localIPs));
+					emit(onPeerAdd(data.CallSign));
+#ifdef FFS_DEBUG
+					m_log->log("P2PManager : " + tr("Adding P2P user callsign = ")+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::blue);
+					for (QHostAddress sip : data.localIPs)
+					{
+						m_log->log("P2PManager : " + tr("List of local IP = ")+ sip.toString(),Qt::blue);
+					}
+#endif
 				}
 				else
 				{
-
+					m_log->log("P2PManager : " + tr("User ") + data.CallSign + " discarded", Qt::darkMagenta);
 				}
+			}
+			// if user already exist, we update it
+			else
+			{
+				CPeer* Peer = (*it);
+				if (Shadow) IP = QHostAddress("127.0.0.1");
+				else
+				{
+					IP = QHostAddress(data.externalIP);
+					if (IP.isNull())
+					{
+						m_log->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
+					}
+				}
+				if (!Peer->m_externalIP.isEqual(IP))
+				{
+#ifdef FFS_DEBUG
+					m_log->log("P2PManager : " + tr("Change IP for user ") + Peer->CallSign + ", IP=" + Peer->m_externalIP.toString(),Qt::blue, LEVEL_NORMAL);
+#endif
+				}
+				if (Peer->m_port != data.Port)
+				{
+#ifdef FFS_DEBUG
+					m_log->log("P2PManager : " + tr("Change port for user ") + Peer->CallSign + ", Port=" + QString::number(Peer->m_port) ,Qt::blue, LEVEL_NORMAL);
+#endif
+				}
+			}
+		}
+		//Make invert research to purge disconnected peers
+		for (size_t i = 0; i < m_peers.count() ; i++)
+		{
+			bool find=false;
+			for (PeerData data : pWhazzup)
+			{
+				if (data.CallSign==m_peers[i]->CallSign)
+				{
+					if ((!m_Shadow) && (data.CallSign == m_CallSign))
+					{
+						find = false;
+					}
+					else find = true;
+				}
+			}
+			if (!find)
+			{
+#ifdef FFS_DEBUG
+				m_log->log("P2PManager : " + tr("Remove user ") + m_peers[i]->CallSign, Qt::blue, LEVEL_NORMAL);
+#endif
+				emit(onPeerRemove(m_peers[i]->CallSign));
+				m_peers.removeAt(i);
+
 			}
 		}
 	}
@@ -313,5 +369,19 @@ namespace ffs2play {
 		QStringList List = m_settings.value("BlackList").value<QStringList>();
 		m_settings.endGroup();
 		return List.contains(pCallsign);
+	}
+
+	void CP2PManager::clear ()
+	{
+		for (QVector<CPeer*>::iterator it = m_peers.begin(); it != m_peers.end() ; ++it)
+		{
+			QString CallSign = (*it)->CallSign;
+#ifdef FFS_DEBUG
+			m_log->log("P2PManager : " + tr("Remove user ") + CallSign, Qt::blue, LEVEL_NORMAL);
+#endif
+			delete (*it);
+			emit(onPeerRemove(CallSign));
+		}
+		m_peers.clear();
 	}
 }

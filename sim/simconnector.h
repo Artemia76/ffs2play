@@ -31,6 +31,17 @@
 namespace ffs2play
 {
 
+	enum class SIM_VERSION
+	{
+		FSX,
+		FSX_STEAM,
+		P3D_V2,
+		P3D_V3,
+		P3D_V4,
+		XPLANE,
+		UNKNOWN
+	};
+
 	/// <summary>
 	/// Enumération des évenements du simulateur à traiter
 	/// </summary>
@@ -83,7 +94,7 @@ namespace ffs2play
 	class SimConnector : public QObject
 	{
 		Q_OBJECT
-		friend class simbasemanager;
+		friend class	simbasemanager;
 	public:
 		explicit        SimConnector(QObject *parent = nullptr);
 		virtual         ~SimConnector();
@@ -95,6 +106,8 @@ namespace ffs2play
 		virtual bool    open()=0;
 		virtual void    close()=0;
 		virtual void    main_loop()=0;
+		virtual SIM_VERSION getVersion()=0;
+
 	signals:
 		void            finished();
 		void            opened();

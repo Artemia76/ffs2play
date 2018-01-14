@@ -41,7 +41,7 @@ namespace ffs2play
 							CP2PManager(QObject *parent = 0);
 		static CP2PManager*	createInstance();
 		void				initUPNP(bool flag);
-		CLogger*			m_logger;
+		CLogger*			m_log;
 		UDPServer*			m_server;
 		QSettings			m_settings;
 		int					m_port;
@@ -52,7 +52,7 @@ namespace ffs2play
 		QString				m_CallSign;
 		UPNPUrls			m_urls;
 		IGDdatas			m_data;
-		QList<CPeer*>		m_peers;
+		QVector<CPeer*>		m_peers;
 	public:
 		~CP2PManager();
 		static CP2PManager*	instance();
@@ -62,11 +62,12 @@ namespace ffs2play
 		void				setCallsign(const QString& pCallSign);
 		void				whazzup_Update(QList<PeerData>& pWhazzup);
 		bool				isDisabled(const QString& pCallsign);
+		void				clear();
 
 	signals:
-		void				onPeerAdd();
-		void				onPeerRemove();
-		void				onPeerChange();
+		void				onPeerAdd(QString);
+		void				onPeerRemove(QString);
+		void				onPeerChange(QString);
 	private slots:
 		void				OnReceiveDatagram(const QNetworkDatagram* pData);
 	};

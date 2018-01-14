@@ -54,6 +54,7 @@ namespace ffs2play
 		CHttpRequest* Request = new CHttpRequest(this);
 		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
 		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
+		m_P2P->clear();
 		m_bConnected = false;
 		emit (FireDisconnected());
 	}

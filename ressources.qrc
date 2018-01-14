@@ -13,5 +13,9 @@
         <file>gfx/connect2_R.png</file>
         <file>gfx/connect2_V.png</file>
         <file>gfx/network.png</file>
+        <file>gfx/signal_0.png</file>
+        <file>gfx/signal_1.png</file>
+        <file>gfx/signal_2.png</file>
+        <file>gfx/signal_3.png</file>
     </qresource>
 </RCC>

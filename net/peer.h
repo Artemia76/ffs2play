@@ -26,8 +26,9 @@
 #include <QObject>
 #include <QTimer>
 #include <QHostAddress>
-#include <QDateTime>
 #include <QMutex>
+#include <QDataStream>
+#include <QNetworkDatagram>
 #include <sstream>
 #include <cstddef>
 
@@ -72,7 +73,7 @@ namespace ffs2play
 
 	typedef unsigned char byte;
 
-	const byte PROTO_VERSION = 14;
+	const byte PROTO_VERSION = 13;
 
 	// Déclaration of Singleton manager to have recursion access and friendly protection
 
@@ -85,80 +86,95 @@ namespace ffs2play
 		friend class CP2PManager;
 	public:
 		const QString&			CallSign;
+		const bool&				Disabled;
 	protected:
 								CPeer(
 									UDPServer*pServer,
 									QHostAddress pExternalIP,
 									int pPort,
-									QString CallSign,
+									QString pCallSign,
 									bool pDisabled=false,
 									bool pLocal = false,
 									const QList<QHostAddress>* pInternalIP=NULL,
 									QObject *pParent = nullptr
 								);
-	public:
 								~CPeer ();
+		void					Start();
+		void					Stop();
+		void					Disable(bool pFlag);
+
 	private:
-		QTimer					HeartBeat;
-		int						m_Counter;
-		quint8					m_Counter_In;
-		bool					m_OnLine;
-		QString					m_CallSign;
-		QString					m_Tail;
+		QSettings				m_settings;
+		QTimer					m_heartBeat;
+		int						m_counter;
+		quint8					m_counter_In;
+		quint8					m_counter_Out;
+		bool					m_onLine;
+		QString					m_callSign;
+		QString					m_tail;
 		simbasemanager*			m_simManager;
 		AIMapping*				m_AIMapping;
 		QHostAddress			m_EP;
-		QList<QHostAddress>		m_InternalIP;
-		QHostAddress			m_ExternalIP;
-		quint16					m_Port;
-		AirData					m_Data;
-		AirData					m_SendData;
-		AirData					m_FuturData;
-		AirData					m_ActualPos;
+		QList<QHostAddress>		m_internalIP;
+		QHostAddress			m_externalIP;
+		quint16					m_port;
+		AirData					m_data;
+		AirData					m_sendData;
+		AirData					m_futurData;
+		AirData					m_actualPos;
 		CAIBase					m_AIData;
-		QDateTime				m_LastPing;
-		QDateTime				m_LastData;
-		quint32					m_SendInterval;
-		QDateTime				m_LastStateEvent;
+		datetime				m_lastPing;
+		datetime				m_lastData;
+		timespan				m_sendInterval;
+		datetime				m_lastStateEvent;
 		UDPServer*				m_server;
 		CLogger*				m_log;
-		int						m_Latence;
-		double					m_Distance;
-		int						m_RefreshRate;
-		int						m_RemoteRefreshRate;
-		int						m_Decalage;
-		double					m_MiniPing;
-		quint32					m_ObjectID;
-		byte					m_Version;
-		int						m_Spawned;
-		bool					m_Refresh;
-		double					m_PredictiveTime;
-		QList<double>			m_FrameRateArray;
-		QTimer					m_TimerCreateAI;
+		timespan				m_latence;
+		double					m_distance;
+		qint64					m_refreshRate;
+		qint64					m_remoteRefreshRate;
+		timespan				m_decalage;
+		timespan				m_miniPing;
+		quint32					m_objectID;
+		byte					m_version;
+		int						m_spawned;
+		bool					m_refresh;
+		double					m_predictiveTime;
+		QList<double>			m_frameRateArray;
+		QTimer					m_timerCreateAI;
 		AIResol					m_AIResolution;
-		int						m_FrameCount;
-		double					m_Ecart;
-		QDateTime				m_LastAIUpdate;
-		bool					m_bDisabled;
-		QMutex					m_Mutex;
-		bool					m_bSelected;
-		bool					m_bLocal;
+		int						m_frameCount;
+		double					m_ecart;
+		datetime				m_lastAIUpdate;
+		bool					m_disabled;
+		QMutex					m_mutex;
+		bool					m_selected;
+		bool					m_local;
 		int						m_sel_iplocal;
-		bool					m_TrySimpleAI;
-		QDateTime				m_LastRender;
-		double					m_DeltaAltitude;
-		double					m_DeltaLongitude;
-		double					m_DeltaLatitude;
-		double					m_DeltaHeading;
-		double					m_DeltaPitch;
-		double					m_DeltaBank;
-		bool					m_Visible;
-		bool					m_bSpawnable;
+		bool					m_trySimpleAI;
+		datetime				m_lastRender;
+		double					m_deltaAltitude;
+		double					m_deltaLongitude;
+		double					m_deltaLatitude;
+		double					m_deltaHeading;
+		double					m_deltaPitch;
+		double					m_deltaBank;
+		bool					m_visible;
+		bool					m_spawnable;
 		double					m_old_fps;
+
+		void					sendPing();
+		void					sendPong(const datetime& pTime);
+		void					requestVersion();
+		void					sendVersion();
+		void					sendData();
 
 	signals:
 
-	public slots:
+	private slots:
+		void					OnReceiveMessage(const QNetworkDatagram* pDatagram);
+		void					OnStateChange(CAircraftState pState);
+		void					OnHeartBeat();
 	};
 }
 #endif // PEER_H

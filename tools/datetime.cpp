@@ -26,13 +26,19 @@ namespace ffs2play
 {
 	datetime Now()
 	{
-		return std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
+		return time_point_cast<milliseconds>(system_clock::now());
 	}
 
 	datetime fromTimeStamp(uint64_t pTS)
 	{
-		auto epoch = std::chrono::time_point<std::chrono::system_clock>();
-		auto since_epoch = std::chrono::microseconds(pTS);
-		return std::chrono::time_point_cast<std::chrono::microseconds>(epoch + since_epoch);
+		auto epoch = time_point<system_clock>();
+		auto since_epoch = milliseconds(pTS);
+		return time_point_cast<std::chrono::milliseconds>(epoch + since_epoch);
+	}
+
+	uint64_t toTimeStamp(datetime pTime)
+	{
+		auto epoch = time_point<system_clock>();
+		return duration_cast<milliseconds>(pTime-epoch).count();
 	}
 }

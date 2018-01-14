@@ -35,7 +35,7 @@
 #include "SimConnect.h"
 #include "sim/simconnector.h"
 
-namespace ffs2play_simconnect
+namespace ffs2play
 {
 	const int WM_USER_SIMCONNECT = 0x402;
 
@@ -255,6 +255,7 @@ namespace ffs2play_simconnect
 		bool        open();
 		void        close();
 		void        main_loop();
+		SIM_VERSION getVersion();
 	};
 }
 #endif // FFS_WITH_SC

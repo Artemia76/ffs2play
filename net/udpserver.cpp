@@ -66,9 +66,9 @@ namespace ffs2play
 		{
 			if (m_pListenner->isOpen()) stop();
 			m_running = m_pListenner->bind (QHostAddress::AnyIPv4, m_port);
-	#ifdef FFS_DEBUG
+#ifdef FFS_DEBUG
 			m_log->log("UPDServer : " + tr("listenning on port ") + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
-	#endif
+#endif
 		}
 	}
 

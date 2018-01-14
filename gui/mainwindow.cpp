@@ -57,23 +57,26 @@ namespace ffs2play
 		// Simconnect Manager Init
 		m_simManager = simbasemanager::instance();
 		connect(m_simManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
-		connect(m_simManager, SIGNAL(closed()),this, SLOT(onSCM_Closed()));
-	#ifdef Q_OS_WIN
-		m_simManager->init(new ffs2play_simconnect::CSCManager());
-	#else
-		m_simManager->init(new ffs2play_xplane::CXPManager());
-	#endif
+		connect(m_simManager,  SIGNAL(closed()),this, SLOT(onSCM_Closed()));
+		//connect(m_simManager, &simbasemanager::fireSimEvent,this, &MainWindow::OnSimEvent);
+#ifdef Q_OS_WIN
+		m_simManager->init(new CSCManager());
+#else
+		m_simManager->init(new CXPManager());
+#endif
 		//Start timer to updating GUI
 		connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
 		m_updateTimer.start(500);
 
 		m_P2PManager = CP2PManager::instance();
 		m_P2PManager->init(true);
+		connect(m_P2PManager, SIGNAL(onPeerAdd(QString)), SLOT(OnPeerAdd(QString)));
+		connect(m_P2PManager, SIGNAL(onPeerChange(QString)), SLOT(OnPeerChange(QString)));
+		connect(m_P2PManager, SIGNAL(onPeerRemove(QString)), SLOT(OnPeerRemove(QString)));
 
 		m_webManager = CWebManager::instance();
 		connect(m_webManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
 		connect(m_webManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
-		connect(m_simManager, SIGNAL(fireSimEvent(SimEvent)),SLOT(OnSimEvent(SimEvent)));
 	}
 
 	///
@@ -370,18 +373,78 @@ namespace ffs2play
 		m_log->log(tr("FFS2Play Version : ") + Version.FullVersion  );
 	}
 
+	///
+	/// \brief MainWindow::on_afFSCon_triggered
+	///
+
 	void MainWindow::on_afFSCon_triggered()
 	{
 		m_simManager->open_close();
 	}
+
+	///
+	/// \brief MainWindow::on_afP2P_triggered
+	///
 
 	void MainWindow::on_afP2P_triggered()
 	{
 
 	}
 
-	void MainWindow::OnSimEvent(SimEvent Event)
+	///
+	/// \brief MainWindow::OnSimEvent
+	/// \param Event
+	///
+
+	void MainWindow::OnSimEvent(SimEvent pEvent)
 	{
-		m_log->log("Receive Sim Event = " + QString::number((int)Event.Evt_Id) + " Data = " + QString::number(Event.Data));
+		m_log->log("Receive Sim Event = " + QString::number((int)pEvent.Evt_Id) + " Data = " + QString::number(pEvent.Data));
+	}
+
+	///
+	/// \brief MainWindow::OnPeerAdd
+	/// \param pCallSign
+	///
+
+	void MainWindow::OnPeerAdd(QString pCallSign)
+	{
+		QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
+		if (item_list.count()==0)
+		{
+			QListWidgetItem* item = new QListWidgetItem	(QIcon(":/gfx/signal_0.png"),pCallSign);
+			ui->lwPeer->addItem(item);
+		}
+		else
+		{
+			m_log->log("Try to add existing peer in the list, ignore it",Qt::darkMagenta);
+		}
+	}
+
+	///
+	/// \brief MainWindow::OnPeerChange
+	/// \param pCallSign
+	///
+
+	void MainWindow::OnPeerChange(QString)
+	{
+
+	}
+
+	///
+	/// \brief MainWindow::OnPeerRemove
+	/// \param pCallSign
+	///
+
+	void MainWindow::OnPeerRemove(QString pCallSign)
+	{
+		QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
+		if (item_list.count()>0)
+		{
+			delete item_list[0];
+		}
+		else
+		{
+			m_log->log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
+		}
 	}
 }

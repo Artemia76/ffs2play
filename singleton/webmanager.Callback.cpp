@@ -107,6 +107,7 @@ namespace ffs2play
 					{
 						m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
 					}
+					m_P2P->setCallsign(m_users[m_currentUser-1].Login);
 					CheckWhazzup(Doc);
 					emit (FireConnected());
 				}
@@ -121,10 +122,13 @@ namespace ffs2play
 	#ifdef FFS_DEBUG
 		m_log->log("WebManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 	#endif
-		QDomDocument Doc;
-		if (pRequest->getAsXml(Doc))
+		if (m_bConnected)
 		{
-			CheckWhazzup(Doc);
+			QDomDocument Doc;
+			if (pRequest->getAsXml(Doc))
+			{
+				CheckWhazzup(Doc);
+			}
 		}
 		pRequest->deleteLater();
 	}

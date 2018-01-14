@@ -79,7 +79,6 @@ namespace ffs2play
 		}
 		m_settings.endGroup();
 		m_currentUser = num;
-		//P2P->setCallsign(getCallSign());
 	#ifdef FFS_DEBUG
 		m_log->log("WebManager : " + tr("AES Key generated = ") + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 	#endif

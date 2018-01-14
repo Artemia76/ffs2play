@@ -27,7 +27,7 @@
 
 #include <QCoreApplication>
 
-namespace ffs2play_simconnect
+namespace ffs2play
 {
 
 	///
@@ -107,6 +107,29 @@ namespace ffs2play_simconnect
 	{
 		HRESULT hr;
 		hr=SimConnect_CallDispatch(m_hSimConnect,CSCManager::DispatchCallback,this);
+	}
+
+	///
+	/// \brief CSCManager::getVersion
+	/// \return
+	///
+
+	SIM_VERSION CSCManager::getVersion()
+	{
+		if (!m_bConnected) return SIM_VERSION::UNKNOWN;
+		switch (m_appVersionMajor)
+		{
+			case 2:
+				return SIM_VERSION.P3D_V2;
+			case 3:
+				return SIM_VERSION.P3D_V3;
+			case 4:
+				return SIM_VERSION.P3D_V4;
+			case 10:
+				return SIM_VERSION.FSX;
+			default:
+				return SIM_VERSION.FSX_STEAM;
+		}
 	}
 
 	///

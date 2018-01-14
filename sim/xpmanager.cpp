@@ -29,9 +29,8 @@
 #include <QTextCodec>
 #include <QApplication>
 
-namespace ffs2play_xplane
+namespace ffs2play
 {
-	using namespace ffs2play;
 	///
 	/// \brief CXPManager::CXPManager
 	/// \param parent
@@ -43,7 +42,7 @@ namespace ffs2play_xplane
 		m_LocalPort=47600;
 		m_DestPort=47500;
 		Server = new UDPServer(this);
-		connect (Server,&UDPServer::fireIncomingData, this,&CXPManager::OnReceiveDatagram);
+		connect (Server,SIGNAL(fireIncomingData(const QNetworkDatagram*)), this,SLOT(OnReceiveDatagram(const QNetworkDatagram*)));
 		Server->setPort(m_LocalPort);
 		Server->start();
 	}
@@ -75,6 +74,7 @@ namespace ffs2play_xplane
 				QApplication::processEvents();
 				wait++;
 			}
+			if (m_bConnected) emit(opened());
 			return m_bConnected;
 		}
 		return false;
@@ -109,6 +109,16 @@ namespace ffs2play_xplane
 	}
 
 	///
+	/// \brief CXPManager::getVersion
+	/// \return
+	///
+
+	SIM_VERSION CXPManager::getVersion()
+	{
+		return SIM_VERSION::XPLANE;
+	}
+
+	///
 	/// \brief CXPManager::OnReceiveDatagram
 	///
 
@@ -135,7 +145,7 @@ namespace ffs2play_xplane
 				{
 					PlayerData.ParseFromString(data.toStdString());
 					State.fromAirData(PlayerData);
-					emit(fireSimVariableEvent(State));
+					emit (fireSimVariableEvent(State));
 				}
 				catch (std::exception& e)
 				{
