@@ -50,6 +50,24 @@ namespace ffs2play
 		QPalette p = ui->pteLogger->palette();
 		p.setColor(QPalette::Text,Qt::darkBlue);
 		m_log = CLogger::instance();
+		switch (m_log->DebugLevel)
+		{
+			case LEVEL_NONE:
+			{
+				ui->rb_filterNone->setChecked(true);
+				break;
+			}
+			case LEVEL_NORMAL:
+			{
+				ui->rb_filterNormal->setChecked(true);
+				break;
+			}
+			case LEVEL_VERBOSE:
+			{
+				ui->rb_filterVerbose->setChecked(true);
+				break;
+			}
+		}
 		connect(m_log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)));
 		ui->pteLogger->setPalette(p);
 		ui->pteLogger->setMaximumBlockCount(m_maxLine);
@@ -58,7 +76,6 @@ namespace ffs2play
 		m_simManager = simbasemanager::instance();
 		connect(m_simManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
 		connect(m_simManager,  SIGNAL(closed()),this, SLOT(onSCM_Closed()));
-		//connect(m_simManager, &simbasemanager::fireSimEvent,this, &MainWindow::OnSimEvent);
 #ifdef Q_OS_WIN
 		m_simManager->init(new CSCManager());
 #else
@@ -314,33 +331,32 @@ namespace ffs2play
 					ui->twSIMData->item(i,0)->setText(QString::number(State.TimeFactor));
 					break;
 				}
-			case 29:
-			{
-				ui->twSIMData->item(i,0)->setText(QString::number(State.Door1Pos));
-				break;
+				case 29:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number(State.Door1Pos));
+					break;
+				}
+				case 30:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number(State.Door2Pos));
+					break;
+				}
+				case 31:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number(State.Door3Pos));
+					break;
+				}
+				case 32:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number(State.Door4Pos));
+					break;
+				}
+				case 33:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.ParkingBrake));
+					break;
+				}
 			}
-			case 30:
-			{
-				ui->twSIMData->item(i,0)->setText(QString::number(State.Door2Pos));
-				break;
-			}
-			case 31:
-			{
-				ui->twSIMData->item(i,0)->setText(QString::number(State.Door3Pos));
-				break;
-			}
-			case 32:
-			{
-				ui->twSIMData->item(i,0)->setText(QString::number(State.Door4Pos));
-				break;
-			}
-			case 33:
-			{
-				ui->twSIMData->item(i,0)->setText(QString::number((int)State.ParkingBrake));
-				break;
-			}
-			}
-
 		}
 	}
 
@@ -392,16 +408,6 @@ namespace ffs2play
 	}
 
 	///
-	/// \brief MainWindow::OnSimEvent
-	/// \param Event
-	///
-
-	void MainWindow::OnSimEvent(SimEvent pEvent)
-	{
-		m_log->log("Receive Sim Event = " + QString::number((int)pEvent.Evt_Id) + " Data = " + QString::number(pEvent.Data));
-	}
-
-	///
 	/// \brief MainWindow::OnPeerAdd
 	/// \param pCallSign
 	///
@@ -447,4 +453,19 @@ namespace ffs2play
 			m_log->log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
 		}
 	}
+}
+
+void ffs2play::MainWindow::on_rb_filterNone_toggled(bool checked)
+{
+	if (checked) m_log->setDebugLevel(LEVEL_NONE);
+}
+
+void ffs2play::MainWindow::on_rb_filterNormal_toggled(bool checked)
+{
+	if (checked) m_log->setDebugLevel(LEVEL_NORMAL);
+}
+
+void ffs2play::MainWindow::on_rb_filterVerbose_toggled(bool checked)
+{
+	if (checked) m_log->setDebugLevel(LEVEL_VERBOSE);
 }

@@ -80,8 +80,8 @@ namespace ffs2play
 	void CPeer::Start()
 	{
 		if (!m_disabled) return;
-		connect(m_server, SIGNAL(fireIncomingData(const QNetworkDatagram*)), SLOT(OnReceiveMessage(const QNetworkDatagram*)));
-		connect(m_simManager, &simbasemanager::fireSimVariableEvent,this,&CPeer::OnStateChange);
+		connect(m_server, SIGNAL(fireIncomingData(const QNetworkDatagram*)), this, SLOT(OnReceiveMessage(const QNetworkDatagram*)));
+		connect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)), this, SLOT(OnStateChange(CAircraftState)));
 		m_heartBeat.start(5000);
 		m_lastData = Now();
 		m_lastStateEvent = m_lastData;
@@ -145,10 +145,10 @@ namespace ffs2play
 		QNetworkDatagram Output(Data,m_EP,m_port);
 		m_server->send(Output);
 #ifdef FFS_DEBUG
-			m_log->log("UPDServer : " + tr("send data to ") +
-					   Output.destinationAddress().toString()
-					   + " port = " + QString::number(Output.destinationPort())
-					   + " datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
+					Output.destinationAddress().toString() +
+					" port = " + QString::number(Output.destinationPort()) +
+					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 		m_counter++;
 		if ((m_counter > 2) && m_onLine)
@@ -176,10 +176,10 @@ namespace ffs2play
 		QNetworkDatagram Output(Data,m_EP,m_port);
 		m_server->send(Output);
 #ifdef FFS_DEBUG
-			m_log->log("UPDServer : " + tr("send data to ") +
-					   Output.destinationAddress().toString()
-					   + " port = " + QString::number(Output.destinationPort())
-					   + " datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
+					Output.destinationAddress().toString() +
+					" port = " + QString::number(Output.destinationPort()) +
+					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 	}
 
@@ -197,10 +197,10 @@ namespace ffs2play
 		QNetworkDatagram Output(Data,m_EP,m_port);
 		m_server->send(Output);
 #ifdef FFS_DEBUG
-		m_log->log("UPDServer : " + tr("send data to ") +
-					   Output.destinationAddress().toString()
-					   + " port = " + QString::number(Output.destinationPort())
-					   + " datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
+					Output.destinationAddress().toString() +
+					" port = " + QString::number(Output.destinationPort()) +
+					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 	}
 
@@ -213,10 +213,10 @@ namespace ffs2play
 		QNetworkDatagram Output(Data,m_EP,m_port);
 		m_server->send(Output);
 #ifdef FFS_DEBUG
-			m_log->log("UPDServer : " + tr("send data to ") +
-					   Output.destinationAddress().toString()
-					   + " port = " + QString::number(Output.destinationPort())
-					   + " datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
+					Output.destinationAddress().toString() +
+					" port = " + QString::number(Output.destinationPort()) +
+					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 	}
 
@@ -234,20 +234,20 @@ namespace ffs2play
 		QNetworkDatagram Output(Data,m_EP,m_port);
 		m_server->send(Output);
 #ifdef FFS_DEBUG
-			m_log->log("UPDServer : " + tr("send data to ") +
-					   Output.destinationAddress().toString()
-					   + " port = " + QString::number(Output.destinationPort())
-					   + " datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
+					Output.destinationAddress().toString() +
+					" port = " + QString::number(Output.destinationPort()) +
+					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 	}
 	void CPeer::OnReceiveMessage(const QNetworkDatagram* pDatagram)
 	{
-		#ifdef FFS_DEBUG
-		  m_log->log("UPDServer : " + tr("receive data from ") +
-					 pDatagram->senderAddress().toString()
-					 + " port = " + QString::number(pDatagram->senderPort())
-					 + " datagram = " + pDatagram->data().toHex(), Qt::darkBlue,LEVEL_NORMAL);
-		#endif
+#ifdef FFS_DEBUG
+		m_log->log("Peer [" + m_callSign + "] " + tr("receive data from ") +
+					pDatagram->senderAddress().toString() +
+					" port = " + QString::number(pDatagram->senderPort()) +
+					" datagram = " + pDatagram->data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 		if(m_EP.isNull())
 		{
 		  if(m_internalIP.contains(pDatagram->senderAddress()))

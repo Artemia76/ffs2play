@@ -113,7 +113,7 @@ namespace ffs2play {
 			WSADATA wsaData;
 			int nResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 			if(nResult != NO_ERROR) {
-				m_logger->log("P2PManager : "+ tr("UPNP Windows Socket failed."),Qt::red);
+				m_log->log("P2PManager : "+ tr("UPNP Windows Socket failed."),Qt::red);
 				return;
 			}
 	#endif

@@ -120,15 +120,15 @@ namespace ffs2play
 		switch (m_appVersionMajor)
 		{
 			case 2:
-				return SIM_VERSION.P3D_V2;
+				return SIM_VERSION::P3D_V2;
 			case 3:
-				return SIM_VERSION.P3D_V3;
+				return SIM_VERSION::P3D_V3;
 			case 4:
-				return SIM_VERSION.P3D_V4;
+				return SIM_VERSION::P3D_V4;
 			case 10:
-				return SIM_VERSION.FSX;
+				return SIM_VERSION::FSX;
 			default:
-				return SIM_VERSION.FSX_STEAM;
+				return SIM_VERSION::FSX_STEAM;
 		}
 	}
 
@@ -461,7 +461,6 @@ namespace ffs2play
 			{
 				UserState* Data =  (UserState*)(&data->dwData);
 				State.TimeStamp = Now();
-				Log->log("SCManager : Timestamp =" + QString::number(State.TimeStamp.time_since_epoch().count()));
 				State.AileronPos = Data->AileronPos;
 				State.AmbiantPrecipState = Data->AmbiantPrecipState;
 				State.AmbiantWindDirection = Data->AmbiantWindDirection;

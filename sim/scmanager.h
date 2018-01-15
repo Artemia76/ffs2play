@@ -238,6 +238,7 @@ namespace ffs2play
 		qint64      m_VariableRate;
 		QDateTime   m_LastVariable;
 		QDateTime   m_LastSim;
+		int			m_appVersionMajor;
 
 		void        InitSimConnect();
 		void        OnRecvOpen (SIMCONNECT_RECV_OPEN* data);

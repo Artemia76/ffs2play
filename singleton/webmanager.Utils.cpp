@@ -129,9 +129,11 @@ namespace ffs2play
 						item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.ip(j))));
 					}
 					whazzup.append(item);
+#ifdef FFS_DEBUG
 					m_log->log("WEBManager : " + tr(" CallSign = ") + item.CallSign
 								+ " IP = " + item.externalIP.toString()
-								+ " Port = " + QString::number(item.Port));
+								+ " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 				}
 			}
 			if (whazzup.count()>0)

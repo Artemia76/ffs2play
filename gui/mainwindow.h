@@ -63,11 +63,15 @@ namespace ffs2play
 		void			on_afAide_triggered();
 		void			on_afFSCon_triggered();
 		void			on_afP2P_triggered();
-
-		void			OnSimEvent(SimEvent pEvent);
 		void			OnPeerRemove(QString pCallSign);
 		void			OnPeerChange(QString pCallSign);
 		void			OnPeerAdd(QString pCallSign);
+		void on_rb_filterNone_toggled(bool checked);
+
+		void on_rb_filterNormal_toggled(bool checked);
+
+		void on_rb_filterVerbose_toggled(bool checked);
+
 	private:
 		Ui::MainWindow*	ui;
 		CLogger*		m_log;

@@ -41,20 +41,21 @@ namespace ffs2play
 		Q_OBJECT
 
 	private:
-						CLogger(QObject* pParent = 0);
-		static CLogger* createInstance();
-		CL_DEBUG_LEVEL  m_DebugLevel;
-		QSettings		m_settings;
-		bool            m_logToFile;
+								CLogger(QObject* pParent = 0);
+		static CLogger*			createInstance();
+		CL_DEBUG_LEVEL			m_DebugLevel;
+		QSettings				m_settings;
+		bool					m_logToFile;
 
 	public:
-						~CLogger();
-		static CLogger* instance();
-		void            setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-		void            log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+								~CLogger();
+		const CL_DEBUG_LEVEL&	DebugLevel;
+		static CLogger*			instance();
+		void					setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+		void					log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 
 	signals:
-		void            fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+		void					fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 	};
 }
 #endif // CLOGGER_H

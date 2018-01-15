@@ -31,7 +31,8 @@ namespace ffs2play
 	///
 
 	CLogger::CLogger(QObject* parent):
-		QObject(parent)
+		QObject(parent),
+		DebugLevel(m_DebugLevel)
 	{
 		qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
 		m_settings.beginGroup("Log");
