@@ -165,6 +165,7 @@ namespace ffs2play
 		SMOKE_ENABLE,
 		IS_SLEW_ACTIVE,
 		AI_MOVE,
+		AI_UPDATE,
 		AI_INIT
 	};
 
@@ -239,6 +240,9 @@ namespace ffs2play
 		QDateTime   m_LastVariable;
 		QDateTime   m_LastSim;
 		int			m_appVersionMajor;
+		QStringList m_messageBuffer;
+		const float	m_timeToScroll=10.0;
+		QHash<uint, QString> m_AIProcess;
 
 		void        InitSimConnect();
 		void        OnRecvOpen (SIMCONNECT_RECV_OPEN* data);
@@ -252,11 +256,16 @@ namespace ffs2play
 		void        OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data);
 		static void CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
 		void        process(SIMCONNECT_RECV *pData, DWORD cbData);
+		void		sendText (const QString& pMessage);
 	protected:
 		bool        open();
 		void        close();
 		void        main_loop();
 		SIM_VERSION getVersion();
+		void		sendScrollingText(const QString& pMessage);
+		bool		createAI(const QString &pAircraft, const QString &Tail, const CAircraftState &pData);
+		bool		removeAI(uint& pObjectID);
+		void		freezeAI(uint pObjectID,bool pState);
 	};
 }
 #endif // FFS_WITH_SC

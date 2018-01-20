@@ -100,13 +100,17 @@ namespace ffs2play
 		virtual         ~SimConnector();
 		bool            isConnected();
 	protected:
-		CLogger*        Log;
-		bool            m_bConnected;
-		CAircraftState  State;
+		CLogger*        m_log;
+		bool            m_connected;
+		CAircraftState  m_state;
 		virtual bool    open()=0;
 		virtual void    close()=0;
 		virtual void    main_loop()=0;
 		virtual SIM_VERSION getVersion()=0;
+		virtual void	sendScrollingText(const QString& pMessage)=0;
+		virtual bool	createAI(const QString& pAircraft,const QString& Tail,const CAircraftState& pData)=0;
+		virtual bool	removeAI(uint& pObjectID)=0;
+		virtual void	freezeAI(uint pObjectID, bool pState)=0;
 
 	signals:
 		void            finished();
@@ -114,6 +118,7 @@ namespace ffs2play
 		void            closed();
 		void            fireSimVariableEvent(CAircraftState);
 		void            fireSimEvent(SimEvent);
+		void			fireSimAICreated(QString,uint);
 	public slots:
 	};
 }

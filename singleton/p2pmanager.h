@@ -60,7 +60,7 @@ namespace ffs2play
 		int					getPort();
 		QString				getLocalIPs();
 		void				setCallsign(const QString& pCallSign);
-		void				whazzup_Update(QList<PeerData>& pWhazzup);
+		void				whazzup_Update(QVector<PeerData>& pWhazzup);
 		bool				isDisabled(const QString& pCallsign);
 		void				clear();
 

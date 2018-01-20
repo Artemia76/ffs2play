@@ -33,10 +33,10 @@ namespace ffs2play
 	/// \return
 	///
 
-	QDataStream& operator<<(QDataStream& out, const QList<SUser>& v)
+	QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v)
 	{
 		out << v.count();
-		for (QList<SUser>::const_iterator it = v.constBegin(); it != v.constEnd(); ++it)
+		for (QVector<SUser>::const_iterator it = v.constBegin(); it != v.constEnd(); ++it)
 		{
 			out << it->Profil << it->Login << it->Password << it->URL;
 		}
@@ -50,7 +50,7 @@ namespace ffs2play
 	/// \return
 	///
 
-	QDataStream& operator>>(QDataStream& in, QList<SUser>& v)
+	QDataStream& operator>>(QDataStream& in, QVector<SUser>& v)
 	{
 		v.clear();
 		int num;
@@ -109,7 +109,7 @@ namespace ffs2play
 		QDomElement Element = pDoc.elementsByTagName("whazzup").at(0).toElement();
 		if (!Element.isNull())
 		{
-			QList<PeerData> whazzup;
+			QVector<PeerData> whazzup;
 			for (int i = 0; i< Element.childNodes().count();i++)
 			{
 				if (Element.childNodes().at(i).isElement())
@@ -119,7 +119,12 @@ namespace ffs2play
 					item.CallSign = Player.nodeName();
 					item.Port=Player.attribute("port").toUShort();
 					item.externalIP=m_crypto.DecryptFromBase64(Player.attribute("ip"));
-					ffs2play::LocalIPList LocalIP;
+#ifdef FFS_DEBUG
+					m_log->log("WEBManager : " + tr(" CallSign = ") + item.CallSign
+								+ " IP = " + item.externalIP.toString()
+								+ " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+					LocalIPList LocalIP;
 					LocalIP.ParseFromString(
 								QByteArray::fromBase64(
 									m_crypto.DecryptFromBase64(Player.attribute("local_ip")).toLatin1()
@@ -127,13 +132,11 @@ namespace ffs2play
 					for (int j=0; j<LocalIP.ip_size();j++)
 					{
 						item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.ip(j))));
+#ifdef FFS_DEBUG
+						m_log->log("WEBManager : " + tr(" Local IP = ") + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 					}
 					whazzup.append(item);
-#ifdef FFS_DEBUG
-					m_log->log("WEBManager : " + tr(" CallSign = ") + item.CallSign
-								+ " IP = " + item.externalIP.toString()
-								+ " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
-#endif
 				}
 			}
 			if (whazzup.count()>0)

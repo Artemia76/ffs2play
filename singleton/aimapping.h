@@ -17,13 +17,14 @@ namespace ffs2play
 	{
 		Q_OBJECT
 	private:
-		explicit AIMapping(QObject *parent = nullptr);
-		static AIMapping* createInstance();
-		CLogger*     Log;
+		explicit			AIMapping(QObject *parent = nullptr);
+		static	AIMapping*	createInstance();
+		CLogger*			Log;
 
 	public:
-		~AIMapping();
-		static AIMapping* instance();
+							~AIMapping();
+		static	AIMapping*	instance();
+		AIResol				SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
 	signals:
 
 	public slots:

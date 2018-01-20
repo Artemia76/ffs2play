@@ -23,21 +23,21 @@
 #include "peer.h"
 
 #ifdef Q_OS_WIN
-	#include <windows.h>
+	//#include <windows.h>
 #endif
 
 namespace ffs2play
 {
-	CPeer::CPeer(
-			UDPServer* pServer,
+	CPeer::CPeer(UDPServer* pServer,
 			QHostAddress pExternalIP,
 			int pPort,
 			QString pCallSign,
 			bool pDisabled,
 			bool pLocal,
-			const QList<QHostAddress>* pInternalIP,
-			QObject *pParent
-			) : QObject(pParent),
+			const QVector<QHostAddress>* pInternalIP,
+			QObject *pParent,
+			int pP2PRate,
+			int pP2PRadius) : QObject(pParent),
 				CallSign(m_callSign),
 				Disabled(m_disabled)
 	{
@@ -61,6 +61,9 @@ namespace ffs2play
 		Disable(pDisabled);
 		m_visible = false;
 		m_spawnable = false;
+		m_blockData = false;
+		P2PRadius = pP2PRadius;
+		P2PRate = pP2PRate;
 		connect(&m_heartBeat,SIGNAL(timeout()),SLOT(OnHeartBeat()));
 	}
 
@@ -115,9 +118,7 @@ namespace ffs2play
 		m_heartBeat.stop();
 		disconnect(m_server, SIGNAL(fireIncomingData(const QNetworkDatagram*)), this,SLOT(OnReceiveMessage(const QNetworkDatagram*)));
 		disconnect(m_simManager, SIGNAL(fireSimVariableEvent(ffs2play::CAircraftState)),this, SLOT(OnStateChange(ffs2play::CAircraftState)));
-		//m_TimerCreateAI.Stop();
-		//m_TimerCreateAI.Dispose();
-		//m_Analyseur.OnStateChange -= OnStateChange;
+		m_timerCreateAI.stop();
 		//m_SC.OnSCReceiveEvent -= OnSCReceiveEvent;
 		//m_SC.OnSCReceiveEventFrame -= OnSCReceiveEventFrame;
 		//m_SC.OnAICreated -= OnAICreated;
@@ -135,220 +136,131 @@ namespace ffs2play
 		m_spawned = 0;
 	}
 
-	void CPeer::sendPing()
+	void CPeer::spawnAI(bool pFlag)
 	{
-		m_lastPing = Now();
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::PING;
-		QNetworkDatagram Output(Data,m_EP,m_port);
-		m_server->send(Output);
-#ifdef FFS_DEBUG
-		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
-					Output.destinationAddress().toString() +
-					" port = " + QString::number(Output.destinationPort()) +
-					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-		m_counter++;
-		if ((m_counter > 2) && m_onLine)
+		if (pFlag && (m_objectID == 0) && (m_spawned == 0))
 		{
+			m_trySimpleAI = false;
 #ifdef FFS_DEBUG
-			if (m_counter > 2)
-				m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Timeout"),Qt::darkBlue,LEVEL_NORMAL);
-			else
-				m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Diconnected"),Qt::darkBlue,LEVEL_NORMAL);
+			m_log->log("Peer [" + m_callSign + "] " +
+					tr(" Local request for Title solve = ") + QString::fromStdString(m_data.title()) +
+					tr (" , Model = ") + QString::fromStdString(m_data.model()) ,
+					Qt::darkBlue,LEVEL_NORMAL);
 #endif
-			m_onLine = false;
-			m_version = 0;
-			m_miniPing = milliseconds(1000);
-			//Spawn_AI(false);
-		}
-	}
-
-	void CPeer::sendPong(const datetime& pTime)
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::PONG;
-		stream << (quint64)toTimeStamp(pTime);
-		QNetworkDatagram Output(Data,m_EP,m_port);
-		m_server->send(Output);
-#ifdef FFS_DEBUG
-		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
-					Output.destinationAddress().toString() +
-					" port = " + QString::number(Output.destinationPort()) +
-					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-	}
-
-	void CPeer::sendVersion()
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::VERSION;
-		stream << PROTO_VERSION;
-		stream << QString::fromStdString(m_sendData.title());
-		stream << QString::fromStdString(m_sendData.type());
-		stream << QString::fromStdString(m_sendData.model());
-		stream << QString::fromStdString(m_sendData.category());
-		QNetworkDatagram Output(Data,m_EP,m_port);
-		m_server->send(Output);
-#ifdef FFS_DEBUG
-		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
-					Output.destinationAddress().toString() +
-					" port = " + QString::number(Output.destinationPort()) +
-					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-	}
-
-	void CPeer::requestVersion()
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::REQ_VERSION;
-		QNetworkDatagram Output(Data,m_EP,m_port);
-		m_server->send(Output);
-#ifdef FFS_DEBUG
-		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
-					Output.destinationAddress().toString() +
-					" port = " + QString::number(Output.destinationPort()) +
-					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-	}
-
-	void CPeer::sendData()
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::DATA;
-		if (m_counter_Out == 255) m_counter_Out = 0;
-		else m_counter_Out++;
-		stream << m_counter_Out;
-		std::string adata=m_sendData.SerializePartialAsString();
-		stream << QString::fromStdString(adata);
-		QNetworkDatagram Output(Data,m_EP,m_port);
-		m_server->send(Output);
-#ifdef FFS_DEBUG
-		m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
-					Output.destinationAddress().toString() +
-					" port = " + QString::number(Output.destinationPort()) +
-					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-	}
-	void CPeer::OnReceiveMessage(const QNetworkDatagram* pDatagram)
-	{
-#ifdef FFS_DEBUG
-		m_log->log("Peer [" + m_callSign + "] " + tr("receive data from ") +
-					pDatagram->senderAddress().toString() +
-					" port = " + QString::number(pDatagram->senderPort()) +
-					" datagram = " + pDatagram->data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-		if(m_EP.isNull())
-		{
-		  if(m_internalIP.contains(pDatagram->senderAddress()))
-		  {
-			  m_EP=pDatagram->senderAddress();
-		  }
-		  else return;
-		}
-		else if((!m_EP.isEqual(pDatagram->senderAddress())) || (m_port != pDatagram->senderPort())) return;
-
-		datetime curr_time=Now();
-		QByteArray data(pDatagram->data());
-		QDataStream stream(&data,QIODevice::ReadOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		quint8 Code;
-		stream>>Code;
-		data.remove(0,1);
-		switch ((Protocol)Code)
-		{
-			case Protocol::PING:
+			m_AIResolution = m_AIMapping->SolveTitle(QString::fromStdString(m_data.title()), QString::fromStdString(m_data.model()), QString::fromStdString(m_data.type()));
+			if (m_AIResolution.Titre != "Mooney Bravo")
 			{
-				sendPong(curr_time);
-				break;
+#ifdef FFS_DEBUG
+				m_log->log("Peer [" + m_callSign + "] " + tr(" the local request has find a solution"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
 			}
-			case Protocol::PONG:
+			m_spawned = 2;
+			createAI();
+		}
+		if ((!pFlag) && (m_spawned > 0))
+		{
+			m_spawned = 0;
+			m_timerCreateAI.stop();
+			if (m_objectID != 0)
 			{
-				m_latence = duration_cast<milliseconds> (curr_time - m_lastPing)/2;
-				m_counter = 0;
-				quint64 Time;
-				stream >> Time;
-				datetime TimePong = fromTimeStamp(Time);
-				if (m_miniPing > m_latence)
-				{
-					m_decalage = duration_cast<milliseconds> (curr_time - m_latence - TimePong);
-					m_miniPing = m_latence;
-				}
-				if (!m_onLine)
+				if (m_simManager->removeAI(m_objectID))
 				{
 #ifdef FFS_DEBUG
-					m_log->log("Peer [" + m_callSign + "] " + tr(" go online"),Qt::darkBlue,LEVEL_NORMAL);
+					m_log->log("Peer [" + m_callSign + "] " + tr(" Remove aircraft"), Qt::darkBlue,LEVEL_NORMAL);
 #endif
-					m_onLine = true;
-					m_distance = -1;
-					m_counter_In = 0;
-					m_counter_Out = 0;
 				}
-				if (m_version == 0) requestVersion();
-				break;
-			}
-			case Protocol::CHAT:
-			{
-				QString Message;
-				stream >> Message;
-				m_simManager->sendScrollingText(CallSign + " : " + Message);
-				break;
-			}
-			case Protocol::VERSION:
-			{
-				stream >> m_version;
-				if (m_version == PROTO_VERSION)
-				{
-					QString Title,Type,Model,Category;
-					stream >> Title;
-					stream >> Type;
-					stream >> Model;
-					stream >> Category;
-					m_data.set_title(Title.toStdString());
-					m_data.set_type(Type.toStdString());
-					m_data.set_model(Model.toStdString());
-					m_data.set_category(Category.toStdString());
-				}
-#ifdef FFS_DEBUG
-				m_log->log("Peer [" + m_callSign + "] " + tr(" received version number = ") + QString::number(m_version),Qt::darkBlue,LEVEL_NORMAL);
-#endif
-				break;
-			}
-			case Protocol::REQ_VERSION:
-			{
-				sendVersion();
-				break;
+				else m_log->log("Peer [" + m_callSign + "] " + tr(" Error during removing of the aircraft"), Qt::darkMagenta);
 			}
 		}
 	}
 
-	void CPeer::OnStateChange(CAircraftState pState)
+	void CPeer::createAI()
 	{
-		bool Title_Changed = false;
-		if (m_sendData.title() != pState.Title.toStdString())
+		if (m_spawned == 2)
 		{
-			Title_Changed = true;
+			if (m_objectID != 0)
+			{
+				m_simManager->removeAI(m_objectID);
+			}
 		}
-		pState.toAirData(m_sendData);
-		if (duration_cast<milliseconds>(pState.TimeStamp - m_lastStateEvent) < m_sendInterval) return;
-		if ((!m_onLine) || (m_EP.isNull()) || (m_version < 1)) return;
-		sendData();
-		if (Title_Changed) sendVersion();
-		m_lastStateEvent = pState.TimeStamp;
 	}
 
-	void CPeer::OnHeartBeat()
+	void CPeer::refreshData()
 	{
-		if (!m_EP.isNull()) sendPing();
+		if ((m_objectID == 0) || (m_version != PROTO_VERSION)) return;
+		// if it is the first update, we initialize datas with raw position
+		if (m_spawned == 5)
+		{
+			m_AIData.Altitude = m_data.altitude();
+			m_AIData.Latitude = m_data.latitude();
+			m_AIData.Longitude = m_data.longitude();
+			m_AIData.Heading = m_data.heading();
+			m_AIData.Pitch = m_data.pitch();
+			m_AIData.Bank = m_data.bank();
+			m_simManager->freezeAI(m_objectID, m_data.onground());
+			m_lastRender = Now();
+			if (m_spawned==5) m_spawned=6;
+		}
+		// We have fresh data and are ready to compute extrapolation
+		if (m_spawned >=6)
+		{
+			double CoefHoriz = 0;
+			m_predictiveTime = m_remoteRefreshRate*3;
+			// Extrapolation compute
+			timespan Retard = m_lastData - fromTimeStamp(m_data.timestamp()); //Calcul du retard absolu de la donnée
+			if (Retard.count() < 0) Retard = milliseconds(0);
+			//double Periode = m_RemoteRefreshRate.TotalMilliseconds; //Calcul de la période entre deux données
+			if (m_remoteRefreshRate.count() > 0)
+			{
+				// On mémorise la position actuelle de l'extrapolation
+				m_actualPos.set_timestamp(toTimeStamp(m_lastRender));
+				m_actualPos.set_altitude(m_AIData.Altitude);
+				m_actualPos.set_latitude(m_AIData.Latitude);
+				m_actualPos.set_longitude(m_AIData.Longitude);
+				m_actualPos.set_heading(m_AIData.Heading);
+				m_actualPos.set_bank(m_AIData.Bank);
+				m_actualPos.set_pitch(m_AIData.Pitch);
+
+				m_futurData.set_timestamp( toTimeStamp(m_lastRender + m_predictiveTime));
+				CoefHoriz = (m_futurData.timestamp() - m_data.timestamp()) / m_remoteRefreshRate.count();
+				m_futurData.set_altitude(m_data.altitude() + ((m_data.altitude() - m_oldData.altitude()) * CoefHoriz));
+				m_futurData.set_longitude(m_data.longitude() + ((m_data.longitude() - m_oldData.longitude()) * CoefHoriz));
+				m_futurData.set_latitude(m_data.latitude() + ((m_data.latitude() - m_oldData.latitude()) * CoefHoriz));
+				double Gam_Heading = m_data.heading() - m_oldData.heading();
+				if (Gam_Heading < -180) Gam_Heading += 360;
+				if (Gam_Heading > 180) Gam_Heading -= 360;
+				m_futurData.set_heading(m_data.heading() + (Gam_Heading * CoefHoriz));
+				if (m_futurData.heading() < 0) m_futurData.set_heading(m_futurData.heading() + 360);
+				if (m_futurData.heading() >= 360) m_futurData.set_heading(m_futurData.heading() - 360);
+				double Gam_Pitch = m_data.pitch() - m_oldData.pitch();
+				if (Gam_Pitch < -180) Gam_Pitch += 360;
+				if (Gam_Pitch > 180) Gam_Pitch -= 360;
+				m_futurData.set_pitch(m_data.pitch() + (Gam_Pitch * CoefHoriz));
+				if (m_futurData.pitch() < -180) m_futurData.set_pitch(m_futurData.pitch()+ 360);
+				if (m_futurData.pitch() >= 180) m_futurData.set_pitch(m_futurData.pitch()- 360);
+				double Gam_Bank = m_data.bank() - m_oldData.bank();
+				if (Gam_Bank < -180) Gam_Bank += 360;
+				if (Gam_Bank > 180) Gam_Bank -= 360;
+				m_futurData.set_bank(m_data.bank() + (Gam_Bank * CoefHoriz));
+				if (m_futurData.bank() < -180) m_futurData.set_bank(m_futurData.bank() + 360);
+				if (m_futurData.bank() >= 180) m_futurData.set_bank(m_futurData.bank() - 360);
+				//Calcul des deltas de correction
+				m_deltaAltitude = m_futurData.altitude() - m_actualPos.altitude();
+				m_deltaLatitude = m_futurData.latitude() - m_actualPos.latitude();
+				m_deltaLongitude = m_futurData.longitude() - m_actualPos.longitude();
+				m_deltaHeading = m_futurData.heading() - m_actualPos.heading();
+				if (m_deltaHeading < -180) m_deltaHeading += 360;
+				if (m_deltaHeading >= 180) m_deltaHeading -= 360;
+				m_deltaPitch = m_futurData.pitch() - m_actualPos.pitch();
+				if (m_deltaPitch < -180) m_deltaPitch += 360;
+				if (m_deltaPitch >= 180) m_deltaPitch -= 360;
+				m_deltaBank = m_futurData.bank() - m_actualPos.bank();
+				if (m_deltaBank < -180) m_deltaBank += 360;
+				if (m_deltaBank >= 180) m_deltaBank -= 360;
+			}
+			m_spawned = 7;
+			m_actualPos.set_pitch(m_AIData.Pitch);
+			if (m_data.onground() != m_oldData.onground()) m_simManager->freezeAI(m_objectID,m_data.onground());
+		}
 	}
 }

@@ -60,7 +60,7 @@ namespace ffs2play
 
 	bool CXPManager::open ()
 	{
-		if (!m_bConnected)
+		if (!m_connected)
 		{
 			QByteArray Data;
 			QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -68,14 +68,14 @@ namespace ffs2play
 			QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
 			Server->send(Output);
 			int wait=0;
-			while ((!m_bConnected) && (wait < 5))
+			while ((!m_connected) && (wait < 5))
 			{
 				QThread::sleep(1);
 				QApplication::processEvents();
 				wait++;
 			}
-			if (m_bConnected) emit(opened());
-			return m_bConnected;
+			if (m_connected) emit(opened());
+			return m_connected;
 		}
 		return false;
 	}
@@ -86,15 +86,15 @@ namespace ffs2play
 
 	void CXPManager::close ()
 	{
-		if (m_bConnected)
+		if (m_connected)
 		{
 			QByteArray Data;
 			QDataStream stream(&Data,QIODevice::WriteOnly);
 			stream << (quint8)DISC;
 			QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
 			Server->send(Output);
-			m_bConnected=false;
-			Log->log(tr("Disconnected from XPlane."));
+			m_connected=false;
+			m_log->log(tr("Disconnected from XPlane."));
 			emit(closed());
 		}
 	}
@@ -133,9 +133,9 @@ namespace ffs2play
 		{
 			case PONG:
 			{
-				if (!m_bConnected)
+				if (!m_connected)
 				{
-					m_bConnected=true;
+					m_connected=true;
 				}
 				break;
 			}
@@ -144,19 +144,19 @@ namespace ffs2play
 				try
 				{
 					PlayerData.ParseFromString(data.toStdString());
-					State.fromAirData(PlayerData);
-					emit (fireSimVariableEvent(State));
+					m_state.fromAirData(PlayerData);
+					emit (fireSimVariableEvent(m_state));
 				}
 				catch (std::exception& e)
 				{
-					Log->log(tr("DataSend Error : ") + QString(e.what()),Qt::magenta);
+					m_log->log(tr("DataSend Error : ") + QString(e.what()),Qt::magenta);
 				}
 				break;
 			}
 			default:
 			{
 #ifdef FFS_DEBUG
-			Log->log("CXPManager : " + tr("unknown code = ") +
+			m_log->log("CXPManager : " + tr("unknown code = ") +
 					QString(Code),
 					Qt::darkBlue,LEVEL_VERBOSE);
 #endif

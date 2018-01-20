@@ -54,11 +54,14 @@ namespace ffs2play
 		const CAircraftState	getAircraftState();
 		void					sendScrollingText(const QString& pMessage);
 		SIM_VERSION				getVersion();
-
+		bool					createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData);
+		bool					removeAI(uint& pObjectID);
+		void					freezeAI(uint pObjectID, bool pState);
 	private slots:
 		void					mainThread();
 		void					OnSimVariableEvent(CAircraftState);
 		void					OnSimEvent(SimEvent);
+		void					OnSimAICreated(QString,uint);
 	public slots:
 		void					open_close();
 
@@ -68,6 +71,7 @@ namespace ffs2play
 		void					closed();
 		void					fireSimVariableEvent(CAircraftState);
 		void					fireSimEvent(SimEvent);
+		void					fireSimAICreated(QString,uint);
 	};
 }
 #endif // SIMBASEMANAGER_H

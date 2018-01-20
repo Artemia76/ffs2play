@@ -81,7 +81,7 @@ namespace ffs2play {
 		if (flag)
 		{
 			m_settings.beginGroup("P2P");
-			m_port = m_settings.value("Port",54856).toInt();
+			m_port = m_settings.value("Port",54857).toInt();
 			m_bUPNP = false;
 			m_server->setPort(m_port);
 			m_server->start();
@@ -250,7 +250,7 @@ namespace ffs2play {
 		m_CallSign = pCallSign;
 	}
 
-	void CP2PManager::whazzup_Update(QList<PeerData> &pWhazzup)
+	void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
 	{
 		QString UserName = m_CallSign.replace('[','_');
 		UserName = UserName.replace(']','_');

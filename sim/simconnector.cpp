@@ -26,8 +26,8 @@ namespace ffs2play
 {
 	SimConnector::SimConnector(QObject *parent) : QObject(parent)
 	{
-		Log=CLogger::instance();
-		m_bConnected = false;
+		m_log=CLogger::instance();
+		m_connected = false;
 	}
 
 	SimConnector::~SimConnector()
@@ -37,6 +37,6 @@ namespace ffs2play
 
 	bool SimConnector::isConnected()
 	{
-		return m_bConnected;
+		return m_connected;
 	}
 }

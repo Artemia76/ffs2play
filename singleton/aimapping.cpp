@@ -22,4 +22,14 @@ namespace ffs2play
 	{
 		return Singleton<AIMapping>::instance(AIMapping::createInstance);
 	}
+
+	AIResol AIMapping::SolveTitle(const QString &pTitle, const QString &pModel, const QString &pType)
+	{
+		//Default substitute airtcraft
+		AIResol Resol;
+		Resol.Titre = "Mooney Bravo";
+		Resol.CG_Height = 3.7;
+		Resol.Pitch = 2.9;
+		return Resol;
+	}
 }

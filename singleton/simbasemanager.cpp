@@ -79,8 +79,9 @@ namespace ffs2play
 		if ((p_connector==NULL)||(m_initialized)) return;
 		m_connector=p_connector;
 		m_initialized=true;
-		connect(m_connector,&SimConnector::fireSimEvent,this,&simbasemanager::OnSimEvent);
-		connect(m_connector,&SimConnector::fireSimVariableEvent,this,&simbasemanager::OnSimVariableEvent);
+		connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
+		connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+		connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
 	}
 
 	///
@@ -166,7 +167,7 @@ namespace ffs2play
 	{
 		CAircraftState State;
 		if (m_initialized && (m_connector!=NULL))
-			State = m_connector->State;
+			State = m_connector->m_state;
 		return State;
 	}
 
@@ -179,7 +180,7 @@ namespace ffs2play
 	{
 		if (m_initialized && (m_connector!=nullptr))
 		{
-
+			m_connector->sendScrollingText(pMessage);
 		}
 	}
 
@@ -193,13 +194,44 @@ namespace ffs2play
 		return Version;
 	}
 
-	void simbasemanager::OnSimVariableEvent(ffs2play::CAircraftState pState)
+	bool simbasemanager::createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData)
+	{
+		if (m_initialized && (m_connector!=nullptr))
+		{
+			return m_connector->createAI(pAircraft,pTail,pData);
+		}
+		return false;
+	}
+
+	bool simbasemanager::removeAI(uint& pObjectID)
+	{
+		if (m_initialized && (m_connector!=nullptr))
+		{
+			return m_connector->removeAI(pObjectID);
+		}
+		return false;
+	}
+
+	void simbasemanager::freezeAI(uint pObjectID, bool pState)
+	{
+		if (m_initialized && (m_connector!=nullptr))
+		{
+			m_connector->freezeAI(pObjectID,pState);
+		}
+	}
+
+	void simbasemanager::OnSimVariableEvent(CAircraftState pState)
 	{
 		emit(fireSimVariableEvent(pState));
 	}
 
-	void simbasemanager::OnSimEvent(ffs2play::SimEvent pEvent)
+	void simbasemanager::OnSimEvent(SimEvent pEvent)
 	{
 		emit(fireSimEvent(pEvent));
+	}
+
+	void simbasemanager::OnSimAICreated(QString pTail, uint pObjectID)
+	{
+		emit(fireSimAICreated(pTail,pObjectID));
 	}
 }

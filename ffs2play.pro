@@ -68,11 +68,15 @@ SOURCES +=		main.cpp \
 				gui/mainwindow.cpp \
 				net/chttprequest.cpp \
 				net/peer.cpp \
+                net/peer.Event.Cpp \
+                net/peer.Requests.cpp \
 				net/udpserver.cpp \
 				protobuf/ffs2play.pb.cc \
 				sim/aibase.cpp \
 				sim/aircraftstate.cpp \
 				sim/simconnector.cpp \
+                sim/scmanager.cpp \
+                sim/xpmanager.cpp \
 				singleton/aimapping.cpp \
 				singleton/clogger.cpp \
 				singleton/p2pmanager.cpp \
@@ -83,9 +87,8 @@ SOURCES +=		main.cpp \
 				singleton/webmanager.Utils.cpp \
 				tools/crypto.cpp \
 				tools/getappversion.cpp \
-				tools/datetime.cpp \
-				sim/scmanager.cpp \
-	sim/xpmanager.cpp
+                tools/datetime.cpp \
+                tools/calculation.cpp
 
 HEADERS  +=     gui/dialogprofils.h \
 				gui/mainwindow.h \
@@ -96,6 +99,7 @@ HEADERS  +=     gui/dialogprofils.h \
 				sim/aibase.h \
 				sim/aircraftstate.h \
 				sim/simconnector.h \
+                sim/scmanager.h \
 				sim/xpmanager.h \
 				singleton/aimapping.h \
 				singleton/call_once.h \
@@ -107,8 +111,8 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/crypto.h \
 				tools/datetime.h \
 				tools/getappversion.h \
-				tools/version.h \
-				sim/scmanager.h
+                tools/version.h \
+                tools/calculation.h
 
 FORMS	+=		gui/dialogprofils.ui \
 				gui/mainwindow.ui

@@ -27,7 +27,7 @@
 #include <QDomDocument>
 #include <QDataStream>
 #include <QSettings>
-#include <QList>
+#include <QVector>
 #include <QTimer>
 #include <QDateTime>
 #include <QMetaEnum>
@@ -52,12 +52,12 @@ namespace ffs2play
 	};
 }
 
-Q_DECLARE_METATYPE(QList<ffs2play::SUser>)
+Q_DECLARE_METATYPE(QVector<ffs2play::SUser>)
 
 namespace ffs2play
 {
-	QDataStream& operator<<(QDataStream& out, const QList<SUser>& v);
-	QDataStream& operator>>(QDataStream& in, QList<SUser>& v);
+	QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v);
+	QDataStream& operator>>(QDataStream& in, QVector<SUser>& v);
 
 	class CWebManager : public QObject
 	{
@@ -100,7 +100,7 @@ namespace ffs2play
 		void				CheckWhazzup (QDomDocument& pDoc);
 
 	protected:
-		QList<SUser>		m_users;
+		QVector<SUser>		m_users;
 		void				SaveConfig();
 		void				SetCurrentUser(int pNum);
 

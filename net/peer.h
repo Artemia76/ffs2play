@@ -67,7 +67,7 @@ namespace ffs2play
 	{
 		QString CallSign;
 		QHostAddress externalIP;
-		QList<QHostAddress> localIPs;
+		QVector<QHostAddress> localIPs;
 		quint16 Port;
 	};
 
@@ -87,6 +87,8 @@ namespace ffs2play
 	public:
 		const QString&			CallSign;
 		const bool&				Disabled;
+		int						P2PRadius;
+		int						P2PRate;
 	protected:
 								CPeer(
 									UDPServer*pServer,
@@ -95,8 +97,10 @@ namespace ffs2play
 									QString pCallSign,
 									bool pDisabled=false,
 									bool pLocal = false,
-									const QList<QHostAddress>* pInternalIP=NULL,
-									QObject *pParent = nullptr
+									const QVector<QHostAddress>* pInternalIP=NULL,
+									QObject *pParent = nullptr,
+									int pP2PRate = 200,
+									int pP2PRadius = 10
 								);
 								~CPeer ();
 		void					Start();
@@ -115,10 +119,11 @@ namespace ffs2play
 		simbasemanager*			m_simManager;
 		AIMapping*				m_AIMapping;
 		QHostAddress			m_EP;
-		QList<QHostAddress>		m_internalIP;
+		QVector<QHostAddress>	m_internalIP;
 		QHostAddress			m_externalIP;
 		quint16					m_port;
 		AirData					m_data;
+		AirData					m_oldData;
 		AirData					m_sendData;
 		AirData					m_futurData;
 		AirData					m_actualPos;
@@ -131,16 +136,16 @@ namespace ffs2play
 		CLogger*				m_log;
 		timespan				m_latence;
 		double					m_distance;
-		qint64					m_refreshRate;
-		qint64					m_remoteRefreshRate;
+		timespan				m_refreshRate;
+		timespan				m_remoteRefreshRate;
 		timespan				m_decalage;
 		timespan				m_miniPing;
 		quint32					m_objectID;
 		byte					m_version;
 		int						m_spawned;
 		bool					m_refresh;
-		double					m_predictiveTime;
-		QList<double>			m_frameRateArray;
+		timespan				m_predictiveTime;
+		QVector<double>			m_frameRateArray;
 		QTimer					m_timerCreateAI;
 		AIResol					m_AIResolution;
 		int						m_frameCount;
@@ -162,13 +167,53 @@ namespace ffs2play
 		bool					m_visible;
 		bool					m_spawnable;
 		double					m_old_fps;
+		bool					m_blockData;
 
+		///
+		/// \brief send
+		/// \param pOutput
+		///
+		void					send(const QByteArray& pOutput);
+
+		///
+		/// \brief sendChat
+		/// \param pMessage
+		///
+		void					sendChat(const QString& pMessage);
+
+		///
+		/// \brief sendPing
+		///
 		void					sendPing();
+
+		///
+		/// \brief sendPong
+		/// \param pTime
+		///
 		void					sendPong(const datetime& pTime);
-		void					requestVersion();
+
+		///
+		/// \brief sendVersion
+		///
 		void					sendVersion();
+
+		///
+		/// \brief requestVersion
+		///
+		void					requestVersion();
+
+		///
+		/// \brief sendData
+		///
 		void					sendData();
 
+		///
+		/// \brief spawnAI
+		/// \param pFlag
+		///
+		void					spawnAI(bool pFlag);
+		void					refreshData();
+		void					createAI();
 	signals:
 
 	private slots:
