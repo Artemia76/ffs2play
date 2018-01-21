@@ -135,8 +135,7 @@ namespace ffs2play
 		if (m_counter_Out == 255) m_counter_Out = 0;
 		else m_counter_Out++;
 		stream << m_counter_Out;
-		std::string adata=m_sendData.SerializePartialAsString();
-		stream << QString::fromStdString(adata);
+		stream << QByteArray::fromStdString(m_sendData.SerializeAsString());
 		send(Data);
 	}
 }

@@ -45,6 +45,7 @@ namespace ffs2play
 		UDPServer*			m_server;
 		QSettings			m_settings;
 		int					m_port;
+		int					m_AILimite;
 		bool				m_bUPNP;
 		bool				m_Shadow;
 		LocalIPList			m_InternalIP;
@@ -53,6 +54,7 @@ namespace ffs2play
 		UPNPUrls			m_urls;
 		IGDdatas			m_data;
 		QVector<CPeer*>		m_peers;
+		QTimer				m_checkAITimer;
 	public:
 		~CP2PManager();
 		static CP2PManager*	instance();
@@ -65,11 +67,11 @@ namespace ffs2play
 		void				clear();
 
 	signals:
-		void				onPeerAdd(QString);
-		void				onPeerRemove(QString);
-		void				onPeerChange(QString);
+		void				firePeerAdd(QString);
+		void				firePeerRemove(QString);
+		void				firePeerChange(QString);
 	private slots:
-		void				OnReceiveDatagram(const QNetworkDatagram* pData);
+		void				onCheckAI();
 	};
 }
 #endif // P2PMANAGER_H

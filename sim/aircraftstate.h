@@ -22,29 +22,40 @@
 
 #ifndef AIRCRAFTSTATE_H
 #define AIRCRAFTSTATE_H
-#include <qstring.h>
+#include <QString>
+
 #include "tools/datetime.h"
-#include "sim/aibase.h"
+#include "protobuf/ffs2play.pb.h"
 
 namespace ffs2play
 {
-	class CAircraftState : public CAIBase
+	class CAircraftState
 	{
 	public:
 		CAircraftState();
 		~CAircraftState();
-		virtual void toAirData (AirData& pAirData);
-		virtual void fromAirData (const AirData& pAirData);
-		datetime    TimeStamp;
+		void toAirData (AirData& pAirData);
+		void fromAirData (const AirData& pAirData);
+		datetime	TimeStamp;
 		QString     Title;
 		QString     Model;
 		QString     Type;
 		QString     Category;
+		double		Latitude;
+		double		Longitude;
+		double		Altitude;
+		double		Pitch;
+		double		Bank;
+		double		Heading;
+		double		ElevatorPos;
+		double		AileronPos;
+		double		RudderPos;
+		double		SpoilerPos;
+		double		ParkingBrakePos;
 		double      GroundAltitude;
 		double      Weight;
 		double      TotalFuelCapacity;
 		double      Vario;
-		qint32      TimeFactor;
 		double      GroundSpeed;
 		double      TASSpeed;
 		double      IASSpeed;
@@ -53,6 +64,7 @@ namespace ffs2play
 		double      AmbiantWindVelocity;
 		double      AmbiantWindDirection;
 		double      SeaLevelPressure;
+		qint32      TimeFactor;
 		qint32      XAxis;
 		qint32      YAxis;
 		qint32      Slider;
@@ -63,7 +75,28 @@ namespace ffs2play
 		quint32     AmbiantPrecipState;
 		qint32      AltimeterSetting;
 		qint32      NumEngine;
+		int			Door1Pos;
+		int			Door2Pos;
+		int			Door3Pos;
+		int			Door4Pos;
+		int			StateEng1;
+		int			StateEng2;
+		int			StateEng3;
+		int			StateEng4;
+		int			ThrottleEng1;
+		int			ThrottleEng2;
+		int			ThrottleEng3;
+		int			ThrottleEng4;
+		int			GearPos;
+		int			FlapsIndex;
+		int			LandingLight;
+		int			StrobeLight;
+		int			BeaconLight;
+		int			NavLight;
+		int			RecoLight;
+		int			Smoke;
 		//Etat
+		bool        OnGround;
 		bool        ParkingBrake;
 		bool        Pause;
 		bool        Crash;
@@ -71,7 +104,6 @@ namespace ffs2play
 		bool        Pushback;
 		bool        OverSpeed;
 		bool        Slew;
-		bool        OnGround;
 		bool        Stalling;
 	};
 }

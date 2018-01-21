@@ -43,11 +43,11 @@ namespace ffs2play
 
 	struct SAI_Data
 	{
-		char    title[256];
-		double  kohlsmann;
-		double  altitude;
-		double  latitude;
-		double  longitude;
+		char	title[256];
+		double	kohlsmann;
+		double	altitude;
+		double	latitude;
+		double	longitude;
 	};
 	#pragma pack ()
 
@@ -176,40 +176,72 @@ namespace ffs2play
 	#pragma pack(1)
 	struct UserState
 	{
-		char Title[256];
-		char Type[256];
-		char Model[256];
-		char Category[256];
-		double PlaneAltitude;
-		double GndAltitude;
-		double Vario;
-		double PlaneHeading;
-		double Longitude;
+		char	Title[256];
+		char	Type[256];
+		char	Model[256];
+		char	Category[256];
+		double	PlaneAltitude;
+		double	GndAltitude;
+		double	Vario;
+		double	PlaneHeading;
+		double	Longitude;
+		double	Latitude;
+		double	GndSpeed;
+		double	TASSpeed;
+		double	FuelQty;
+		double	TotalFuelCapacity;
+		double	FuelWeightGallon;
+		double	PlanePitch;
+		double	PlaneBank;
+		double	GForce;
+		double	PlaneWeight;
+		quint32	Realism;
+		double	AmbiantWindVelocity;
+		double	AmbiantWindDirection;
+		quint32	AmbiantPrecipState;
+		double	SeaLevelPressure;
+		double	IASSpeed;
+		double	ElevatorPos;
+		double	AileronPos;
+		double	RudderPos;
+		double	SpoilerPos;
+		double	ParkingBrakePos;
+		quint32	TimeFactor;
+		qint32	Door1Pos;
+		qint32	Door2Pos;
+		qint32	Door3Pos;
+		qint32	Door4Pos;
+		qint32	NumEngine;
+		qint32	StateEng1;
+		qint32	StateEng2;
+		qint32	StateEng3;
+		qint32	StateEng4;
+		qint32	ThrottleEng1;
+		qint32	ThrottleEng2;
+		qint32	ThrottleEng3;
+		qint32	ThrottleEng4;
+		qint32	Squawk;
+	};
+	#pragma pack ()
+
+	#pragma pack(1)
+	struct AIMoveStruct
+	{
 		double Latitude;
-		double GndSpeed;
-		double TASSpeed;
-		double FuelQty;
-		double TotalFuelCapacity;
-		double FuelWeightGallon;
-		double PlanePitch;
-		double PlaneBank;
-		double GForce;
-		double PlaneWeight;
-		quint32  Realism;
-		double AmbiantWindVelocity;
-		double AmbiantWindDirection;
-		quint32    AmbiantPrecipState;
-		double SeaLevelPressure;
-		double IASSpeed;
+		double Longitude;
+		double Altitude;
+		double Pitch;
+		double Bank;
+		double Heading;
 		double ElevatorPos;
 		double AileronPos;
 		double RudderPos;
-		quint32   TimeFactor;
-		qint32    Door1Pos;
-		qint32    Door2Pos;
-		qint32    Door3Pos;
+		double SpoilerPos;
+		double ParkingBrakePos;
+		qint32 Door1Pos;
+		qint32 Door2Pos;
+		qint32 Door3Pos;
 		qint32 Door4Pos;
-		qint32 NumEngine;
 		qint32 StateEng1;
 		qint32 StateEng2;
 		qint32 StateEng3;
@@ -219,10 +251,27 @@ namespace ffs2play
 		qint32 ThrottleEng3;
 		qint32 ThrottleEng4;
 		qint32 Squawk;
+		qint32 GearPos;
+		qint32 FlapsIndex;
+		qint32 LandingLight;
+		qint32 StrobeLight;
+		qint32 BeaconLight;
+		qint32 NavLight;
+		qint32 RecoLight;
+		qint32 Smoke;
 	};
 	#pragma pack ()
 
+	#pragma pack(1)
+	struct AIUpdateStruct
+	{
+		double AvionAltitude;
+		double SolAltitude;
+		double Longitude;
+		double Latitude;
+	};
 
+	#pragma pack()
 	///
 	/// \brief The CSCManager class
 	///
@@ -234,36 +283,39 @@ namespace ffs2play
 		explicit CSCManager(QObject *parent = 0);
 		~CSCManager();
 	private:
-		HANDLE      m_hSimConnect;
-		qint64      m_SimRate;
-		qint64      m_VariableRate;
-		QDateTime   m_LastVariable;
-		QDateTime   m_LastSim;
+		HANDLE		m_hSimConnect;
+		qint64		m_SimRate;
+		qint64		m_VariableRate;
+		QDateTime	m_LastVariable;
+		QDateTime	m_LastSim;
 		int			m_appVersionMajor;
-		QStringList m_messageBuffer;
+		QStringList	m_messageBuffer;
 		const float	m_timeToScroll=10.0;
 		QHash<uint, QString> m_AIProcess;
+		QHash<DWORD, QString> m_record;
 
-		void        InitSimConnect();
-		void        OnRecvOpen (SIMCONNECT_RECV_OPEN* data);
-		void        OnRecvQuit (SIMCONNECT_RECV* data);
-		void        OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data);
-		void        OnRecvException (SIMCONNECT_RECV_EXCEPTION* data);
-		void        OnRecvEvent (SIMCONNECT_RECV_EVENT* data);
-		void        OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data);
-		void        OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data);
-		void        OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data);
-		void        OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data);
-		static void CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
-		void        process(SIMCONNECT_RECV *pData, DWORD cbData);
+		void		InitSimConnect();
+		void		OnRecvOpen (SIMCONNECT_RECV_OPEN* data);
+		void		OnRecvQuit (SIMCONNECT_RECV* data);
+		void		OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data);
+		void		OnRecvException (SIMCONNECT_RECV_EXCEPTION* data);
+		void		OnRecvEvent (SIMCONNECT_RECV_EVENT* data);
+		void		OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data);
+		void		OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data);
+		void		OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data);
+		void		OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data);
+static	void		CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
+		void		process(SIMCONNECT_RECV *pData, DWORD cbData);
 		void		sendText (const QString& pMessage);
+		void		trace(const QString& pMessage);
 	protected:
-		bool        open();
-		void        close();
-		void        main_loop();
-		SIM_VERSION getVersion();
+		bool		open();
+		void		close();
+		void		main_loop();
+		SIM_VERSION	getVersion();
 		void		sendScrollingText(const QString& pMessage);
-		bool		createAI(const QString &pAircraft, const QString &Tail, const CAircraftState &pData);
+		bool		createAI(const QString &pAircraft, const QString &Tail, const CAircraftState &pData,bool pNonAIObject);
+		bool		updateAI(uint pObjectID, const CAircraftState& pData);
 		bool		removeAI(uint& pObjectID);
 		void		freezeAI(uint pObjectID,bool pState);
 	};

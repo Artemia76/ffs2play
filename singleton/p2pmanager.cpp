@@ -39,7 +39,8 @@ namespace ffs2play {
 	{
 		m_log=CLogger::instance();
 		m_server = new UDPServer(this);
-		connect (m_server,&UDPServer::fireIncomingData, this,&CP2PManager::OnReceiveDatagram);
+		connect (&m_checkAITimer,SIGNAL(timeout()),this,SLOT(onCheckAI()));
+		m_checkAITimer.start(5000);
 	}
 
 	///
@@ -71,6 +72,58 @@ namespace ffs2play {
 		return Singleton<CP2PManager>::instance(CP2PManager::createInstance);
 	}
 
+	void CP2PManager::onCheckAI()
+	{
+		int NbInvisible = 0;
+		int NbVisible = 0;
+		int PosLointain = 0;
+		double ScoreLointain = -1;
+		int PosPret = 0;
+		double ScorePret=DBL_MAX;
+		for (int i=0; i<m_peers.count(); i++)
+		{
+			if (m_peers[i]->m_spawnable)
+			{
+				if (m_peers[i]->m_visible)
+				{
+					NbVisible++;
+					if (m_peers[i]->m_distance > ScoreLointain)
+					{
+						ScoreLointain = m_peers[i]->m_distance;
+						PosLointain = i;
+					}
+				}
+				else
+				{
+					NbInvisible++;
+					if (m_peers[i]->m_distance < ScorePret)
+					{
+						ScorePret = m_peers[i]->m_distance;
+						PosPret = i;
+					}
+				}
+			}
+		}
+		// Si on en a plus de visible que la limite alors on en choisi un pour le rendre invisible (les plus lointains)
+		if (NbVisible > m_AILimite)
+		{
+			//On rend le plus lointain invisible
+			m_peers[PosLointain]->m_visible = false;
+#ifdef FFS_DEBUG
+			m_log->log("P2PManager : Peer " + m_peers[PosLointain]->m_callSign + tr(" become unvisible"),Qt::darkBlue);
+#endif
+		}
+		//Sinon , si on a des invisibles et que le nombre de visibles est inférieur à la limite
+		//cela signifie qu'on a des invisibles qu'on peut afficher (les plus prêt)
+		else if ((NbInvisible > 0) && (NbVisible < m_AILimite))
+		{
+			m_peers[PosPret]->m_visible = true;
+#ifdef FFS_DEBUG
+			m_log->log("P2PManager : Peer " + m_peers[PosPret]->m_callSign + tr(" become visible"),Qt::darkBlue);
+#endif
+		}
+	}
+
 	///
 	/// \brief CP2PManager::init
 	/// \param flag
@@ -90,6 +143,7 @@ namespace ffs2play {
 				initUPNP(true);
 			}
 			m_Shadow = m_settings.value("ShadowEnable", false).toBool();
+			m_AILimite = m_settings.value("AILimite",10).toInt();
 			m_settings.endGroup();
 		}
 		else
@@ -135,15 +189,15 @@ namespace ffs2play {
 						&error);
 			if (devlist != NULL)
 			{
-	#ifdef FFS_DEBUG
+#ifdef FFS_DEBUG
 				for (UPNPDev* device = devlist; device !=NULL; device = device->pNext)
 				{
 					m_log->log("P2PManager : " + tr("IGP Desc = ") + QString(device->descURL) + tr(" st: ") + QString(device->st),Qt::darkBlue,LEVEL_NORMAL);
 				}
-	#endif
+#endif
 				if ((error = UPNP_GetValidIGD(devlist, &m_urls, &m_data, lanaddr, 64)) != 0)
 				{
-	#ifdef FFS_DEBUG
+#ifdef FFS_DEBUG
 					switch (error)
 					{
 						case 1:
@@ -167,18 +221,18 @@ namespace ffs2play {
 							break;
 						}
 					}
-	#endif
+#endif
 					m_InternalIP.add_ip(lanaddr);
 					UPNP_GetExternalIPAddress(m_urls.controlURL,m_data.first.servicetype,wanaddr);
 					m_ExternalIP = QString(wanaddr);
-	#ifdef FFS_DEBUG
+#ifdef FFS_DEBUG
 					m_log->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
 					for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
 					{
 						m_log->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
 					}
 					m_log->log("P2PManager : " + tr("Internet IP address : ") + QString(m_ExternalIP),Qt::darkBlue,LEVEL_NORMAL);
-	#endif
+#endif
 					error = UPNP_AddPortMapping(
 							m_urls.controlURL,
 							m_data.first.servicetype,
@@ -222,16 +276,6 @@ namespace ffs2play {
 		}
 	}
 
-	///
-	/// \brief CP2PManager::OnReceiveDatagram
-	/// \param data
-	///
-
-	void CP2PManager::OnReceiveDatagram(const QNetworkDatagram* data)
-	{
-
-	}
-
 	int CP2PManager::getPort()
 	{
 		return m_port;
@@ -262,10 +306,10 @@ namespace ffs2play {
 			// Shadow Detection
 			if (UserName == data.CallSign.toLower())
 			{
-	#ifdef FFS_DEBUG
+#ifdef FFS_DEBUG
 				if (m_Shadow) Shadow = true;
 				else
-	#endif
+#endif
 					continue;
 			}
 			QVector<CPeer*>::iterator it;
@@ -295,13 +339,9 @@ namespace ffs2play {
 				if ((!IP.isNull()) && (data.Port>0))
 				{
 					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,!data.externalIP.isEqual(IP),&data.localIPs));
-					emit(onPeerAdd(data.CallSign));
+					emit(firePeerAdd(data.CallSign));
 #ifdef FFS_DEBUG
-					m_log->log("P2PManager : " + tr("Adding P2P user callsign = ")+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::blue);
-					for (QHostAddress sip : data.localIPs)
-					{
-						m_log->log("P2PManager : " + tr("List of local IP = ")+ sip.toString(),Qt::blue);
-					}
+					m_log->log("P2PManager : " + tr("Adding P2P user callsign = ")+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue);
 #endif
 				}
 				else
@@ -337,7 +377,7 @@ namespace ffs2play {
 			}
 		}
 		//Make invert research to purge disconnected peers
-		for (size_t i = 0; i < m_peers.count() ; i++)
+		for (int i = 0; i < m_peers.count() ; i++)
 		{
 			bool find=false;
 			for (PeerData data : pWhazzup)
@@ -356,7 +396,7 @@ namespace ffs2play {
 #ifdef FFS_DEBUG
 				m_log->log("P2PManager : " + tr("Remove user ") + m_peers[i]->CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
-				emit(onPeerRemove(m_peers[i]->CallSign));
+				emit(firePeerRemove(m_peers[i]->CallSign));
 				m_peers.removeAt(i);
 
 			}
@@ -380,7 +420,7 @@ namespace ffs2play {
 			m_log->log("P2PManager : " + tr("Remove user ") + CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
 			delete (*it);
-			emit(onPeerRemove(CallSign));
+			emit(firePeerRemove(CallSign));
 		}
 		m_peers.clear();
 	}

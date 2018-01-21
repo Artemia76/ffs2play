@@ -72,7 +72,6 @@ SOURCES +=		main.cpp \
                 net/peer.Requests.cpp \
 				net/udpserver.cpp \
 				protobuf/ffs2play.pb.cc \
-				sim/aibase.cpp \
 				sim/aircraftstate.cpp \
 				sim/simconnector.cpp \
                 sim/scmanager.cpp \
@@ -96,7 +95,6 @@ HEADERS  +=     gui/dialogprofils.h \
 				net/peer.h \
 				net/udpserver.h \
 				protobuf/ffs2play.pb.h \
-				sim/aibase.h \
 				sim/aircraftstate.h \
 				sim/simconnector.h \
                 sim/scmanager.h \

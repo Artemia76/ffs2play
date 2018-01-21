@@ -234,6 +234,8 @@ namespace ffs2play
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "ELEVATOR POSITION", "Position",SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "AILERON POSITION", "Position",SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "RUDDER POSITION", "Position",SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "SPOILERS HANDLE POSITION", "Position",SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "BRAKE PARKING POSITION", "Position",SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "SIMULATION RATE", "Number",SIMCONNECT_DATATYPE_INT32);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "EXIT OPEN:0", "Percent",SIMCONNECT_DATATYPE_INT32);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "EXIT OPEN:1", "Percent",SIMCONNECT_DATATYPE_INT32);
@@ -263,6 +265,8 @@ namespace ffs2play
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "ELEVATOR POSITION", "Position", SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "AILERON POSITION", "Position", SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "RUDDER POSITION", "Position", SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "SPOILERS HANDLE POSITION", "Position", SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "BRAKE PARKING POSITION", "Position", SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "EXIT OPEN:0", "Percent", SIMCONNECT_DATATYPE_INT32);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "EXIT OPEN:1", "Percent", SIMCONNECT_DATATYPE_INT32);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "EXIT OPEN:2", "Percent", SIMCONNECT_DATATYPE_INT32);
@@ -404,7 +408,9 @@ namespace ffs2play
 
 	void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 	{
-		m_log->log(tr("Get a SimConnect exception = ") + QString::number(data->dwException),Qt::red);
+		m_log->log(tr("Get a SimConnect exception = ") + QString::number(data->dwException) +
+				   tr(" Related method invoked = ") + m_record.value(data->dwSendID),
+				   Qt::red);
 	}
 
 	///
@@ -421,22 +427,31 @@ namespace ffs2play
 		Event.Data = data->dwData;
 		switch (data->uEventID)
 		{
-			case REQUEST_ID::PAUSE:
+			case EVENT_ID::PAUSE:
 			{
 				Event.Evt_Id = SIM_EVENT_ID::PAUSE;
 				m_state.Pause=(bool)Event.Data;
 				break;
 			}
-			case REQUEST_ID::SIMSTART:
+			case EVENT_ID::SIMSTART:
 			{
 				Event.Evt_Id = SIM_EVENT_ID::SIMSTART;
 				m_state.RunState=true;
 				break;
 			}
-			case REQUEST_ID::SIMSTOP:
+			case EVENT_ID::SIMSTOP:
 			{
 				Event.Evt_Id = SIM_EVENT_ID::SIMSTOP;
 				m_state.RunState=false;
+				break;
+			}
+			case EVENT_ID::TEXT_SCROLL:
+			{
+				if((SIMCONNECT_TEXT_RESULT)data->dwData == SIMCONNECT_TEXT_RESULT_TIMEOUT)
+				{
+					m_messageBuffer.removeAt(0);
+					if (m_messageBuffer.count()>0) sendText(m_messageBuffer[0]);
+				}
 				break;
 			}
 			default:
@@ -455,6 +470,9 @@ namespace ffs2play
 
 	void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 	{
+#ifdef FFS_DEBUG
+		m_log->log("SCManager : " + tr("OnRecvSimObjectData called"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 		switch (data->dwRequestID)
 		{
 			case REQUEST_ID::PERIODIQUE:
@@ -502,113 +520,121 @@ namespace ffs2play
 				emit(fireSimVariableEvent(m_state));
 				break;
 			}
-			case REQUEST_ID::AI_UPDATE:
-			{
-				//fireSCReceiveAIUpdate
-				break;
-			}
 			default:
 			{
-				SimEvent Event;
-				Event.Data = data->dwData;
-				switch (data->dwRequestID)
+				if (data->dwRequestID >= (DWORD)(REQUEST_ID::AI_UPDATE))
 				{
-					case REQUEST_ID::PARKING_BRAKE:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::PARKING_BRAKE;
-						m_state.ParkingBrake=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::ALTIMETER_SETTING:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::ALTIMETER_SETTING;
-						m_state.AltimeterSetting=Event.Data;
-						break;
-					}
-					case REQUEST_ID::BEACON_LIGHT:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::BEACON_LIGHT;
-						m_state.BeaconLight=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::CRASH:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::CRASH;
-						m_state.Crash=(bool)(Event.Data==11);
-						break;
-					}
-					case REQUEST_ID::FLAPS_HANDLE_INDEX:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::FLAPS_HANDLE_INDEX;
-						m_state.FlapsIndex=Event.Data;
-						break;
-					}
-					case REQUEST_ID::FLAPS_HANDLE_PERCENT:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::FLAPS_HANDLE_PERCENT;
-						break;
-					}
-					case REQUEST_ID::GEAR_HANDLE_POSITION:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::GEAR_HANDLE_POSITION;
-						m_state.GearPos=Event.Data;
-						break;
-					}
-					case REQUEST_ID::LANDING_LIGHT:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::LANDING_LIGHT;
-						m_state.LandingLight=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::NAV_LIGHT:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::NAV_LIGHT;
-						m_state.NavLight=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::ON_GROUND:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::ON_GROUND;
-						m_state.OnGround=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::OVERSPEED:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::OVERSPEED;
-						m_state.OverSpeed=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::PUSHBACK:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::PUSHBACK;
-						m_state.Pushback=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::RECOGNITION_LIGHT:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::RECOGNITION_LIGHT;
-						m_state.RecoLight=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::SLEW:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::SLEW_ON;
-						m_state.Slew=(bool)Event.Data;
-						break;
-					}
-					case REQUEST_ID::SMOKE_ENABLE:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::SMOKE_ENABLE;
-						m_state.Smoke=(bool)Event.Data;
-						break;
-					}
-					default:
-					{
-						Event.Evt_Id = SIM_EVENT_ID::UNUSED;
-						break;
-					}
+					AIUpdateStruct* Data =  (AIUpdateStruct*)(&data->dwData);
+					CAircraftState AIData;
+					AIData.Altitude = Data->AvionAltitude;
+					AIData.GroundAltitude = Data->SolAltitude;
+					AIData.Longitude = Data->Longitude;
+					AIData.Latitude = Data->Latitude;
+					emit(fireSimAIUpdated(AIData,data->dwObjectID));
 				}
-				emit(fireSimEvent(Event));
+				else
+				{
+					SimEvent Event;
+					Event.Data = data->dwData;
+					switch (data->dwRequestID)
+					{
+						case REQUEST_ID::PARKING_BRAKE:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::PARKING_BRAKE;
+							m_state.ParkingBrake=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::ALTIMETER_SETTING:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::ALTIMETER_SETTING;
+							m_state.AltimeterSetting=Event.Data;
+							break;
+						}
+						case REQUEST_ID::BEACON_LIGHT:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::BEACON_LIGHT;
+							m_state.BeaconLight=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::CRASH:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::CRASH;
+							m_state.Crash=(bool)(Event.Data==11);
+							break;
+						}
+						case REQUEST_ID::FLAPS_HANDLE_INDEX:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::FLAPS_HANDLE_INDEX;
+							m_state.FlapsIndex=Event.Data;
+							break;
+						}
+						case REQUEST_ID::FLAPS_HANDLE_PERCENT:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::FLAPS_HANDLE_PERCENT;
+							break;
+						}
+						case REQUEST_ID::GEAR_HANDLE_POSITION:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::GEAR_HANDLE_POSITION;
+							m_state.GearPos=Event.Data;
+							break;
+						}
+						case REQUEST_ID::LANDING_LIGHT:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::LANDING_LIGHT;
+							m_state.LandingLight=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::NAV_LIGHT:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::NAV_LIGHT;
+							m_state.NavLight=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::ON_GROUND:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::ON_GROUND;
+							m_state.OnGround=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::OVERSPEED:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::OVERSPEED;
+							m_state.OverSpeed=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::PUSHBACK:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::PUSHBACK;
+							m_state.Pushback=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::RECOGNITION_LIGHT:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::RECOGNITION_LIGHT;
+							m_state.RecoLight=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::SLEW:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::SLEW_ON;
+							m_state.Slew=(bool)Event.Data;
+							break;
+						}
+						case REQUEST_ID::SMOKE_ENABLE:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::SMOKE_ENABLE;
+							m_state.Smoke=(bool)Event.Data;
+							break;
+						}
+						default:
+						{
+							Event.Evt_Id = SIM_EVENT_ID::UNUSED;
+							break;
+						}
+					}
+					emit(fireSimEvent(Event));
+				}
 				break;
 			}
 		}
@@ -621,7 +647,7 @@ namespace ffs2play
 
 	void CSCManager::OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data)
 	{
-
+		emit(fireSimEventFrame(data->fFrameRate, data->fSimSpeed));
 	}
 
 	///
@@ -629,11 +655,8 @@ namespace ffs2play
 	/// \param data
 	///
 
-	void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data)
+	void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE*)
 	{
-	#ifdef FFS_DEBUG
-		m_log->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE event"), Qt::darkBlue,LEVEL_VERBOSE);
-	#endif
 	}
 
 	///
@@ -654,13 +677,17 @@ namespace ffs2play
 					   Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 			SimConnect_AIReleaseControl(m_hSimConnect,data->dwObjectID, (SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::AI_RELEASE);
+			trace("SimConnect_AIReleaseControl:670");
 			SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ATTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+			trace("SimConnect_TransmitClientEvent:672");
 			SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+			trace("SimConnect_TransmitClientEvent:674");
 			SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-
+			trace("SimConnect_TransmitClientEvent:677");
 			emit(fireSimAICreated(it.value(),data->dwObjectID));
 			m_AIProcess.remove(data->dwRequestID);
 			SimConnect_RequestDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + data->dwObjectID),DEFINITION_ID::AI_UPDATE,data->dwObjectID,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT,0,0,0);
+			trace("SimConnect_RequestDataOnSimObject:680");
 		}
 		else
 		{
@@ -681,11 +708,17 @@ namespace ffs2play
 	{
 		if(m_connected)
 		{
-			SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,(SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::TEXT_SCROLL, pMessage.size(),(void*)pMessage.toStdString().c_str());
+			const char* str=pMessage.toStdString().c_str();
+			HRESULT result = SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,(SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::TEXT_SCROLL, sizeof(str),(void*)str);
+			trace("SimConnect_Text:702");
+			if (result == E_FAIL)
+			{
+				m_log->log("SCManager: " + tr("Send Text Failed"),Qt::darkMagenta);
+			}
 		}
 	}
 
-	bool CSCManager::createAI(const QString &pAircraft, const QString &pTail, const CAircraftState &pData)
+	bool CSCManager::createAI(const QString &pAircraft, const QString &pTail, const CAircraftState &pData,bool pNonAIObject)
 	{
 		if (m_connected)
 		{
@@ -704,17 +737,23 @@ namespace ffs2play
 			uint index = (uint)m_AIProcess.count()+ (uint)REQUEST_ID::AI_CREATE;
 			m_AIProcess.insert(index,pTail);
 			HRESULT result;
-			if (pData.Category != "Helicopter")
+			if (!pNonAIObject)
+			{
 				result = SimConnect_AICreateNonATCAircraft(m_hSimConnect,
 															pAircraft.toStdString().c_str(),
 															pTail.toStdString().c_str(),
 															data,
 															(SIMCONNECT_DATA_REQUEST_ID)index);
+				trace("SimConnect_AICreateNonATCAircraft:732");
+			}
 			else
+			{
 				result = SimConnect_AICreateSimulatedObject(m_hSimConnect,
 															   pAircraft.toStdString().c_str(),
 															   data,
 															   (SIMCONNECT_DATA_REQUEST_ID)index);
+				trace("SimConnect_AICreateSimulatedObject:741");
+			}
 			if (result==S_OK) return true;
 		}
 		return false;
@@ -722,31 +761,100 @@ namespace ffs2play
 
 	bool CSCManager::removeAI(uint& pObjectID)
 	{
+#ifdef FFS_DEBUG
+		m_log->log("SCManager : " + tr("removeAI called"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
 		if (m_connected)
 		{
 			HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect,pObjectID,(SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + pObjectID));
+			trace("SimConnect_AIRemoveObject:759");
 			if (result==S_OK) return true;
 		}
 		m_log->log("SCManager: " + tr("Delete Aircrfaft failed"),Qt::darkMagenta);
 		return false;
 	}
 
+	bool CSCManager::updateAI(uint pObjectID, const CAircraftState& pData)
+	{
+#ifdef FFS_DEBUG
+		m_log->log("SCManager : " + tr("updateAI called"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+		if (m_connected && (pObjectID>0))
+		{
+			AIMoveStruct MoveData;
+			MoveData.AileronPos = pData.AileronPos;
+			MoveData.Altitude = pData.Altitude;
+			MoveData.Bank = pData.Bank;
+			MoveData.BeaconLight = pData.BeaconLight;
+			MoveData.Door1Pos = pData.Door1Pos;
+			MoveData.Door2Pos = pData.Door2Pos;
+			MoveData.Door3Pos = pData.Door3Pos;
+			MoveData.Door4Pos = pData.Door4Pos;
+			MoveData.ElevatorPos = pData.ElevatorPos;
+			MoveData.FlapsIndex = pData.FlapsIndex;
+			MoveData.GearPos = pData.GearPos;
+			MoveData.Heading = pData.Heading;
+			MoveData.LandingLight = pData.LandingLight;
+			MoveData.Latitude = pData.Latitude;
+			MoveData.Longitude = pData.Longitude;
+			MoveData.NavLight = pData.NavLight;
+			MoveData.ParkingBrakePos = pData.ParkingBrakePos;
+			MoveData.Pitch = pData.Pitch;
+			MoveData.RecoLight = pData.RecoLight;
+			MoveData.RudderPos = pData.RudderPos;
+			MoveData.Smoke = pData.Smoke;
+			MoveData.SpoilerPos = pData.SpoilerPos;
+			MoveData.Squawk = pData.Squawk;
+			MoveData.StateEng1 = pData.StateEng1;
+			MoveData.StateEng2 = pData.StateEng2;
+			MoveData.StateEng3 = pData.StateEng3;
+			MoveData.StateEng4 = pData.StateEng4;
+			MoveData.StrobeLight = pData.StrobeLight;
+			MoveData.ThrottleEng1 = pData.ThrottleEng1;
+			MoveData.ThrottleEng2 = pData.ThrottleEng2;
+			MoveData.ThrottleEng3 = pData.ThrottleEng3;
+			MoveData.ThrottleEng4 = pData.ThrottleEng4;
+			SimConnect_SetDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_DEFINITION_ID)DEFINITION_ID::AI_MOVE,pObjectID,SIMCONNECT_DATA_SET_FLAG_DEFAULT,0,sizeof(AIMoveStruct),&MoveData);
+			trace("SimConnect_SetDataOnSimObject:808");
+			return true;
+		}
+		return false;
+	}
+
 	void CSCManager::freezeAI(uint pObjectID, bool pState)
 	{
+#ifdef FFS_DEBUG
+		m_log->log("SCManager : " + tr("freezeAI called"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
 		if (m_connected && (pObjectID > 0))
 		{
 			if (pState)
 			{
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+				trace("SimConnect_TransmitClientEvent:824");
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+				trace("SimConnect_TransmitClientEvent:826");
 			}
 			else
 			{
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+				trace("SimConnect_TransmitClientEvent:831");
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+				trace("SimConnect_TransmitClientEvent:832");
 			}
 		}
 
+	}
+
+	void CSCManager::trace(const QString &pMessage)
+	{
+		DWORD id;
+		int hr=SimConnect_GetLastSentPacketID(m_hSimConnect,&id);
+		m_record.insert(id,pMessage);
+		if (m_record.count()>100)
+		{
+			m_record.erase(m_record.begin());
+		}
 	}
 }
 #endif //FFS_WITH_SC

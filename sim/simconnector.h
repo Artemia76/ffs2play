@@ -96,29 +96,34 @@ namespace ffs2play
 		Q_OBJECT
 		friend class	simbasemanager;
 	public:
-		explicit        SimConnector(QObject *parent = nullptr);
-		virtual         ~SimConnector();
-		bool            isConnected();
+		explicit		SimConnector(QObject *parent = nullptr);
+		virtual			~SimConnector();
+		bool			isConnected();
 	protected:
-		CLogger*        m_log;
-		bool            m_connected;
+		CLogger*		m_log;
+		bool			m_connected;
 		CAircraftState  m_state;
-		virtual bool    open()=0;
-		virtual void    close()=0;
-		virtual void    main_loop()=0;
-		virtual SIM_VERSION getVersion()=0;
-		virtual void	sendScrollingText(const QString& pMessage)=0;
-		virtual bool	createAI(const QString& pAircraft,const QString& Tail,const CAircraftState& pData)=0;
-		virtual bool	removeAI(uint& pObjectID)=0;
-		virtual void	freezeAI(uint pObjectID, bool pState)=0;
+virtual	bool			open()=0;
+virtual void			close()=0;
+virtual	void			main_loop()=0;
+virtual	SIM_VERSION		getVersion()=0;
+virtual	void			sendScrollingText(const QString& pMessage)=0;
+virtual	bool			createAI(const QString& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject)=0;
+virtual	bool			removeAI(uint& pObjectID)=0;
+virtual bool			updateAI(uint pObjectID, const CAircraftState& data)=0;
+virtual	void			freezeAI(uint pObjectID, bool pState)=0;
 
 	signals:
-		void            finished();
-		void            opened();
-		void            closed();
-		void            fireSimVariableEvent(CAircraftState);
-		void            fireSimEvent(SimEvent);
+		void			finished();
+		void			opened();
+		void			closed();
+		void			fireSimVariableEvent(CAircraftState);
+		void			fireSimEvent(SimEvent);
 		void			fireSimAICreated(QString,uint);
+		void			fireSimAIUpdated(CAircraftState, uint);
+		void			fireSimAIRemoved(uint);
+		void			fireSimEventFrame(float,float);
+
 	public slots:
 	};
 }

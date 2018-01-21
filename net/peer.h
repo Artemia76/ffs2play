@@ -73,7 +73,7 @@ namespace ffs2play
 
 	typedef unsigned char byte;
 
-	const byte PROTO_VERSION = 13;
+	const quint8 PROTO_VERSION = 14;
 
 	// Déclaration of Singleton manager to have recursion access and friendly protection
 
@@ -122,12 +122,13 @@ namespace ffs2play
 		QVector<QHostAddress>	m_internalIP;
 		QHostAddress			m_externalIP;
 		quint16					m_port;
-		AirData					m_data;
-		AirData					m_oldData;
+		CAircraftState			m_data;
+		CAircraftState			m_oldData;
 		AirData					m_sendData;
-		AirData					m_futurData;
-		AirData					m_actualPos;
-		CAIBase					m_AIData;
+		CAircraftState			m_futurData;
+		CAircraftState			m_actualPos;
+		CAircraftState			m_AIData;
+		CAircraftState			m_AISimData;
 		datetime				m_lastPing;
 		datetime				m_lastData;
 		timespan				m_sendInterval;
@@ -141,7 +142,7 @@ namespace ffs2play
 		timespan				m_decalage;
 		timespan				m_miniPing;
 		quint32					m_objectID;
-		byte					m_version;
+		quint8					m_version;
 		int						m_spawned;
 		bool					m_refresh;
 		timespan				m_predictiveTime;
@@ -166,8 +167,9 @@ namespace ffs2play
 		double					m_deltaBank;
 		bool					m_visible;
 		bool					m_spawnable;
-		double					m_old_fps;
 		bool					m_blockData;
+		double					m_old_fps;
+		double					m_old_GND_AI;
 
 		///
 		/// \brief send
@@ -213,13 +215,21 @@ namespace ffs2play
 		///
 		void					spawnAI(bool pFlag);
 		void					refreshData();
+		void					updateAI(datetime pTime, float pFPS);
 		void					createAI();
+		void					resetAI();
 	signals:
 
 	private slots:
 		void					OnReceiveMessage(const QNetworkDatagram* pDatagram);
-		void					OnStateChange(CAircraftState pState);
+		void					OnSimStateChange(CAircraftState pState);
+		void					OnSimEvent(SimEvent);
+		void					OnSimEventFrame(float,float);
+		void					OnSimAICreated(QString,uint);
+		void					OnSimAIUpdated(CAircraftState,uint);
+		void					OnSimAIRemoved(uint);
 		void					OnHeartBeat();
+		void					OnTimerCreateAI();
 	};
 }
 #endif // PEER_H

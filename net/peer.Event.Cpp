@@ -49,7 +49,6 @@ namespace ffs2play
 		stream.setByteOrder(QDataStream::LittleEndian);
 		quint8 Code;
 		stream>>Code;
-		data.remove(0,1);
 		switch ((Protocol)Code)
 		{
 			case Protocol::PING:
@@ -86,7 +85,7 @@ namespace ffs2play
 			{
 				QString Message;
 				stream >> Message;
-				m_simManager->sendScrollingText(CallSign + " : " + Message);
+				//m_simManager->sendScrollingText(CallSign + " : " + Message);
 				break;
 			}
 			case Protocol::DATA:
@@ -100,16 +99,22 @@ namespace ffs2play
 					// If counter received is greater we have fresh data
 					if (((CounterIn - m_counter_In) > 0) || (m_counter_In == 255))
 					{
-						m_oldData.CopyFrom(m_data);
+						m_oldData=m_data;
 						quint32 Len;
 						stream >> Len;
-						data.remove(0,5);
-						m_data.ParseFromString(data.toStdString());
-						m_data.set_timestamp(m_data.timestamp()+ duration_cast<milliseconds>(m_decalage).count());
-						if (m_data.timestamp() <= m_oldData.timestamp())
+						data.remove(0,6);
+						AirData ReceivedData;
+						ReceivedData.ParseFromString(data.toStdString());
+						m_data.fromAirData(ReceivedData);
+						m_data.TimeStamp += m_decalage;
+						if (m_data.TimeStamp<= m_oldData.TimeStamp)
 						{
 #ifdef FFS_DEBUG
-							m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram dropped : too late"),Qt::darkBlue,LEVEL_NORMAL);
+							m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram dropped : too late") +
+										" Décalage mSec=" + QString::number(m_decalage.count()) +
+									   " OldTime = " + QString::number(toTimeStamp(m_oldData.TimeStamp)) +
+									   " NewTime = " + QString::number(toTimeStamp(m_data.TimeStamp))
+									   ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
 						}
 						else
@@ -117,10 +122,10 @@ namespace ffs2play
 							if (m_spawned==4) m_spawned++;
 							m_refreshRate = curr_time - m_lastData;
 							m_lastData = curr_time;
-							m_remoteRefreshRate = milliseconds(m_data.timestamp() - m_oldData.timestamp());
-							m_distance = distance(m_data.latitude(),m_data.longitude(),m_sendData.latitude(),m_sendData.longitude(), 'N');
+							m_remoteRefreshRate = m_data.TimeStamp - m_oldData.TimeStamp;
+							m_distance = distance(m_data.Latitude,m_data.Longitude,m_sendData.latitude(),m_sendData.longitude(), 'N');
 #ifdef FFS_DEBUG
-							m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram missing quantity = ") + QString::number(CounterIn - m_counter_In - 1),Qt::darkBlue,LEVEL_NORMAL);
+							if ((CounterIn - m_counter_In) > 1) m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram missing quantity = ") + QString::number(CounterIn - m_counter_In - 1),Qt::darkBlue,LEVEL_NORMAL);
 #endif
 							if (m_spawned >=5) refreshData();
 						}
@@ -130,8 +135,8 @@ namespace ffs2play
 #ifdef FFS_DEBUG
 						m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram dropped : too late since ") + QString::number(m_counter_In - CounterIn),Qt::darkBlue,LEVEL_NORMAL);
 #endif
-						m_counter_In = CounterIn;
 					}
+					m_counter_In = CounterIn;
 					m_mutex.unlock();
 				}
 				break;
@@ -141,15 +146,10 @@ namespace ffs2play
 				stream >> m_version;
 				if (m_version == PROTO_VERSION)
 				{
-					QString Title,Type,Model,Category;
-					stream >> Title;
-					stream >> Type;
-					stream >> Model;
-					stream >> Category;
-					m_data.set_title(Title.toStdString());
-					m_data.set_type(Type.toStdString());
-					m_data.set_model(Model.toStdString());
-					m_data.set_category(Category.toStdString());
+					stream >> m_data.Title;
+					stream >> m_data.Type;
+					stream >> m_data.Model;
+					stream >> m_data.Category;
 				}
 	#ifdef FFS_DEBUG
 				m_log->log("Peer [" + m_callSign + "] " + tr(" received version number = ") + QString::number(m_version),Qt::darkBlue,LEVEL_NORMAL);
@@ -166,10 +166,66 @@ namespace ffs2play
 
 	void CPeer::OnHeartBeat()
 	{
-		if (!m_EP.isNull()) sendPing();
+		sendPing();
 	}
 
-	void CPeer::OnStateChange(CAircraftState pState)
+	void CPeer::OnSimEventFrame(float pFrameRate, float)
+	{
+		if (m_spawned >=6)
+		{
+			updateAI(Now(),pFrameRate);
+		}
+	}
+
+	void CPeer::OnSimAICreated(QString pTail,uint pObjectID)
+	{
+		if (pTail == m_tail)
+		{
+			if ((pObjectID != 0)&&(m_objectID==0))
+			{
+				m_objectID = pObjectID;
+				m_spawned = 4;
+				m_simManager->freezeAI(m_objectID, m_data.OnGround);
+				m_lastAIUpdate = Now();
+#ifdef FFS_DEBUG
+				m_log->log("Peer [" + m_callSign + "] " + tr(" Receive Object_ID = ") + QString::number(m_objectID),Qt::darkBlue,LEVEL_NORMAL);
+#endif
+			}
+			else
+			{
+#ifdef FFS_DEBUG
+				m_log->log("Peer [" + m_callSign + "] " + tr(" Receive an unwanted object") + QString::number(m_objectID),Qt::darkBlue,LEVEL_NORMAL);
+#endif
+			}
+		}
+	}
+
+	void CPeer::OnSimAIRemoved(uint pObjectID)
+	{
+		if (pObjectID == m_objectID)
+		{
+			m_objectID = 0;
+			m_spawned = 0;
+#ifdef FFS_DEBUG
+				m_log->log("Peer [" + m_callSign + "] " + tr(" Receive a removed Object from sim ID = ") + QString::number(pObjectID),Qt::darkBlue,LEVEL_NORMAL);
+#endif
+		}
+	}
+
+	void CPeer::OnSimEvent(SimEvent)
+	{
+
+	}
+
+	void CPeer::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
+	{
+		if (m_objectID != pObjectID) return;
+		m_lastAIUpdate = Now();
+		m_AISimData = pAIData;
+		m_ecart = distance(m_data.Latitude,m_data.Longitude,m_AISimData.Latitude,m_AISimData.Longitude, 'N');
+	}
+
+	void CPeer::OnSimStateChange(CAircraftState pState)
 	{
 		bool Title_Changed = false;
 		if (m_sendData.title() != pState.Title.toStdString())
@@ -177,7 +233,7 @@ namespace ffs2play
 			Title_Changed = true;
 		}
 		pState.toAirData(m_sendData);
-		if (duration_cast<milliseconds>(pState.TimeStamp - m_lastStateEvent) < m_sendInterval) return;
+		if ((pState.TimeStamp - m_lastStateEvent) < m_sendInterval) return;
 		if ((!m_onLine) || (m_EP.isNull()) || (m_version < 1)) return;
 		sendData();
 		if (Title_Changed) sendVersion();
@@ -204,6 +260,38 @@ namespace ffs2play
 			spawnAI(false);
 #ifdef FFS_DEBUG
 			m_log->log("Peer [" + m_callSign + "] " + tr(" Destruct AI Object Visible=") + QString::number(m_visible) + tr(" Spawnable = ") + QString::number(m_spawnable),Qt::darkBlue,LEVEL_NORMAL);
+#endif
+		}
+	}
+
+	void CPeer::OnTimerCreateAI()
+	{
+		m_timerCreateAI.stop();
+		if ((m_spawned >= 2) && (m_objectID == 0))
+		{
+			m_spawned = 2;
+			if (!m_trySimpleAI)
+			{
+				m_trySimpleAI = true;
+#ifdef FFS_DEBUG
+				m_log->log("Peer [" + m_callSign + "] " + tr(" Simulator have not created the requested AI, Let's try with simple object") ,Qt::darkBlue,LEVEL_NORMAL);
+#endif
+			}
+			else
+			{
+				m_AIResolution.Titre = "Mooney Bravo";
+				m_AIResolution.CG_Height = 3.7;
+				m_AIResolution.Pitch = 2.9;
+#ifdef FFS_DEBUG
+				m_log->log("Peer [" + m_callSign + "] " + tr(" Simulator have not created the requested AI, we are trying with default simulator aircraft") ,Qt::darkBlue,LEVEL_NORMAL);
+#endif
+			}
+			createAI();
+		}
+		else
+		{
+#ifdef FFS_DEBUG
+				m_log->log("Peer [" + m_callSign + "] " + tr(" Simulator has been created the requested AI") ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
 		}
 	}

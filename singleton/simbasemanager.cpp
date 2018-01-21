@@ -81,7 +81,10 @@ namespace ffs2play
 		m_initialized=true;
 		connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
 		connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+		connect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
 		connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
+		connect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
+		connect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
 	}
 
 	///
@@ -194,11 +197,20 @@ namespace ffs2play
 		return Version;
 	}
 
-	bool simbasemanager::createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData)
+	bool simbasemanager::createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData,bool pNonAIObject)
 	{
 		if (m_initialized && (m_connector!=nullptr))
 		{
-			return m_connector->createAI(pAircraft,pTail,pData);
+			return m_connector->createAI(pAircraft,pTail,pData,pNonAIObject);
+		}
+		return false;
+	}
+
+	bool simbasemanager::updateAI(uint pObjectID, const CAircraftState &pData)
+	{
+		if (m_initialized && (m_connector!=nullptr))
+		{
+			return m_connector->updateAI(pObjectID,pData);
 		}
 		return false;
 	}
@@ -233,5 +245,20 @@ namespace ffs2play
 	void simbasemanager::OnSimAICreated(QString pTail, uint pObjectID)
 	{
 		emit(fireSimAICreated(pTail,pObjectID));
+	}
+
+	void simbasemanager::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
+	{
+		emit(fireSimAIUpdated(pAIData,pObjectID));
+	}
+
+	void simbasemanager::OnSimAIRemoved(uint pObjectID)
+	{
+		emit(fireSimAIRemoved(pObjectID));
+	}
+
+	void simbasemanager::OnSimEventFrame(float pFramRate, float SimSpeed)
+	{
+		emit(fireSimEventFrame(pFramRate, SimSpeed));
 	}
 }

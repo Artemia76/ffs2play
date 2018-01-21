@@ -125,10 +125,7 @@ namespace ffs2play
 								+ " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 					LocalIPList LocalIP;
-					LocalIP.ParseFromString(
-								QByteArray::fromBase64(
-									m_crypto.DecryptFromBase64(Player.attribute("local_ip")).toLatin1()
-									).toStdString());
+					LocalIP.ParseFromString(QByteArray::fromBase64(Player.attribute("local_ip").toLatin1()).toStdString());
 					for (int j=0; j<LocalIP.ip_size();j++)
 					{
 						item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.ip(j))));

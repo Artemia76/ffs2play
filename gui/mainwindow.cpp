@@ -87,9 +87,9 @@ namespace ffs2play
 
 		m_P2PManager = CP2PManager::instance();
 		m_P2PManager->init(true);
-		connect(m_P2PManager, SIGNAL(onPeerAdd(QString)), SLOT(OnPeerAdd(QString)));
-		connect(m_P2PManager, SIGNAL(onPeerChange(QString)), SLOT(OnPeerChange(QString)));
-		connect(m_P2PManager, SIGNAL(onPeerRemove(QString)), SLOT(OnPeerRemove(QString)));
+		connect(m_P2PManager, SIGNAL(firePeerAdd(QString)), SLOT(OnPeerAdd(QString)));
+		connect(m_P2PManager, SIGNAL(firePeerChange(QString)), SLOT(OnPeerChange(QString)));
+		connect(m_P2PManager, SIGNAL(firePeerRemove(QString)), SLOT(OnPeerRemove(QString)));
 
 		m_webManager = CWebManager::instance();
 		connect(m_webManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
