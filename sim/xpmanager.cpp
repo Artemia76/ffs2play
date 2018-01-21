@@ -118,6 +118,27 @@ namespace ffs2play
 		return SIM_VERSION::XPLANE;
 	}
 
+	void CXPManager::sendScrollingText(const QString& pMessage)
+	{
+
+	}
+	bool CXPManager::createAI(const QString& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject)
+	{
+		return false;
+	}
+	bool CXPManager::removeAI(uint& pObjectID)
+	{
+		return false;
+	}
+	bool CXPManager::updateAI(uint pObjectID, const CAircraftState& data)
+	{
+		return false;
+	}
+	void CXPManager::freezeAI(uint pObjectID, bool pState)
+	{
+
+	}
+
 	///
 	/// \brief CXPManager::OnReceiveDatagram
 	///
@@ -163,4 +184,6 @@ namespace ffs2play
 			}
 		}
 	}
+
+
 }

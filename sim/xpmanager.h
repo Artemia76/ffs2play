@@ -69,8 +69,13 @@ namespace ffs2play
 		void        close();
 		void        main_loop();
 		SIM_VERSION getVersion();
+		void		sendScrollingText(const QString& pMessage);
+		bool		createAI(const QString& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject);
+		bool		removeAI(uint& pObjectID);
+		bool		updateAI(uint pObjectID, const CAircraftState& data);
+		void		freezeAI(uint pObjectID, bool pState);
 	private slots:
-		void OnReceiveDatagram(const QNetworkDatagram* datagram);
+		void		OnReceiveDatagram(const QNetworkDatagram* datagram);
 	};
 }
 #endif // XPMANAGER_H

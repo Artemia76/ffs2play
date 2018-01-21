@@ -68,7 +68,6 @@ SOURCES +=		main.cpp \
 				gui/mainwindow.cpp \
 				net/chttprequest.cpp \
 				net/peer.cpp \
-                net/peer.Event.Cpp \
                 net/peer.Requests.cpp \
 				net/udpserver.cpp \
 				protobuf/ffs2play.pb.cc \
@@ -87,7 +86,8 @@ SOURCES +=		main.cpp \
 				tools/crypto.cpp \
 				tools/getappversion.cpp \
                 tools/datetime.cpp \
-                tools/calculation.cpp
+                tools/calculation.cpp \
+    net/peer.Event.cpp
 
 HEADERS  +=     gui/dialogprofils.h \
 				gui/mainwindow.h \
