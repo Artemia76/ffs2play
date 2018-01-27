@@ -43,9 +43,12 @@ namespace ffs2play
 	private:
 								CLogger(QObject* pParent = 0);
 		static CLogger*			createInstance();
+		void					updatePattern();
 		CL_DEBUG_LEVEL			m_DebugLevel;
 		QSettings				m_settings;
 		bool					m_logToFile;
+		QString					m_filtreLog;
+		QRegExp					m_rx;
 
 	public:
 								~CLogger();
@@ -53,6 +56,7 @@ namespace ffs2play
 		static CLogger*			instance();
 		void					setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 		void					log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+		void					setFilter(const QString& pFilter);
 
 	signals:
 		void					fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);

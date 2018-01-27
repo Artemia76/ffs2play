@@ -38,7 +38,10 @@ namespace ffs2play
 		m_settings.beginGroup("Log");
 		m_DebugLevel = (CL_DEBUG_LEVEL)m_settings.value("DebugLevel",LEVEL_NONE).toLongLong();
 		m_logToFile = m_settings.value("LogToFile",false).toBool();
+		m_filtreLog = m_settings.value("FiltreLog","*").toString();
 		m_settings.endGroup();
+		m_rx.setPatternSyntax(QRegExp::Wildcard);
+		updatePattern();
 	}
 
 	///
@@ -98,6 +101,21 @@ namespace ffs2play
 	void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 	{
 		if (pLevel > m_DebugLevel) return;
+		if ((!m_rx.exactMatch(Texte))&&(pLevel>LEVEL_NONE)) return;
 		emit(fireLog(Texte,pColor,pLevel));
+	}
+
+	void CLogger::updatePattern()
+	{
+		m_rx.setPattern(m_pattern);
+	}
+
+	void CLogger::setFilter(const QString pFilter)
+	{
+		m_filtreLog=pFilter;
+		updatePattern();
+		m_settings.beginGroup("Log");
+		m_settings.setValue("FiltreLog",m_filtreLog);
+		m_settings.endGroup();
 	}
 }

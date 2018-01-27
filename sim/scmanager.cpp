@@ -815,7 +815,7 @@ namespace ffs2play
 			MoveData.ThrottleEng3 = pData.ThrottleEng3;
 			MoveData.ThrottleEng4 = pData.ThrottleEng4;
 			SimConnect_SetDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_DEFINITION_ID)DEFINITION_ID::AI_MOVE,pObjectID,SIMCONNECT_DATA_SET_FLAG_DEFAULT,0,sizeof(AIMoveStruct),&MoveData);
-			trace("SimConnect_SetDataOnSimObject:808");
+			trace("SimConnect_SetDataOnSimObject:818");
 			return true;
 		}
 		return false;

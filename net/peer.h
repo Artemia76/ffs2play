@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * Peer.h is part of FF2Play project
+ *
+ * This class purpose a dialog interface to manage account profils
+ * to connect severals FFS2Play networks servers
+ * **************************************************************************/
+
 #ifndef PEER_H
 #define PEER_H
 
