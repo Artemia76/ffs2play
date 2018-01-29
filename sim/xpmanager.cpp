@@ -177,7 +177,7 @@ namespace ffs2play
 			default:
 			{
 #ifdef FFS_DEBUG
-			m_log->log("CXPManager : " + tr("unknown code = ") +
+			m_log->log("XPManager : " + tr("unknown code = ") +
 					QString(Code),
 					Qt::darkBlue,LEVEL_VERBOSE);
 #endif

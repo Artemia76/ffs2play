@@ -107,15 +107,20 @@ namespace ffs2play
 
 	void CLogger::updatePattern()
 	{
-		m_rx.setPattern(m_pattern);
+		m_rx.setPattern(m_filtreLog);
 	}
 
-	void CLogger::setFilter(const QString pFilter)
+	void CLogger::setFilter(const QString& pFilter)
 	{
 		m_filtreLog=pFilter;
 		updatePattern();
 		m_settings.beginGroup("Log");
 		m_settings.setValue("FiltreLog",m_filtreLog);
 		m_settings.endGroup();
+	}
+
+	QString CLogger::getFilter()
+	{
+		return m_filtreLog;
 	}
 }

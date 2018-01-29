@@ -120,7 +120,7 @@ namespace ffs2play
 	void CPeer::Stop()
 	{
 		if (m_disabled) return;
-		//Spawn_AI(false);
+		spawnAI(false);
 		m_heartBeat.stop();
 		disconnect(m_server, SIGNAL(fireIncomingData(const QNetworkDatagram*)), this,SLOT(OnReceiveMessage(const QNetworkDatagram*)));
 		disconnect(m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
@@ -326,7 +326,7 @@ namespace ffs2play
 					}
 					m_old_fps = pFPS;
 					timespan Temps = duration_cast<milliseconds>(milliseconds(1000) / FPSAvg);
-					double CoefInterpol = Temps / (m_futurData.TimeStamp - m_actualPos.TimeStamp);
+					double CoefInterpol = (double)Temps.count() / (double)duration_cast<milliseconds>(m_futurData.TimeStamp - m_actualPos.TimeStamp).count();
 					m_lastRender = pTime;
 					m_AIData.Altitude += m_deltaAltitude * CoefInterpol;
 					m_AIData.Latitude += m_deltaLatitude * CoefInterpol;
@@ -350,7 +350,10 @@ namespace ffs2play
 						m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.CG_Height;
 					}
 				}
-				if (m_spawned >= 7) m_simManager->updateAI(m_objectID, m_AIData);
+				if (m_spawned >= 7)
+				{
+					m_simManager->updateAI(m_objectID, m_AIData);
+				}
 			}
 		}
 		m_mutex.unlock();

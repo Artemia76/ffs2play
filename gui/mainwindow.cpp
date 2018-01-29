@@ -68,6 +68,16 @@ namespace ffs2play
 				break;
 			}
 		}
+		int id=ui->cb_filter->findText(m_log->getFilter(),Qt::MatchExactly);
+		if (id >=0)
+		{
+			ui->cb_filter->setCurrentIndex(id);
+		}
+		else
+		{
+			ui->cb_filter->addItem(m_log->getFilter());
+			ui->cb_filter->setCurrentIndex(ui->cb_filter->findText(m_log->getFilter(),Qt::MatchExactly));
+		}
 		connect(m_log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)));
 		ui->pteLogger->setPalette(p);
 		ui->pteLogger->setMaximumBlockCount(m_maxLine);
@@ -468,4 +478,9 @@ void ffs2play::MainWindow::on_rb_filterNormal_toggled(bool checked)
 void ffs2play::MainWindow::on_rb_filterVerbose_toggled(bool checked)
 {
 	if (checked) m_log->setDebugLevel(LEVEL_VERBOSE);
+}
+
+void ffs2play::MainWindow::on_cb_filter_currentIndexChanged(const QString &arg1)
+{
+	m_log->setFilter(arg1);
 }

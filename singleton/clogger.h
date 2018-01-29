@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QColor>
+#include <QRegExp>
 
 namespace ffs2play
 {
@@ -57,6 +58,7 @@ namespace ffs2play
 		void					setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 		void					log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 		void					setFilter(const QString& pFilter);
+		QString					getFilter();
 
 	signals:
 		void					fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);

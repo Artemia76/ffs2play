@@ -204,6 +204,18 @@ namespace ffs2play
 	void CSCManager::InitSimConnect()
 	{
 		HRESULT hr;
+		// Create event id for joyst
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::SLIDER,"");
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::XAXIS,"");
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::YAXIS,"");
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::RZAXIS,"");
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::HAT,"");
+		// Create notification for freeze action to AI
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::FREEZE_LATLONG,"FREEZE_LATITUDE_LONGITUDE_SET");
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::FREEZE_ALTITUDE,"FREEZE_ALTITUDE_SET");
+		hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::FREEZE_ATTITUDE,"FREEZE_ATTITUDE_SET");
+
+		// Create notification for joystick events
 
 		// Données périodiques
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
@@ -288,6 +300,14 @@ namespace ffs2play
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "LIGHT NAV", "Bool", SIMCONNECT_DATATYPE_INT32);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "LIGHT RECOGNITION", "Bool", SIMCONNECT_DATATYPE_INT32);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "SMOKE ENABLE", "Bool", SIMCONNECT_DATATYPE_INT32);
+
+		// AI Update définition
+
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "PLANE ALTITUDE", "feet", SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "GROUND ALTITUDE", "feet", SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "Plane Longitude", "degrees", SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "Plane Latitude", "degrees", SIMCONNECT_DATATYPE_FLOAT64);
+
 
 		// Data events on change
 
@@ -674,20 +694,20 @@ namespace ffs2play
 			m_log->log("SCManager : " + tr("Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID Request = ") + QString::number(data->dwRequestID) +
 					   tr(" , Name = ") + it.value() +
 					   tr(" , Object_ID = ") + QString::number(data->dwObjectID),
-					   Qt::darkBlue,LEVEL_VERBOSE);
+					   Qt::darkBlue,LEVEL_NORMAL);
 #endif
 			SimConnect_AIReleaseControl(m_hSimConnect,data->dwObjectID, (SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::AI_RELEASE);
-			trace("SimConnect_AIReleaseControl:670");
+			trace("SimConnect_AIReleaseControl:679");
 			SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ATTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-			trace("SimConnect_TransmitClientEvent:672");
+			trace("SimConnect_TransmitClientEvent:681");
 			SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-			trace("SimConnect_TransmitClientEvent:674");
+			trace("SimConnect_TransmitClientEvent:684");
 			SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-			trace("SimConnect_TransmitClientEvent:677");
+			trace("SimConnect_TransmitClientEvent:686");
 			emit(fireSimAICreated(it.value(),data->dwObjectID));
 			m_AIProcess.remove(data->dwRequestID);
 			SimConnect_RequestDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + data->dwObjectID),DEFINITION_ID::AI_UPDATE,data->dwObjectID,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT,0,0,0);
-			trace("SimConnect_RequestDataOnSimObject:680");
+			trace("SimConnect_RequestDataOnSimObject:701");
 		}
 		else
 		{
@@ -708,8 +728,7 @@ namespace ffs2play
 	{
 		if(m_connected)
 		{
-			const char* str=pMessage.toStdString().c_str();
-			HRESULT result = SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,(SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::TEXT_SCROLL, sizeof(str),(void*)str);
+			HRESULT result = SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,(SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::TEXT_SCROLL, pMessage.length()+1,(void*)pMessage.toStdString().c_str());
 			trace("SimConnect_Text:702");
 			if (result == E_FAIL)
 			{
@@ -744,7 +763,7 @@ namespace ffs2play
 															pTail.toStdString().c_str(),
 															data,
 															(SIMCONNECT_DATA_REQUEST_ID)index);
-				trace("SimConnect_AICreateNonATCAircraft:732");
+				trace("SimConnect_AICreateNonATCAircraft:741");
 			}
 			else
 			{
@@ -752,7 +771,7 @@ namespace ffs2play
 															   pAircraft.toStdString().c_str(),
 															   data,
 															   (SIMCONNECT_DATA_REQUEST_ID)index);
-				trace("SimConnect_AICreateSimulatedObject:741");
+				trace("SimConnect_AICreateSimulatedObject:750");
 			}
 			if (result==S_OK) return true;
 		}
@@ -767,17 +786,17 @@ namespace ffs2play
 		if (m_connected)
 		{
 			HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect,pObjectID,(SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + pObjectID));
-			trace("SimConnect_AIRemoveObject:759");
+			trace("SimConnect_AIRemoveObject:768");
 			if (result==S_OK) return true;
 		}
-		m_log->log("SCManager: " + tr("Delete Aircrfaft failed"),Qt::darkMagenta);
+		m_log->log("SCManager : " + tr("Delete Aircrfaft failed"),Qt::darkMagenta);
 		return false;
 	}
 
 	bool CSCManager::updateAI(uint pObjectID, const CAircraftState& pData)
 	{
 #ifdef FFS_DEBUG
-		m_log->log("SCManager : " + tr("updateAI called"), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("SCManager : " + tr("updateAI called"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 		if (m_connected && (pObjectID>0))
 		{
@@ -815,7 +834,7 @@ namespace ffs2play
 			MoveData.ThrottleEng3 = pData.ThrottleEng3;
 			MoveData.ThrottleEng4 = pData.ThrottleEng4;
 			SimConnect_SetDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_DEFINITION_ID)DEFINITION_ID::AI_MOVE,pObjectID,SIMCONNECT_DATA_SET_FLAG_DEFAULT,0,sizeof(AIMoveStruct),&MoveData);
-			trace("SimConnect_SetDataOnSimObject:818");
+			trace("SimConnect_SetDataOnSimObject:816");
 			return true;
 		}
 		return false;
@@ -824,23 +843,23 @@ namespace ffs2play
 	void CSCManager::freezeAI(uint pObjectID, bool pState)
 	{
 #ifdef FFS_DEBUG
-		m_log->log("SCManager : " + tr("freezeAI called"), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("SCManager : " + tr("freezeAI called"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 		if (m_connected && (pObjectID > 0))
 		{
 			if (pState)
 			{
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-				trace("SimConnect_TransmitClientEvent:824");
+				trace("SimConnect_TransmitClientEvent:832");
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-				trace("SimConnect_TransmitClientEvent:826");
+				trace("SimConnect_TransmitClientEvent:834");
 			}
 			else
 			{
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-				trace("SimConnect_TransmitClientEvent:831");
+				trace("SimConnect_TransmitClientEvent:839");
 				SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-				trace("SimConnect_TransmitClientEvent:832");
+				trace("SimConnect_TransmitClientEvent:841");
 			}
 		}
 

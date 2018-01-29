@@ -342,7 +342,7 @@ namespace ffs2play {
 					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,!data.externalIP.isEqual(IP),&data.localIPs));
 					emit(firePeerAdd(data.CallSign));
 #ifdef FFS_DEBUG
-					m_log->log("P2PManager : " + tr("Adding P2P user callsign = ")+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue);
+					m_log->log("P2PManager : " + tr("Adding P2P user callsign = ")+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
 #endif
 				}
 				else

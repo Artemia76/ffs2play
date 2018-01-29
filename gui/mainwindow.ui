@@ -622,9 +622,52 @@
      </item>
      <item>
       <widget class="QComboBox" name="cb_filter">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
        <item>
         <property name="text">
          <string>*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AIMapping*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HttpRequest*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>P2PManager*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Peer*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>UPDServer*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SCManager*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>XPManager*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>WEBManager*</string>
         </property>
        </item>
       </widget>

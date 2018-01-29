@@ -72,6 +72,8 @@ namespace ffs2play
 
 		void on_rb_filterVerbose_toggled(bool checked);
 
+		void on_cb_filter_currentIndexChanged(const QString &arg1);
+
 	private:
 		Ui::MainWindow*	ui;
 		CLogger*		m_log;
