@@ -61,7 +61,7 @@ namespace ffs2play
 		else if (result == Check)
 		{
 			QDataStream stream(Profils);
-			stream.setVersion(QDataStream::Qt_5_10);
+			stream.setVersion(QDataStream::Qt_5_9);
 			m_users.clear();
 			stream >> m_users;
 			if ((num > m_users.count()) || (num <1))
@@ -128,7 +128,7 @@ namespace ffs2play
 	{
 		QByteArray profils;
 		QDataStream stream(&profils,QIODevice::WriteOnly);
-		stream.setVersion(QDataStream::Qt_5_10);
+		stream.setVersion(QDataStream::Qt_5_9);
 		stream << m_users;
 		QCryptographicHash Hash(QCryptographicHash::Md5);
 		Hash.addData(profils);

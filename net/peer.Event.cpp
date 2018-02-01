@@ -25,26 +25,26 @@
 
 namespace ffs2play
 {
-	void CPeer::OnReceiveMessage(const QNetworkDatagram* pDatagram)
+	void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
 	{
 	#ifdef FFS_DEBUG
 		m_log->log("Peer [" + m_callSign + "] " + tr("receive data from ") +
-					pDatagram->senderAddress().toString() +
-					" port = " + QString::number(pDatagram->senderPort()) +
-					" datagram = " + pDatagram->data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
+					pDatagram.senderAddress().toString() +
+					" port = " + QString::number(pDatagram.senderPort()) +
+					" datagram = " + pDatagram.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
 	#endif
 		if(m_EP.isNull())
 		{
-		  if(m_internalIP.contains(pDatagram->senderAddress()))
+		  if(m_internalIP.contains(pDatagram.senderAddress()))
 		  {
-			  m_EP=pDatagram->senderAddress();
+			  m_EP=pDatagram.senderAddress();
 		  }
 		  else return;
 		}
-		else if((!m_EP.isEqual(pDatagram->senderAddress())) || (m_port != pDatagram->senderPort())) return;
+		else if((!m_EP.isEqual(pDatagram.senderAddress())) || (m_port != pDatagram.senderPort())) return;
 
 		datetime curr_time=Now();
-		QByteArray data(pDatagram->data());
+		QByteArray data(pDatagram.data());
 		QDataStream stream(&data,QIODevice::ReadOnly);
 		stream.setByteOrder(QDataStream::LittleEndian);
 		quint8 Code;
@@ -85,7 +85,7 @@ namespace ffs2play
 			{
 				QString Message;
 				stream >> Message;
-				//m_simManager->sendScrollingText(CallSign + " : " + Message);
+				m_simManager->sendScrollingText(CallSign + " : " + Message);
 				break;
 			}
 			case Protocol::DATA:
@@ -106,6 +106,9 @@ namespace ffs2play
 						AirData ReceivedData;
 						ReceivedData.ParseFromString(data.toStdString());
 						m_data.fromAirData(ReceivedData);
+#ifdef FFS_DEBUG
+						m_log->log("Peer [" + m_callSign + "] " + tr(" LAtitude = ") + QString::number(m_data.Latitude), Qt::darkBlue,LEVEL_NORMAL);
+#endif
 						m_data.TimeStamp += m_decalage;
 						if (m_data.TimeStamp<= m_oldData.TimeStamp)
 						{

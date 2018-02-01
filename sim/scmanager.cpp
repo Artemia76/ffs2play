@@ -20,8 +20,6 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
-#ifdef FFS_WITH_SC
-
 #include "scmanager.h"
 #include "singleton/singleton.h"
 
@@ -876,4 +874,3 @@ namespace ffs2play
 		}
 	}
 }
-#endif //FFS_WITH_SC

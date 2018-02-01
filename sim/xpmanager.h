@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QMutex>
 #include <QDateTime>
 
 #include "sim/simconnector.h"
@@ -48,7 +49,7 @@ namespace ffs2play
 	/// \brief The CSCManager class
 	///
 
-	class CXPManager : public ffs2play::SimConnector
+	class CXPManager : public SimConnector
 	{
 		Q_OBJECT
 	public:
@@ -63,19 +64,21 @@ namespace ffs2play
 		QDateTime   m_LastSim;
 		UDPServer*  Server;
 		AirData     PlayerData;
+		QMutex		m_Mutex;
 
 	protected:
 		bool        open();
 		void        close();
 		void        main_loop();
 		SIM_VERSION getVersion();
-		void		sendScrollingText(const QString& pMessage);
-		bool		createAI(const QString& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject);
-		bool		removeAI(uint& pObjectID);
-		bool		updateAI(uint pObjectID, const CAircraftState& data);
-		void		freezeAI(uint pObjectID, bool pState);
+		void		sendScrollingText(const QString&);
+		bool		createAI(const QString&, const QString&, const CAircraftState&, bool);
+		bool		removeAI(uint&);
+		bool		updateAI(uint, const CAircraftState&);
+		void		freezeAI(uint, bool);
+		CAircraftState	getState();
 	private slots:
-		void		OnReceiveDatagram(const QNetworkDatagram* datagram);
+		void		OnReceiveDatagram(QNetworkDatagram datagram);
 	};
 }
 #endif // XPMANAGER_H

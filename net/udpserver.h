@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QUdpSocket>
 #include <QSettings>
+#include <QNetworkDatagram>
 
 #include "singleton/clogger.h"
 
@@ -47,7 +48,7 @@ namespace ffs2play
 		void		setPort(int pPort);
 		void		send(const QNetworkDatagram& pData);
 	signals:
-		void		fireIncomingData (const QNetworkDatagram*);
+		void		fireIncomingData (QNetworkDatagram);
 	private slots:
 		void		incomingData () ;
 	};

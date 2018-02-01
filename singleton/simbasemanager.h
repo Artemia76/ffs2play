@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QApplication>
 #include "singleton/clogger.h"
 #include "sim/simconnector.h"
 

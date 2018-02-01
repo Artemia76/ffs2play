@@ -81,6 +81,8 @@ namespace ffs2play
 		m_initialized=true;
 		connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
 		connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+		CAircraftState state;
+		emit m_connector->fireSimVariableEvent(state);
 		connect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
 		connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
 		connect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
@@ -156,6 +158,7 @@ namespace ffs2play
 		while (m_connector->isConnected())
 		{
 			m_connector->main_loop();
+			QApplication::processEvents();
 			m_thread->msleep(1);
 		}
 		emit(finished());
@@ -170,7 +173,7 @@ namespace ffs2play
 	{
 		CAircraftState State;
 		if (m_initialized && (m_connector!=NULL))
-			State = m_connector->m_state;
+			State = m_connector->getState();
 		return State;
 	}
 

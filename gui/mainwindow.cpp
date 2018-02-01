@@ -128,9 +128,9 @@ namespace ffs2play
 		m_settings.beginGroup("Log");
 		m_settings.setValue("MaxLine",m_maxLine);
 		m_settings.endGroup();
-		m_webManager->disconnect();
-		m_P2PManager->init(false);
-		m_simManager->close();
+		if (m_webManager!=nullptr) m_webManager->Disconnect();
+		if (m_P2PManager!=nullptr) m_P2PManager->init(false);
+		if (m_simManager!=nullptr) m_simManager->close();
 	}
 
 	///
@@ -453,15 +453,18 @@ namespace ffs2play
 
 	void MainWindow::OnPeerRemove(QString pCallSign)
 	{
-		QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
-		if (item_list.count()>0)
+		//QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
+		//if (item_list.count()>0)
+		for (int i=0; ui->lwPeer->count();i++)
 		{
-			delete item_list[0];
+			if (ui->lwPeer->item(i)->text()==pCallSign)
+			{
+				QListWidgetItem* item = ui->lwPeer->takeItem(i);
+				delete item;
+				return;
+			}
 		}
-		else
-		{
-			m_log->log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
-		}
+		m_log->log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
 	}
 }
 

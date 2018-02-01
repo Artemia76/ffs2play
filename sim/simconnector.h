@@ -112,11 +112,9 @@ virtual	bool			createAI(const QString& pAircraft,const QString& Tail,const CAirc
 virtual	bool			removeAI(uint& pObjectID)=0;
 virtual bool			updateAI(uint pObjectID, const CAircraftState& data)=0;
 virtual	void			freezeAI(uint pObjectID, bool pState)=0;
-
+virtual CAircraftState	getState()=0;
 	signals:
 		void			finished();
-		void			opened();
-		void			closed();
 		void			fireSimVariableEvent(CAircraftState);
 		void			fireSimEvent(SimEvent);
 		void			fireSimAICreated(QString,uint);

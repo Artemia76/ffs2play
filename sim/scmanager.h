@@ -23,8 +23,6 @@
 #ifndef SIMCONNECT_H
 #define SIMCONNECT_H
 
-#ifdef FFS_WITH_SC
-
 #include <QObject>
 #include <QThread>
 #include <QDateTime>
@@ -320,6 +318,4 @@ static	void		CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, voi
 		void		freezeAI(uint pObjectID,bool pState);
 	};
 }
-#endif // FFS_WITH_SC
-
 #endif // SIMCONNECT_H

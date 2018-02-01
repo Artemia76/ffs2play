@@ -42,7 +42,7 @@ namespace ffs2play
 		m_LocalPort=47600;
 		m_DestPort=47500;
 		Server = new UDPServer(this);
-		connect (Server,SIGNAL(fireIncomingData(const QNetworkDatagram*)), this,SLOT(OnReceiveDatagram(const QNetworkDatagram*)));
+		connect (Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
 		Server->setPort(m_LocalPort);
 		Server->start();
 	}
@@ -74,7 +74,6 @@ namespace ffs2play
 				QApplication::processEvents();
 				wait++;
 			}
-			if (m_connected) emit(opened());
 			return m_connected;
 		}
 		return false;
@@ -95,7 +94,6 @@ namespace ffs2play
 			Server->send(Output);
 			m_connected=false;
 			m_log->log(tr("Disconnected from XPlane."));
-			emit(closed());
 		}
 	}
 
@@ -106,6 +104,7 @@ namespace ffs2play
 
 	void CXPManager::main_loop()
 	{
+
 	}
 
 	///
@@ -118,23 +117,23 @@ namespace ffs2play
 		return SIM_VERSION::XPLANE;
 	}
 
-	void CXPManager::sendScrollingText(const QString& pMessage)
+	void CXPManager::sendScrollingText(const QString& /*pMessage*/)
 	{
 
 	}
-	bool CXPManager::createAI(const QString& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject)
+	bool CXPManager::createAI(const QString& /*pAircraft*/,const QString& /*Tail*/,const CAircraftState& /*Data*/,bool /*pNonAIObject*/)
 	{
 		return false;
 	}
-	bool CXPManager::removeAI(uint& pObjectID)
+	bool CXPManager::removeAI(uint& /*pObjectID*/)
 	{
 		return false;
 	}
-	bool CXPManager::updateAI(uint pObjectID, const CAircraftState& data)
+	bool CXPManager::updateAI(uint /*pObjectID*/, const CAircraftState& /*data*/)
 	{
 		return false;
 	}
-	void CXPManager::freezeAI(uint pObjectID, bool pState)
+	void CXPManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
 	{
 
 	}
@@ -143,9 +142,9 @@ namespace ffs2play
 	/// \brief CXPManager::OnReceiveDatagram
 	///
 
-	void CXPManager::OnReceiveDatagram(const QNetworkDatagram* datagram)
+	void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
 	{
-		QByteArray data(datagram->data());
+		QByteArray data(datagram.data());
 		QDataStream stream(&data,QIODevice::ReadOnly);
 		quint8 Code;
 		stream>>Code;
@@ -162,16 +161,22 @@ namespace ffs2play
 			}
 			case DATA_SEND:
 			{
+				m_Mutex.lock();
 				try
 				{
 					PlayerData.ParseFromString(data.toStdString());
 					m_state.fromAirData(PlayerData);
-					emit (fireSimVariableEvent(m_state));
+#ifdef FFS_DEBUG
+					m_log->log("XPManager : " + tr("Receive DATA_SEND event"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+					emit(fireSimVariableEvent(m_state));
+					emit(fireSimEventFrame(20,50));
 				}
 				catch (std::exception& e)
 				{
 					m_log->log(tr("DataSend Error : ") + QString(e.what()),Qt::magenta);
 				}
+				m_Mutex.unlock();
 				break;
 			}
 			default:
@@ -185,5 +190,12 @@ namespace ffs2play
 		}
 	}
 
-
+	CAircraftState CXPManager::getState()
+	{
+		CAircraftState state;
+		m_Mutex.lock();
+		state=m_state;
+		m_Mutex.unlock();
+		return state;
+	}
 }

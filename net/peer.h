@@ -228,7 +228,7 @@ namespace ffs2play
 	signals:
 
 	private slots:
-		void					OnReceiveMessage(const QNetworkDatagram* pDatagram);
+		void					OnReceiveMessage(QNetworkDatagram pDatagram);
 		void					OnSimStateChange(CAircraftState pState);
 		void					OnSimEvent(SimEvent);
 		void					OnSimEventFrame(float,float);

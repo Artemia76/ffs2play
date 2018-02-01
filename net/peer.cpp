@@ -84,7 +84,7 @@ namespace ffs2play
 	void CPeer::Start()
 	{
 		if (!m_disabled) return;
-		connect(m_server, SIGNAL(fireIncomingData(const QNetworkDatagram*)), this, SLOT(OnReceiveMessage(const QNetworkDatagram*)));
+		connect(m_server, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
 		connect(m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
 		connect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)), this, SLOT(OnSimStateChange(CAircraftState)));
 		connect(m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
@@ -122,10 +122,10 @@ namespace ffs2play
 		if (m_disabled) return;
 		spawnAI(false);
 		m_heartBeat.stop();
-		disconnect(m_server, SIGNAL(fireIncomingData(const QNetworkDatagram*)), this,SLOT(OnReceiveMessage(const QNetworkDatagram*)));
+		disconnect(m_server, SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveMessage(QNetworkDatagram)));
 		disconnect(m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
-		disconnect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)),this, SLOT(OnStateChange(CAircraftState)));
-		disconnect(m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnEventFrame(float,float)));
+		disconnect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)),this, SLOT(OnSimStateChange(CAircraftState)));
+		disconnect(m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
 		disconnect(m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
 		disconnect(m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
 		disconnect(m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
@@ -235,7 +235,6 @@ namespace ffs2play
 				m_actualPos.set_heading(m_AIData.Heading);
 				m_actualPos.set_bank(m_AIData.Bank);
 				m_actualPos.set_pitch(m_AIData.Pitch);*/
-
 				m_futurData.TimeStamp = m_lastRender + m_predictiveTime;
 				CoefHoriz = (m_futurData.TimeStamp - m_data.TimeStamp) / m_remoteRefreshRate;
 				m_futurData.Altitude = m_data.Altitude + ((m_data.Altitude - m_oldData.Altitude) * CoefHoriz);

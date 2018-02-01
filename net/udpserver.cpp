@@ -34,15 +34,14 @@ namespace ffs2play
 
 	UDPServer::UDPServer(QObject *pParent) : QObject(pParent)
 	{
-		qRegisterMetaType<const QNetworkDatagram*>("const QNetworkDatagram*");
+		qRegisterMetaType<QNetworkDatagram>("QNetworkDatagram");
 		m_log = CLogger::instance();
 	#ifdef FFS_DEBUG
 		m_log->log("UPDServer : " + tr("constructor"), Qt::darkBlue,LEVEL_NORMAL);
 	#endif
 		m_running = false;
 		m_pListenner = new QUdpSocket(this);
-		connect(m_pListenner, SIGNAL(readyRead()),
-					this, SLOT(incomingData()));
+		connect(m_pListenner, SIGNAL(readyRead()),this, SLOT(incomingData()));
 		m_port = 0;
 	}
 
@@ -102,8 +101,7 @@ namespace ffs2play
 	{
 		while (m_pListenner->hasPendingDatagrams())
 		{
-			QNetworkDatagram datagram = m_pListenner->receiveDatagram();
-			emit fireIncomingData(&datagram);
+			emit(fireIncomingData(m_pListenner->receiveDatagram()));
 		}
 	}
 
