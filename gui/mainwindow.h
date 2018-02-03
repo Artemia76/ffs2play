@@ -29,10 +29,6 @@
 #include <QTimer>
 
 #include "singleton/clogger.h"
-#ifdef Q_OS_WIN
-	#include "sim/scmanager.h"
-#endif
-#include "sim/xpmanager.h"
 #include "singleton/simbasemanager.h"
 #include "net/chttprequest.h"
 #include "singleton/p2pmanager.h"
@@ -55,6 +51,7 @@ namespace ffs2play
 		void			onLog(const QString& pMessage,QColor pColor, CL_DEBUG_LEVEL pLevel);
 		void			onSCM_Opened();
 		void			onSCM_Closed();
+		void			onSCM_Loaded(SIM_TYPE);
 		void			onWM_Connected();
 		void			onWM_Disconnected();
 		void			onUpdate();
@@ -66,13 +63,11 @@ namespace ffs2play
 		void			OnPeerRemove(QString pCallSign);
 		void			OnPeerChange(QString pCallSign);
 		void			OnPeerAdd(QString pCallSign);
-		void on_rb_filterNone_toggled(bool checked);
-
-		void on_rb_filterNormal_toggled(bool checked);
-
-		void on_rb_filterVerbose_toggled(bool checked);
-
-		void on_cb_filter_currentIndexChanged(const QString &arg1);
+		void			on_rb_filterNone_toggled(bool checked);
+		void			on_rb_filterNormal_toggled(bool checked);
+		void			on_rb_filterVerbose_toggled(bool checked);
+		void			on_cb_filter_currentIndexChanged(const QString &arg1);
+		void			on_afFSType_triggered();
 
 	private:
 		Ui::MainWindow*	ui;

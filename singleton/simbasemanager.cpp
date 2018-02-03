@@ -35,14 +35,27 @@ namespace ffs2play
 	{
 		qRegisterMetaType<SimEvent>("SimEvent");
 		qRegisterMetaType<CAircraftState>("CAircraftState");
+		qRegisterMetaType<SIM_TYPE>("SIM_TYPE");
 		m_log = CLogger::instance();
 		m_connector =nullptr;
 		m_initialized = false;
 		m_bRunning = false;
+#ifdef Q_OS_WIN
+		m_simAvailable.append(SIM_TYPE::FSX);
+#endif
+		m_simAvailable.append(SIM_TYPE::XPLANE);
+		m_settings.beginGroup("Sim");
+		m_simType = (SIM_TYPE)m_settings.value("DefaultSim",(int)m_simAvailable.first()).toInt();
+		m_settings.endGroup();
+		if (!m_simAvailable.contains(m_simType))
+		{
+			m_simType=m_simAvailable.first();
+		}
 		m_thread = new QThread();
 		this->moveToThread(m_thread);
 		connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()));
 		connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
+		load(m_simType);
 	}
 
 	///
@@ -61,7 +74,7 @@ namespace ffs2play
 
 	simbasemanager::~simbasemanager()
 	{
-		close();
+		unload();
 	}
 
 	///
@@ -74,19 +87,53 @@ namespace ffs2play
 		return Singleton<simbasemanager>::instance(simbasemanager::createInstance);
 	}
 
-	void simbasemanager::init(SimConnector *p_connector)
+	void simbasemanager::load(SIM_TYPE pSimType)
 	{
-		if ((p_connector==NULL)||(m_initialized)) return;
-		m_connector=p_connector;
+		unload();
+		switch (pSimType)
+		{
+#ifdef Q_OS_WIN
+			case SIM_TYPE::FSX:
+			{
+				m_connector = new CSCManager(this);
+				break;
+			}
+#endif
+			case SIM_TYPE::XPLANE:
+			{
+				m_connector = new CXPManager(this);
+				break;
+			}
+			default:
+			{
+				return;
+			}
+		}
 		m_initialized=true;
 		connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
 		connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
-		CAircraftState state;
-		emit m_connector->fireSimVariableEvent(state);
 		connect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
 		connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
 		connect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
 		connect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+		emit(loaded(m_simType));
+	}
+
+	void simbasemanager::unload()
+	{
+		if (!m_initialized) return;
+		if (m_connector!=nullptr)
+		{
+			close();
+			disconnect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
+			disconnect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+			disconnect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
+			disconnect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
+			disconnect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
+			disconnect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+			delete m_connector;
+			m_connector=nullptr;
+		}
 	}
 
 	///
@@ -198,6 +245,26 @@ namespace ffs2play
 			Version = m_connector->getVersion();
 		}
 		return Version;
+	}
+
+	SIM_TYPE simbasemanager::getType()
+	{
+		return m_simType;
+	}
+
+	const QList<SIM_TYPE>& simbasemanager::getSimList()
+	{
+		return m_simAvailable;
+	}
+
+	void simbasemanager::setSimType(SIM_TYPE pSimType)
+	{
+		if (!m_simAvailable.contains(pSimType)) return;
+		m_simType = pSimType;
+		m_settings.beginGroup("Sim");
+		m_settings.setValue("DefaultSim",(int)m_simType);
+		m_settings.endGroup();
+		if (m_initialized) load(m_simType);
 	}
 
 	bool simbasemanager::createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData,bool pNonAIObject)

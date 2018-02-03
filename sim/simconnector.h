@@ -24,6 +24,7 @@
 #define SIMCONNECTOR_H
 
 #include <QObject>
+#include <QMutex>
 #include "sim/aircraftstate.h"
 #include "singleton/clogger.h"
 #include "tools/datetime.h"
@@ -103,6 +104,8 @@ namespace ffs2play
 		CLogger*		m_log;
 		bool			m_connected;
 		CAircraftState  m_state;
+		QMutex			m_Mutex;
+
 virtual	bool			open()=0;
 virtual void			close()=0;
 virtual	void			main_loop()=0;
@@ -112,7 +115,7 @@ virtual	bool			createAI(const QString& pAircraft,const QString& Tail,const CAirc
 virtual	bool			removeAI(uint& pObjectID)=0;
 virtual bool			updateAI(uint pObjectID, const CAircraftState& data)=0;
 virtual	void			freezeAI(uint pObjectID, bool pState)=0;
-virtual CAircraftState	getState()=0;
+virtual CAircraftState	getState();
 	signals:
 		void			finished();
 		void			fireSimVariableEvent(CAircraftState);

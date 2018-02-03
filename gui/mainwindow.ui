@@ -322,6 +322,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="afFSType"/>
    <addaction name="afFSCon"/>
    <addaction name="afServeurCon"/>
    <addaction name="afProfil"/>
@@ -1171,6 +1172,18 @@
    </property>
    <property name="toolTip">
     <string>P2P Settings</string>
+   </property>
+  </action>
+  <action name="afFSType">
+   <property name="icon">
+    <iconset resource="../ressources.qrc">
+     <normaloff>:/gfx/p3d.png</normaloff>:/gfx/p3d.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sim Type</string>
+   </property>
+   <property name="toolTip">
+    <string>Choose Sim to use</string>
    </property>
   </action>
  </widget>

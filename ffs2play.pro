@@ -34,6 +34,7 @@ win32 {
 	OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
 	OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
 	CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
+    DEFINES += _WINSOCKAPI_
 CONFIG( debug, debug|release ) {
 	CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\Win32\Output\Debug"
 	MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Debug

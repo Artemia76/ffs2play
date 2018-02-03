@@ -39,4 +39,13 @@ namespace ffs2play
 	{
 		return m_connected;
 	}
+
+	CAircraftState SimConnector::getState()
+	{
+		CAircraftState state;
+		m_Mutex.lock();
+		state=m_state;
+		m_Mutex.unlock();
+		return state;
+	}
 }

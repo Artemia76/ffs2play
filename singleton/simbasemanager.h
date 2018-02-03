@@ -26,12 +26,25 @@
 #include <QObject>
 #include <QThread>
 #include <QApplication>
+#include <QSettings>
 #include "singleton/clogger.h"
-#include "sim/simconnector.h"
 
+//#include "sim/simconnector.h"
+
+#ifdef Q_OS_WIN
+	#include "sim/scmanager.h"
+#endif
+#include "sim/xpmanager.h"
 
 namespace ffs2play
 {
+	enum class SIM_TYPE
+	{
+		FSX,
+		XPLANE,
+		SIMGEAR
+	};
+
 	class simbasemanager : public QObject
 	{
 		Q_OBJECT
@@ -39,15 +52,19 @@ namespace ffs2play
 	static	simbasemanager*		createInstance();
 		explicit				simbasemanager(QObject *parent = nullptr);
 		CLogger*				m_log;
+		QSettings				m_settings;
 		bool					m_initialized;
 		SimConnector*			m_connector;
 		QThread*				m_thread;
 		bool					m_bRunning;
+		SIM_TYPE				m_simType;
+		QList<SIM_TYPE>			m_simAvailable;
 
 	public:
 	static simbasemanager*		instance();
 								~simbasemanager();
-		void					init(SimConnector* p_connector);
+		void					load(SIM_TYPE pSimType);
+		void					unload();
 		void					open();
 		void					close();
 		bool					isConnected();
@@ -55,6 +72,9 @@ namespace ffs2play
 		const CAircraftState	getAircraftState();
 		void					sendScrollingText(const QString& pMessage);
 		SIM_VERSION				getVersion();
+		SIM_TYPE				getType();
+		const QList<SIM_TYPE>&	getSimList();
+		void					setSimType(SIM_TYPE pSimType);
 		bool					createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData, bool pNonAIObject);
 		bool					removeAI(uint& pObjectID);
 		bool					updateAI(uint pObjectID, const CAircraftState& pData);
@@ -73,6 +93,7 @@ namespace ffs2play
 
 	signals:
 		void					finished();
+		void					loaded(SIM_TYPE);
 		void					opened();
 		void					closed();
 		void					fireSimVariableEvent(CAircraftState);

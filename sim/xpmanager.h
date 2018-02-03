@@ -25,14 +25,11 @@
 
 #include <QObject>
 #include <QThread>
-#include <QMutex>
 #include <QDateTime>
 
 #include "sim/simconnector.h"
 #include "net/udpserver.h"
 #include "protobuf/ffs2play.pb.h"
-
-#pragma pack(1)
 
 namespace ffs2play
 {
@@ -56,29 +53,27 @@ namespace ffs2play
 		explicit CXPManager(QObject *parent = 0);
 		~CXPManager();
 	private:
-		qint64      m_SimRate;
-		qint64      m_VariableRate;
-		quint16     m_DestPort;
-		quint16     m_LocalPort;
-		QDateTime   m_LastVariable;
-		QDateTime   m_LastSim;
-		UDPServer*  Server;
-		AirData     PlayerData;
-		QMutex		m_Mutex;
+		qint64			m_SimRate;
+		qint64			m_VariableRate;
+		quint16			m_DestPort;
+		quint16			m_LocalPort;
+		QDateTime		m_LastVariable;
+		QDateTime		m_LastSim;
+		UDPServer*		Server;
+		AirData			PlayerData;
 
 	protected:
-		bool        open();
-		void        close();
-		void        main_loop();
-		SIM_VERSION getVersion();
-		void		sendScrollingText(const QString&);
-		bool		createAI(const QString&, const QString&, const CAircraftState&, bool);
-		bool		removeAI(uint&);
-		bool		updateAI(uint, const CAircraftState&);
-		void		freezeAI(uint, bool);
-		CAircraftState	getState();
+		bool			open();
+		void			close();
+		void			main_loop();
+		SIM_VERSION		getVersion();
+		void			sendScrollingText(const QString&);
+		bool			createAI(const QString&, const QString&, const CAircraftState&, bool);
+		bool			removeAI(uint&);
+		bool			updateAI(uint, const CAircraftState&);
+		void			freezeAI(uint, bool);
 	private slots:
-		void		OnReceiveDatagram(QNetworkDatagram datagram);
+		void			OnReceiveDatagram(QNetworkDatagram datagram);
 	};
 }
 #endif // XPMANAGER_H

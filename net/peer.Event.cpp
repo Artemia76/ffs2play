@@ -106,9 +106,6 @@ namespace ffs2play
 						AirData ReceivedData;
 						ReceivedData.ParseFromString(data.toStdString());
 						m_data.fromAirData(ReceivedData);
-#ifdef FFS_DEBUG
-						m_log->log("Peer [" + m_callSign + "] " + tr(" LAtitude = ") + QString::number(m_data.Latitude), Qt::darkBlue,LEVEL_NORMAL);
-#endif
 						m_data.TimeStamp += m_decalage;
 						if (m_data.TimeStamp<= m_oldData.TimeStamp)
 						{

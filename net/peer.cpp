@@ -205,12 +205,6 @@ namespace ffs2play
 		if (m_spawned == 5)
 		{
 			m_AIData = m_data;
-			/*m_AIData.Altitude = m_data.altitude();
-			m_AIData.Latitude = m_data.latitude();
-			m_AIData.Longitude = m_data.longitude();
-			m_AIData.Heading = m_data.heading();
-			m_AIData.Pitch = m_data.pitch();
-			m_AIData.Bank = m_data.bank();*/
 			m_simManager->freezeAI(m_objectID, m_data.OnGround);
 			m_lastRender = Now();
 			if (m_spawned==5) m_spawned=6;
@@ -229,12 +223,6 @@ namespace ffs2play
 				// On mémorise la position actuelle de l'extrapolation
 				m_actualPos = m_AIData;
 				m_actualPos.TimeStamp = m_lastRender;
-				/*m_actualPos.set_altitude(m_AIData.Altitude);
-				m_actualPos.set_latitude(m_AIData.Latitude);
-				m_actualPos.set_longitude(m_AIData.Longitude);
-				m_actualPos.set_heading(m_AIData.Heading);
-				m_actualPos.set_bank(m_AIData.Bank);
-				m_actualPos.set_pitch(m_AIData.Pitch);*/
 				m_futurData.TimeStamp = m_lastRender + m_predictiveTime;
 				CoefHoriz = (m_futurData.TimeStamp - m_data.TimeStamp) / m_remoteRefreshRate;
 				m_futurData.Altitude = m_data.Altitude + ((m_data.Altitude - m_oldData.Altitude) * CoefHoriz);
@@ -318,10 +306,10 @@ namespace ffs2play
 				// If we have enougth data (new + old) we start run interpolation
 				if (m_spawned >=7)
 				{
-					float FPSAvg = pFPS;
+					double FPSAvg = pFPS;
 					if (m_old_fps != 0)
 					{
-						FPSAvg = (pFPS + (float)m_old_fps)/2;
+						FPSAvg = (double)(((double)pFPS + m_old_fps)/2);
 					}
 					m_old_fps = pFPS;
 					timespan Temps = duration_cast<milliseconds>(milliseconds(1000) / FPSAvg);

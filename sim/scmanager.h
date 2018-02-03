@@ -292,30 +292,31 @@ namespace ffs2play
 		QHash<uint, QString> m_AIProcess;
 		QHash<DWORD, QString> m_record;
 
-		void		InitSimConnect();
-		void		OnRecvOpen (SIMCONNECT_RECV_OPEN* data);
-		void		OnRecvQuit (SIMCONNECT_RECV* data);
-		void		OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data);
-		void		OnRecvException (SIMCONNECT_RECV_EXCEPTION* data);
-		void		OnRecvEvent (SIMCONNECT_RECV_EVENT* data);
-		void		OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data);
-		void		OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data);
-		void		OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data);
-		void		OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data);
-static	void		CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
-		void		process(SIMCONNECT_RECV *pData, DWORD cbData);
-		void		sendText (const QString& pMessage);
-		void		trace(const QString& pMessage);
+		void			InitSimConnect();
+		void			OnRecvOpen (SIMCONNECT_RECV_OPEN* data);
+		void			OnRecvQuit (SIMCONNECT_RECV* data);
+		void			OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data);
+		void			OnRecvException (SIMCONNECT_RECV_EXCEPTION* data);
+		void			OnRecvEvent (SIMCONNECT_RECV_EVENT* data);
+		void			OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data);
+		void			OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data);
+		void			OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data);
+		void			OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data);
+static	void			CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
+		void			process(SIMCONNECT_RECV *pData, DWORD cbData);
+		void			sendText (const QString& pMessage);
+		void			trace(const QString& pMessage);
 	protected:
-		bool		open();
-		void		close();
-		void		main_loop();
-		SIM_VERSION	getVersion();
-		void		sendScrollingText(const QString& pMessage);
-		bool		createAI(const QString &pAircraft, const QString &Tail, const CAircraftState &pData,bool pNonAIObject);
-		bool		updateAI(uint pObjectID, const CAircraftState& pData);
-		bool		removeAI(uint& pObjectID);
-		void		freezeAI(uint pObjectID,bool pState);
+		bool			open();
+		void			close();
+		void			main_loop();
+		SIM_VERSION		getVersion();
+
+		void			sendScrollingText(const QString& pMessage);
+		bool			createAI(const QString &pAircraft, const QString &Tail, const CAircraftState &pData,bool pNonAIObject);
+		bool			updateAI(uint pObjectID, const CAircraftState& pData);
+		bool			removeAI(uint& pObjectID);
+		void			freezeAI(uint pObjectID,bool pState);
 	};
 }
 #endif // SIMCONNECT_H

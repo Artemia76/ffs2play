@@ -45,12 +45,14 @@ namespace ffs2play
 		connect (Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
 		Server->setPort(m_LocalPort);
 		Server->start();
+		m_log->log("XPManager : " + tr("XPlane Module loaded"));
 	}
 
 	CXPManager::~CXPManager()
 	{
 		close();
 		Server->stop();
+		m_log->log("XPManager : " + tr("XPlane Module loaded"));
 		//delete Server;
 	}
 
@@ -188,14 +190,5 @@ namespace ffs2play
 #endif
 			}
 		}
-	}
-
-	CAircraftState CXPManager::getState()
-	{
-		CAircraftState state;
-		m_Mutex.lock();
-		state=m_state;
-		m_Mutex.unlock();
-		return state;
 	}
 }

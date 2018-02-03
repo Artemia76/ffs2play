@@ -86,11 +86,8 @@ namespace ffs2play
 		m_simManager = simbasemanager::instance();
 		connect(m_simManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
 		connect(m_simManager,  SIGNAL(closed()),this, SLOT(onSCM_Closed()));
-#ifdef Q_OS_WIN
-		m_simManager->init(new CSCManager());
-#else
-		m_simManager->init(new CXPManager());
-#endif
+		connect(m_simManager, SIGNAL(loaded(SIM_TYPE)),this, SLOT(onSCM_Loaded(SIM_TYPE)));
+		onSCM_Loaded(m_simManager->getType());
 		//Start timer to updating GUI
 		connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
 		m_updateTimer.start(500);
@@ -167,6 +164,22 @@ namespace ffs2play
 		ui->afFSCon->setIcon(QIcon(":/gfx/plane_gris.png"));
 	}
 
+	void MainWindow::onSCM_Loaded(SIM_TYPE pSimType)
+	{
+		switch (pSimType)
+		{
+			case SIM_TYPE::FSX:
+			{
+				ui->afFSType->setIcon(QIcon(":/gfx/p3d.png"));
+				break;
+			}
+			case SIM_TYPE::XPLANE:
+			{
+				ui->afFSType->setIcon(QIcon(":/gfx/xplane.png"));
+				break;
+			}
+		}
+	}
 	///
 	/// \brief MainWindow::onWM_Connected
 	///
@@ -486,4 +499,15 @@ void ffs2play::MainWindow::on_rb_filterVerbose_toggled(bool checked)
 void ffs2play::MainWindow::on_cb_filter_currentIndexChanged(const QString &arg1)
 {
 	m_log->setFilter(arg1);
+}
+
+void ffs2play::MainWindow::on_afFSType_triggered()
+{
+	if (m_simManager->getSimList().count()==1) return;
+	int index = m_simManager->getSimList().indexOf(m_simManager->getType());
+	if (index == (m_simManager->getSimList().count()-1))
+		index=0;
+	else
+		index++;
+	m_simManager->setSimType(m_simManager->getSimList()[index]);
 }

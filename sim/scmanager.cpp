@@ -38,11 +38,13 @@ namespace ffs2play
 	{
 		// Initialisation de l'état de connexion avec le simulateur
 		m_hSimConnect = NULL;
+		m_log->log("SCManager : " + tr("FSX/Prepar3D Module loaded"));
 	}
 
 	CSCManager::~CSCManager()
 	{
 		close();
+		m_log->log("SCManager : " + tr("FSX/Prepar3D Module unloaded"));
 	}
 
 	///
@@ -58,7 +60,6 @@ namespace ffs2play
 			{
 				// Keep connexion status
 				m_connected = true;
-				emit(opened());
 				return true;
 			}
 			else
@@ -80,7 +81,6 @@ namespace ffs2play
 			m_connected = false;
 			SimConnect_Close(m_hSimConnect);
 			m_log->log(tr("Disconnected from FS."));
-			emit(closed());
 		}
 	}
 
