@@ -784,8 +784,9 @@ namespace ffs2play
 		if (m_connected)
 		{
 			HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect,pObjectID,(SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + pObjectID));
+			pObjectID = 0;
 			trace("SimConnect_AIRemoveObject:768");
-			if (result==S_OK) return true;
+			return true;
 		}
 		m_log->log("SCManager : " + tr("Delete Aircrfaft failed"),Qt::darkMagenta);
 		return false;

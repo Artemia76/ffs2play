@@ -20,6 +20,7 @@ CONFIG(release, debug|release) {
 	MOC_DIR = release/.moc
 	RCC_DIR = release/.rcc
 	UI_DIR = release/.ui
+    DEFINES += FFS_DEBUG
 } else {
 	DESTDIR = debug
 	OBJECTS_DIR = debug/.obj

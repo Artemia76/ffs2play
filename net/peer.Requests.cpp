@@ -134,6 +134,7 @@ namespace ffs2play
 		stream << (quint8)Protocol::DATA;
 		if (m_counter_Out == 255) m_counter_Out = 0;
 		else m_counter_Out++;
+		m_log->log("Counter Out =" + QString::number(m_counter_Out));
 		stream << m_counter_Out;
 		stream << QByteArray::fromStdString(m_sendData.SerializeAsString());
 		send(Data);
