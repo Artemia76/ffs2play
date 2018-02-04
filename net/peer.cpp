@@ -70,6 +70,8 @@ namespace ffs2play
 
 	CPeer::~CPeer()
 	{
+		disconnect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
+		disconnect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
 		Stop();
 	}
 	void CPeer::Disable(bool pFlag)

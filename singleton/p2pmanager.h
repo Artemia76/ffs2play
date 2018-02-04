@@ -49,7 +49,7 @@ namespace ffs2play
 		bool				m_bUPNP;
 		bool				m_Shadow;
 		LocalIPList			m_InternalIP;
-		QString				m_ExternalIP;
+		QHostAddress		m_ExternalIP;
 		QString				m_CallSign;
 		UPNPUrls			m_urls;
 		IGDdatas			m_data;

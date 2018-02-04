@@ -225,14 +225,14 @@ namespace ffs2play {
 #endif
 					m_InternalIP.add_ip(lanaddr);
 					UPNP_GetExternalIPAddress(m_urls.controlURL,m_data.first.servicetype,wanaddr);
-					m_ExternalIP = QString(wanaddr);
+					m_ExternalIP = QHostAddress(QString(wanaddr));
 #ifdef FFS_DEBUG
 					m_log->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
 					for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
 					{
 						m_log->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
 					}
-					m_log->log("P2PManager : " + tr("Internet IP address : ") + QString(m_ExternalIP),Qt::darkBlue,LEVEL_NORMAL);
+					m_log->log("P2PManager : " + tr("Internet IP address : ") + m_ExternalIP.toString(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
 					error = UPNP_AddPortMapping(
 							m_urls.controlURL,
@@ -339,7 +339,7 @@ namespace ffs2play {
 				}
 				if ((!IP.isNull()) && (data.Port>0))
 				{
-					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,!data.externalIP.isEqual(IP),&data.localIPs));
+					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs));
 					emit(firePeerAdd(data.CallSign));
 #ifdef FFS_DEBUG
 					m_log->log("P2PManager : " + tr("Adding P2P user callsign = ")+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
@@ -398,7 +398,7 @@ namespace ffs2play {
 				m_log->log("P2PManager : " + tr("Remove user ") + m_peers[i]->CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
 				emit(firePeerRemove(m_peers[i]->CallSign));
-				m_peers.removeAt(i);
+				delete m_peers.takeAt(i);
 
 			}
 		}

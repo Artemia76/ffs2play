@@ -426,9 +426,9 @@ namespace ffs2play
 
 	void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 	{
-		m_log->log(tr("Get a SimConnect exception = ") + QString::number(data->dwException) +
+		m_log->log("SCManager : "+ tr("Get a SimConnect exception = ") + QString::number(data->dwException) +
 				   tr(" Related method invoked = ") + m_record.value(data->dwSendID),
-				   Qt::red);
+				   Qt::red,LEVEL_VERBOSE);
 	}
 
 	///
@@ -488,13 +488,13 @@ namespace ffs2play
 
 	void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 	{
-#ifdef FFS_DEBUG
-		m_log->log("SCManager : " + tr("OnRecvSimObjectData called"), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
 		switch (data->dwRequestID)
 		{
 			case REQUEST_ID::PERIODIQUE:
 			{
+#ifdef FFS_DEBUG
+				m_log->log("SCManager : " + tr("OnRecvSimObjectData Periodic"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 				UserState* Data =  (UserState*)(&data->dwData);
 				m_state.TimeStamp = Now();
 				m_state.AileronPos = Data->AileronPos;
@@ -542,6 +542,9 @@ namespace ffs2play
 			{
 				if (data->dwRequestID >= (DWORD)(REQUEST_ID::AI_UPDATE))
 				{
+#ifdef FFS_DEBUG
+					m_log->log("SCManager : " + tr("OnRecvSimObjectData AIUpdate ObjectID = ") + QString::number(data->dwRequestID-(DWORD)(REQUEST_ID::AI_UPDATE)), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 					AIUpdateStruct* Data =  (AIUpdateStruct*)(&data->dwData);
 					CAircraftState AIData;
 					AIData.Altitude = Data->AvionAltitude;
@@ -779,7 +782,7 @@ namespace ffs2play
 	bool CSCManager::removeAI(uint& pObjectID)
 	{
 #ifdef FFS_DEBUG
-		m_log->log("SCManager : " + tr("removeAI called"), Qt::darkBlue,LEVEL_NORMAL);
+		m_log->log("SCManager : " + tr("removeAI called object ID = ") + QString::number(pObjectID), Qt::darkBlue,LEVEL_NORMAL);
 #endif
 		if (m_connected)
 		{

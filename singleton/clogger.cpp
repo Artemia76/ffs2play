@@ -83,12 +83,14 @@ namespace ffs2play
 
 	void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
 	{
+		m_mutex.lock();
 		if (pLevel < LEVEL_NONE ) m_DebugLevel=LEVEL_NONE;
 		else if (pLevel > LEVEL_VERBOSE) m_DebugLevel=LEVEL_VERBOSE;
 		else m_DebugLevel = pLevel;
 		m_settings.beginGroup("Log");
 		m_settings.setValue("DebugLevel",QVariant(m_DebugLevel));
 		m_settings.endGroup();
+		m_mutex.unlock();
 	}
 
 	///
@@ -100,9 +102,12 @@ namespace ffs2play
 
 	void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 	{
-		if (pLevel > m_DebugLevel) return;
-		if ((!m_rx.exactMatch(Texte))&&(pLevel>LEVEL_NONE)) return;
-		emit(fireLog(Texte,pColor,pLevel));
+		m_mutex.lock();
+		if ((m_rx.exactMatch(Texte)&&(pLevel <= m_DebugLevel))||(pLevel==LEVEL_NONE))
+		{
+			emit(fireLog(Texte,pColor,pLevel));
+		}
+		m_mutex.unlock();
 	}
 
 	void CLogger::updatePattern()
@@ -112,11 +117,13 @@ namespace ffs2play
 
 	void CLogger::setFilter(const QString& pFilter)
 	{
+		m_mutex.lock();
 		m_filtreLog=pFilter;
 		updatePattern();
 		m_settings.beginGroup("Log");
 		m_settings.setValue("FiltreLog",m_filtreLog);
 		m_settings.endGroup();
+		m_mutex.unlock();
 	}
 
 	QString CLogger::getFilter()

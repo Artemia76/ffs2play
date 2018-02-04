@@ -27,6 +27,7 @@
 #include <QSettings>
 #include <QColor>
 #include <QRegExp>
+#include <QMutex>
 
 namespace ffs2play
 {
@@ -50,6 +51,7 @@ namespace ffs2play
 		bool					m_logToFile;
 		QString					m_filtreLog;
 		QRegExp					m_rx;
+		QMutex					m_mutex;
 
 	public:
 								~CLogger();

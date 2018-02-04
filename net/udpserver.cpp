@@ -101,7 +101,14 @@ namespace ffs2play
 	{
 		while (m_pListenner->hasPendingDatagrams())
 		{
-			emit(fireIncomingData(m_pListenner->receiveDatagram()));
+			QNetworkDatagram datagram = m_pListenner->receiveDatagram();
+#ifdef FFS_DEBUG
+			m_log->log("UDPServer : " + tr("receive data from ") +
+				datagram.senderAddress().toString() +
+				" port = " + QString::number(datagram.senderPort()) +
+				" datagram = " + datagram.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+			emit(fireIncomingData(datagram));
 		}
 	}
 
@@ -114,6 +121,12 @@ namespace ffs2play
 	{
 		if ((m_running) && (m_pListenner !=NULL))
 		{
+#ifdef FFS_DEBUG
+			m_log->log("UDPServer : " + tr("send data to ") +
+				pData.destinationAddress().toString() +
+				" port = " + QString::number(pData.destinationPort()) +
+				" datagram = " + pData.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 			m_pListenner->writeDatagram(pData);
 		}
 	}

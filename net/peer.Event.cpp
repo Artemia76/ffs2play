@@ -27,12 +27,6 @@ namespace ffs2play
 {
 	void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
 	{
-	#ifdef FFS_DEBUG
-		m_log->log("Peer [" + m_callSign + "] " + tr("receive data from ") +
-					pDatagram.senderAddress().toString() +
-					" port = " + QString::number(pDatagram.senderPort()) +
-					" datagram = " + pDatagram.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-	#endif
 		if(m_EP.isNull())
 		{
 		  if(m_internalIP.contains(pDatagram.senderAddress()))
@@ -100,11 +94,12 @@ namespace ffs2play
 					if (((CounterIn - m_counter_In) > 0) || (m_counter_In == 255))
 					{
 						m_oldData=m_data;
-						quint32 Len;
-						stream >> Len;
-						data.remove(0,6);
+						//quint32 Len;
+						//stream >> Len;
+						data.remove(0,2);
 						AirData ReceivedData;
-						ReceivedData.ParseFromString(data.toStdString());
+						std::istringstream in(data.toStdString());
+						ReceivedData.ParseFromIstream(&in);
 						m_data.fromAirData(ReceivedData);
 						m_data.TimeStamp += m_decalage;
 						if (m_data.TimeStamp<= m_oldData.TimeStamp)

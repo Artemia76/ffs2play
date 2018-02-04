@@ -21,6 +21,7 @@
 ****************************************************************************/
 
 #include "peer.h"
+#include <QBuffer>
 
 namespace ffs2play
 {
@@ -30,12 +31,6 @@ namespace ffs2play
 		{
 			QNetworkDatagram Output(pOutput,m_EP, m_port);
 			m_server->send(Output);
-#ifdef FFS_DEBUG
-			m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
-				Output.destinationAddress().toString() +
-				" port = " + QString::number(Output.destinationPort()) +
-				" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
 		}
 		else
 		{
@@ -44,12 +39,6 @@ namespace ffs2play
 				if (m_sel_iplocal >= m_internalIP.count()) m_sel_iplocal = 0;
 				QNetworkDatagram Output(pOutput,m_internalIP[m_sel_iplocal], m_port);
 				m_server->send(Output);
-#ifdef FFS_DEBUG
-				m_log->log("Peer [" + m_callSign + "] " + tr("send data to ") +
-					Output.destinationAddress().toString() +
-					" port = " + QString::number(Output.destinationPort()) +
-					" datagram = " + Output.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
-#endif
 				m_sel_iplocal++;
 			}
 		}
@@ -122,7 +111,6 @@ namespace ffs2play
 		QDataStream stream(&Data,QIODevice::WriteOnly);
 		stream.setByteOrder(QDataStream::LittleEndian);
 		stream << (quint8)Protocol::REQ_VERSION;
-		QNetworkDatagram Output(Data,m_EP,m_port);
 		send(Data);
 	}
 
@@ -134,9 +122,11 @@ namespace ffs2play
 		stream << (quint8)Protocol::DATA;
 		if (m_counter_Out == 255) m_counter_Out = 0;
 		else m_counter_Out++;
-		m_log->log("Counter Out =" + QString::number(m_counter_Out));
 		stream << m_counter_Out;
-		stream << QByteArray::fromStdString(m_sendData.SerializeAsString());
+		char* buffer = new char[m_sendData.ByteSize()];
+		m_sendData.SerializeToArray(buffer,m_sendData.ByteSize());
+		stream.writeRawData(buffer,m_sendData.ByteSize());
+		delete buffer;
 		send(Data);
 	}
 }

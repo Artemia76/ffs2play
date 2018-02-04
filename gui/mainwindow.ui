@@ -653,7 +653,7 @@
        </item>
        <item>
         <property name="text">
-         <string>UPDServer*</string>
+         <string>UDPServer*</string>
         </property>
        </item>
        <item>
