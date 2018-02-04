@@ -142,4 +142,8 @@ namespace ffs2play
 			}
 		}
 	}
+	bool CWebManager::isConnected()
+	{
+		return m_bConnected;
+	}
 }

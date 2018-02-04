@@ -110,6 +110,7 @@ namespace ffs2play
 		bool				DelayedExit;
 		void				Connect();
 		void				Disconnect();
+		bool				isConnected();
 	signals:
 		void				FireHelloCallback();
 		void				FireConnected();

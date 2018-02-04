@@ -676,8 +676,30 @@ namespace ffs2play
 	/// \param data
 	///
 
-	void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE*)
+	void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data)
 	{
+		switch((EVENT_ID)data->uEventID)
+		{
+			case EVENT_ID::ADDED_AIRCRAFT:
+			{
+#ifdef FFS_DEBUG
+				m_log->log("SCManager : " + tr("Object as been created type = ") + QString::number(data->eObjType)
+						+ tr(" with n°") + QString::number(data->dwData)
+					   ,Qt::darkBlue,LEVEL_NORMAL);
+#endif
+				break;
+			}
+			case EVENT_ID::REMOVED_AIRCRAFT:
+			{
+#ifdef FFS_DEBUG
+				m_log->log("SCManager : " + tr("Object as been removed type = ") + QString::number(data->eObjType)
+						+ tr(" with n°") + QString::number(data->dwData)
+					   ,Qt::darkBlue,LEVEL_NORMAL);
+#endif
+				fireSimAIRemoved(data->dwData);
+				break;
+			}
+		}
 	}
 
 	///
@@ -743,7 +765,7 @@ namespace ffs2play
 		if (m_connected)
 		{
 #ifdef FFS_DEBUG
-			m_log->log("SCManager : " + tr("Create_AI Title = ")+ pAircraft + tr(" ; Tail = ")+pTail, Qt::darkBlue,LEVEL_NORMAL);
+			m_log->log("SCManager : " + tr("Create_AI Title = ")+ pAircraft + tr(" ; Tail = ")+pTail + tr(" ; NonAIObject=") + QString::number(pNonAIObject), Qt::darkBlue,LEVEL_NORMAL);
 #endif
 			SIMCONNECT_DATA_INITPOSITION data;
 			data.Altitude = pData.Altitude;

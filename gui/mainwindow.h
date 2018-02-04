@@ -63,11 +63,13 @@ namespace ffs2play
 		void			OnPeerRemove(QString pCallSign);
 		void			OnPeerChange(QString pCallSign);
 		void			OnPeerAdd(QString pCallSign);
+		void			OnPeerReceiveTChat(QString,QString);
 		void			on_rb_filterNone_toggled(bool checked);
 		void			on_rb_filterNormal_toggled(bool checked);
 		void			on_rb_filterVerbose_toggled(bool checked);
 		void			on_cb_filter_currentIndexChanged(const QString &arg1);
 		void			on_afFSType_triggered();
+		void			on_leTchatSend_returnPressed();
 
 	private:
 		Ui::MainWindow*	ui;

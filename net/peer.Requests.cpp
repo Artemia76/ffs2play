@@ -46,12 +46,18 @@ namespace ffs2play
 
 	void CPeer::sendChat(const QString &pMessage)
 	{
+		QString Message=pMessage;
 		if (!m_onLine) return;
 		QByteArray Data;
 		QDataStream stream(&Data,QIODevice::WriteOnly);
+		if (Message.length()>255)
+		{
+			Message=Message.left(255);
+		}
 		stream.setByteOrder(QDataStream::LittleEndian);
 		stream << (quint8)Protocol::CHAT;
-		stream << pMessage;
+		stream << (byte)Message.length();
+		stream.writeRawData(Message.toStdString().c_str(),Message.length());
 		send(Data);
 	}
 
@@ -98,10 +104,14 @@ namespace ffs2play
 		stream.setByteOrder(QDataStream::LittleEndian);
 		stream << (quint8)Protocol::VERSION;
 		stream << PROTO_VERSION;
-		stream << QString::fromStdString(m_sendData.title());
-		stream << QString::fromStdString(m_sendData.type());
-		stream << QString::fromStdString(m_sendData.model());
-		stream << QString::fromStdString(m_sendData.category());
+		stream << (byte)m_sendData.title().length();
+		stream.writeRawData(m_sendData.title().c_str(),m_sendData.title().length());
+		stream << (byte)m_sendData.type().length();
+		stream.writeRawData(m_sendData.type().c_str(),m_sendData.type().length());
+		stream << (byte)m_sendData.model().length();
+		stream.writeRawData(m_sendData.model().c_str(),m_sendData.model().length());
+		stream << (byte)m_sendData.category().length();
+		stream.writeRawData(m_sendData.category().c_str(),m_sendData.category().length());
 		send(Data);
 	}
 

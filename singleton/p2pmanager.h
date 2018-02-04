@@ -62,16 +62,21 @@ namespace ffs2play
 		int					getPort();
 		QString				getLocalIPs();
 		void				setCallsign(const QString& pCallSign);
+		QString				getCallsign();
 		void				whazzup_Update(QVector<PeerData>& pWhazzup);
 		bool				isDisabled(const QString& pCallsign);
 		void				clear();
+		void				sendTChat(const QString& pMessage);
 
 	signals:
 		void				firePeerAdd(QString);
 		void				firePeerRemove(QString);
 		void				firePeerChange(QString);
+		void				fireSendTChat(QString);
+		void				fireReceiveTChat(QString,QString);
 	private slots:
 		void				onCheckAI();
+		void				onReceiveTChat(QString,QString);
 	};
 }
 #endif // P2PMANAGER_H

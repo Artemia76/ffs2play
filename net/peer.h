@@ -226,7 +226,9 @@ namespace ffs2play
 		void					createAI();
 		void					resetAI();
 	signals:
-
+		void					fireReceiveTChat(QString,QString);
+	protected slots:
+		void					OnSendTChat(QString);
 	private slots:
 		void					OnReceiveMessage(QNetworkDatagram pDatagram);
 		void					OnSimStateChange(CAircraftState pState);

@@ -295,6 +295,16 @@ namespace ffs2play {
 		m_CallSign = pCallSign;
 	}
 
+	QString CP2PManager::getCallsign()
+	{
+		return m_CallSign;
+	}
+
+	void CP2PManager::sendTChat(const QString &pMessage)
+	{
+		emit(fireSendTChat(pMessage));
+	}
+
 	void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
 	{
 		QString UserName = m_CallSign.replace('[','_');
@@ -340,6 +350,8 @@ namespace ffs2play {
 				if ((!IP.isNull()) && (data.Port>0))
 				{
 					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs));
+					connect(this, SIGNAL(fireSendTChat(QString)),m_peers.last(),SLOT(OnSendTChat(QString)));
+					connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
 					emit(firePeerAdd(data.CallSign));
 #ifdef FFS_DEBUG
 					m_log->log("P2PManager : " + tr("Adding P2P user callsign = ")+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
@@ -397,6 +409,8 @@ namespace ffs2play {
 #ifdef FFS_DEBUG
 				m_log->log("P2PManager : " + tr("Remove user ") + m_peers[i]->CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
+				disconnect(this, SIGNAL(fireSendTChat(QString)),m_peers.at(i),SLOT(OnSendTChat(QString)));
+				disconnect(m_peers.at(i), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
 				emit(firePeerRemove(m_peers[i]->CallSign));
 				delete m_peers.takeAt(i);
 
@@ -420,9 +434,16 @@ namespace ffs2play {
 #ifdef FFS_DEBUG
 			m_log->log("P2PManager : " + tr("Remove user ") + CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
+			disconnect(this, SIGNAL(fireSendTChat(QString)),*it,SLOT(OnSendTChat(QString)));
+			disconnect(*it, SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
 			delete (*it);
 			emit(firePeerRemove(CallSign));
 		}
 		m_peers.clear();
+	}
+
+	void CP2PManager::onReceiveTChat(QString pCallSign, QString pMessage)
+	{
+		emit (fireReceiveTChat(pCallSign,pMessage));
 	}
 }

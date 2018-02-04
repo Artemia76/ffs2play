@@ -97,6 +97,7 @@ namespace ffs2play
 		connect(m_P2PManager, SIGNAL(firePeerAdd(QString)), SLOT(OnPeerAdd(QString)));
 		connect(m_P2PManager, SIGNAL(firePeerChange(QString)), SLOT(OnPeerChange(QString)));
 		connect(m_P2PManager, SIGNAL(firePeerRemove(QString)), SLOT(OnPeerRemove(QString)));
+		connect(m_P2PManager, SIGNAL(fireReceiveTChat(QString,QString)), SLOT(OnPeerReceiveTChat(QString,QString)));
 
 		m_webManager = CWebManager::instance();
 		connect(m_webManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
@@ -481,6 +482,11 @@ namespace ffs2play
 	}
 }
 
+void ffs2play::MainWindow::OnPeerReceiveTChat(QString pCallSign,QString pMessage)
+{
+	ui->teTChatZone->append(pCallSign + " : " + pMessage);
+}
+
 void ffs2play::MainWindow::on_rb_filterNone_toggled(bool checked)
 {
 	if (checked) m_log->setDebugLevel(LEVEL_NONE);
@@ -510,4 +516,15 @@ void ffs2play::MainWindow::on_afFSType_triggered()
 	else
 		index++;
 	m_simManager->setSimType(m_simManager->getSimList()[index]);
+}
+
+void ffs2play::MainWindow::on_leTchatSend_returnPressed()
+{
+	QString Message = ui->leTchatSend->text();
+	ui->leTchatSend->clear();
+	if(m_webManager->isConnected())
+	{
+		ui->teTChatZone->append(m_P2PManager->getCallsign() + " : " + Message);
+		m_P2PManager->sendTChat(Message);
+	}
 }

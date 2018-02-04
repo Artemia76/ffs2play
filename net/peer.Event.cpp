@@ -78,8 +78,14 @@ namespace ffs2play
 			case Protocol::CHAT:
 			{
 				QString Message;
-				stream >> Message;
+				quint8 Len;
+				stream >> Len;
+				char* Buff = new char[Len];
+				stream.readRawData(Buff,Len);
+				Message = QByteArray::fromRawData(Buff,Len);
+				delete Buff;
 				m_simManager->sendScrollingText(CallSign + " : " + Message);
+				emit(fireReceiveTChat(m_callSign,Message));
 				break;
 			}
 			case Protocol::DATA:
@@ -288,6 +294,14 @@ namespace ffs2play
 #ifdef FFS_DEBUG
 				m_log->log("Peer [" + m_callSign + "] " + tr(" Simulator has been created the requested AI") ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
+		}
+	}
+
+	void CPeer::OnSendTChat(QString pMessage)
+	{
+		if (m_onLine)
+		{
+			sendChat(pMessage);
 		}
 	}
 }
