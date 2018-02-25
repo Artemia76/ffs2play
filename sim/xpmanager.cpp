@@ -67,7 +67,7 @@ namespace ffs2play
 			QByteArray Data;
 			QDataStream stream(&Data,QIODevice::WriteOnly);
 			stream << (quint8)PING;
-			QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
+			QNetworkDatagram Output(Data,QHostAddress("127.0.0.1"),m_DestPort);
 			Server->send(Output);
 			int wait=0;
 			while ((!m_connected) && (wait < 5))
