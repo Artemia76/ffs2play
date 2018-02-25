@@ -47,6 +47,7 @@ namespace ffs2play
 		QDialog(parent),
 		ui(new Ui::DialogProfils)
 	{
+		m_changed = false;
 		// Init GUI Part
 		ui->setupUi(this);
 
@@ -77,7 +78,6 @@ namespace ffs2play
 
 		// Apply button is disabled at start
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
-		m_changed = false;
 	}
 
 	///
