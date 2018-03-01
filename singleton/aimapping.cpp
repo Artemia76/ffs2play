@@ -5,12 +5,21 @@ namespace ffs2play
 {
 	AIMapping::AIMapping(QObject *parent) : QObject(parent)
 	{
-		Log = CLogger::instance();
+		m_log = CLogger::instance();
+		m_DB= QSqlDatabase::addDatabase("QSQLITE");
+		QString PathDatabase = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+		if (!QDir(PathDatabase).exists())
+		{
+			QDir().mkdir(PathDatabase);
+		}
+		m_DB.setDatabaseName(PathDatabase + QString("/AIDB.sqlite"));
+		m_DB.open();
+		m_log->log(PathDatabase);
 	}
 
 	AIMapping::~AIMapping()
 	{
-
+		m_DB.close();
 	}
 
 	AIMapping* AIMapping::createInstance()

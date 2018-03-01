@@ -33,6 +33,7 @@
 #include "net/chttprequest.h"
 #include "singleton/p2pmanager.h"
 #include "singleton/webmanager.h"
+#include "singleton/aimapping.h"
 
 namespace Ui {
 class MainWindow;
@@ -77,6 +78,7 @@ namespace ffs2play
 		simbasemanager*	m_simManager;
 		CP2PManager*	m_P2PManager;
 		CWebManager*	m_webManager;
+		AIMapping*		m_AIMapping;
 		QSettings		m_settings;
 		QTimer			m_updateTimer;
 		quint32			m_maxLine;

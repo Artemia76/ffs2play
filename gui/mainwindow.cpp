@@ -102,6 +102,8 @@ namespace ffs2play
 		m_webManager = CWebManager::instance();
 		connect(m_webManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
 		connect(m_webManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
+
+		m_AIMapping = AIMapping::instance();
 	}
 
 	///

@@ -2,6 +2,7 @@
 #define AIMAPPING_H
 
 #include <QObject>
+#include <QtSql>
 #include "singleton/clogger.h"
 
 namespace ffs2play
@@ -19,7 +20,8 @@ namespace ffs2play
 	private:
 		explicit			AIMapping(QObject *parent = nullptr);
 		static	AIMapping*	createInstance();
-		CLogger*			Log;
+		CLogger*			m_log;
+		QSqlDatabase		m_DB;
 
 	public:
 							~AIMapping();
