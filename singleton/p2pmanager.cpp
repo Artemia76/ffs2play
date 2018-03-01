@@ -104,6 +104,9 @@ namespace ffs2play {
 					}
 				}
 			}
+			//Update list quality signal icon
+			emit(firePeerChange(m_peers[i]->CallSign,m_peers[i]->GetSignal()));
+
 		}
 		// Si on en a plus de visible que la limite alors on en choisi un pour le rendre invisible (les plus lointains)
 		if (NbVisible > m_AILimite)

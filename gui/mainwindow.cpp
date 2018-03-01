@@ -95,7 +95,7 @@ namespace ffs2play
 		m_P2PManager = CP2PManager::instance();
 		m_P2PManager->init(true);
 		connect(m_P2PManager, SIGNAL(firePeerAdd(QString)), SLOT(OnPeerAdd(QString)));
-		connect(m_P2PManager, SIGNAL(firePeerChange(QString)), SLOT(OnPeerChange(QString)));
+		connect(m_P2PManager, SIGNAL(firePeerChange(QString,int)), SLOT(OnPeerChange(QString,int)));
 		connect(m_P2PManager, SIGNAL(firePeerRemove(QString)), SLOT(OnPeerRemove(QString)));
 		connect(m_P2PManager, SIGNAL(fireReceiveTChat(QString,QString)), SLOT(OnPeerReceiveTChat(QString,QString)));
 
@@ -457,9 +457,35 @@ namespace ffs2play
 	/// \param pCallSign
 	///
 
-	void MainWindow::OnPeerChange(QString)
+	void MainWindow::OnPeerChange(QString pCallSign, int pSignal)
 	{
-
+		QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
+		if (item_list.count()>0)
+		{
+			QString icon;
+			switch (pSignal)
+			{
+				case 0:
+					icon=":/gfx/signal_0.png";
+					break;
+				case 1:
+					icon=":/gfx/signal_1.png";
+					break;
+				case 2:
+					icon=":/gfx/signal_2.png";
+					break;
+				case 3:
+					icon=":/gfx/signal_3.png";
+					break;
+				case 4:
+					icon=":/gfx/close.png";
+					break;
+				default:
+					icon=":/gfx/close.png";
+					break;
+			}
+			item_list[0]->setIcon(QIcon(icon));
+		}
 	}
 
 	///

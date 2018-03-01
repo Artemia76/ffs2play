@@ -10,7 +10,7 @@ namespace ffs2play
 		QString PathDatabase = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 		if (!QDir(PathDatabase).exists())
 		{
-			QDir().mkdir(PathDatabase);
+			QDir().mkpath(PathDatabase);
 		}
 		m_DB.setDatabaseName(PathDatabase + QString("/AIDB.sqlite"));
 		m_DB.open();

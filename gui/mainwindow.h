@@ -62,7 +62,7 @@ namespace ffs2play
 		void			on_afFSCon_triggered();
 		void			on_afP2P_triggered();
 		void			OnPeerRemove(QString pCallSign);
-		void			OnPeerChange(QString pCallSign);
+		void			OnPeerChange(QString pCallSign,int pSignal);
 		void			OnPeerAdd(QString pCallSign);
 		void			OnPeerReceiveTChat(QString,QString);
 		void			on_rb_filterNone_toggled(bool checked);

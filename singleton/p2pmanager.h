@@ -71,7 +71,7 @@ namespace ffs2play
 	signals:
 		void				firePeerAdd(QString);
 		void				firePeerRemove(QString);
-		void				firePeerChange(QString);
+		void				firePeerChange(QString,int);
 		void				fireSendTChat(QString);
 		void				fireReceiveTChat(QString,QString);
 	private slots:

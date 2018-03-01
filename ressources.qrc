@@ -19,5 +19,6 @@
         <file>gfx/signal_3.png</file>
         <file>gfx/xplane.png</file>
         <file>gfx/p3d.png</file>
+        <file>gfx/close.png</file>
     </qresource>
 </RCC>

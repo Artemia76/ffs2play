@@ -355,4 +355,17 @@ namespace ffs2play
 			spawnAI(false);
 		}
 	}
+
+	int CPeer::GetSignal()
+	{
+		if (m_disabled) return 4;
+		else if (m_onLine)
+		{
+			int latence = m_latence.count();
+			if (latence < 200) return 3;
+			else if ((latence >= 200) && (latence < 500)) return 2;
+			else return 1;
+		}
+		else return 0;
+	}
 }

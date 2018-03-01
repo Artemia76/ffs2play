@@ -113,6 +113,7 @@ namespace ffs2play
 		void					Start();
 		void					Stop();
 		void					Disable(bool pFlag);
+		int						GetSignal();
 
 	private:
 		QSettings				m_settings;

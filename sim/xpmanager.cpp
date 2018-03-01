@@ -43,6 +43,7 @@ namespace ffs2play
 		m_DestPort=47500;
 		Server = new UDPServer(this);
 		connect (Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
+		connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
 		Server->setPort(m_LocalPort);
 		Server->start();
 		m_log->log("XPManager : " + tr("XPlane Module loaded"));
@@ -64,11 +65,7 @@ namespace ffs2play
 	{
 		if (!m_connected)
 		{
-			QByteArray Data;
-			QDataStream stream(&Data,QIODevice::WriteOnly);
-			stream << (quint8)PING;
-			QNetworkDatagram Output(Data,QHostAddress("127.0.0.1"),m_DestPort);
-			Server->send(Output);
+			sendPing();
 			int wait=0;
 			while ((!m_connected) && (wait < 5))
 			{
@@ -89,6 +86,7 @@ namespace ffs2play
 	{
 		if (m_connected)
 		{
+			m_PingTimer.stop();
 			QByteArray Data;
 			QDataStream stream(&Data,QIODevice::WriteOnly);
 			stream << (quint8)DISC;
@@ -140,6 +138,15 @@ namespace ffs2play
 
 	}
 
+	void CXPManager::sendPing()
+	{
+		QByteArray Data;
+		QDataStream stream(&Data,QIODevice::WriteOnly);
+		stream << (quint8)PING;
+		QNetworkDatagram Output(Data,QHostAddress("127.0.0.1"),m_DestPort);
+		Server->send(Output);
+	}
+
 	///
 	/// \brief CXPManager::OnReceiveDatagram
 	///
@@ -158,6 +165,7 @@ namespace ffs2play
 				if (!m_connected)
 				{
 					m_connected=true;
+					m_PingTimer.start(5000);
 				}
 				break;
 			}
@@ -189,6 +197,14 @@ namespace ffs2play
 					Qt::darkBlue,LEVEL_VERBOSE);
 #endif
 			}
+		}
+	}
+
+	void CXPManager::OnPingTimer()
+	{
+		if (m_connected)
+		{
+			sendPing();
 		}
 	}
 }

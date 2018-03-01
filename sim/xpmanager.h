@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QThread>
 #include <QDateTime>
+#include <QTimer>
 
 #include "sim/simconnector.h"
 #include "net/udpserver.h"
@@ -61,6 +62,7 @@ namespace ffs2play
 		QDateTime		m_LastSim;
 		UDPServer*		Server;
 		AirData			PlayerData;
+		QTimer			m_PingTimer;
 
 	protected:
 		bool			open();
@@ -72,8 +74,10 @@ namespace ffs2play
 		bool			removeAI(uint&);
 		bool			updateAI(uint, const CAircraftState&);
 		void			freezeAI(uint, bool);
+		void			sendPing();
 	private slots:
 		void			OnReceiveDatagram(QNetworkDatagram datagram);
+		void			OnPingTimer();
 	};
 }
 #endif // XPMANAGER_H

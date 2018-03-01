@@ -589,6 +589,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dwDebugOpt">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="floating">
     <bool>false</bool>
    </property>
