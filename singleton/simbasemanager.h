@@ -87,6 +87,9 @@ namespace ffs2play
 		void					OnSimAIUpdated(CAircraftState, uint);
 		void					OnSimAIRemoved(uint);
 		void					OnSimEventFrame(float,float);
+		void					OnSimConnected();
+		void					OnSimDisconnected();
+		void					OnSimTimedOut();
 
 	public slots:
 		void					open_close();

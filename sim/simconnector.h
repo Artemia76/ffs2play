@@ -106,7 +106,7 @@ namespace ffs2play
 		CAircraftState  m_state;
 		QMutex			m_Mutex;
 
-virtual	bool			open()=0;
+virtual	void			open()=0;
 virtual void			close()=0;
 virtual	void			main_loop()=0;
 virtual	SIM_VERSION		getVersion()=0;
@@ -124,6 +124,9 @@ virtual CAircraftState	getState();
 		void			fireSimAIUpdated(CAircraftState, uint);
 		void			fireSimAIRemoved(uint);
 		void			fireSimEventFrame(float,float);
+		void			fireSimConnected();
+		void			fireSimDisconnected();
+		void			fireSimTimedOut();
 
 	public slots:
 	};

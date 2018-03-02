@@ -65,6 +65,7 @@ UI_DIR =		gui
 SOURCES +=		main.cpp \
 				gui/dialogprofils.cpp \
 				gui/mainwindow.cpp \
+                gui/dialogp2p.cpp \
 				net/chttprequest.cpp \
 				net/peer.cpp \
 				net/peer.Requests.cpp \
@@ -85,12 +86,13 @@ SOURCES +=		main.cpp \
 				tools/crypto.cpp \
 				tools/getappversion.cpp \
 				tools/datetime.cpp \
-				tools/calculation.cpp
+                tools/calculation.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
 HEADERS  +=     gui/dialogprofils.h \
 				gui/mainwindow.h \
+                gui/dialogp2p.h \
 				net/chttprequest.h \
 				net/peer.h \
 				net/udpserver.h \
@@ -109,14 +111,15 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/datetime.h \
 				tools/getappversion.h \
 				tools/version.h \
-				tools/calculation.h
+                tools/calculation.h
 
 win32 {
 HEADERS	+=		sim/scmanager.h
 }
 
 FORMS	+=		gui/dialogprofils.ui \
-				gui/mainwindow.ui
+				gui/mainwindow.ui \
+                gui/dialogp2p.ui
 
 TRANSLATIONS += intl/ffs2play_fr_FR.ts
 
@@ -198,7 +201,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 0
+VERSION_BUILD = 1
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

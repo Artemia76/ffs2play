@@ -202,7 +202,9 @@ namespace ffs2play
 			}
 			if (!ui->lineEdit_URL->text().isEmpty())
 			{
-				user.URL = ui->lineEdit_URL->text();
+				QUrl url = QUrl::fromUserInput(ui->lineEdit_URL->text());
+				user.URL = url.toString();
+				ui->lineEdit_URL->setText(user.URL);
 			}
 			m_changed = false;
 			m_webManager->SaveConfig();

@@ -307,7 +307,7 @@ static	void			CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, vo
 		void			sendText (const QString& pMessage);
 		void			trace(const QString& pMessage);
 	protected:
-		bool			open();
+		void			open();
 		void			close();
 		void			main_loop();
 		SIM_VERSION		getVersion();

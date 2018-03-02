@@ -39,6 +39,7 @@ namespace ffs2play
 	CXPManager::CXPManager(QObject* parent):
 		SimConnector(parent)
 	{
+		m_XPPlugin.setAddress("127.0.0.1");
 		m_LocalPort=47600;
 		m_DestPort=47500;
 		Server = new UDPServer(this);
@@ -61,21 +62,14 @@ namespace ffs2play
 	/// \brief CXPManager::open
 	///
 
-	bool CXPManager::open ()
+	void CXPManager::open ()
 	{
 		if (!m_connected)
 		{
+			m_log->log(tr("Connecting to XPlane ..."));
 			sendPing();
-			int wait=0;
-			while ((!m_connected) && (wait < 5))
-			{
-				QThread::sleep(1);
-				QApplication::processEvents();
-				wait++;
-			}
-			return m_connected;
+			m_PingTimer.start(5000);
 		}
-		return false;
 	}
 
 	///
@@ -87,11 +81,7 @@ namespace ffs2play
 		if (m_connected)
 		{
 			m_PingTimer.stop();
-			QByteArray Data;
-			QDataStream stream(&Data,QIODevice::WriteOnly);
-			stream << (quint8)DISC;
-			QNetworkDatagram Output(Data,QHostAddress("localhost"),m_DestPort);
-			Server->send(Output);
+			sendDisc();
 			m_connected=false;
 			m_log->log(tr("Disconnected from XPlane."));
 		}
@@ -143,10 +133,18 @@ namespace ffs2play
 		QByteArray Data;
 		QDataStream stream(&Data,QIODevice::WriteOnly);
 		stream << (quint8)PING;
-		QNetworkDatagram Output(Data,QHostAddress("127.0.0.1"),m_DestPort);
+		QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
 		Server->send(Output);
 	}
 
+	void CXPManager::sendDisc()
+	{
+		QByteArray Data;
+		QDataStream stream(&Data,QIODevice::WriteOnly);
+		stream << (quint8)DISC;
+		QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+		Server->send(Output);
+	}
 	///
 	/// \brief CXPManager::OnReceiveDatagram
 	///
@@ -166,7 +164,10 @@ namespace ffs2play
 				{
 					m_connected=true;
 					m_PingTimer.start(5000);
+					m_log->log(tr("Connected to XPlane."));
+					emit(fireSimConnected());
 				}
+				m_LastPong=Now();
 				break;
 			}
 			case DATA_SEND:
@@ -204,7 +205,17 @@ namespace ffs2play
 	{
 		if (m_connected)
 		{
-			sendPing();
+			if(timespan(Now() - m_LastPong).count()>10000)
+			{
+				close();
+				emit(fireSimTimedOut());
+			}
+			else sendPing();
+		}
+		else
+		{
+			m_PingTimer.stop();
+			emit(fireSimTimedOut());
 		}
 	}
 }

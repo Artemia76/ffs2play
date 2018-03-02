@@ -51,7 +51,7 @@ namespace ffs2play
 	/// \brief CSCManager::open
 	///
 
-	bool CSCManager::open ()
+	void CSCManager::open ()
 	{
 		if (!m_connected)
 		{
@@ -60,14 +60,15 @@ namespace ffs2play
 			{
 				// Keep connexion status
 				m_connected = true;
-				return true;
+				m_log->log(tr("Connected to FS."));
+				emit(fireSimConnected());
 			}
 			else
 			{
 				m_log->log(tr("Connexion to FS failed."),Qt::darkMagenta);
+				emit(fireSimTimedOut());
 			}
 		}
-		return false;
 	}
 
 	///
@@ -377,6 +378,7 @@ namespace ffs2play
 		m_log->log("SCManager : " + tr("Receive SIMCONNECT_RECV event"), Qt::darkBlue,LEVEL_VERBOSE);
 	#endif
 		close();
+		emit(fireSimDisconnected());
 	}
 
 	///

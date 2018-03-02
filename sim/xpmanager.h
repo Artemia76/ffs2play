@@ -58,14 +58,14 @@ namespace ffs2play
 		qint64			m_VariableRate;
 		quint16			m_DestPort;
 		quint16			m_LocalPort;
-		QDateTime		m_LastVariable;
-		QDateTime		m_LastSim;
+		datetime		m_LastPong;
 		UDPServer*		Server;
 		AirData			PlayerData;
 		QTimer			m_PingTimer;
+		QHostAddress	m_XPPlugin;
 
 	protected:
-		bool			open();
+		void			open();
 		void			close();
 		void			main_loop();
 		SIM_VERSION		getVersion();
@@ -74,6 +74,7 @@ namespace ffs2play
 		bool			removeAI(uint&);
 		bool			updateAI(uint, const CAircraftState&);
 		void			freezeAI(uint, bool);
+		void			sendDisc();
 		void			sendPing();
 	private slots:
 		void			OnReceiveDatagram(QNetworkDatagram datagram);

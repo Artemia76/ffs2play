@@ -116,6 +116,9 @@ namespace ffs2play
 		connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
 		connect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
 		connect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+		connect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
+		connect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
+		connect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
 		emit(loaded(m_simType));
 	}
 
@@ -131,6 +134,9 @@ namespace ffs2play
 			disconnect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
 			disconnect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
 			disconnect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+			disconnect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
+			disconnect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
+			disconnect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
 			delete m_connector;
 			m_connector=nullptr;
 		}
@@ -155,16 +161,9 @@ namespace ffs2play
 		if (!isInitialized()) return;
 		if (!m_connector->isConnected())
 		{
-			if (m_connector->open())
-			{
-				// Thread starting
-				m_thread->start();
-				emit(opened());
-			}
-			else
-			{
-				m_log->log(tr("Connexion to simulator failed."),Qt::darkMagenta);
-			}
+			m_connector->open();
+			// Thread starting
+			m_thread->start();
 		}
 	}
 
@@ -174,14 +173,14 @@ namespace ffs2play
 
 	void simbasemanager::close ()
 	{
-		if (!isInitialized()) return;
+		if (!m_bRunning) return;
 		if (m_connector->isConnected())
 		{
 			m_connector->close();
-			m_thread->wait(0);
-			m_log->log(tr("Disconnected from simulator."));
-			emit(closed());
 		}
+		m_bRunning=false;
+		m_thread->wait(0);
+		emit(closed());
 	}
 
 	bool simbasemanager::isInitialized()
@@ -202,7 +201,8 @@ namespace ffs2play
 
 	void simbasemanager::mainThread()
 	{
-		while (m_connector->isConnected())
+		m_bRunning=true;
+		while (m_bRunning)
 		{
 			m_connector->main_loop();
 			QApplication::processEvents();
@@ -330,5 +330,21 @@ namespace ffs2play
 	void simbasemanager::OnSimEventFrame(float pFramRate, float SimSpeed)
 	{
 		emit(fireSimEventFrame(pFramRate, SimSpeed));
+	}
+
+	void simbasemanager::OnSimConnected()
+	{
+		emit(opened());
+	}
+
+	void simbasemanager::OnSimDisconnected()
+	{
+		close();
+	}
+
+	void simbasemanager::OnSimTimedOut()
+	{
+		m_log->log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
+		close();
 	}
 }

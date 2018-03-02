@@ -21,9 +21,11 @@
 ****************************************************************************/
 
 #include <QByteArray>
+#include <QMessageBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogprofils.h"
+#include "dialogp2p.h"
 #include "tools/getappversion.h"
 
 namespace ffs2play
@@ -382,6 +384,71 @@ namespace ffs2play
 					ui->twSIMData->item(i,0)->setText(QString::number((int)State.ParkingBrake));
 					break;
 				}
+				case 34:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng1));
+					break;
+				}
+				case 35:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng2));
+					break;
+				}
+				case 36:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng3));
+					break;
+				}
+				case 37:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng4));
+					break;
+				}
+				case 38:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.BeaconLight));
+					break;
+				}
+				case 39:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.LandingLight));
+					break;
+				}
+				case 40:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.StrobeLight));
+					break;
+				}
+				case 41:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.NavLight));
+					break;
+				}
+				case 42:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.RecoLight));
+					break;
+				}
+				case 43:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng1));
+					break;
+				}
+				case 44:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng2));
+					break;
+				}
+				case 45:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng3));
+					break;
+				}
+				case 46:
+				{
+					ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng4));
+					break;
+				}
 			}
 		}
 	}
@@ -412,7 +479,7 @@ namespace ffs2play
 	void MainWindow::on_afAide_triggered()
 	{
 		sVersion Version = GetAppVersion();
-		m_log->log(tr("FFS2Play Version : ") + Version.FullVersion  );
+		QMessageBox::about(this,tr("About"), Version.FullVersion );
 	}
 
 	///
@@ -430,7 +497,8 @@ namespace ffs2play
 
 	void MainWindow::on_afP2P_triggered()
 	{
-
+		DialogP2P* dialog = new DialogP2P();
+		dialog->show();
 	}
 
 	///

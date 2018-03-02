@@ -14,7 +14,6 @@ namespace ffs2play
 		}
 		m_DB.setDatabaseName(PathDatabase + QString("/AIDB.sqlite"));
 		m_DB.open();
-		m_log->log(PathDatabase);
 	}
 
 	AIMapping::~AIMapping()
