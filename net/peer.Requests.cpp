@@ -56,8 +56,7 @@ namespace ffs2play
 		}
 		stream.setByteOrder(QDataStream::LittleEndian);
 		stream << (quint8)Protocol::CHAT;
-		stream << (byte)Message.length();
-		stream.writeRawData(Message.toStdString().c_str(),Message.length());
+		StringToStream(stream,pMessage);
 		send(Data);
 	}
 
@@ -104,14 +103,10 @@ namespace ffs2play
 		stream.setByteOrder(QDataStream::LittleEndian);
 		stream << (quint8)Protocol::VERSION;
 		stream << PROTO_VERSION;
-		stream << (byte)m_sendData.title().length();
-		stream.writeRawData(m_sendData.title().c_str(),m_sendData.title().length());
-		stream << (byte)m_sendData.type().length();
-		stream.writeRawData(m_sendData.type().c_str(),m_sendData.type().length());
-		stream << (byte)m_sendData.model().length();
-		stream.writeRawData(m_sendData.model().c_str(),m_sendData.model().length());
-		stream << (byte)m_sendData.category().length();
-		stream.writeRawData(m_sendData.category().c_str(),m_sendData.category().length());
+		StringToStream(stream,QString::fromStdString(m_sendData.title()));
+		StringToStream(stream,QString::fromStdString(m_sendData.type()));
+		StringToStream(stream,QString::fromStdString(m_sendData.model()));
+		StringToStream(stream,QString::fromStdString(m_sendData.category()));
 		send(Data);
 	}
 
@@ -133,10 +128,7 @@ namespace ffs2play
 		if (m_counter_Out == 255) m_counter_Out = 0;
 		else m_counter_Out++;
 		stream << m_counter_Out;
-		char* buffer = new char[m_sendData.ByteSize()];
-		m_sendData.SerializeToArray(buffer,m_sendData.ByteSize());
-		stream.writeRawData(buffer,m_sendData.ByteSize());
-		delete buffer;
+		ProtobufToStream(stream,m_sendData);
 		send(Data);
 	}
 }

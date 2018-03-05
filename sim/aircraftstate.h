@@ -34,7 +34,7 @@ namespace ffs2play
 	public:
 		CAircraftState();
 		~CAircraftState();
-		void toAirData (AirData& pAirData);
+		void toAirData (AirData& pAirData) const;
 		void fromAirData (const AirData& pAirData);
 		datetime	TimeStamp;
 		QString     Title;

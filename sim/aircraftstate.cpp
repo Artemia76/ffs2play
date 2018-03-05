@@ -102,7 +102,7 @@ namespace ffs2play
 
 	}
 
-	void CAircraftState::toAirData(AirData &data)
+	void CAircraftState::toAirData(AirData &data) const
 	{
 		data.set_timestamp(TimeStamp.time_since_epoch().count());
 		data.set_title(Title.toStdString());

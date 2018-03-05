@@ -86,7 +86,8 @@ SOURCES +=		main.cpp \
 				tools/crypto.cpp \
 				tools/getappversion.cpp \
 				tools/datetime.cpp \
-                tools/calculation.cpp
+                tools/calculation.cpp \
+    tools/datagram.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
@@ -111,7 +112,8 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/datetime.h \
 				tools/getappversion.h \
 				tools/version.h \
-                tools/calculation.h
+                tools/calculation.h \
+    tools/datagram.h
 
 win32 {
 HEADERS	+=		sim/scmanager.h

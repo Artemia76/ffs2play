@@ -147,13 +147,14 @@ namespace ffs2play
 				stream >> m_version;
 				if (m_version == PROTO_VERSION)
 				{
-					stream >> m_data.Title;
-					stream >> m_data.Type;
-					stream >> m_data.Model;
-					stream >> m_data.Category;
+					m_data.Title=StringFromStream(stream);
+					m_data.Type=StringFromStream(stream);
+					m_data.Model=StringFromStream(stream);
+					m_data.Category=StringFromStream(stream);
 				}
 	#ifdef FFS_DEBUG
-				m_log->log("Peer [" + m_callSign + "] " + tr(" received version number = ") + QString::number(m_version),Qt::darkBlue,LEVEL_NORMAL);
+				m_log->log("Peer [" + m_callSign + "] " + tr(" received version number = ") + QString::number(m_version) +
+						   " Title = " + m_data.Title,Qt::darkBlue,LEVEL_NORMAL);
 	#endif
 				break;
 			}
@@ -180,7 +181,7 @@ namespace ffs2play
 
 	void CPeer::OnSimAICreated(QString pTail,uint pObjectID)
 	{
-		if (pTail == m_tail)
+		if ((pTail == m_tail) &&(m_spawned==2))
 		{
 			if ((pObjectID != 0)&&(m_objectID==0))
 			{

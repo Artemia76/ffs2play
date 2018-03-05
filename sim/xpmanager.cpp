@@ -29,6 +29,8 @@
 #include <QTextCodec>
 #include <QApplication>
 
+#include "tools/datagram.h"
+
 namespace ffs2play
 {
 	///
@@ -111,25 +113,84 @@ namespace ffs2play
 	{
 
 	}
-	bool CXPManager::createAI(const QString& /*pAircraft*/,const QString& /*Tail*/,const CAircraftState& /*Data*/,bool /*pNonAIObject*/)
+	bool CXPManager::createAI(const QString& pAircraft,const QString& pTail,const CAircraftState& pData,bool pNonAIObject)
 	{
+		if (m_connected)
+		{
+#ifdef FFS_DEBUG
+			m_log->log("XPManager : " + tr("Send createAI"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+			QByteArray Data;
+			QDataStream stream(&Data,QIODevice::WriteOnly);
+			pData.toAirData(SendData);
+			stream << (quint8)ADD_PEER;
+			StringToStream(stream,pTail);
+			ProtobufToStream(stream,SendData);
+			QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+			Server->send(Output);
+			return true;
+		}
 		return false;
 	}
-	bool CXPManager::removeAI(uint& /*pObjectID*/)
+
+	///
+	/// \brief CXPManager::removeAI
+	/// \return
+	///
+
+	bool CXPManager::removeAI(uint& pObjectID)
 	{
+		if (m_connected)
+		{
+#ifdef FFS_DEBUG
+			m_log->log("XPManager : " + tr("Send removeAI"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+			QByteArray Data;
+			QDataStream stream(&Data,QIODevice::WriteOnly);
+			stream.setByteOrder(QDataStream::LittleEndian);
+			stream << (quint8)DEL_PEER;
+			stream << pObjectID;
+			QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+			Server->send(Output);
+			pObjectID = 0;
+			return true;
+		}
 		return false;
 	}
-	bool CXPManager::updateAI(uint /*pObjectID*/, const CAircraftState& /*data*/)
+	bool CXPManager::updateAI(uint pObjectID, const CAircraftState& pData)
 	{
-		return false;
+		if (m_connected)
+		{
+#ifdef FFS_DEBUG
+			m_log->log("XPManager : " + tr("Send updateAI"), Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+			QByteArray Data;
+			QDataStream stream(&Data,QIODevice::WriteOnly);
+			stream.setByteOrder(QDataStream::LittleEndian);
+			stream << (quint8)DATA_SEND;
+			stream << pObjectID;
+			pData.toAirData(SendData);
+			ProtobufToStream(stream,SendData);
+			QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+			Server->send(Output);
+			return false;
+		}
 	}
 	void CXPManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
 	{
-
+		if (m_connected)
+		{
+#ifdef FFS_DEBUG
+			m_log->log("XPManager : " + tr("Send freezeAI"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+		}
 	}
 
 	void CXPManager::sendPing()
 	{
+#ifdef FFS_DEBUG
+		m_log->log("XPManager : " + tr("Send PING"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
 		QByteArray Data;
 		QDataStream stream(&Data,QIODevice::WriteOnly);
 		stream << (quint8)PING;
@@ -137,6 +198,21 @@ namespace ffs2play
 		Server->send(Output);
 	}
 
+	void CXPManager::sendData(bool pFlag)
+	{
+		if (m_connected)
+		{
+#ifdef FFS_DEBUG
+			m_log->log("XPManager : " + tr("Send DATA"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+			QByteArray Data;
+			QDataStream stream(&Data,QIODevice::WriteOnly);
+			stream << (quint8)DATA;
+			stream << (quint8)pFlag;
+			QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+			Server->send(Output);
+		}
+	}
 	void CXPManager::sendDisc()
 	{
 		QByteArray Data;
@@ -155,7 +231,6 @@ namespace ffs2play
 		QDataStream stream(&data,QIODevice::ReadOnly);
 		quint8 Code;
 		stream>>Code;
-		data.remove(0,1);
 		switch ((FFS2Proto)Code)
 		{
 			case PONG:
@@ -165,6 +240,7 @@ namespace ffs2play
 					m_connected=true;
 					m_PingTimer.start(5000);
 					m_log->log(tr("Connected to XPlane."));
+					sendData(true);
 					emit(fireSimConnected());
 				}
 				m_LastPong=Now();
@@ -175,6 +251,7 @@ namespace ffs2play
 				m_Mutex.lock();
 				try
 				{
+					data.remove(0,1);
 					PlayerData.ParseFromString(data.toStdString());
 					m_state.fromAirData(PlayerData);
 #ifdef FFS_DEBUG
@@ -186,6 +263,59 @@ namespace ffs2play
 				catch (std::exception& e)
 				{
 					m_log->log(tr("DataSend Error : ") + QString(e.what()),Qt::magenta);
+				}
+				m_Mutex.unlock();
+				break;
+			}
+			case ADD_PEER:
+			{
+				m_Mutex.lock();
+#ifdef FFS_DEBUG
+					m_log->log("XPManager : " + tr("Receive ADD_PEER ") +
+						QString::fromStdString(datagram.data().toHex(':').toStdString())
+						, Qt::darkBlue,LEVEL_NORMAL);
+#endif
+				try
+				{
+					stream.setByteOrder(QDataStream::LittleEndian);
+					quint32 Object_ID;
+					QString CallSign;
+					CallSign=StringFromStream(stream);
+					stream >> Object_ID;
+
+#ifdef FFS_DEBUG
+					m_log->log("XPManager : " + tr("Receive ADD_PEER event, object ID=") +
+						QString::number(Object_ID) + tr("callsign=") +
+						CallSign
+						, Qt::darkBlue,LEVEL_NORMAL);
+#endif
+					emit(fireSimAICreated(CallSign,Object_ID));
+				}
+				catch (std::exception& e)
+				{
+					m_log->log(tr("ADD_PEER Error : ") + QString(e.what()),Qt::magenta);
+				}
+				m_Mutex.unlock();
+				break;
+			}
+			case DEL_PEER:
+			{
+				m_Mutex.lock();
+				try
+				{
+					stream.setByteOrder(QDataStream::LittleEndian);
+					quint32 Object_ID;
+					stream >> Object_ID;
+#ifdef FFS_DEBUG
+					m_log->log("XPManager : " + tr("Receive DEL_PEER event, object ID=") +
+						QString::number(Object_ID)
+						, Qt::darkBlue,LEVEL_NORMAL);
+#endif
+					emit(fireSimAIRemoved(Object_ID));
+				}
+				catch (std::exception& e)
+				{
+					m_log->log(tr("DEL_PEER Error : ") + QString(e.what()),Qt::magenta);
 				}
 				m_Mutex.unlock();
 				break;

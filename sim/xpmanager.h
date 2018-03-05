@@ -40,7 +40,9 @@ namespace ffs2play
 		PONG = 0x01, // Pong With protocol Version
 		DATA = 0x02, // Ask start or stop receive data
 		DATA_SEND = 0x03, // Contain data of user plane
-		DISC = 0x04 // Disconnect client
+		DISC = 0x04, // Disconnect client
+		ADD_PEER = 0x05, // Add peer
+		DEL_PEER = 0x06 // Remove Peer
 	};
 
 	///
@@ -63,6 +65,7 @@ namespace ffs2play
 		AirData			PlayerData;
 		QTimer			m_PingTimer;
 		QHostAddress	m_XPPlugin;
+		AirData			SendData;
 
 	protected:
 		void			open();
@@ -74,8 +77,9 @@ namespace ffs2play
 		bool			removeAI(uint&);
 		bool			updateAI(uint, const CAircraftState&);
 		void			freezeAI(uint, bool);
-		void			sendDisc();
 		void			sendPing();
+		void			sendData(bool pFlag);
+		void			sendDisc();
 	private slots:
 		void			OnReceiveDatagram(QNetworkDatagram datagram);
 		void			OnPingTimer();

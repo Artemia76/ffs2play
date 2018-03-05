@@ -45,6 +45,7 @@
 #include "singleton/clogger.h"
 #include "net/udpserver.h"
 #include "sim/aircraftstate.h"
+#include "tools/datagram.h"
 
 namespace ffs2play
 {
