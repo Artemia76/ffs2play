@@ -87,7 +87,7 @@ SOURCES +=		main.cpp \
 				tools/getappversion.cpp \
 				tools/datetime.cpp \
                 tools/calculation.cpp \
-    tools/datagram.cpp
+                tools/datagram.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
@@ -113,7 +113,7 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/getappversion.h \
 				tools/version.h \
                 tools/calculation.h \
-    tools/datagram.h
+                tools/datagram.h
 
 win32 {
 HEADERS	+=		sim/scmanager.h
@@ -203,7 +203,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 1
+VERSION_BUILD = 2
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
