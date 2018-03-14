@@ -148,7 +148,7 @@ namespace ffs2play
 				close();
 				emit(fireSimTimedOut());
 			}
-			else sendPing();
+			//else sendPing();
 		}
 		else
 		{
