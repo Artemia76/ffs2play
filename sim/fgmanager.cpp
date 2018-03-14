@@ -28,17 +28,16 @@ namespace ffs2play
 	/// \brief FlightGear Manager Constructor
 	/// \param parent
 	///
-
 	CFGManager::CFGManager(QObject* parent):
 		SimConnector(parent)
 	{
 		m_log->log("FGManager : " + tr("FlightGear Module loaded"));
+		connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
 	}
 
 	///
 	/// \brief CFGManager::~CFGManager
 	///
-
 	CFGManager::~CFGManager()
 	{
 		close();
@@ -48,19 +47,18 @@ namespace ffs2play
 	///
 	/// \brief CFGManager::open
 	///
-
 	void CFGManager::open ()
 	{
 		if (!m_connected)
 		{
-			m_log->log(tr("Connecting to XPlane ..."));
+			m_log->log(tr("Connecting to FlightGear ..."));
+			m_PingTimer.start(5000);
 		}
 	}
 
 	///
 	/// \brief CFGManager::close
 	///
-
 	void CFGManager::close ()
 	{
 		if (m_connected)
@@ -74,7 +72,6 @@ namespace ffs2play
 	///
 	/// \brief CFGManager::main_loop()
 	///
-
 	void CFGManager::main_loop()
 	{
 
@@ -84,7 +81,6 @@ namespace ffs2play
 	/// \brief CFGManager::getVersion
 	/// \return
 	///
-
 	SIM_VERSION CFGManager::getVersion()
 	{
 		return SIM_VERSION::FLIGHTGEAR;
@@ -93,7 +89,6 @@ namespace ffs2play
 	///
 	/// \brief CFGManager::sendScrollingText
 	///
-
 	void CFGManager::sendScrollingText(const QString& /*pMessage*/)
 	{
 
@@ -103,7 +98,6 @@ namespace ffs2play
 	/// \brief CFGManager::createAI
 	/// \return
 	///
-
 	bool CFGManager::createAI(const QString& /*pAircraft*/,const QString& /*pTail*/,const CAircraftState& /*pData*/,bool /*pNonAIObject*/)
 	{
 		return false;
@@ -113,7 +107,6 @@ namespace ffs2play
 	/// \brief CFGManager::removeAI
 	/// \return
 	///
-
 	bool CFGManager::removeAI(uint& /*pObjectID*/)
 	{
 		return false;
@@ -125,7 +118,6 @@ namespace ffs2play
 	/// \param pData
 	/// \return
 	///
-
 	bool CFGManager::updateAI(uint /*pObjectID*/, const CAircraftState& /*pData*/)
 	{
 		return false;
@@ -134,7 +126,6 @@ namespace ffs2play
 	///
 	/// \brief CFGManager::freezeAI
 	///
-
 	void CFGManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
 	{
 		if (m_connected)
@@ -142,6 +133,27 @@ namespace ffs2play
 #ifdef FFS_DEBUG
 			m_log->log("FGManager : " + tr("Send freezeAI"), Qt::darkBlue,LEVEL_NORMAL);
 #endif
+		}
+	}
+
+	///
+	/// \brief CFGManager::OnPingTimer
+	///
+	void CFGManager::OnPingTimer()
+	{
+		if (m_connected)
+		{
+			if(timespan(Now() - m_LastPong).count()>10000)
+			{
+				close();
+				emit(fireSimTimedOut());
+			}
+			else sendPing();
+		}
+		else
+		{
+			m_PingTimer.stop();
+			emit(fireSimTimedOut());
 		}
 	}
 }

@@ -24,7 +24,6 @@
 #define FGMANAGER_H
 
 #include <QObject>
-#include <QThread>
 #include <QDateTime>
 #include <QTimer>
 
@@ -43,6 +42,8 @@ namespace ffs2play
 		explicit CFGManager(QObject *parent = 0);
 		~CFGManager();
 	private:
+		QTimer			m_PingTimer;
+		datetime		m_LastPong;
 
 	protected:
 		void			open();
@@ -56,7 +57,7 @@ namespace ffs2play
 		void			freezeAI(uint, bool);
 
 	private slots:
-
+		void			OnPingTimer();
 	};
 }
 #endif // FGMANAGER_H

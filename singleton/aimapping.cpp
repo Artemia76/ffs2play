@@ -3,6 +3,10 @@
 
 namespace ffs2play
 {
+	///
+	/// \brief AIMapping::AIMapping
+	/// \param parent
+	///
 	AIMapping::AIMapping(QObject *parent) : QObject(parent)
 	{
 		m_log = CLogger::instance();
@@ -16,22 +20,37 @@ namespace ffs2play
 		m_DB.open();
 	}
 
+	///
+	/// \brief AIMapping::~AIMapping
+	///
 	AIMapping::~AIMapping()
 	{
 		m_DB.close();
 	}
 
+	///
+	/// \brief AIMapping::createInstance
+	/// \return
+	///
 	AIMapping* AIMapping::createInstance()
 	{
 		return new AIMapping();
 	}
 
+	///
+	/// \brief AIMapping::instance
+	/// \return
+	///
 	AIMapping* AIMapping::instance()
 	{
 		return Singleton<AIMapping>::instance(AIMapping::createInstance);
 	}
 
-	AIResol AIMapping::SolveTitle(const QString &pTitle, const QString &pModel, const QString &pType)
+	///
+	/// \brief AIMapping::SolveTitle
+	/// \return
+	///
+	AIResol AIMapping::SolveTitle(const QString& /*pTitle*/, const QString& /*pModel*/, const QString& /*pType*/)
 	{
 		//Default substitute airtcraft
 		AIResol Resol;

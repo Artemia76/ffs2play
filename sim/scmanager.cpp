@@ -810,7 +810,7 @@ namespace ffs2play
 #endif
 		if (m_connected)
 		{
-			HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect,pObjectID,(SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + pObjectID));
+			SimConnect_AIRemoveObject(m_hSimConnect,pObjectID,(SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + pObjectID));
 			pObjectID = 0;
 			trace("SimConnect_AIRemoveObject:768");
 			return true;
@@ -894,7 +894,7 @@ namespace ffs2play
 	void CSCManager::trace(const QString &pMessage)
 	{
 		DWORD id;
-		int hr=SimConnect_GetLastSentPacketID(m_hSimConnect,&id);
+		SimConnect_GetLastSentPacketID(m_hSimConnect,&id);
 		m_record.insert(id,pMessage);
 		if (m_record.count()>100)
 		{
