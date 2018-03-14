@@ -56,7 +56,7 @@ namespace ffs2play
 	{
 		close();
 		Server->stop();
-		m_log->log("XPManager : " + tr("XPlane Module loaded"));
+		m_log->log("XPManager : " + tr("XPlane Module unloaded"));
 		//delete Server;
 	}
 

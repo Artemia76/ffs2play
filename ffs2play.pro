@@ -75,6 +75,7 @@ SOURCES +=		main.cpp \
 				sim/aircraftstate.cpp \
 				sim/simconnector.cpp \
 				sim/xpmanager.cpp \
+                sim/fgmanager.cpp \
 				singleton/aimapping.cpp \
 				singleton/clogger.cpp \
 				singleton/p2pmanager.cpp \
@@ -101,6 +102,7 @@ HEADERS  +=     gui/dialogprofils.h \
 				sim/aircraftstate.h \
 				sim/simconnector.h \
 				sim/xpmanager.h \
+                sim/fgmanager.h \
 				singleton/aimapping.h \
 				singleton/call_once.h \
 				singleton/clogger.h \
@@ -114,7 +116,6 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/version.h \
                 tools/calculation.h \
                 tools/datagram.h
-
 win32 {
 HEADERS	+=		sim/scmanager.h
 }

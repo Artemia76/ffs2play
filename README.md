@@ -6,9 +6,9 @@ FFS2PLAY will be designed on open source project model and will be writted in C+
 
 The core will be universal to work with P2P multiplayer Layer
 
-Linux and mac portage will be oriented X-PLANE
+Linux and mac portage will be oriented X-PLANE and FlightGear
 
-Windows will be compatible with P3D, FSX, FS SE and X-PLANE
+Windows will be compatible with P3D, FSX, FS SE, X-PLANE and FlightGear
 
 FFS2Play is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

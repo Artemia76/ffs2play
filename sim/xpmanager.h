@@ -46,7 +46,7 @@ namespace ffs2play
 	};
 
 	///
-	/// \brief The CSCManager class
+	/// \brief The CXPManager class
 	///
 
 	class CXPManager : public SimConnector

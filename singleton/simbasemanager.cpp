@@ -44,6 +44,7 @@ namespace ffs2play
 		m_simAvailable.append(SIM_TYPE::FSX);
 #endif
 		m_simAvailable.append(SIM_TYPE::XPLANE);
+		m_simAvailable.append(SIM_TYPE::FLIGHTGEAR);
 		m_settings.beginGroup("Sim");
 		m_simType = (SIM_TYPE)m_settings.value("DefaultSim",(int)m_simAvailable.first()).toInt();
 		m_settings.endGroup();
@@ -102,6 +103,12 @@ namespace ffs2play
 			case SIM_TYPE::XPLANE:
 			{
 				m_connector = new CXPManager(this);
+				break;
+			}
+
+			case SIM_TYPE::FLIGHTGEAR:
+			{
+				m_connector = new CFGManager(this);
 				break;
 			}
 			default:

@@ -671,6 +671,11 @@
        </item>
        <item>
         <property name="text">
+         <string>FGManager*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>WEBManager*</string>
         </property>
        </item>

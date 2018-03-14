@@ -40,6 +40,7 @@ namespace ffs2play
 		P3D_V3,
 		P3D_V4,
 		XPLANE,
+		FLIGHTGEAR,
 		UNKNOWN
 	};
 

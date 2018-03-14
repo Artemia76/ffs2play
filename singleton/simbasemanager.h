@@ -35,6 +35,7 @@
 	#include "sim/scmanager.h"
 #endif
 #include "sim/xpmanager.h"
+#include "sim/fgmanager.h"
 
 namespace ffs2play
 {
@@ -42,7 +43,7 @@ namespace ffs2play
 	{
 		FSX,
 		XPLANE,
-		SIMGEAR
+		FLIGHTGEAR
 	};
 
 	class simbasemanager : public QObject
