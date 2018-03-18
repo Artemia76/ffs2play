@@ -24,6 +24,10 @@
 
 namespace ffs2play
 {
+
+    ///
+    /// \brief CAircraftState::CAircraftState
+    ///
 	CAircraftState::CAircraftState ()
 	{
 		TimeStamp = Now();
@@ -97,11 +101,18 @@ namespace ffs2play
 		Stalling = false;
 	}
 
+    ///
+    /// \brief CAircraftState::~CAircraftState
+    ///
 	CAircraftState::~CAircraftState()
 	{
 
 	}
 
+    ///
+    /// \brief CAircraftState::toAirData
+    /// \param data
+    ///
 	void CAircraftState::toAirData(AirData &data) const
 	{
 		data.set_timestamp(TimeStamp.time_since_epoch().count());
@@ -146,6 +157,10 @@ namespace ffs2play
 
 	}
 
+    ///
+    /// \brief CAircraftState::fromAirData
+    /// \param data
+    ///
 	void CAircraftState::fromAirData(const AirData &data)
 	{
 		TimeStamp = fromTimeStamp(data.timestamp());

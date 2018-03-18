@@ -28,6 +28,19 @@
 
 namespace ffs2play
 {
+    ///
+    /// \brief CPeer::CPeer
+    /// \param pServer
+    /// \param pExternalIP
+    /// \param pPort
+    /// \param pCallSign
+    /// \param pDisabled
+    /// \param pLocal
+    /// \param pInternalIP
+    /// \param pParent
+    /// \param pP2PRate
+    /// \param pP2PRadius
+    ///
 	CPeer::CPeer(UDPServer* pServer,
 			QHostAddress pExternalIP,
 			int pPort,
@@ -37,7 +50,7 @@ namespace ffs2play
 			const QVector<QHostAddress>* pInternalIP,
 			QObject *pParent,
 			int pP2PRate,
-			int pP2PRadius) : QObject(pParent),
+            int pP2PRadius) : QObject(pParent),
 				CallSign(m_callSign),
 				Disabled(m_disabled)
 	{
@@ -64,10 +77,15 @@ namespace ffs2play
 		m_blockData = false;
 		P2PRadius = pP2PRadius;
 		P2PRate = pP2PRate;
+        if (m_simManager->getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
+        else m_disableCalculation = false;
 		connect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
 		connect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
 	}
 
+    ///
+    /// \brief CPeer::~CPeer
+    ///
 	CPeer::~CPeer()
 	{
 		disconnect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
@@ -83,6 +101,10 @@ namespace ffs2play
 			else Start();
 		}
 	}
+
+    ///
+    /// \brief CPeer::Start
+    ///
 	void CPeer::Start()
 	{
 		if (!m_disabled) return;
@@ -119,6 +141,9 @@ namespace ffs2play
 		m_disabled = false;
 	}
 
+    ///
+    /// \brief CPeer::Stop
+    ///
 	void CPeer::Stop()
 	{
 		if (m_disabled) return;
@@ -144,6 +169,10 @@ namespace ffs2play
 		m_spawned = 0;
 	}
 
+    ///
+    /// \brief CPeer::spawnAI
+    /// \param pFlag
+    ///
 	void CPeer::spawnAI(bool pFlag)
 	{
 		if (pFlag && (m_objectID == 0) && (m_spawned == 0))
@@ -181,7 +210,10 @@ namespace ffs2play
 		}
 	}
 
-	void CPeer::createAI()
+    ///
+    /// \brief CPeer::createAI
+    ///
+    void CPeer::createAI()
 	{
 		if (m_spawned == 2)
 		{
@@ -200,8 +232,21 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::refreshData
+    ///
 	void CPeer::refreshData()
 	{
+        if (m_disableCalculation)
+        {
+            m_AIData = m_data;
+            if (m_spawned >= 5)
+            {
+                m_spawned = 7;
+                m_simManager->updateAI(m_objectID, m_AIData);
+            }
+            return;
+        }
 		if ((m_objectID == 0) || (m_version != PROTO_VERSION)) return;
 		// if it is the first update, we initialize datas with raw position
 		if (m_spawned == 5)
@@ -268,8 +313,17 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::updateAI
+    /// \param pTime
+    /// \param pFPS
+    ///
 	void CPeer::updateAI(datetime pTime, float pFPS)
 	{
+        if (m_disableCalculation)
+        {
+            return;
+        }
 		m_mutex.lock();
 		if ((m_objectID == 0) || (m_version != PROTO_VERSION))
 		{
@@ -348,6 +402,9 @@ namespace ffs2play
 		m_mutex.unlock();
 	}
 
+    ///
+    /// \brief CPeer::resetAI
+    ///
 	void CPeer::resetAI()
 	{
 		if (m_spawned >=3)
@@ -356,6 +413,10 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::GetSignal
+    /// \return
+    ///
 	int CPeer::GetSignal()
 	{
 		if (m_disabled) return 4;

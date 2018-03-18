@@ -25,6 +25,10 @@
 
 namespace ffs2play
 {
+    ///
+    /// \brief CPeer::send
+    /// \param pOutput
+    ///
 	void CPeer::send(const QByteArray &pOutput)
 	{
 		if (!m_EP.isNull())
@@ -44,6 +48,10 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::sendChat
+    /// \param pMessage
+    ///
 	void CPeer::sendChat(const QString &pMessage)
 	{
 		QString Message=pMessage;
@@ -60,8 +68,9 @@ namespace ffs2play
 		send(Data);
 	}
 
-	// SendPing
-
+    ///
+    /// \brief CPeer::sendPing
+    ///
 	void CPeer::sendPing()
 	{
 		m_lastPing = Now();
@@ -86,6 +95,10 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::sendPong
+    /// \param pTime
+    ///
 	void CPeer::sendPong(const datetime& pTime)
 	{
 		QByteArray Data;
@@ -96,6 +109,9 @@ namespace ffs2play
 		send(Data);
 	}
 
+    ///
+    /// \brief CPeer::sendVersion
+    ///
 	void CPeer::sendVersion()
 	{
 		QByteArray Data;
@@ -110,6 +126,9 @@ namespace ffs2play
 		send(Data);
 	}
 
+    ///
+    /// \brief CPeer::requestVersion
+    ///
 	void CPeer::requestVersion()
 	{
 		QByteArray Data;
@@ -119,6 +138,9 @@ namespace ffs2play
 		send(Data);
 	}
 
+    ///
+    /// \brief CPeer::sendData
+    ///
 	void CPeer::sendData()
 	{
 		QByteArray Data;

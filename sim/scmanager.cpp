@@ -32,7 +32,6 @@ namespace ffs2play
 	/// \brief CSCManager::CSCManager
 	/// \param parent
 	///
-
 	CSCManager::CSCManager(QObject* parent):
 		SimConnector(parent)
 	{
@@ -41,6 +40,9 @@ namespace ffs2play
 		m_log->log("SCManager : " + tr("FSX/Prepar3D Module loaded"));
 	}
 
+    ///
+    /// \brief CSCManager::~CSCManager
+    ///
 	CSCManager::~CSCManager()
 	{
 		close();
@@ -50,7 +52,6 @@ namespace ffs2play
 	///
 	/// \brief CSCManager::open
 	///
-
 	void CSCManager::open ()
 	{
 		if (!m_connected)
@@ -74,7 +75,6 @@ namespace ffs2play
 	///
 	/// \brief CSCManager::close
 	///
-
 	void CSCManager::close ()
 	{
 		if (m_connected)
@@ -91,7 +91,6 @@ namespace ffs2play
 	/// \param cbData
 	/// \param pContext
 	///
-
 	void CALLBACK CSCManager::DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext)
 	{
 		CSCManager *pThis = reinterpret_cast<CSCManager*>(pContext);
@@ -101,7 +100,6 @@ namespace ffs2play
 	///
 	/// \brief CSCManager::main_loop()
 	///
-
 	void CSCManager::main_loop()
 	{
 		HRESULT hr;
@@ -112,7 +110,6 @@ namespace ffs2play
 	/// \brief CSCManager::getVersion
 	/// \return
 	///
-
 	SIM_VERSION CSCManager::getVersion()
 	{
 		if (!m_connected) return SIM_VERSION::UNKNOWN;
@@ -199,7 +196,6 @@ namespace ffs2play
 	///
 	/// \brief CSCManager::InitSimConnect
 	///
-
 	void CSCManager::InitSimConnect()
 	{
 		HRESULT hr;
@@ -360,7 +356,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvOpen
 	/// \param data
 	///
-
 	void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN*)
 	{
 		m_log->log(tr("Connected to simulator."));
@@ -371,7 +366,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvQuit
 	/// \param data
 	///
-
 	void CSCManager::OnRecvQuit(SIMCONNECT_RECV*)
 	{
 	#ifdef FFS_DEBUG
@@ -385,7 +379,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvSystemState
 	/// \param data
 	///
-
 	void CSCManager::OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data)
 	{
 	#ifdef FFS_DEBUG
@@ -425,7 +418,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvException
 	/// \param data
 	///
-
 	void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 	{
 		m_log->log("SCManager : "+ tr("Get a SimConnect exception = ") + QString::number(data->dwException) +
@@ -437,7 +429,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvEvent
 	/// \param data
 	///
-
 	void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 	{
 	#ifdef FFS_DEBUG
@@ -487,7 +478,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvSimObjectData
 	/// \param data
 	///
-
 	void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 	{
 		switch (data->dwRequestID)
@@ -667,7 +657,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvEventFrame
 	/// \param data
 	///
-
 	void CSCManager::OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data)
 	{
 		emit(fireSimEventFrame(data->fFrameRate, data->fSimSpeed));
@@ -677,7 +666,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvEventObjectAddremove
 	/// \param data
 	///
-
 	void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data)
 	{
 		switch((EVENT_ID)data->uEventID)
@@ -708,7 +696,6 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvAssignedObjectId
 	/// \param data
 	///
-
 	void CSCManager::OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data)
 	{
 		QString Tail;
@@ -740,6 +727,10 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CSCManager::sendScrollingText
+    /// \param pMessage
+    ///
 	void CSCManager::sendScrollingText(const QString& pMessage)
 	{
 		if(m_connected)
@@ -749,6 +740,10 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CSCManager::sendText
+    /// \param pMessage
+    ///
 	void CSCManager::sendText(const QString &pMessage)
 	{
 		if(m_connected)
@@ -762,6 +757,14 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CSCManager::createAI
+    /// \param pAircraft
+    /// \param pTail
+    /// \param pData
+    /// \param pNonAIObject
+    /// \return
+    ///
 	bool CSCManager::createAI(const QString &pAircraft, const QString &pTail, const CAircraftState &pData,bool pNonAIObject)
 	{
 		if (m_connected)

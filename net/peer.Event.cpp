@@ -25,6 +25,10 @@
 
 namespace ffs2play
 {
+    ///
+    /// \brief CPeer::OnReceiveMessage
+    /// \param pDatagram
+    ///
 	void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
 	{
 		if(m_EP.isNull())
@@ -112,7 +116,7 @@ namespace ffs2play
 						{
 #ifdef FFS_DEBUG
 							m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram dropped : too late") +
-										" Décalage mSec=" + QString::number(m_decalage.count()) +
+                                        " Shift mSec=" + QString::number(m_decalage.count()) +
 									   " OldTime = " + QString::number(toTimeStamp(m_oldData.TimeStamp)) +
 									   " NewTime = " + QString::number(toTimeStamp(m_data.TimeStamp))
 									   ,Qt::darkBlue,LEVEL_NORMAL);
@@ -166,19 +170,31 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::OnHeartBeat
+    ///
 	void CPeer::OnHeartBeat()
 	{
 		sendPing();
 	}
 
+    ///
+    /// \brief CPeer::OnSimEventFrame
+    /// \param pFrameRate
+    ///
 	void CPeer::OnSimEventFrame(float pFrameRate, float)
 	{
-		if (m_spawned >=6)
+        if ((m_spawned >=6)&& (!m_disableCalculation))
 		{
 			updateAI(Now(),pFrameRate);
 		}
 	}
 
+    ///
+    /// \brief CPeer::OnSimAICreated
+    /// \param pTail
+    /// \param pObjectID
+    ///
 	void CPeer::OnSimAICreated(QString pTail,uint pObjectID)
 	{
 		if ((pTail == m_tail) &&(m_spawned==2))
@@ -202,6 +218,10 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::OnSimAIRemoved
+    /// \param pObjectID
+    ///
 	void CPeer::OnSimAIRemoved(uint pObjectID)
 	{
 		if (pObjectID == m_objectID)
@@ -214,11 +234,19 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::OnSimEvent
+    ///
 	void CPeer::OnSimEvent(SimEvent)
 	{
 
 	}
 
+    ///
+    /// \brief CPeer::OnSimAIUpdated
+    /// \param pAIData
+    /// \param pObjectID
+    ///
 	void CPeer::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
 	{
 		if (m_objectID != pObjectID) return;
@@ -227,6 +255,10 @@ namespace ffs2play
 		m_ecart = distance(m_data.Latitude,m_data.Longitude,m_AISimData.Latitude,m_AISimData.Longitude, 'N');
 	}
 
+    ///
+    /// \brief CPeer::OnSimStateChange
+    /// \param pState
+    ///
 	void CPeer::OnSimStateChange(CAircraftState pState)
 	{
 		bool Title_Changed = false;
@@ -266,6 +298,9 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::OnTimerCreateAI
+    ///
 	void CPeer::OnTimerCreateAI()
 	{
 		m_timerCreateAI.stop();
@@ -298,6 +333,10 @@ namespace ffs2play
 		}
 	}
 
+    ///
+    /// \brief CPeer::OnSendTChat
+    /// \param pMessage
+    ///
 	void CPeer::OnSendTChat(QString pMessage)
 	{
 		if (m_onLine)
