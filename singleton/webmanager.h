@@ -121,9 +121,11 @@ namespace ffs2play
 		void				HelloCallback (CHttpRequest* pRequest);
 		void				ConnectCallback (CHttpRequest* pRequest);
 		void				LiveUpdateCallback (CHttpRequest* pRequest);
+		void				ATCCallback (CHttpRequest* pRequest);
 		void				LogoutCallback (CHttpRequest* pRequest);
 		void				SendVerify();
 		void				SendLiveUpdate();
+		void				SendATCUpdate();
 		void				OnATCUpdate();
 		void				OnLiveUpdate();
 	};

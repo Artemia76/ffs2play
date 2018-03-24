@@ -56,6 +56,7 @@ namespace ffs2play
 		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
 		m_P2P->clear();
 		m_bConnected = false;
+		m_ATCTimer.stop();
 		emit (FireDisconnected());
 	}
 
@@ -83,5 +84,14 @@ namespace ffs2play
 		CHttpRequest* Request = new CHttpRequest(this);
 		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
 		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLiveUpdate);
+	}
+
+	void CWebManager::SendATCUpdate()
+	{
+		QDomDocument SendAtcUpdate;
+		XmlBuild(SendAtcUpdate, atc);
+		CHttpRequest* Request = new CHttpRequest(this);
+		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ATCCallback (CHttpRequest*)));
+		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendAtcUpdate);
 	}
 }

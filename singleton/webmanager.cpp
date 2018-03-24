@@ -266,6 +266,30 @@ namespace ffs2play
 			}
 			case atc:
 			{
+				CAircraftState State = m_simManager->getAircraftState();
+				QDomElement xmlAtc = pDoc.createElement("atc");
+				xmlRoot.appendChild(xmlAtc);
+				QDomElement xmlLatitude = pDoc.createElement("latitude");
+				xmlLatitude.appendChild(pDoc.createTextNode(QString::number(State.Latitude,'f',5)));
+				xmlAtc.appendChild(xmlLatitude);
+				QDomElement xmlLongitude = pDoc.createElement("longitude");
+				xmlLongitude.appendChild(pDoc.createTextNode(QString::number(State.Longitude,'f',5)));
+				xmlAtc.appendChild(xmlLongitude);
+				QDomElement xmlHeading = pDoc.createElement("heading");
+				xmlHeading.appendChild(pDoc.createTextNode(QString::number(State.Heading,'f',0)));
+				xmlAtc.appendChild(xmlHeading);
+				QDomElement xmlAltitude = pDoc.createElement("altitude");
+				xmlAltitude.appendChild(pDoc.createTextNode(QString::number(State.Altitude,'f',0)));
+				xmlAtc.appendChild(xmlAltitude);
+				QDomElement xmlGroundSpeed = pDoc.createElement("groundSpeed");
+				xmlAtc.appendChild(pDoc.createTextNode(QString::number(State.GroundSpeed,'f',0)));
+				xmlAtc.appendChild(xmlGroundSpeed);
+				QDomElement xmlIASpeed = pDoc.createElement("iaspeed");
+				xmlIASpeed.appendChild(pDoc.createTextNode(QString::number(State.IASSpeed,'f',0)));
+				xmlAtc.appendChild(xmlIASpeed);
+				QDomElement xmlSquawk = pDoc.createElement("squawk");
+				xmlSquawk.appendChild(pDoc.createTextNode(QString::number(State.Squawk,'f',0)));
+				xmlAtc.appendChild(xmlSquawk);
 				break;
 			}
 			default:

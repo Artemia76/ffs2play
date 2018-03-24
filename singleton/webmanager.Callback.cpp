@@ -108,6 +108,7 @@ namespace ffs2play
 						m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
 					}
 					m_P2P->setCallsign(m_users[m_currentUser-1].Login);
+					m_ATCTimer.start();
 					CheckWhazzup(Doc);
 					emit (FireConnected());
 				}
@@ -133,6 +134,13 @@ namespace ffs2play
 		pRequest->deleteLater();
 	}
 
+	void CWebManager::ATCCallback(CHttpRequest *pRequest)
+	{
+#ifdef FFS_DEBUG
+		m_log->log("WebManager : " + tr("Get ATCCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+		pRequest->deleteLater();
+	}
 	///
 	/// \brief CWebManager::LogoutCallback
 	/// \param Request
@@ -155,6 +163,12 @@ namespace ffs2play
 	#ifdef FFS_DEBUG
 		m_log->log("WebManager : " + tr("Get ATCUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
 	#endif
+		if (isConnected() && m_simManager->isConnected())
+		{
+			int Transponder = m_simManager->getAircraftState().Squawk;
+			if ((Transponder == 1200) || (Transponder == 7000) || (Transponder == 4700)) return;
+			SendATCUpdate();
+		}
 	}
 
 	///
