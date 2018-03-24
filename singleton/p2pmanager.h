@@ -45,7 +45,9 @@ namespace ffs2play
 		UDPServer*			m_server;
 		QSettings			m_settings;
 		int					m_port;
-		int					m_AILimite;
+		int					m_AILimit;
+		int					m_AIRadius;
+		int					m_P2PRate;
 		bool				m_bUPNP;
 		bool				m_Shadow;
 		LocalIPList			m_InternalIP;

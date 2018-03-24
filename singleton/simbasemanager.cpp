@@ -53,7 +53,7 @@ namespace ffs2play
 			m_simType=m_simAvailable.first();
 		}
 		m_thread = new QThread();
-		this->moveToThread(m_thread);
+		//this->moveToThread(m_thread);
 		connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()));
 		connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
 		load(m_simType);

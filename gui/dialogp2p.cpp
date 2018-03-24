@@ -29,6 +29,8 @@
 
 #include "dialogp2p.h"
 #include "ui_dialogp2p.h"
+#include "singleton/webmanager.h"
+#include "singleton/simbasemanager.h"
 
 #include <QMessageBox>
 
@@ -59,8 +61,18 @@ namespace ffs2play
 
 		// Get the default profil selected in configuration file
 		m_settings.beginGroup("P2P");
+		ui->cbInfoSim->setChecked(m_settings.value("InfoEnable", true).toBool());
+		ui->cbShadow->setChecked(m_settings.value("ShadowEnable", false).toBool());
+		ui->numAIRadius->setValue(m_settings.value("AIRadius", 10).toInt());
+		ui->numAILimit->setValue(m_settings.value("AILimit", -1).toInt());
+		ui->cbUPNP->setChecked(m_settings.value("UPNPEnable",true).toBool());
+		ui->numP2PTx->setValue(m_settings.value("Port", 54857).toInt());
 
 		m_settings.endGroup();
+		m_needP2PRestart=false;
+		m_needDBReload=false;
+
+		if (CWebManager::instance()->isConnected()) ui->numP2PTx->setDisabled(true);
 
 		// Apply button is disabled at start
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
@@ -126,4 +138,44 @@ namespace ffs2play
 	{
 		m_changed = false;
 	}
+}
+
+void ffs2play::DialogP2P::on_cbShadow_stateChanged(int arg1)
+{
+	checkIfChanged();
+}
+
+void ffs2play::DialogP2P::on_cbInfoSim_stateChanged(int arg1)
+{
+	checkIfChanged();
+}
+
+void ffs2play::DialogP2P::on_numP2PTx_valueChanged(int arg1)
+{
+	checkIfChanged();
+}
+
+void ffs2play::DialogP2P::on_cbUPNP_stateChanged(int arg1)
+{
+	checkIfChanged();
+}
+
+void ffs2play::DialogP2P::on_spinBox_3_valueChanged(int arg1)
+{
+	checkIfChanged();
+}
+
+void ffs2play::DialogP2P::on_cbBeta_stateChanged(int arg1)
+{
+	checkIfChanged();
+}
+
+void ffs2play::DialogP2P::on_btnAddItem_released()
+{
+
+}
+
+void ffs2play::DialogP2P::on_btnDelItem_released()
+{
+
 }

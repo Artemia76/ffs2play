@@ -70,7 +70,8 @@ namespace ffs2play
 
 		// Flag to memorize if something is changed on current profil edition
 		bool				m_changed;
-
+		bool				m_needP2PRestart;
+		bool				m_needDBReload;
 		void				checkIfChanged();
 
 		void				applyChangedItem();
@@ -79,6 +80,14 @@ namespace ffs2play
 
 		// Button in ButtonBox is clicked
 		void				on_buttonBox_clicked(QAbstractButton* button);
+		void on_cbShadow_stateChanged(int arg1);
+		void on_cbInfoSim_stateChanged(int arg1);
+		void on_numP2PTx_valueChanged(int arg1);
+		void on_cbUPNP_stateChanged(int arg1);
+		void on_spinBox_3_valueChanged(int arg1);
+		void on_cbBeta_stateChanged(int arg1);
+		void on_btnAddItem_released();
+		void on_btnDelItem_released();
 	};
 }
 #endif // DIALOGP2P_H

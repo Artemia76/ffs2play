@@ -109,7 +109,7 @@ namespace ffs2play {
 
 		}
 		// Si on en a plus de visible que la limite alors on en choisi un pour le rendre invisible (les plus lointains)
-		if (NbVisible > m_AILimite)
+		if ((NbVisible > m_AILimit) && (m_AILimit>-1))
 		{
 			//On rend le plus lointain invisible
 			m_peers[PosLointain]->m_visible = false;
@@ -119,7 +119,7 @@ namespace ffs2play {
 		}
 		//Sinon , si on a des invisibles et que le nombre de visibles est inférieur à la limite
 		//cela signifie qu'on a des invisibles qu'on peut afficher (les plus prêt)
-		else if ((NbInvisible > 0) && (NbVisible < m_AILimite))
+		else if ((NbInvisible > 0) && ((NbVisible < m_AILimit)||(m_AILimit<0)))
 		{
 			m_peers[PosPret]->m_visible = true;
 #ifdef FFS_DEBUG
@@ -147,7 +147,8 @@ namespace ffs2play {
 				initUPNP(true);
 			}
 			m_Shadow = m_settings.value("ShadowEnable", false).toBool();
-			m_AILimite = m_settings.value("AILimite",10).toInt();
+			m_AILimit = m_settings.value("AILimit",-1).toInt();
+			m_AIRadius = m_settings.value("AIRadius",10).toInt();
 			m_settings.endGroup();
 		}
 		else
@@ -352,7 +353,7 @@ namespace ffs2play {
 				}
 				if ((!IP.isNull()) && (data.Port>0))
 				{
-					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs));
+					m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs,this,m_P2PRate,m_AIRadius));
 					connect(this, SIGNAL(fireSendTChat(QString)),m_peers.last(),SLOT(OnSendTChat(QString)));
 					connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
 					emit(firePeerAdd(data.CallSign));
