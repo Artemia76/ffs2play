@@ -91,7 +91,7 @@ namespace ffs2play
 			m_onLine = false;
 			m_version = 0;
 			m_miniPing = milliseconds(1000);
-			//Spawn_AI(false);
+            spawnAI(false);
 		}
 	}
 
