@@ -115,6 +115,7 @@ namespace ffs2play
 		connect(m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
 		connect(m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
 		connect(m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+		connect(m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
 		m_heartBeat.start(5000);
 		m_lastData = Now();
 		m_lastStateEvent = m_lastData;
@@ -156,6 +157,7 @@ namespace ffs2play
 		disconnect(m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
 		disconnect(m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
 		disconnect(m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+		disconnect(m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
 		m_timerCreateAI.stop();
 
 		m_settings.beginGroup("P2P");

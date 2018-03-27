@@ -242,6 +242,15 @@ namespace ffs2play
 
 	}
 
+	void CPeer::OnSimClosed()
+	{
+		m_objectID = 0;
+		m_spawned = 0;
+#ifdef FFS_DEBUG
+		m_log->log("Peer [" + m_callSign + "] " + tr(" Receive a SimClosed Event"),Qt::darkBlue,LEVEL_NORMAL);
+#endif
+	}
+
     ///
     /// \brief CPeer::OnSimAIUpdated
     /// \param pAIData

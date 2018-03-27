@@ -242,6 +242,7 @@ namespace ffs2play
 		void					OnSimAIRemoved(uint);
 		void					OnHeartBeat();
 		void					OnTimerCreateAI();
+		void					OnSimClosed();
 	};
 }
 #endif // PEER_H
