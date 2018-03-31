@@ -20,7 +20,7 @@ CONFIG(release, debug|release) {
 	MOC_DIR = release/.moc
 	RCC_DIR = release/.rcc
 	UI_DIR = release/.ui
-    DEFINES += FFS_DEBUG
+	DEFINES += FFS_DEBUG
 } else {
 	DESTDIR = debug
 	OBJECTS_DIR = debug/.obj
@@ -35,7 +35,7 @@ win32 {
 	OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
 	OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
 	CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
-    DEFINES += _WINSOCKAPI_
+	DEFINES += _WINSOCKAPI_
 CONFIG( debug, debug|release ) {
 	CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\Win32\Output\Debug"
 	MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Debug
@@ -65,7 +65,7 @@ UI_DIR =		gui
 SOURCES +=		main.cpp \
 				gui/dialogprofils.cpp \
 				gui/mainwindow.cpp \
-                gui/dialogp2p.cpp \
+				gui/dialogp2p.cpp \
 				net/chttprequest.cpp \
 				net/peer.cpp \
 				net/peer.Requests.cpp \
@@ -75,7 +75,7 @@ SOURCES +=		main.cpp \
 				sim/aircraftstate.cpp \
 				sim/simconnector.cpp \
 				sim/xpmanager.cpp \
-                sim/fgmanager.cpp \
+				sim/fgmanager.cpp \
 				singleton/aimapping.cpp \
 				singleton/clogger.cpp \
 				singleton/p2pmanager.cpp \
@@ -87,14 +87,14 @@ SOURCES +=		main.cpp \
 				tools/crypto.cpp \
 				tools/getappversion.cpp \
 				tools/datetime.cpp \
-                tools/calculation.cpp \
-                tools/datagram.cpp
+				tools/calculation.cpp \
+				tools/datagram.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
 HEADERS  +=     gui/dialogprofils.h \
 				gui/mainwindow.h \
-                gui/dialogp2p.h \
+				gui/dialogp2p.h \
 				net/chttprequest.h \
 				net/peer.h \
 				net/udpserver.h \
@@ -102,7 +102,7 @@ HEADERS  +=     gui/dialogprofils.h \
 				sim/aircraftstate.h \
 				sim/simconnector.h \
 				sim/xpmanager.h \
-                sim/fgmanager.h \
+				sim/fgmanager.h \
 				singleton/aimapping.h \
 				singleton/call_once.h \
 				singleton/clogger.h \
@@ -114,15 +114,15 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/datetime.h \
 				tools/getappversion.h \
 				tools/version.h \
-                tools/calculation.h \
-                tools/datagram.h
+				tools/calculation.h \
+				tools/datagram.h
 win32 {
 HEADERS	+=		sim/scmanager.h
 }
 
 FORMS	+=		gui/dialogprofils.ui \
 				gui/mainwindow.ui \
-                gui/dialogp2p.ui
+				gui/dialogp2p.ui
 
 TRANSLATIONS += intl/ffs2play_fr_FR.ts
 
@@ -204,7 +204,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 5
+VERSION_BUILD = 6
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

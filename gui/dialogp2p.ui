@@ -43,9 +43,9 @@
      <colorrole role="Button">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>104</red>
-        <green>125</green>
-        <blue>136</blue>
+        <red>189</red>
+        <green>227</green>
+        <blue>248</blue>
        </color>
       </brush>
      </colorrole>
@@ -189,9 +189,9 @@
      <colorrole role="Button">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>104</red>
-        <green>125</green>
-        <blue>136</blue>
+        <red>189</red>
+        <green>227</green>
+        <blue>248</blue>
        </color>
       </brush>
      </colorrole>
@@ -335,9 +335,9 @@
      <colorrole role="Button">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>104</red>
-        <green>125</green>
-        <blue>136</blue>
+        <red>189</red>
+        <green>227</green>
+        <blue>248</blue>
        </color>
       </brush>
      </colorrole>
@@ -529,6 +529,18 @@
       <string>uPNP NAT</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_6">
         <property name="sizePolicy">
@@ -562,10 +574,16 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
-          <height>16777215</height>
+          <width>0</width>
+          <height>20</height>
          </size>
         </property>
         <property name="text">
@@ -590,7 +608,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>100</height>
+       <height>16777215</height>
       </size>
      </property>
      <property name="palette">
@@ -634,6 +652,18 @@
       <string>Advanced Settings</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
@@ -654,6 +684,18 @@
         </item>
         <item>
          <widget class="QSpinBox" name="numP2PTx">
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>75</width>
+            <height>20</height>
+           </size>
+          </property>
           <property name="minimum">
            <number>50</number>
           </property>
@@ -701,7 +743,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>100</height>
+       <height>16777215</height>
       </size>
      </property>
      <property name="palette">
@@ -772,20 +814,57 @@
       <string>Multiplayer</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
       <item row="1" column="0">
        <widget class="QCheckBox" name="cbInfoSim">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="text">
          <string>Enable ScrollText info on sim</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cbShadow">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Enable Shadow mode</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0">
         <property name="sizeConstraint">
-         <enum>QLayout::SetDefaultConstraint</enum>
+         <enum>QLayout::SetMinimumSize</enum>
         </property>
         <item>
          <widget class="QLabel" name="label">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
           <property name="text">
            <string>AI Radius</string>
           </property>
@@ -799,7 +878,7 @@
           <property name="minimumSize">
            <size>
             <width>50</width>
-            <height>0</height>
+            <height>20</height>
            </size>
           </property>
           <property name="value">
@@ -809,6 +888,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
           <property name="text">
            <string>NM</string>
           </property>
@@ -816,6 +901,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_3">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
           <property name="text">
            <string>AI Limit</string>
           </property>
@@ -829,7 +920,7 @@
           <property name="minimumSize">
            <size>
             <width>50</width>
-            <height>0</height>
+            <height>20</height>
            </size>
           </property>
           <property name="minimum">
@@ -845,17 +936,10 @@
         </item>
        </layout>
       </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="cbShadow">
-        <property name="text">
-         <string>Enable Shadow mode</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item row="4" column="0" colspan="2" alignment="Qt::AlignRight">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -946,21 +1030,27 @@
        </disabled>
       </palette>
      </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
      <property name="title">
       <string>P2P Port</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
       <property name="topMargin">
-       <number>6</number>
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
       </property>
       <item>
        <widget class="QLabel" name="label_8">
@@ -982,14 +1072,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
-          <height>0</height>
+          <width>75</width>
+          <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>100</width>
-          <height>16777215</height>
+          <width>75</width>
+          <height>20</height>
          </size>
         </property>
         <property name="alignment">
@@ -1135,7 +1225,7 @@
      <property name="flat">
       <bool>false</bool>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
        <widget class="QListWidget" name="lvItems">
         <property name="sizePolicy">
@@ -1143,6 +1233,18 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>256</width>
+          <height>225</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -1169,6 +1271,12 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>30</width>
@@ -1187,6 +1295,12 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
            </property>
            <property name="maximumSize">
             <size>

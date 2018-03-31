@@ -201,7 +201,6 @@ namespace ffs2play
 		if (ui->cbShadow->isChecked() != m_P2PManager->getShadowMode())
 		{
 			m_changed = true;
-			m_needP2PRestart = true;
 		}
 		if (ui->numP2PTx->value() != m_P2PManager->getTxRate())
 		{
