@@ -71,7 +71,7 @@ namespace ffs2play
 		m_needP2PRestart=false;
 		m_needDBReload=false;
 
-		if (CWebManager::instance()->isConnected()) ui->numP2PTx->setDisabled(true);
+		if (CWebManager::instance()->isConnected()) ui->numPort->setEnabled(false);
 
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 	}
