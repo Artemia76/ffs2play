@@ -36,7 +36,6 @@
 
 namespace ffs2play
 {
-
 	///
 	/// \brief DialogBox constructor
 	/// \param parent
@@ -62,19 +61,18 @@ namespace ffs2play
 		// Get the default profil selected in configuration file
 		m_settings.beginGroup("P2P");
 		ui->cbInfoSim->setChecked(m_settings.value("InfoEnable", true).toBool());
-		ui->cbShadow->setChecked(m_settings.value("ShadowEnable", false).toBool());
-		ui->numAIRadius->setValue(m_settings.value("AIRadius", 10).toInt());
-		ui->numAILimit->setValue(m_settings.value("AILimit", -1).toInt());
 		ui->cbUPNP->setChecked(m_settings.value("UPNPEnable",true).toBool());
-		ui->numP2PTx->setValue(m_settings.value("Port", 54857).toInt());
-
+		ui->numPort->setValue(m_settings.value("Port", 54857).toInt());
 		m_settings.endGroup();
+		ui->numAIRadius->setValue(m_P2PManager->getAIRadius());
+		ui->numAILimit->setValue(m_P2PManager->getAILimit());
+		ui->numP2PTx->setValue(m_P2PManager->getTxRate());
+		ui->cbShadow->setChecked(m_P2PManager->getShadowMode());
 		m_needP2PRestart=false;
 		m_needDBReload=false;
 
 		if (CWebManager::instance()->isConnected()) ui->numP2PTx->setDisabled(true);
 
-		// Apply button is disabled at start
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 	}
 
@@ -95,6 +93,50 @@ namespace ffs2play
 
 	void DialogP2P::applyChangedItem()
 	{
+		if (!m_changed) return;
+		m_settings.beginGroup("P2P");
+		// is SimInfo changed?
+		if (ui->cbInfoSim->isChecked() != m_settings.value("InfoEnable", true).toBool())
+		{
+			m_settings.setValue("InfoEnable",ui->cbInfoSim->isChecked());
+		}
+		if (ui->cbUPNP->isChecked() != m_settings.value("UPNPEnable",true).toBool())
+		{
+			m_settings.setValue("UPNPEnable",ui->cbUPNP->isChecked());
+		}
+		if (ui->numPort->value() != m_settings.value("Port", 54857).toInt())
+		{
+			m_settings.setValue("Port",ui->numPort->value());
+		}
+		m_settings.endGroup();
+		if (ui->cbShadow->isChecked() != m_P2PManager->getShadowMode())
+		{
+			m_P2PManager->setShadowMode(ui->cbShadow->isChecked());
+		}
+		if (ui->numP2PTx->value() != m_P2PManager->getTxRate())
+		{
+			m_P2PManager->setTxRate(ui->numP2PTx->value());
+		}
+		if (ui->numAIRadius->value() != m_P2PManager->getAIRadius())
+		{
+			m_P2PManager->setAIRadius(ui->numAIRadius->value());
+		}
+		if (ui->numAILimit->value() != m_P2PManager->getAILimit())
+		{
+			m_P2PManager->setAILimit(ui->numAILimit->value());
+		}
+		if (m_needP2PRestart)
+		{
+			m_P2PManager->init(false);
+			m_P2PManager->init(true);
+			m_needP2PRestart=false;
+		}
+		if (m_needDBReload)
+		{
+			m_needDBReload=false;
+		}
+		m_changed=false;
+		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 	}
 
 	///
@@ -137,45 +179,92 @@ namespace ffs2play
 	void DialogP2P::checkIfChanged()
 	{
 		m_changed = false;
+		m_needP2PRestart = false;
+		// Get the default profil selected in configuration file
+		m_settings.beginGroup("P2P");
+		// is SimInfo changed?
+		if (ui->cbInfoSim->isChecked() != m_settings.value("InfoEnable", true).toBool())
+		{
+			m_changed = true;
+		}
+		if (ui->cbUPNP->isChecked() != m_settings.value("UPNPEnable",true).toBool())
+		{
+			m_changed = true;
+			m_needP2PRestart =true;
+		}
+		if (ui->numPort->value() != m_settings.value("Port", 54857).toInt())
+		{
+			m_changed = true;
+		}
+		m_settings.endGroup();
+		// is Shadow mode changed?
+		if (ui->cbShadow->isChecked() != m_P2PManager->getShadowMode())
+		{
+			m_changed = true;
+			m_needP2PRestart = true;
+		}
+		if (ui->numP2PTx->value() != m_P2PManager->getTxRate())
+		{
+			m_changed = true;
+		}
+		if (ui->numAIRadius->value() != m_P2PManager->getAIRadius())
+		{
+			m_changed = true;
+		}
+		if (ui->numAILimit->value() != m_P2PManager->getAILimit())
+		{
+			m_changed = true;
+		}
+		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(m_changed);
 	}
-}
 
-void ffs2play::DialogP2P::on_cbShadow_stateChanged(int arg1)
-{
-	checkIfChanged();
-}
+	void DialogP2P::on_cbShadow_stateChanged(int)
+	{
+		checkIfChanged();
+	}
 
-void ffs2play::DialogP2P::on_cbInfoSim_stateChanged(int arg1)
-{
-	checkIfChanged();
-}
+	void DialogP2P::on_cbInfoSim_stateChanged(int)
+	{
+		checkIfChanged();
+	}
 
-void ffs2play::DialogP2P::on_numP2PTx_valueChanged(int arg1)
-{
-	checkIfChanged();
-}
+	void DialogP2P::on_numP2PTx_valueChanged(int)
+	{
+		checkIfChanged();
+	}
 
-void ffs2play::DialogP2P::on_cbUPNP_stateChanged(int arg1)
-{
-	checkIfChanged();
-}
+	void DialogP2P::on_cbUPNP_stateChanged(int)
+	{
+		checkIfChanged();
+	}
 
-void ffs2play::DialogP2P::on_spinBox_3_valueChanged(int arg1)
-{
-	checkIfChanged();
-}
+	void DialogP2P::on_cbBeta_stateChanged(int)
+	{
+		checkIfChanged();
+	}
 
-void ffs2play::DialogP2P::on_cbBeta_stateChanged(int arg1)
-{
-	checkIfChanged();
-}
+	void DialogP2P::on_btnAddItem_released()
+	{
 
-void ffs2play::DialogP2P::on_btnAddItem_released()
-{
+	}
 
-}
+	void DialogP2P::on_btnDelItem_released()
+	{
 
-void ffs2play::DialogP2P::on_btnDelItem_released()
-{
+	}
 
+	void DialogP2P::on_numPort_valueChanged(int)
+	{
+		checkIfChanged();
+	}
+
+	void DialogP2P::on_numAIRadius_valueChanged(int)
+	{
+		checkIfChanged();
+	}
+
+	void DialogP2P::on_numAILimit_valueChanged(int)
+	{
+		checkIfChanged();
+	}
 }

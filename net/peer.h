@@ -108,13 +108,14 @@ namespace ffs2play
 									const QVector<QHostAddress>* pInternalIP=NULL,
 									QObject *pParent = nullptr,
 									int pP2PRate = 200,
-                                    int pP2PRadius = 10
+									int pP2PRadius = 10
 								);
 								~CPeer ();
 		void					Start();
 		void					Stop();
 		void					Disable(bool pFlag);
 		int						GetSignal();
+		void					SetTxRate(int pTxRate);
 
 	private:
 		QSettings				m_settings;
@@ -162,7 +163,7 @@ namespace ffs2play
 		double					m_ecart;
 		datetime				m_lastAIUpdate;
 		bool					m_disabled;
-        bool                    m_disableCalculation;
+		bool                    m_disableCalculation;
 		QMutex					m_mutex;
 		bool					m_selected;
 		bool					m_local;

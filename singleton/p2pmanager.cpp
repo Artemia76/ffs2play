@@ -149,6 +149,7 @@ namespace ffs2play {
 			m_Shadow = m_settings.value("ShadowEnable", false).toBool();
 			m_AILimit = m_settings.value("AILimit",-1).toInt();
 			m_AIRadius = m_settings.value("AIRadius",10).toInt();
+			m_P2PRate = m_settings.value("TxRate",200).toInt();
 			m_settings.endGroup();
 		}
 		else
@@ -449,5 +450,56 @@ namespace ffs2play {
 	void CP2PManager::onReceiveTChat(QString pCallSign, QString pMessage)
 	{
 		emit (fireReceiveTChat(pCallSign,pMessage));
+	}
+
+	int	CP2PManager::getTxRate()
+	{
+		return m_P2PRate;
+	}
+
+	void CP2PManager::setTxRate(int pTxRate)
+	{
+		if ((pTxRate<50) || (pTxRate>5000)) return;
+		m_settings.setValue("P2P/TxRate",pTxRate);
+		m_P2PRate = pTxRate;
+		for (CPeer* peer : m_peers)
+		{
+			peer->SetTxRate(pTxRate);
+		}
+	}
+
+	int	CP2PManager::getAILimit()
+	{
+		return m_AILimit;
+	}
+
+	void CP2PManager::setAILimit(int pAILimit)
+	{
+		if ((pAILimit<-1) || (pAILimit>30)) return;
+		m_settings.setValue("P2P/AILimit",pAILimit);
+		m_AILimit=pAILimit;
+	}
+
+	int	CP2PManager::getAIRadius()
+	{
+		return m_AIRadius;
+	}
+
+	void CP2PManager::setAIRadius(int pAIRadius)
+	{
+		if ((pAIRadius<0) || (pAIRadius>99)) return;
+		m_settings.setValue("P2P/AIRadius",pAIRadius);
+		m_AIRadius=pAIRadius;
+	}
+
+	bool CP2PManager::getShadowMode()
+	{
+		return m_Shadow;
+	}
+
+	void CP2PManager::setShadowMode(bool pFlag)
+	{
+		m_settings.setValue("P2P/ShadowEnable",pFlag);
+		m_Shadow=pFlag;
 	}
 }

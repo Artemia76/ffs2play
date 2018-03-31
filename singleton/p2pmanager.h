@@ -69,6 +69,14 @@ namespace ffs2play
 		bool				isDisabled(const QString& pCallsign);
 		void				clear();
 		void				sendTChat(const QString& pMessage);
+		int					getTxRate();
+		void				setTxRate(int pTxRate);
+		int					getAILimit();
+		void				setAILimit(int pAILimit);
+		int					getAIRadius();
+		void				setAIRadius(int pAIRadius);
+		bool				getShadowMode();
+		void				setShadowMode(bool pFlag);
 
 	signals:
 		void				firePeerAdd(QString);

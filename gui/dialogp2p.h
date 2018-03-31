@@ -80,14 +80,16 @@ namespace ffs2play
 
 		// Button in ButtonBox is clicked
 		void				on_buttonBox_clicked(QAbstractButton* button);
-		void on_cbShadow_stateChanged(int arg1);
-		void on_cbInfoSim_stateChanged(int arg1);
-		void on_numP2PTx_valueChanged(int arg1);
-		void on_cbUPNP_stateChanged(int arg1);
-		void on_spinBox_3_valueChanged(int arg1);
-		void on_cbBeta_stateChanged(int arg1);
-		void on_btnAddItem_released();
-		void on_btnDelItem_released();
+		void				on_cbShadow_stateChanged(int);
+		void				on_cbInfoSim_stateChanged(int);
+		void				on_numP2PTx_valueChanged(int);
+		void				on_cbUPNP_stateChanged(int);
+		void				on_cbBeta_stateChanged(int);
+		void				on_btnAddItem_released();
+		void				on_btnDelItem_released();
+		void				on_numPort_valueChanged(int);
+		void				on_numAIRadius_valueChanged(int);
+		void				on_numAILimit_valueChanged(int);
 	};
 }
 #endif // DIALOGP2P_H
