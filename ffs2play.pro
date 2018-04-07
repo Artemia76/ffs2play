@@ -20,7 +20,6 @@ CONFIG(release, debug|release) {
 	MOC_DIR = release/.moc
 	RCC_DIR = release/.rcc
 	UI_DIR = release/.ui
-	DEFINES += FFS_DEBUG
 } else {
 	DESTDIR = debug
 	OBJECTS_DIR = debug/.obj
@@ -204,7 +203,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 6
+VERSION_BUILD = 7
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

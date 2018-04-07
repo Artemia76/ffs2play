@@ -447,6 +447,18 @@ class AirData : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   bool smoke() const;
   void set_smoke(bool value);
 
+  // optional double TASSpeed = 40;
+  void clear_tasspeed();
+  static const int kTASSpeedFieldNumber = 40;
+  double tasspeed() const;
+  void set_tasspeed(double value);
+
+  // optional double GNDSpeed = 41;
+  void clear_gndspeed();
+  static const int kGNDSpeedFieldNumber = 41;
+  double gndspeed() const;
+  void set_gndspeed(double value);
+
   // @@protoc_insertion_point(class_scope:ffs2play.AirData)
  private:
 
@@ -491,6 +503,8 @@ class AirData : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   bool stateeng3_;
   bool stateeng4_;
   bool smoke_;
+  double tasspeed_;
+  double gndspeed_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_ffs2play_2eproto();
   friend void protobuf_AssignDesc_ffs2play_2eproto();
@@ -1230,6 +1244,34 @@ inline void AirData::set_smoke(bool value) {
   
   smoke_ = value;
   // @@protoc_insertion_point(field_set:ffs2play.AirData.Smoke)
+}
+
+// optional double TASSpeed = 40;
+inline void AirData::clear_tasspeed() {
+  tasspeed_ = 0;
+}
+inline double AirData::tasspeed() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.TASSpeed)
+  return tasspeed_;
+}
+inline void AirData::set_tasspeed(double value) {
+  
+  tasspeed_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.TASSpeed)
+}
+
+// optional double GNDSpeed = 41;
+inline void AirData::clear_gndspeed() {
+  gndspeed_ = 0;
+}
+inline double AirData::gndspeed() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.GNDSpeed)
+  return gndspeed_;
+}
+inline void AirData::set_gndspeed(double value) {
+  
+  gndspeed_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.GNDSpeed)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS

@@ -154,7 +154,8 @@ namespace ffs2play
 		data.set_recolight(RecoLight);
 		data.set_smoke(Smoke);
 		data.set_onground(OnGround);
-
+		data.set_gndspeed(GroundSpeed);
+		data.set_tasspeed(TASSpeed);
 	}
 
     ///
@@ -202,5 +203,7 @@ namespace ffs2play
 		RecoLight = data.recolight();
 		Smoke = data.smoke();
 		OnGround = data.onground();
+		TASSpeed = data.tasspeed();
+		GroundSpeed = data.gndspeed();
 	}
 }

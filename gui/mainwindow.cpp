@@ -106,6 +106,12 @@ namespace ffs2play
 		connect(m_webManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
 
 		m_AIMapping = AIMapping::instance();
+#ifdef FFS_DEBUG
+		ui->dwDebugOpt->setEnabled(true);
+		setWindowTitle("FFS2Play(debug)");
+#else
+		delete ui->dwDebugOpt;
+#endif
 	}
 
 	///

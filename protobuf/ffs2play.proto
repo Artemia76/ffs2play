@@ -46,4 +46,6 @@ message AirData {
 	bool		StateEng3 = 37;
 	bool		StateEng4 = 38;
 	bool		Smoke = 39;
+	double		TASSpeed = 40;
+	double		GNDSpeed = 41;
 }

@@ -54,7 +54,7 @@ void protobuf_AssignDesc_ffs2play_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocalIPList, _is_default_instance_));
   AirData_descriptor_ = file->message_type(1);
-  static const int AirData_offsets_[39] = {
+  static const int AirData_offsets_[41] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, timestamp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, title_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, model_),
@@ -94,6 +94,8 @@ void protobuf_AssignDesc_ffs2play_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, stateeng3_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, stateeng4_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, smoke_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, tasspeed_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AirData, gndspeed_),
   };
   AirData_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -143,7 +145,7 @@ void protobuf_AddDesc_ffs2play_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\016ffs2play.proto\022\010ffs2play\"\031\n\013LocalIPLis"
-    "t\022\n\n\002IP\030\001 \003(\t\"\337\005\n\007AirData\022\021\n\tTimestamp\030\001"
+    "t\022\n\n\002IP\030\001 \003(\t\"\203\006\n\007AirData\022\021\n\tTimestamp\030\001"
     " \001(\003\022\r\n\005Title\030\002 \001(\t\022\r\n\005Model\030\003 \001(\t\022\014\n\004Ty"
     "pe\030\004 \001(\t\022\020\n\010Category\030\005 \001(\t\022\020\n\010Altitude\030\006"
     " \001(\001\022\026\n\016GroundAltitude\030\007 \001(\001\022\017\n\007Heading\030"
@@ -161,7 +163,8 @@ void protobuf_AddDesc_ffs2play_2eproto() {
     "(\010\022\023\n\013StrobeLight\030  \001(\010\022\020\n\010NavLight\030! \001("
     "\010\022\021\n\tRecoLight\030\" \001(\010\022\021\n\tStateEng1\030# \001(\010\022"
     "\021\n\tStateEng2\030$ \001(\010\022\021\n\tStateEng3\030% \001(\010\022\021\n"
-    "\tStateEng4\030& \001(\010\022\r\n\005Smoke\030\' \001(\010b\006proto3", 799);
+    "\tStateEng4\030& \001(\010\022\r\n\005Smoke\030\' \001(\010\022\020\n\010TASSp"
+    "eed\030( \001(\001\022\020\n\010GNDSpeed\030) \001(\001b\006proto3", 835);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ffs2play.proto", &protobuf_RegisterTypes);
   LocalIPList::default_instance_ = new LocalIPList();
@@ -513,6 +516,8 @@ const int AirData::kStateEng2FieldNumber;
 const int AirData::kStateEng3FieldNumber;
 const int AirData::kStateEng4FieldNumber;
 const int AirData::kSmokeFieldNumber;
+const int AirData::kTASSpeedFieldNumber;
+const int AirData::kGNDSpeedFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 AirData::AirData()
@@ -576,6 +581,8 @@ void AirData::SharedCtor() {
   stateeng3_ = false;
   stateeng4_ = false;
   smoke_ = false;
+  tasspeed_ = 0;
+  gndspeed_ = 0;
 }
 
 AirData::~AirData() {
@@ -644,7 +651,8 @@ void AirData::Clear() {
   ZR_(longitude_, squawk_);
   ZR_(door1pos_, throttleeng1_);
   ZR_(throttleeng2_, strobelight_);
-  ZR_(navlight_, smoke_);
+  ZR_(navlight_, tasspeed_);
+  gndspeed_ = 0;
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -1249,6 +1257,36 @@ bool AirData::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(321)) goto parse_TASSpeed;
+        break;
+      }
+
+      // optional double TASSpeed = 40;
+      case 40: {
+        if (tag == 321) {
+         parse_TASSpeed:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &tasspeed_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(329)) goto parse_GNDSpeed;
+        break;
+      }
+
+      // optional double GNDSpeed = 41;
+      case 41: {
+        if (tag == 329) {
+         parse_GNDSpeed:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &gndspeed_)));
+
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1492,6 +1530,16 @@ void AirData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(39, this->smoke(), output);
   }
 
+  // optional double TASSpeed = 40;
+  if (this->tasspeed() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(40, this->tasspeed(), output);
+  }
+
+  // optional double GNDSpeed = 41;
+  if (this->gndspeed() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(41, this->gndspeed(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:ffs2play.AirData)
 }
 
@@ -1716,6 +1764,16 @@ void AirData::SerializeWithCachedSizes(
   // optional bool Smoke = 39;
   if (this->smoke() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(39, this->smoke(), target);
+  }
+
+  // optional double TASSpeed = 40;
+  if (this->tasspeed() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(40, this->tasspeed(), target);
+  }
+
+  // optional double GNDSpeed = 41;
+  if (this->gndspeed() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(41, this->gndspeed(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:ffs2play.AirData)
@@ -1953,6 +2011,16 @@ int AirData::ByteSize() const {
     total_size += 2 + 1;
   }
 
+  // optional double TASSpeed = 40;
+  if (this->tasspeed() != 0) {
+    total_size += 2 + 8;
+  }
+
+  // optional double GNDSpeed = 41;
+  if (this->gndspeed() != 0) {
+    total_size += 2 + 8;
+  }
+
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -2102,6 +2170,12 @@ void AirData::MergeFrom(const AirData& from) {
   if (from.smoke() != 0) {
     set_smoke(from.smoke());
   }
+  if (from.tasspeed() != 0) {
+    set_tasspeed(from.tasspeed());
+  }
+  if (from.gndspeed() != 0) {
+    set_gndspeed(from.gndspeed());
+  }
 }
 
 void AirData::CopyFrom(const ::google::protobuf::Message& from) {
@@ -2167,6 +2241,8 @@ void AirData::InternalSwap(AirData* other) {
   std::swap(stateeng3_, other->stateeng3_);
   std::swap(stateeng4_, other->stateeng4_);
   std::swap(smoke_, other->smoke_);
+  std::swap(tasspeed_, other->tasspeed_);
+  std::swap(gndspeed_, other->gndspeed_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -2846,6 +2922,34 @@ void AirData::clear_smoke() {
   
   smoke_ = value;
   // @@protoc_insertion_point(field_set:ffs2play.AirData.Smoke)
+}
+
+// optional double TASSpeed = 40;
+void AirData::clear_tasspeed() {
+  tasspeed_ = 0;
+}
+ double AirData::tasspeed() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.TASSpeed)
+  return tasspeed_;
+}
+ void AirData::set_tasspeed(double value) {
+  
+  tasspeed_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.TASSpeed)
+}
+
+// optional double GNDSpeed = 41;
+void AirData::clear_gndspeed() {
+  gndspeed_ = 0;
+}
+ double AirData::gndspeed() const {
+  // @@protoc_insertion_point(field_get:ffs2play.AirData.GNDSpeed)
+  return gndspeed_;
+}
+ void AirData::set_gndspeed(double value) {
+  
+  gndspeed_ = value;
+  // @@protoc_insertion_point(field_set:ffs2play.AirData.GNDSpeed)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
