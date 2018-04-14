@@ -30,7 +30,7 @@
 #ifdef Q_OS_WIN32
 	#define BYTE CryptoPP::byte
 #else
-	#define BYTE byte
+	#define BYTE quint8
 #endif
 
 namespace ffs2play
