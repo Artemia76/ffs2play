@@ -51,6 +51,9 @@ build/
 *.old
 *.db
 *.smproj
+*.pb.cc
+*.pb.h
+*.pro.user
 
 # Visual C++ cache files
 ipch/

@@ -32,7 +32,7 @@ namespace ffs2play
 		pStream.readRawData(Buffer,Len);
 		Buffer[Len]='\0';
 		QString Result(Buffer);
-		delete Buffer;
+		delete[] Buffer;
 		return Result;
 	}
 
@@ -46,7 +46,7 @@ namespace ffs2play
 		char* buffer = new char[pMessage.ByteSize()];
 		pMessage.SerializeToArray(buffer,pMessage.ByteSize());
 		pStream.writeRawData(buffer,pMessage.ByteSize());
-		delete buffer;
+		delete[] buffer;
 	}
 }
 

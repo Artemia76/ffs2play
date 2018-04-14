@@ -242,8 +242,8 @@ namespace ffs2play {
 					error = UPNP_AddPortMapping(
 							m_urls.controlURL,
 							m_data.first.servicetype,
-							QString::number(m_port).toLatin1(),
-							QString::number(m_port).toLatin1(),
+							QString::number(m_port).toStdString().c_str(),
+							QString::number(m_port).toStdString().c_str(),
 							lanaddr,
 							"FFS2Play",
 							"UDP",
@@ -272,7 +272,7 @@ namespace ffs2play {
 			int error = UPNP_DeletePortMapping(
 						m_urls.controlURL,
 						m_data.first.servicetype,
-						QString::number(m_port).toLatin1(),
+						QString::number(m_port).toStdString().c_str(),
 						"UDP",
 						NULL
 			);

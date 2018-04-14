@@ -6,13 +6,13 @@
 
 QT       += core gui sql
 
-TEMPLATE = app
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 
 TARGET = ffs2play
-DEFINES += MINIUPNP_STATICLIB
-DEFINES += QT_DEBUG_PLUGINS=1
+TEMPLATE = app
+
+DEFINES += QT_NO_CAST_FROM_BYTEARRAY
+DEFINES += QT_NO_CAST_TO_ASCII
 
 CONFIG(release, debug|release) {
 	DESTDIR = release
@@ -35,6 +35,7 @@ win32 {
 	OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
 	CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
 	DEFINES += _WINSOCKAPI_
+	DEFINES += MINIUPNP_STATICLIB
 CONFIG( debug, debug|release ) {
 	CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\Win32\Output\Debug"
 	MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\msvc\Debug
@@ -59,6 +60,11 @@ unix{
 					/usr/include/cryptopp
 }
 
+#Protobuf generation
+
+PROTOS = $$files(protobuf/*.proto)
+include(protobuf.pri)
+
 UI_DIR =		gui
 
 SOURCES +=		main.cpp \
@@ -70,7 +76,6 @@ SOURCES +=		main.cpp \
 				net/peer.Requests.cpp \
 				net/peer.Event.cpp \
 				net/udpserver.cpp \
-				protobuf/ffs2play.pb.cc \
 				sim/aircraftstate.cpp \
 				sim/simconnector.cpp \
 				sim/xpmanager.cpp \
@@ -97,7 +102,6 @@ HEADERS  +=     gui/dialogprofils.h \
 				net/chttprequest.h \
 				net/peer.h \
 				net/udpserver.h \
-				protobuf/ffs2play.pb.h \
 				sim/aircraftstate.h \
 				sim/simconnector.h \
 				sim/xpmanager.h \
@@ -157,6 +161,8 @@ RC_FILE = ffs2play.rc
 
 RESOURCES += ressources.qrc
 
+CONFIG += c++14
+
 unix {
 CONFIG += link_pkgconfig
 PKGCONFIG += protobuf
@@ -171,9 +177,8 @@ win {
 	DISTFILES += ffs2play.rc
 }
 
-DISTFILES += intl/ffs2play_fr_FR.ts \
+DISTFILES += \
 	README.md
-DISTFILES += protobuf/ffs2play.proto
 
 
 isEmpty(TARGET_EXT) {
@@ -203,9 +208,12 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 7
+VERSION_BUILD = 8
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
 DEFINES += APP_BUILD=$$VERSION_BUILD
 
+QMAKE_EXTRA_TARGETS += versionTarget
+
+#QMAKE_EXTRA_TARGETS += deploy
