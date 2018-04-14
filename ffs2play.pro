@@ -166,11 +166,12 @@ CONFIG += c++14
 unix {
 CONFIG += link_pkgconfig
 PKGCONFIG += protobuf
-PKGCONFIG += libcrypto++
 
-LIBS += -lminiupnpc
-LIBS += -lssl
-LIBS += -lcrypto
+LIBS	+= -lminiupnpc
+LIBS	+= -lssl
+LIBS	+= -lcryptopp
+LIBS	+= -lcrypto
+
 }
 
 win {
