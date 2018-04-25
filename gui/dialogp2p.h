@@ -68,6 +68,8 @@ namespace ffs2play
 		// Configuration file Access
 		QSettings			m_settings;
 
+		AIMapping*			m_AIMapping;
+
 		// Flag to memorize if something is changed on current profil edition
 		bool				m_changed;
 		bool				m_needP2PRestart;

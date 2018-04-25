@@ -59,10 +59,6 @@ namespace ffs2play
 			HRESULT hr;
 			if (SUCCEEDED (hr = SimConnect_Open (&m_hSimConnect,QCoreApplication::applicationName().toStdString().c_str(),NULL,NULL, (HANDLE)WM_USER_SIMCONNECT,0)))
 			{
-				// Keep connexion status
-				m_connected = true;
-				m_log->log(tr("Connected to FS."));
-				emit(fireSimConnected());
 			}
 			else
 			{
@@ -82,6 +78,7 @@ namespace ffs2play
 			m_connected = false;
 			SimConnect_Close(m_hSimConnect);
 			m_log->log(tr("Disconnected from FS."));
+			emit(fireSimDisconnected());
 		}
 	}
 
@@ -124,7 +121,7 @@ namespace ffs2play
 			case 10:
 				return SIM_VERSION::FSX;
 			default:
-				return SIM_VERSION::FSX_STEAM;
+				return SIM_VERSION::UNKNOWN;
 		}
 	}
 
@@ -356,10 +353,15 @@ namespace ffs2play
 	/// \brief CSCManager::OnRecvOpen
 	/// \param data
 	///
-	void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN*)
+	void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
 	{
 		m_log->log(tr("Connected to simulator."));
+		m_appVersionMajor = (int)data->dwApplicationVersionMajor;
 		InitSimConnect();
+		// Keep connexion status
+		m_connected = true;
+		m_log->log(tr("Connected to FS."));
+		emit(fireSimConnected());
 	}
 
 	///

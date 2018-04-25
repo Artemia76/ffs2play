@@ -32,6 +32,7 @@
 #include "singleton/webmanager.h"
 #include "singleton/simbasemanager.h"
 
+#include <QFileDialog>
 #include <QMessageBox>
 
 namespace ffs2play
@@ -58,6 +59,8 @@ namespace ffs2play
 		// Get P2PManager instance
 		m_P2PManager = CP2PManager::instance();
 
+		m_AIMapping = AIMapping::instance();
+
 		// Get the default profil selected in configuration file
 		m_settings.beginGroup("P2P");
 		ui->cbInfoSim->setChecked(m_settings.value("InfoEnable", true).toBool());
@@ -70,7 +73,10 @@ namespace ffs2play
 		ui->cbShadow->setChecked(m_P2PManager->getShadowMode());
 		m_needP2PRestart=false;
 		m_needDBReload=false;
-
+		for (QString Item : m_AIMapping->getPathList())
+		{
+			ui->lvItems->addItem(Item);
+		}
 		if (CWebManager::instance()->isConnected()) ui->numPort->setEnabled(false);
 
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
@@ -244,7 +250,18 @@ namespace ffs2play
 
 	void DialogP2P::on_btnAddItem_released()
 	{
-
+		QFileDialog FileDlg(this);
+		QString Path;
+		FileDlg.setFileMode(QFileDialog::Directory);
+		if (FileDlg.exec())
+		{
+			Path = FileDlg.selectedFiles().first();
+			if (!Path.isEmpty())
+			{
+				m_AIMapping->addPath(Path);
+				ui->lvItems->addItem(Path);
+			}
+		}
 	}
 
 	void DialogP2P::on_btnDelItem_released()

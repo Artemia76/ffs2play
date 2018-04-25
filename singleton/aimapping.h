@@ -22,8 +22,9 @@ namespace ffs2play
 	private:
 		explicit			AIMapping(QObject *parent = nullptr);
 		static	AIMapping*	createInstance();
-		QString				findInstallationPath (const QString& pKey);
+		//QString				findInstallationPath (const QString& pKey);
 		void				initSQLite();
+		void				checkSimTable();
 		void				DBFileUpdate(const QString& pKey,const QString& pPath);
 		void				DBFilePurge ();
 
@@ -54,12 +55,15 @@ namespace ffs2play
 		QMap<QString,QString> getList();
 		QString				getPath(const QString& pCheckSum);
 		QString				getFileData(const QString& pKey);
-
+		QStringList			getPathList();
+		bool				addPath(const QString& pPath);
+		bool				delPath(const QString& pPath);
 
 	signals:
 
 	private slots:
 		void				onSimReveiveOpen();
+		void				onSimReceiveClose();
 		void				scanSimObject();
 	public slots:
 	};
