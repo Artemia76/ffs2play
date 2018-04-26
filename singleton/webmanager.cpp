@@ -262,6 +262,10 @@ namespace ffs2play
 				QDomElement xmlOnGround = pDoc.createElement("onground");
 				xmlOnGround.appendChild(pDoc.createTextNode(QString::number(State.OnGround,'f',0)));
 				xmlLiveUpdate.appendChild(xmlOnGround);
+				QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
+				QDomElement xmlSim = pDoc.createElement("sim");
+				xmlSim.appendChild(pDoc.createTextNode( version.valueToKey(m_simManager->getVersion())));
+				xmlLiveUpdate.appendChild(xmlSim);
 				break;
 			}
 			case atc:

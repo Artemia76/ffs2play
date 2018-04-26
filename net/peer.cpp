@@ -135,7 +135,7 @@ namespace ffs2play
 		m_settings.beginGroup("P2P");
 		if (m_settings.value("P2PInfoEnable", true).toBool())
 		{
-			if (m_simManager->getVersion()!=SIM_VERSION::XPLANE)
+			if (m_simManager->getVersion()!=SimConnector::SIM_VERSION::XPLANE)
 				m_simManager->sendScrollingText(CallSign + tr(" is connected on P2P Network"));
 		}
 		m_settings.endGroup();
@@ -163,7 +163,7 @@ namespace ffs2play
 		m_settings.beginGroup("P2P");
 		if (m_settings.value("P2PInfoEnable", true).toBool())
 		{
-			if (m_simManager->getVersion()!=SIM_VERSION::XPLANE)
+			if (m_simManager->getVersion()!=SimConnector::SIM_VERSION::XPLANE)
 				m_simManager->sendScrollingText(CallSign + tr(" leave from P2P Network"));
 		}
 		m_settings.endGroup();
@@ -186,7 +186,7 @@ namespace ffs2play
 					Qt::darkBlue,LEVEL_NORMAL);
 #endif
 			m_AIResolution = m_AIMapping->SolveTitle(m_data.Title,m_data.Model, m_data.Type);
-			if (m_AIResolution.Titre != "Mooney Bravo")
+			if (m_AIResolution.Title != "Mooney Bravo")
 			{
 #ifdef FFS_DEBUG
 				m_log->log("Peer [" + m_callSign + "] " + tr(" the local request has find a solution"), Qt::darkBlue,LEVEL_NORMAL);
@@ -228,9 +228,9 @@ namespace ffs2play
 			if (m_data.Category == "Helicopter") m_trySimpleAI = true;
 			m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-			m_log->log("Peer [" + m_callSign + "] " + tr(" Requesting creation of aircraft with Title = ") + m_AIResolution.Titre, Qt::darkBlue,LEVEL_NORMAL);
+			m_log->log("Peer [" + m_callSign + "] " + tr(" Requesting creation of aircraft with Title = ") + m_AIResolution.Title, Qt::darkBlue,LEVEL_NORMAL);
 #endif
-			m_simManager->createAI(m_AIResolution.Titre, m_tail,m_data, m_trySimpleAI);
+			m_simManager->createAI(m_AIResolution.Title, m_tail,m_data, m_trySimpleAI);
 		}
 	}
 

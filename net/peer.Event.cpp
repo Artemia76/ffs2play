@@ -331,7 +331,7 @@ namespace ffs2play
 			}
 			else
 			{
-				m_AIResolution.Titre = "Mooney Bravo";
+				m_AIResolution.Title = "Mooney Bravo";
 				m_AIResolution.CG_Height = 3.7;
 				m_AIResolution.Pitch = 2.9;
 #ifdef FFS_DEBUG

@@ -104,7 +104,7 @@ namespace ffs2play
 	/// \return
 	///
 
-	SIM_VERSION CXPManager::getVersion()
+	SimConnector::SIM_VERSION CXPManager::getVersion()
 	{
 		return SIM_VERSION::XPLANE;
 	}

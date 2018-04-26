@@ -244,9 +244,9 @@ namespace ffs2play
 		}
 	}
 
-	SIM_VERSION simbasemanager::getVersion()
+	SimConnector::SIM_VERSION simbasemanager::getVersion()
 	{
-		SIM_VERSION Version = SIM_VERSION::UNKNOWN;
+		SimConnector::SIM_VERSION Version = SimConnector::SIM_VERSION::UNKNOWN;
 		if (m_initialized && (m_connector!=nullptr))
 		{
 			Version = m_connector->getVersion();

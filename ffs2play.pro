@@ -92,7 +92,8 @@ SOURCES +=		main.cpp \
 				tools/getappversion.cpp \
 				tools/datetime.cpp \
 				tools/calculation.cpp \
-				tools/datagram.cpp
+				tools/datagram.cpp \
+                tools/iniparser.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
@@ -118,7 +119,8 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/getappversion.h \
 				tools/version.h \
 				tools/calculation.h \
-				tools/datagram.h
+				tools/datagram.h \
+                tools/iniparser.h
 win32 {
 HEADERS	+=		sim/scmanager.h
 }
@@ -179,7 +181,8 @@ win {
 }
 
 DISTFILES += \
-	README.md
+	README.md \
+    ffs2play.iss
 
 
 isEmpty(TARGET_EXT) {

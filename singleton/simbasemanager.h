@@ -72,7 +72,7 @@ namespace ffs2play
 		bool					isInitialized();
 		const CAircraftState	getAircraftState();
 		void					sendScrollingText(const QString& pMessage);
-		SIM_VERSION				getVersion();
+		SimConnector::SIM_VERSION getVersion();
 		SIM_TYPE				getType();
 		const QList<SIM_TYPE>&	getSimList();
 		void					setSimType(SIM_TYPE pSimType);

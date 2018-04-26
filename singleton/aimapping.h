@@ -11,7 +11,7 @@ namespace ffs2play
 {
 	struct AIResol
 	{
-		QString Titre;
+		QString Title;
 		double  CG_Height;
 		double  Pitch;
 	};
@@ -27,6 +27,7 @@ namespace ffs2play
 		void				checkSimTable();
 		void				DBFileUpdate(const QString& pKey,const QString& pPath);
 		void				DBFilePurge ();
+		QString				MD5Hash(const QString& pFileName);
 
 		bool				m_Initialized;
 		CLogger*			m_log;
@@ -62,7 +63,7 @@ namespace ffs2play
 	signals:
 
 	private slots:
-		void				onSimReveiveOpen();
+		void				onSimReceiveOpen();
 		void				onSimReceiveClose();
 		void				scanSimObject();
 	public slots:

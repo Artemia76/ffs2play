@@ -1,5 +1,6 @@
 #include "aimapping.h"
 #include "singleton/singleton.h"
+#include "tools/iniparser.h"
 
 namespace ffs2play
 {
@@ -10,10 +11,11 @@ namespace ffs2play
 	AIMapping::AIMapping(QObject *parent) : QObject(parent)
 	{
 		m_Initialized =false;
+		m_thread = nullptr;
 		m_log = CLogger::instance();
 		m_simManager = simbasemanager::instance();
-		connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReveiveOpen()));
-		connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReveiveClose()));
+		connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
+		connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
 		initSQLite();
 	}
 
@@ -22,8 +24,8 @@ namespace ffs2play
 	///
 	AIMapping::~AIMapping()
 	{
-		disconnect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReveiveOpen()));
-		disconnect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReveiveClose()));
+		disconnect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
+		disconnect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
 		m_DB.close();
 	}
 
@@ -106,59 +108,13 @@ namespace ffs2play
 		return Response;
 	}*/
 
-	void AIMapping::onSimReveiveOpen()
+	void AIMapping::onSimReceiveOpen()
 	{
 		if (m_simManager==nullptr) return;
 		m_AircraftPaths.clear();
-		switch (m_simManager->getVersion())
-		{
-			case SIM_VERSION::FLIGHTGEAR:
-			{
-				m_Table = "FlightGear";
-				break;
-			}
-			case SIM_VERSION::FSX:
-			{
-				m_Table = "FSX";
-				break;
-			}
-			case SIM_VERSION::FSX_STEAM:
-			{
-				m_Table = "FSX_Steam";
-				break;
-			}
-			case SIM_VERSION::P3D_V2:
-			{
-				m_Table = "P3D_V2";
-				break;
-			}
-			case SIM_VERSION::P3D_V3:
-			{
-				m_Table = "P3D_V3";
-				break;
-			}
-			case SIM_VERSION::P3D_V4:
-			{
-				m_Table = "P3D_V4";
-				break;
-			}
-			case SIM_VERSION::XPLANE:
-			{
-				m_Table = "XPlane";
-				break;
-			}
-			case SIM_VERSION::UNKNOWN:
-			default:
-			{
-				m_Table.clear();
-				break;
-			}
-			if (m_AircraftPaths.count() > 0)
-			{
-				checkSimTable();
-				startScanSimObject();
-			}
-		}
+		QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
+		m_Table = version.valueToKey(m_simManager->getVersion());
+		startScanSimObject();
 	}
 
 	void AIMapping::onSimReceiveClose()
@@ -187,11 +143,19 @@ namespace ffs2play
 #endif
 			return;
 		}
-		query.prepare( "create table if not exists Aircrafts ( checksum varchar(32), Sim varchar(16), Titre varchar(256) collate nocase, Editeur varchar(100) collate nocase, Type varchar(30) collate nocase, Model varchar(10) collate nocase, Path varchar(256) collate nocase, Categorie varchar(20) collate nocase, NbMoteur int, TypeMoteur int, CGHeight real, Pitch real);");
+		query.prepare("create table if not exists Aircrafts ( checksum varchar(32), Sim varchar(16) collate nocase, Title varchar(256) collate nocase, Editor varchar(100) collate nocase, Type varchar(30) collate nocase, Model varchar(10) collate nocase, Path varchar(256) collate nocase, Category varchar(20) collate nocase, NbEngine int, EngineType int, CGHeight real, Pitch real);");
 		if (!query.exec())
 		{
 #ifdef FFS_DEBUG
-			m_log->log(tr("AIMapping : Fail to create SimPath Table"), Qt::darkYellow,LEVEL_NORMAL);
+			m_log->log(tr("AIMapping : Fail to create Aircrafts Table"), Qt::darkYellow,LEVEL_NORMAL);
+#endif
+			return;
+		}
+		query.prepare("create table if not exists Replacement (RemoteTitle varchar(256) UNIQUE, LocalTitle varchar(256), Sim varchar(16) collate nocase)");
+		if (!query.exec())
+		{
+#ifdef FFS_DEBUG
+			m_log->log(tr("AIMapping : Fail to create Replacement Table"), Qt::darkYellow,LEVEL_NORMAL);
 #endif
 			return;
 		}
@@ -203,8 +167,13 @@ namespace ffs2play
 		if (!m_DB.isOpen() && (!m_Table.isEmpty())) return;
 		QSqlQuery query("PRAGMA table_info(" + m_Table + ");");
 	}
+
+	///
+	/// \brief AIMapping::startScanSimObject
+	///
 	void AIMapping::startScanSimObject()
 	{
+		m_AircraftPaths = getPathList();
 		if (m_AircraftPaths.count() == 0) return;
 		if (m_thread != nullptr)
 		{
@@ -216,6 +185,9 @@ namespace ffs2play
 		m_thread->start();
 	}
 
+	///
+	/// \brief AIMapping::scanSimObject
+	///
 	void AIMapping::scanSimObject()
 	{
 		m_NbAdded=0;
@@ -223,7 +195,13 @@ namespace ffs2play
 		m_log->log(tr("Start updating aircraft database..."));
 		for (QString Directory : m_AircraftPaths)
 		{
-
+			QDirIterator it(Directory, QStringList() << "aircraft.cfg" << "sim.cfg" << "*.acf", QDir::Files, QDirIterator::Subdirectories);
+			while (it.hasNext())
+			{
+				QString FileName = it.next();
+				QString Hash = MD5Hash(FileName);
+				DBFileUpdate(Hash,FileName);
+			}
 		}
 		DBFilePurge();
 		m_log->log(tr("End of update : ") + QString::number(m_NbAdded) + tr(" aircrafts added and ") + QString::number(m_NbUpdated) + tr(" updated."));
@@ -232,20 +210,194 @@ namespace ffs2play
 
 	void AIMapping::DBFileUpdate(const QString &pKey, const QString &pPath)
 	{
-		if (!m_Initialized) return;
+		if ((!m_Initialized) || m_Table.isEmpty()) return;
+		QSqlQuery query;
+		query.prepare( "SELECT checksum FROM Aircrafts WHERE (checksum = :checksum) and (Sim = :Sim)");
+		query.bindValue(":checksum",pKey);
+		query.bindValue(":Sim",m_Table);
+		if (query.exec())
+		{
+			if (!query.next())
+			{
+#ifdef FFS_DEBUG
+				m_log->log(tr("AIMapping : No record was found for ") + pKey, Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+				try
+				{
+					IniParser s(pPath,m_simManager->getType());
+					QString Editor = s.value("fltsim.0", "ui_createdby").toString();
+					QString Atc_model = s.value("General","atc_model").toString();
+					QString Atc_type =  s.value("General","atc_type").toString();
+					QString Category =  s.value("General","Category").toString();
+					int Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
+					double Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
+					double Static_Pitch =  s.value("contact_points","static_pitch").toDouble();
+#if FFS_DEBUG
+					m_log->log(tr("AIMapping : Path = ") + pPath,Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : Editor = ") + Editor,Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : ATCModel = ") + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : ATCType = ") + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : Category = ") + Category, Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : EngineType = ") + QString::number(Engine_Type), Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : CG Height = ") +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : Pitch = ") +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+					int nb_moteur = 0;
+					while (true)
+					{
+						QString Reponse = s.value("GeneralEngineData", QString("Engine.") + QString::number(nb_moteur)).toString();
+						if (Reponse != "")
+						{
+							nb_moteur++;
+						}
+						else break;
+					}
+#if FFS_DEBUG
+					m_log->log(tr("AIMapping : Engine quantity = ") + QString::number(nb_moteur),Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+					int nb_title = 0;
+					while (true)
+					{
+						QString Title = s.value(QString("fltsim.") + QString::number(nb_title), "title").toString();
+						if (Title != "")
+						{
+#if FFS_DEBUG
+							m_log->log(tr("AIMapping : livery found Title = ") + Title,Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+							nb_title++;
+							query.prepare("SELECT * FROM Aircrafts WHERE Title = :Title AND checksum = :checksum");
+							query.bindValue(":Title",Title);
+							query.bindValue(":checksum",pKey);
+							if (query.exec())
+							{
+								// If there is no result, we have a new aircraft to register
+								if (!query.next())
+								{
+									query.prepare("INSERT INTO Aircrafts (checksum, Sim, Title, Editor, Type, Model, Path, Category, NbEngine, EngineType, CGHeight, Pitch)"
+												  "VALUES (:checksum, :Sim, :Title, :Editor, :Type, :Model, :Path, :Category, :NBEngine, :EngineType, :CGHeight, :Pitch)");
+									query.bindValue(":checksum", pKey);
+									query.bindValue(":Sim",m_Table);
+									query.bindValue(":Title", Title);
+									query.bindValue(":Editor", Editor);
+									query.bindValue(":Type", Atc_type);
+									query.bindValue(":Model", Atc_model);
+									query.bindValue(":Path", pPath);
+									query.bindValue(":Category", Category);
+									query.bindValue(":NBEngine", nb_moteur);
+									query.bindValue(":EngineType", Engine_Type);
+									query.bindValue(":CGHeight", Static_CG_Height);
+									query.bindValue(":Pitch", Static_Pitch);
+									query.exec();
+									m_NbAdded++;
+								}
+								else //Update Record
+								{
+									query.prepare("UPDATE Aircrafts SET checksum = :checksum, Editor = :Editor, Type = :Type, Model = :Model, Path = :Path, Category = :Category, NbEngine = :NbEngine, EngineType = :EngineType, CGHeight = :CHeight, Pitch = :Pitch WHERE (Title = :Title) and (Sim = :Sim)");
+									query.bindValue(":checksum", pKey);
+									query.bindValue(":Sim",m_Table);
+									query.bindValue(":Title", Title);
+									query.bindValue(":Editor", Editor);
+									query.bindValue(":Type", Atc_type);
+									query.bindValue(":Model", Atc_model);
+									query.bindValue(":Path", pPath);
+									query.bindValue(":Category", Category);
+									query.bindValue(":NBEngine", nb_moteur);
+									query.bindValue(":EngineType", Engine_Type);
+									query.bindValue(":CGHeight", Static_CG_Height);
+									query.bindValue(":Pitch", Static_Pitch);
+									query.exec();
+									m_NbUpdated++;
+								}
+							}
+						}
+						else break;
+					}
+				}
+				catch (IniParserException& ex)
+				{
+					m_log->log(tr("AIMapping : IniParser error = ") + ex.Message,Qt::magenta,LEVEL_NORMAL);
+				}
+			}
+		}
+		else m_log->log(tr("AIMapping : Error = ") + query.lastError().text(), Qt::darkYellow,LEVEL_VERBOSE);
+
 	}
 
 	///
 	/// \brief AIMapping::SolveTitle
 	/// \return
 	///
-	AIResol AIMapping::SolveTitle(const QString& /*pTitle*/, const QString& /*pModel*/, const QString& /*pType*/)
+	AIResol AIMapping::SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType)
 	{
 		//Default substitute airtcraft
 		AIResol Resol;
-		Resol.Titre = "Mooney Bravo";
+		QString Title = pTitle.toLower();
+		QString Model = pModel.toLower();
+		QString Type = pType.toLower();
+
+		Resol.Title = "Mooney Bravo";
 		Resol.CG_Height = 3.7;
 		Resol.Pitch = 2.9;
+		if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
+		// Check local rules
+		QString Rule = getRule(Title);
+		if (Rule != "")
+		{
+#ifdef FFS_DEBUG
+			m_log->log(tr("AIMapping : Local rule found in DB : ") +  Title + tr(" replaced by ") + Rule, Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+			Title = Rule;
+		}
+		// Check if Title exist in database
+		QSqlQuery query;
+		query.prepare( "SELECT Title,CGHeight,Pitch FROM Aircrafts WHERE Title = :Title");
+		query.bindValue(":Sim",m_Table);
+		query.bindValue(":Title",Title);
+
+		if (query.exec())
+		{
+			qDebug(Title.toStdString().c_str());
+			if (query.next())
+			{
+				Resol.Title = query.value(0).toString();
+				Resol.CG_Height = query.value(1).toDouble();
+				Resol.Pitch = query.value(2).toDouble();
+#ifdef FFS_DEBUG
+				m_log->log(tr("AIMapping : Title Match found in database : ") + Resol.Title, Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+			}
+			else
+			{
+				query.prepare( "SELECT Title,CGHeight,Pitch FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
+				query.bindValue(":Sim",m_Table);
+				query.bindValue(":Model",Model);
+				if (query.exec())
+				{
+					if (query.next())
+					{
+						Resol.Title = query.value(0).toString();
+						Resol.CG_Height = query.value(1).toDouble();
+						Resol.Pitch = query.value(2).toDouble();
+		#ifdef FFS_DEBUG
+						m_log->log(tr("AIMapping : ATC Model Match found in database : ") + Resol.Title, Qt::darkYellow,LEVEL_VERBOSE);
+		#endif
+					}
+				}
+				else
+				{
+#ifdef FFS_DEBUG
+					m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+				}
+			}
+
+		}
+		else
+		{
+#ifdef FFS_DEBUG
+				m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+		}
 		return Resol;
 	}
 
@@ -418,5 +570,18 @@ namespace ffs2play
 			return false;
 		}
 		return true;
+	}
+	QString AIMapping::MD5Hash(const QString& pFileName)
+	{
+		QFile f(pFileName);
+		if (f.open(QFile::ReadOnly))
+		{
+		   QCryptographicHash hash(QCryptographicHash::Md5);
+		   if (hash.addData(&f))
+		   {
+			   return QString(hash.result().toHex());
+		   }
+		}
+		return "";
 	}
 }

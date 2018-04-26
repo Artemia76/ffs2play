@@ -107,21 +107,21 @@ namespace ffs2play
 	/// \brief CSCManager::getVersion
 	/// \return
 	///
-	SIM_VERSION CSCManager::getVersion()
+	SimConnector::SIM_VERSION CSCManager::getVersion()
 	{
-		if (!m_connected) return SIM_VERSION::UNKNOWN;
+		if (!m_connected) return SimConnector::SIM_VERSION::UNKNOWN;
 		switch (m_appVersionMajor)
 		{
 			case 2:
-				return SIM_VERSION::P3D_V2;
+				return SimConnector::SIM_VERSION::P3D_V2;
 			case 3:
-				return SIM_VERSION::P3D_V3;
+				return SimConnector::SIM_VERSION::P3D_V3;
 			case 4:
-				return SIM_VERSION::P3D_V4;
+				return SimConnector::SIM_VERSION::P3D_V4;
 			case 10:
-				return SIM_VERSION::FSX;
+				return SimConnector::SIM_VERSION::FSX;
 			default:
-				return SIM_VERSION::UNKNOWN;
+				return SimConnector::SIM_VERSION::UNKNOWN;
 		}
 	}
 

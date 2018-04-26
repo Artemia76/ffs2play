@@ -31,19 +31,6 @@
 
 namespace ffs2play
 {
-
-	enum class SIM_VERSION
-	{
-		FSX,
-		FSX_STEAM,
-		P3D_V2,
-		P3D_V3,
-		P3D_V4,
-		XPLANE,
-		FLIGHTGEAR,
-		UNKNOWN
-	};
-
 	/// <summary>
 	/// Enumération des évenements du simulateur à traiter
 	/// </summary>
@@ -100,6 +87,20 @@ namespace ffs2play
 	public:
 		explicit		SimConnector(QObject *parent = nullptr);
 		virtual			~SimConnector();
+
+		enum SIM_VERSION
+		{
+			FSX,
+			FSX_STEAM,
+			P3D_V2,
+			P3D_V3,
+			P3D_V4,
+			XPLANE,
+			FLIGHTGEAR,
+			UNKNOWN
+		};
+		Q_ENUM(SIM_VERSION)
+
 		bool			isConnected();
 	protected:
 		CLogger*		m_log;

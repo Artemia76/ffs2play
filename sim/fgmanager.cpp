@@ -81,7 +81,7 @@ namespace ffs2play
 	/// \brief CFGManager::getVersion
 	/// \return
 	///
-	SIM_VERSION CFGManager::getVersion()
+	SimConnector::SIM_VERSION CFGManager::getVersion()
 	{
 		return SIM_VERSION::FLIGHTGEAR;
 	}
