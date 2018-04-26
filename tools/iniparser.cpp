@@ -103,7 +103,7 @@ namespace ffs2play
 			Key = Key.replace("="," ");
 			Key = Key.replace("," ," ");
 
-			//QStringList parser = Key.split(QRegExp("\\s+"));
+			QStringList parser = Key.split(QRegExp("\\s+"));
 
 			if (parser.count()>1)
 			{
