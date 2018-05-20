@@ -180,8 +180,8 @@ namespace ffs2play
 			if (m_thread->isRunning()) m_thread->exit();
 		}
 		m_thread = new QThread();
-		connect(m_thread, SIGNAL(started()), this, SLOT(scanSimObject()));
-		m_thread->setPriority(QThread::LowestPriority);
+		m_thread->setPriority(QThread::IdlePriority);
+		connect(m_thread, SIGNAL(started()), this, SLOT(scanSimObject()),Qt::DirectConnection);
 		m_thread->start();
 	}
 
@@ -356,7 +356,6 @@ namespace ffs2play
 
 		if (query.exec())
 		{
-			qDebug(Title.toStdString().c_str());
 			if (query.next())
 			{
 				Resol.Title = query.value(0).toString();

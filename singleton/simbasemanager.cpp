@@ -54,7 +54,7 @@ namespace ffs2play
 		}
 		m_thread = new QThread();
 		//this->moveToThread(m_thread);
-		connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()));
+		connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()),Qt::DirectConnection);
 		connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
 		load(m_simType);
 	}
@@ -181,12 +181,12 @@ namespace ffs2play
 	void simbasemanager::close ()
 	{
 		if (!m_bRunning) return;
+		m_bRunning=false;
+		m_thread->wait(0);
 		if (m_connector->isConnected())
 		{
 			m_connector->close();
 		}
-		m_bRunning=false;
-		m_thread->wait(0);
 		emit(closed());
 	}
 
@@ -212,7 +212,7 @@ namespace ffs2play
 		while (m_bRunning)
 		{
 			m_connector->main_loop();
-			QApplication::processEvents();
+			//QApplication::processEvents();
 			m_thread->msleep(1);
 		}
 		emit(finished());

@@ -19,6 +19,7 @@ namespace ffs2play
 	class AIMapping : public QObject
 	{
 		Q_OBJECT
+		friend class FileExplorer;
 	private:
 		explicit			AIMapping(QObject *parent = nullptr);
 		static	AIMapping*	createInstance();

@@ -100,7 +100,10 @@ namespace ffs2play
 	void CSCManager::main_loop()
 	{
 		HRESULT hr;
-		hr=SimConnect_CallDispatch(m_hSimConnect,CSCManager::DispatchCallback,this);
+		if (m_hSimConnect!=nullptr)
+		{
+			hr=SimConnect_CallDispatch(m_hSimConnect,CSCManager::DispatchCallback,this);
+		}
 	}
 
 	///

@@ -36,7 +36,7 @@ namespace ffs2play
 			while (!in.atEnd())
 			{
 				QString NewGroup;
-				QString Line = in.readLine().toLower();
+				QString Line = in.readLine();
 				bool is_group=false;
 				if (m_simType==SIM_TYPE::FSX)
 				{
@@ -45,7 +45,7 @@ namespace ffs2play
 					if (rx.indexIn(Line)>=0)
 					{
 						is_group = true;
-						NewGroup=rx.cap(1);
+						NewGroup=rx.cap(1).toLower();
 					}
 				}
 				if (m_simType==SIM_TYPE::XPLANE)
@@ -72,7 +72,7 @@ namespace ffs2play
 					else
 					{
 						//Clean space, tabs char
-						Line.remove(" ");
+						//Line.remove(" ");
 						Line.remove("\t");
 						Keys.append(Line);
 					}
@@ -95,19 +95,18 @@ namespace ffs2play
 	{
 		QVariant Result;
 		Result.setValue(QString(""));
-		QString Parameter =pParameter.toLower();
+		QString Parameter = pParameter.toLower();
 		QString Group = pGroup.toLower();
 		QStringList Keys = m_GroupMap[Group];
 		for (QString Key : Keys)
 		{
-			Key = Key.replace("="," ");
-			Key = Key.replace("," ," ");
-
-			QStringList parser = Key.split(QRegExp("\\s+"));
+			QStringList parser = Key.split('=');
 
 			if (parser.count()>1)
 			{
-				if (parser[0]==Parameter)
+				parser[0].remove(" ");
+				parser[0].remove("\t");
+				if (parser[0].compare(Parameter,Qt::CaseInsensitive)==0)
 				{
 					Result.setValue(parser[1]);
 					break;
