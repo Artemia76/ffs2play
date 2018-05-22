@@ -36,6 +36,7 @@
 
 #include "singleton/clogger.h"
 #include "singleton/p2pmanager.h"
+#include "singleton/simbasemanager.h"
 
 namespace Ui {
 class DialogP2P;
@@ -64,6 +65,9 @@ namespace ffs2play
 
 		// Web Manager singleton instance
 		CP2PManager*		m_P2PManager;
+
+		// Simulator Manager singleton instance
+		simbasemanager*		m_SimManager;
 
 		// Configuration file Access
 		QSettings			m_settings;

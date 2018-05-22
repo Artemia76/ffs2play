@@ -59,7 +59,11 @@ namespace ffs2play
 		// Get P2PManager instance
 		m_P2PManager = CP2PManager::instance();
 
+		// Get AIMapping instance
 		m_AIMapping = AIMapping::instance();
+
+		// Get SimManager instance
+		m_SimManager = simbasemanager::instance();
 
 		// Get the default profil selected in configuration file
 		m_settings.beginGroup("P2P");
@@ -80,6 +84,12 @@ namespace ffs2play
 		if (CWebManager::instance()->isConnected()) ui->numPort->setEnabled(false);
 
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+		if (m_SimManager->getVersion()==SimConnector::SIM_VERSION::UNKNOWN)
+		{
+			ui->btnAddItem->setEnabled(false);
+			ui->btnDelItem->setEnabled(false);
+			ui->lvItems->setEnabled(false);
+		}
 	}
 
 	///
@@ -266,7 +276,7 @@ namespace ffs2play
 
 	void DialogP2P::on_btnDelItem_released()
 	{
-
+		qDebug() << QString::number(ui->lvItems->currentRow());
 	}
 
 	void DialogP2P::on_numPort_valueChanged(int)
