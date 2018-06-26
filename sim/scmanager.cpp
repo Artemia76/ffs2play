@@ -775,7 +775,7 @@ namespace ffs2play
 		if (m_connected)
 		{
 #ifdef FFS_DEBUG
-			m_log->log("SCManager : " + tr("Create_AI Title = ")+ pAircraft + tr(" ; Tail = ")+pTail + tr(" ; NonAIObject=") + QString::number(pNonAIObject), Qt::darkBlue,LEVEL_NORMAL);
+			m_log->log("SCManager : " + tr("Create_AI Title = ")+ QString::fromStdString(pAircraft.title()) + tr(" ; Tail = ")+pTail + tr(" ; NonAIObject=") + QString::number(pNonAIObject), Qt::darkBlue,LEVEL_NORMAL);
 #endif
 			SIMCONNECT_DATA_INITPOSITION data;
 			data.Altitude = pData.Altitude;

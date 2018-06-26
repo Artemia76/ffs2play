@@ -212,6 +212,7 @@ namespace ffs2play
 	{
 		if ((!m_Initialized) || m_Table.isEmpty()) return;
 		QSqlQuery query;
+		QString Path= pPath;
 		query.prepare( "SELECT checksum FROM Aircrafts WHERE (checksum = :checksum) and (Sim = :Sim)");
 		query.bindValue(":checksum",pKey);
 		query.bindValue(":Sim",m_Table);
@@ -225,7 +226,10 @@ namespace ffs2play
 				try
 				{
 					SIM_TYPE sim=m_simManager->getType();
-					IniParser s(pPath,sim);
+					IniParser s(Path,sim);
+#ifdef Q_OS_WIN
+					Path = Path.replace("/","\\");
+#endif
 					QString Editor,Atc_model, Atc_type, Category, Title;
 					int Engine_Type = 0;
 					double Static_CG_Height=0.0, Static_Pitch = 0.0;
@@ -251,7 +255,7 @@ namespace ffs2play
 						Static_Pitch =  s.value("properties","acf/_the_eqlbm").toDouble();
 					}
 #if FFS_DEBUG
-					m_log->log(tr("AIMapping : Path = ") + pPath,Qt::darkYellow,LEVEL_VERBOSE);
+					m_log->log(tr("AIMapping : Path = ") + Path,Qt::darkYellow,LEVEL_VERBOSE);
 					m_log->log(tr("AIMapping : Editor = ") + Editor,Qt::darkYellow,LEVEL_VERBOSE);
 					m_log->log(tr("AIMapping : ATCModel = ") + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
 					m_log->log(tr("AIMapping : ATCType = ") + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
@@ -301,7 +305,7 @@ namespace ffs2play
 									query.bindValue(":Editor", Editor);
 									query.bindValue(":Type", Atc_type);
 									query.bindValue(":Model", Atc_model);
-									query.bindValue(":Path", pPath);
+									query.bindValue(":Path", Path);
 									query.bindValue(":Category", Category);
 									query.bindValue(":NBEngine", nb_moteur);
 									query.bindValue(":EngineType", Engine_Type);
@@ -319,7 +323,7 @@ namespace ffs2play
 									query.bindValue(":Editor", Editor);
 									query.bindValue(":Type", Atc_type);
 									query.bindValue(":Model", Atc_model);
-									query.bindValue(":Path", pPath);
+									query.bindValue(":Path", Path);
 									query.bindValue(":Category", Category);
 									query.bindValue(":NBEngine", nb_moteur);
 									query.bindValue(":EngineType", Engine_Type);
