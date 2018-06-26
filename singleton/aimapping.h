@@ -6,16 +6,10 @@
 #include <QtSql>
 #include "singleton/clogger.h"
 #include "singleton/simbasemanager.h"
+#include "protobuf/ffs2play.pb.h"
 
 namespace ffs2play
 {
-	struct AIResol
-	{
-		QString Title;
-		double  CG_Height;
-		double  Pitch;
-	};
-
 	class AIMapping : public QObject
 	{
 		Q_OBJECT
@@ -55,7 +49,7 @@ namespace ffs2play
 		void				delRule(const QString& pRemoteTitle);
 		void				cleanAIDB();
 		QMap<QString,QString> getList();
-		QString				getPath(const QString& pCheckSum);
+		QString				getAircraftPath(const QString& pTitle);
 		QString				getFileData(const QString& pKey);
 		QStringList			getPathList();
 		bool				addPath(const QString& pPath);

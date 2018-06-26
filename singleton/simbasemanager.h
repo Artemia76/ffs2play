@@ -36,6 +36,7 @@
 #endif
 #include "sim/xpmanager.h"
 #include "sim/fgmanager.h"
+#include "protobuf/ffs2play.pb.h"
 
 namespace ffs2play
 {
@@ -76,7 +77,7 @@ namespace ffs2play
 		SIM_TYPE				getType();
 		const QList<SIM_TYPE>&	getSimList();
 		void					setSimType(SIM_TYPE pSimType);
-		bool					createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData, bool pNonAIObject);
+		bool					createAI(AIResol& pAircraft, const QString& pTail, const CAircraftState& pData, bool pNonAIObject);
 		bool					removeAI(uint& pObjectID);
 		bool					updateAI(uint pObjectID, const CAircraftState& pData);
 		void					freezeAI(uint pObjectID, bool pState);

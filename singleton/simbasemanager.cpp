@@ -274,7 +274,7 @@ namespace ffs2play
 		if (m_initialized) load(m_simType);
 	}
 
-	bool simbasemanager::createAI(const QString& pAircraft, const QString& pTail, const CAircraftState& pData,bool pNonAIObject)
+	bool simbasemanager::createAI(AIResol& pAircraft, const QString& pTail, const CAircraftState& pData,bool pNonAIObject)
 	{
 		if (m_initialized && (m_connector!=nullptr))
 		{

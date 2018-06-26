@@ -224,14 +224,32 @@ namespace ffs2play
 #endif
 				try
 				{
-					IniParser s(pPath,m_simManager->getType());
-					QString Editor = s.value("fltsim.0", "ui_createdby").toString();
-					QString Atc_model = s.value("General","atc_model").toString();
-					QString Atc_type =  s.value("General","atc_type").toString();
-					QString Category =  s.value("General","Category").toString();
-					int Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
-					double Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
-					double Static_Pitch =  s.value("contact_points","static_pitch").toDouble();
+					SIM_TYPE sim=m_simManager->getType();
+					IniParser s(pPath,sim);
+					QString Editor,Atc_model, Atc_type, Category, Title;
+					int Engine_Type = 0;
+					double Static_CG_Height=0.0, Static_Pitch = 0.0;
+					if (sim==SIM_TYPE::FSX)
+					{
+						Editor = s.value("fltsim.0", "ui_createdby").toString();
+						Atc_model = s.value("General","atc_model").toString();
+						Atc_type =  s.value("General","atc_type").toString();
+						Category =  s.value("General","Category").toString();
+						Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
+						Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
+						Static_Pitch =  s.value("contact_points","static_pitch").toDouble();
+					}
+					else if (sim==SIM_TYPE::XPLANE)
+					{
+						Title = s.value("properties", "acf/_name").toString();
+						Editor = s.value("properties", "acf/_studio").toString();
+						Atc_model = s.value("properties","acf/_ICAO").toString();
+						Atc_type = s.value("properties","acf/_manufacturer").toString();
+						//Category =  s.value("General","Category").toString();
+						//Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
+						Static_CG_Height =  s.value("properties","acf/_h_eqlbm").toDouble();
+						Static_Pitch =  s.value("properties","acf/_the_eqlbm").toDouble();
+					}
 #if FFS_DEBUG
 					m_log->log(tr("AIMapping : Path = ") + pPath,Qt::darkYellow,LEVEL_VERBOSE);
 					m_log->log(tr("AIMapping : Editor = ") + Editor,Qt::darkYellow,LEVEL_VERBOSE);
@@ -258,7 +276,9 @@ namespace ffs2play
 					int nb_title = 0;
 					while (true)
 					{
-						QString Title = s.value(QString("fltsim.") + QString::number(nb_title), "title").toString();
+						if (sim==SIM_TYPE::FSX)
+							Title = s.value(QString("fltsim.") + QString::number(nb_title), "title").toString();
+
 						if (Title != "")
 						{
 #if FFS_DEBUG
@@ -311,6 +331,7 @@ namespace ffs2play
 							}
 						}
 						else break;
+						if(sim==SIM_TYPE::XPLANE) break;
 					}
 				}
 				catch (IniParserException& ex)
@@ -335,9 +356,9 @@ namespace ffs2play
 		QString Model = pModel.toLower();
 		QString Type = pType.toLower();
 
-		Resol.Title = "Mooney Bravo";
-		Resol.CG_Height = 3.7;
-		Resol.Pitch = 2.9;
+		Resol.set_title("Mooney Bravo");
+		Resol.set_cgheight(3.7);
+		Resol.set_pitch(2.9);
 		if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
 		// Check local rules
 		QString Rule = getRule(Title);
@@ -350,7 +371,7 @@ namespace ffs2play
 		}
 		// Check if Title exist in database
 		QSqlQuery query;
-		query.prepare( "SELECT Title,CGHeight,Pitch FROM Aircrafts WHERE Title = :Title");
+		query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
 		query.bindValue(":Sim",m_Table);
 		query.bindValue(":Title",Title);
 
@@ -358,27 +379,29 @@ namespace ffs2play
 		{
 			if (query.next())
 			{
-				Resol.Title = query.value(0).toString();
-				Resol.CG_Height = query.value(1).toDouble();
-				Resol.Pitch = query.value(2).toDouble();
+				Resol.set_title(query.value(0).toString().toStdString());
+				Resol.set_cgheight(query.value(1).toDouble());
+				Resol.set_pitch(query.value(2).toDouble());
+				Resol.set_path(query.value(3).toString().toStdString());
 #ifdef FFS_DEBUG
-				m_log->log(tr("AIMapping : Title Match found in database : ") + Resol.Title, Qt::darkYellow,LEVEL_VERBOSE);
+				m_log->log(tr("AIMapping : Title Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
 			}
 			else
 			{
-				query.prepare( "SELECT Title,CGHeight,Pitch FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
+				query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
 				query.bindValue(":Sim",m_Table);
 				query.bindValue(":Model",Model);
 				if (query.exec())
 				{
 					if (query.next())
 					{
-						Resol.Title = query.value(0).toString();
-						Resol.CG_Height = query.value(1).toDouble();
-						Resol.Pitch = query.value(2).toDouble();
+						Resol.set_title(query.value(0).toString().toStdString());
+						Resol.set_cgheight(query.value(1).toDouble());
+						Resol.set_pitch(query.value(2).toDouble());
+						Resol.set_path(query.value(3).toString().toStdString());
 		#ifdef FFS_DEBUG
-						m_log->log(tr("AIMapping : ATC Model Match found in database : ") + Resol.Title, Qt::darkYellow,LEVEL_VERBOSE);
+						m_log->log(tr("AIMapping : ATC Model Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
 		#endif
 					}
 				}
@@ -485,12 +508,27 @@ namespace ffs2play
 		return md5mlist;
 	}
 
-	QString AIMapping::getPath(const QString &pCheckSum)
+	QString AIMapping::getAircraftPath(const QString &pTitle)
 	{
 		QString Response;
 		if (m_Initialized)
 		{
-
+			QSqlQuery query;
+			query.prepare("SELECT Path FROM Aircrafts WHERE Title = :Title;");
+			query.bindValue(":Title",pTitle);
+			if (query.exec())
+			{
+				while (query.next())
+				{
+					Response=query.value(0).toString();
+				}
+			}
+			else
+			{
+#ifdef FFS_DEBUG
+			m_log->log(tr("AIMapping : Fail to query path list for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+#endif
+			}
 		}
 		return Response;
 	}

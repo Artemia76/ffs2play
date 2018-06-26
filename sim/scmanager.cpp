@@ -40,9 +40,9 @@ namespace ffs2play
 		m_log->log("SCManager : " + tr("FSX/Prepar3D Module loaded"));
 	}
 
-    ///
-    /// \brief CSCManager::~CSCManager
-    ///
+	///
+	/// \brief CSCManager::~CSCManager
+	///
 	CSCManager::~CSCManager()
 	{
 		close();
@@ -732,10 +732,10 @@ namespace ffs2play
 		}
 	}
 
-    ///
-    /// \brief CSCManager::sendScrollingText
-    /// \param pMessage
-    ///
+	///
+	/// \brief CSCManager::sendScrollingText
+	/// \param pMessage
+	///
 	void CSCManager::sendScrollingText(const QString& pMessage)
 	{
 		if(m_connected)
@@ -745,10 +745,10 @@ namespace ffs2play
 		}
 	}
 
-    ///
-    /// \brief CSCManager::sendText
-    /// \param pMessage
-    ///
+	///
+	/// \brief CSCManager::sendText
+	/// \param pMessage
+	///
 	void CSCManager::sendText(const QString &pMessage)
 	{
 		if(m_connected)
@@ -762,15 +762,15 @@ namespace ffs2play
 		}
 	}
 
-    ///
-    /// \brief CSCManager::createAI
-    /// \param pAircraft
-    /// \param pTail
-    /// \param pData
-    /// \param pNonAIObject
-    /// \return
-    ///
-	bool CSCManager::createAI(const QString &pAircraft, const QString &pTail, const CAircraftState &pData,bool pNonAIObject)
+	///
+	/// \brief CSCManager::createAI
+	/// \param pAircraft
+	/// \param pTail
+	/// \param pData
+	/// \param pNonAIObject
+	/// \return
+	///
+	bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircraftState &pData,bool pNonAIObject)
 	{
 		if (m_connected)
 		{
@@ -792,7 +792,7 @@ namespace ffs2play
 			if (!pNonAIObject)
 			{
 				result = SimConnect_AICreateNonATCAircraft(m_hSimConnect,
-															pAircraft.toStdString().c_str(),
+															pAircraft.title().c_str(),
 															pTail.toStdString().c_str(),
 															data,
 															(SIMCONNECT_DATA_REQUEST_ID)index);
@@ -801,7 +801,7 @@ namespace ffs2play
 			else
 			{
 				result = SimConnect_AICreateSimulatedObject(m_hSimConnect,
-															   pAircraft.toStdString().c_str(),
+															   pAircraft.title().c_str(),
 															   data,
 															   (SIMCONNECT_DATA_REQUEST_ID)index);
 				trace("SimConnect_AICreateSimulatedObject:750");

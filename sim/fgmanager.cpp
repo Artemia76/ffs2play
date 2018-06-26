@@ -98,7 +98,7 @@ namespace ffs2play
 	/// \brief CFGManager::createAI
 	/// \return
 	///
-	bool CFGManager::createAI(const QString& /*pAircraft*/,const QString& /*pTail*/,const CAircraftState& /*pData*/,bool /*pNonAIObject*/)
+	bool CFGManager::createAI(AIResol& /*pAircraft*/,const QString& /*pTail*/,const CAircraftState& /*pData*/,bool /*pNonAIObject*/)
 	{
 		return false;
 	}

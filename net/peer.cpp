@@ -186,7 +186,7 @@ namespace ffs2play
 					Qt::darkBlue,LEVEL_NORMAL);
 #endif
 			m_AIResolution = m_AIMapping->SolveTitle(m_data.Title,m_data.Model, m_data.Type);
-			if (m_AIResolution.Title != "Mooney Bravo")
+			if (m_AIResolution.title() != "Mooney Bravo")
 			{
 #ifdef FFS_DEBUG
 				m_log->log("Peer [" + m_callSign + "] " + tr(" the local request has find a solution"), Qt::darkBlue,LEVEL_NORMAL);
@@ -228,9 +228,9 @@ namespace ffs2play
 			if (m_data.Category == "Helicopter") m_trySimpleAI = true;
 			m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-			m_log->log("Peer [" + m_callSign + "] " + tr(" Requesting creation of aircraft with Title = ") + m_AIResolution.Title, Qt::darkBlue,LEVEL_NORMAL);
+			m_log->log("Peer [" + m_callSign + "] " + tr(" Requesting creation of aircraft with Title = ") + QString::fromStdString(m_AIResolution.title()), Qt::darkBlue,LEVEL_NORMAL);
 #endif
-			m_simManager->createAI(m_AIResolution.Title, m_tail,m_data, m_trySimpleAI);
+			m_simManager->createAI(m_AIResolution, m_tail,m_data, m_trySimpleAI);
 		}
 	}
 
@@ -392,7 +392,7 @@ namespace ffs2play
 					{
 						// Mise à jour de l'altitude sol de référence
 						m_old_GND_AI = m_AISimData.GroundAltitude;
-						m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.CG_Height;
+						m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgheight();
 					}
 				}
 				if (m_spawned >= 7)

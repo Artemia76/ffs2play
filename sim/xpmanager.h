@@ -73,7 +73,7 @@ namespace ffs2play
 		void			main_loop();
 		SIM_VERSION		getVersion();
 		void			sendScrollingText(const QString&);
-		bool			createAI(const QString&, const QString&, const CAircraftState&, bool);
+		bool			createAI(AIResol&, const QString&, const CAircraftState&, bool);
 		bool			removeAI(uint&);
 		bool			updateAI(uint, const CAircraftState&);
 		void			freezeAI(uint, bool);

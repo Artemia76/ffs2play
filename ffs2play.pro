@@ -93,7 +93,7 @@ SOURCES +=		main.cpp \
 				tools/datetime.cpp \
 				tools/calculation.cpp \
 				tools/datagram.cpp \
-                tools/iniparser.cpp
+				tools/iniparser.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
@@ -120,7 +120,7 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/version.h \
 				tools/calculation.h \
 				tools/datagram.h \
-                tools/iniparser.h
+				tools/iniparser.h
 win32 {
 HEADERS	+=		sim/scmanager.h
 }
@@ -182,7 +182,7 @@ win {
 
 DISTFILES += \
 	README.md \
-    ffs2play.iss
+	ffs2play.iss
 
 
 isEmpty(TARGET_EXT) {
@@ -212,7 +212,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 9
+VERSION_BUILD = 10
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

@@ -113,7 +113,7 @@ namespace ffs2play
 	{
 
 	}
-	bool CXPManager::createAI(const QString& /*pAircraft*/,const QString& pTail,const CAircraftState& pData,bool /*pNonAIObject*/)
+	bool CXPManager::createAI(AIResol& pAircraft, const QString& pTail,const CAircraftState& pData,bool /*pNonAIObject*/)
 	{
 		if (m_connected)
 		{
@@ -125,7 +125,7 @@ namespace ffs2play
 			pData.toAirData(SendData);
 			stream << (quint8)ADD_PEER;
 			StringToStream(stream,pTail);
-			ProtobufToStream(stream,SendData);
+			ProtobufToStream(stream,pAircraft);
 			QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
 			Server->send(Output);
 			return true;

@@ -152,6 +152,10 @@ namespace ffs2play
 				if (m_version == PROTO_VERSION)
 				{
 					m_data.Title=StringFromStream(stream);
+					if (m_spawned >=3)
+					{
+						spawnAI(false);
+					}
 					m_data.Type=StringFromStream(stream);
 					m_data.Model=StringFromStream(stream);
 					m_data.Category=StringFromStream(stream);
@@ -331,9 +335,9 @@ namespace ffs2play
 			}
 			else
 			{
-				m_AIResolution.Title = "Mooney Bravo";
-				m_AIResolution.CG_Height = 3.7;
-				m_AIResolution.Pitch = 2.9;
+				m_AIResolution.set_title("Mooney Bravo");
+				m_AIResolution.set_cgheight(3.7);
+				m_AIResolution.set_pitch(2.9);
 #ifdef FFS_DEBUG
 				m_log->log("Peer [" + m_callSign + "] " + tr(" Simulator have not created the requested AI, we are trying with default simulator aircraft") ,Qt::darkBlue,LEVEL_NORMAL);
 #endif

@@ -48,11 +48,13 @@ namespace ffs2play
 						NewGroup=rx.cap(1).toLower();
 					}
 				}
-				if (m_simType==SIM_TYPE::XPLANE)
+				else if (m_simType==SIM_TYPE::XPLANE)
 				{
-					if (Line.contains("_begin"))
-					is_group = true;
-					NewGroup=Line.remove("_begin");
+					if (Line.toLower().contains("_begin"))
+					{
+						is_group = true;
+						NewGroup=Line.toLower().remove("_begin");
+					}
 				}
 				if (is_group)
 				{
@@ -91,6 +93,14 @@ namespace ffs2play
 	{
 	}
 
+	///
+	/// \brief IniParser::value
+	/// \param pGroup
+	/// \param pParameter
+	/// \param pDefaultValue
+	/// \return
+	///
+
 	QVariant IniParser::value(const QString& pGroup, const QString& pParameter, const QVariant& pDefaultValue) const
 	{
 		QVariant Result;
@@ -100,16 +110,34 @@ namespace ffs2play
 		QStringList Keys = m_GroupMap[Group];
 		for (QString Key : Keys)
 		{
-			QStringList parser = Key.split('=');
-
-			if (parser.count()>1)
+			if (m_simType==SIM_TYPE::FSX)
 			{
-				parser[0].remove(" ");
-				parser[0].remove("\t");
-				if (parser[0].compare(Parameter,Qt::CaseInsensitive)==0)
+				QStringList parser = Key.split('=');
+
+				if (parser.count()>1)
 				{
-					Result.setValue(parser[1]);
-					break;
+					parser[0].remove(" ");
+					parser[0].remove("\t");
+					if (parser[0].compare(Parameter,Qt::CaseInsensitive)==0)
+					{
+						Result.setValue(parser[1]);
+						break;
+					}
+				}
+			}
+			else if (m_simType==SIM_TYPE::XPLANE)
+			{
+				QStringList parser = Key.split(' ');
+				if (parser.count()>2)
+				{
+					if (parser[0] == 'P')
+					{
+						if (parser[1].compare(Parameter,Qt::CaseInsensitive)==0)
+						{
+							Result.setValue(Key.mid(parser[1].length()+3));
+							break;
+						}
+					}
 				}
 			}
 		}
