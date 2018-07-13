@@ -22,6 +22,7 @@
 
 #include <QByteArray>
 #include <QMessageBox>
+#include <QMenu>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogprofils.h"
@@ -106,6 +107,8 @@ namespace ffs2play
 		connect(m_webManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
 
 		m_AIMapping = AIMapping::instance();
+		ui->lwPeer->setContextMenuPolicy(Qt::CustomContextMenu);
+		connect(ui->lwPeer, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(OnPeerShowContextMenu(QPoint)));
 #ifdef FFS_DEBUG
 		ui->dwDebugOpt->setEnabled(true);
 		setWindowTitle("FFS2Play(debug)");
@@ -633,4 +636,25 @@ void ffs2play::MainWindow::on_leTchatSend_returnPressed()
 		ui->teTChatZone->append(m_P2PManager->getCallsign() + " : " + Message);
 		m_P2PManager->sendTChat(Message);
 	}
+}
+
+void ffs2play::MainWindow::OnPeerShowContextMenu(const QPoint&pos)
+{
+	QListWidgetItem* temp = ui->lwPeer->itemAt(pos);
+	if (temp != nullptr)
+	{
+		// Handle global position
+		QPoint globalPos = ui->lwPeer->mapToGlobal(pos);
+		// Create menu and insert some actions
+		QMenu myMenu(this);
+		myMenu.addAction("Mapping", this, SLOT(OpenMappingBox()));
+		// Show context menu at handling position
+		myMenu.exec(globalPos);
+
+	}
+}
+
+void ffs2play::MainWindow::OpenMappingBox()
+{
+	m_log->log("click)");
 }

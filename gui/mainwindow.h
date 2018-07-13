@@ -27,6 +27,7 @@
 #include <QTextCodec>
 #include <QSettings>
 #include <QTimer>
+#include <QListWidget>
 
 #include "singleton/clogger.h"
 #include "singleton/simbasemanager.h"
@@ -71,6 +72,8 @@ namespace ffs2play
 		void			on_cb_filter_currentIndexChanged(const QString &arg1);
 		void			on_afFSType_triggered();
 		void			on_leTchatSend_returnPressed();
+		void			OnPeerShowContextMenu(const QPoint&);
+		void			OpenMappingBox();
 
 	private:
 		Ui::MainWindow*	ui;
