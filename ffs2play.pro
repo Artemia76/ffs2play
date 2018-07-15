@@ -93,7 +93,8 @@ SOURCES +=		main.cpp \
 				tools/datetime.cpp \
 				tools/calculation.cpp \
 				tools/datagram.cpp \
-				tools/iniparser.cpp
+				tools/iniparser.cpp \
+    gui/aireplace.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
@@ -120,14 +121,16 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/version.h \
 				tools/calculation.h \
 				tools/datagram.h \
-				tools/iniparser.h
+				tools/iniparser.h \
+    gui/aireplace.h
 win32 {
 HEADERS	+=		sim/scmanager.h
 }
 
 FORMS	+=		gui/dialogprofils.ui \
 				gui/mainwindow.ui \
-				gui/dialogp2p.ui
+				gui/dialogp2p.ui \
+    gui/aireplace.ui
 
 TRANSLATIONS += intl/ffs2play_fr_FR.ts
 
@@ -212,7 +215,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 10
+VERSION_BUILD = 11
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

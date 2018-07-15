@@ -289,9 +289,10 @@ namespace ffs2play
 							m_log->log(tr("AIMapping : livery found Title = ") + Title,Qt::darkYellow,LEVEL_VERBOSE);
 #endif
 							nb_title++;
-							query.prepare("SELECT * FROM Aircrafts WHERE Title = :Title AND checksum = :checksum");
+							query.prepare("SELECT * FROM Aircrafts WHERE (Title = :Title) AND (checksum = :checksum) AND (Sim = :Sim)" );
 							query.bindValue(":Title",Title);
 							query.bindValue(":checksum",pKey);
+							query.bindValue(":Sim", m_Table);
 							if (query.exec())
 							{
 								// If there is no result, we have a new aircraft to register
@@ -359,10 +360,19 @@ namespace ffs2play
 		QString Title = pTitle.toLower();
 		QString Model = pModel.toLower();
 		QString Type = pType.toLower();
-
-		Resol.set_title("Mooney Bravo");
-		Resol.set_cgheight(3.7);
-		Resol.set_pitch(2.9);
+		SIM_TYPE sim=m_simManager->getType();
+		if (sim == SIM_TYPE::FSX)
+		{
+			Resol.set_title("Mooney Bravo");
+			Resol.set_cgheight(3.7);
+			Resol.set_pitch(2.9);
+		}
+		else if (sim == SIM_TYPE::XPLANE)
+		{
+			Resol.set_title("Beechcraft Baron 58");
+			Resol.set_cgheight(3.7);
+			Resol.set_pitch(2.9);
+		}
 		if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
 		// Check local rules
 		QString Rule = getRule(Title);
@@ -427,12 +437,54 @@ namespace ffs2play
 		return Resol;
 	}
 
-	QStringList AIMapping::getAITitreDispo(QString pCategorie, QString pEditeur, QString pType, QString pModel)
+	QStringList AIMapping::getAITitreDispo(QString pCategory, QString pEditor, QString pType, QString pModel)
 	{
 		QStringList List;
 		if (m_Initialized)
 		{
+			if (pCategory == "*") pCategory = "";
+			if (pEditor == "*") pEditor = "";
+			if (pType == "*") pType = "";
+			if (pModel == "*") pModel = "";
+			bool Category, Editor, Type, Model;
+			Category=Editor=Type=Model=false;
+			QSqlQuery query;
+			QString command =  "SELECT Title FROM Aircrafts WHERE Sim = :Sim";
+			if (pCategory.length()>0)
+			{
+				command += " and Category like :Category";
+				Category =true;
+			}
+			if (pEditor.length()>0)
+			{
+				command += " and Editor like :Editor";
+				Editor = true;
+			}
+			if (pType.length()>0)
+			{
+				command += " and Type like :Type";
+				Type = true;
+			}
+			if (pModel.length()>0)
+			{
+				command += " and Model like :Model";
+				Model = true;
+			}
+			command += " order by Title;";
+			query.prepare(command);
+			query.bindValue(":Sim",m_Table);
+			if (Category) query.bindValue(":Category",pCategory);
+			if (Editor) query.bindValue(":Editor",pEditor);
+			if (Type) query.bindValue(":Type",pType);
+			if (Model) query.bindValue(":Model",pModel);
 
+			if (query.exec())
+			{
+				while (query.next())
+				{
+					List.append(query.value(0).toString());
+				}
+			}
 		}
 		return List;
 	}
@@ -479,10 +531,20 @@ namespace ffs2play
 
 	QString AIMapping::getRule(const QString &pTitre)
 	{
-		QString Response;
+		QString Response="";
 		if (m_Initialized)
 		{
-
+			QSqlQuery query;
+			query.prepare("SELECT LocalTitle FROM Replacement WHERE (RemoteTitle like :RemoteTitle) and (Sim like :Sim)");
+			query.bindValue(":Sim",m_Table);
+			query.bindValue(":RemoteTitle",pTitre);
+			if (query.exec())
+			{
+				if (query.next())
+				{
+					Response=query.value(0).toString();
+				}
+			}
 		}
 		return Response;
 	}
@@ -490,11 +552,22 @@ namespace ffs2play
 	void AIMapping::addRule(const QString &pRemoteTitle, const QString &pLocalTitle)
 	{
 		if (!m_Initialized) return;
+		QSqlQuery query;
+		query.prepare("INSERT OR REPLACE INTO Replacement (RemoteTitle, LocalTitle, Sim) VALUES ( :RemoteTitle , :LocalTitle , :Sim );");
+		query.bindValue(":Sim",m_Table);
+		query.bindValue(":RemoteTitle",pRemoteTitle);
+		query.bindValue(":LocalTitle",pLocalTitle);
+		query.exec();
 	}
 
 	void AIMapping::delRule(const QString &pRemoteTitle)
 	{
 		if (!m_Initialized) return;
+		QSqlQuery query;
+		query.prepare("DELETE FROM Replacement WHERE ( RemoteTitle = :RemoteTitle ) and ( Sim =:Sim );");
+		query.bindValue(":Sim",m_Table);
+		query.bindValue(":RemoteTitle",pRemoteTitle);
+		query.exec();
 	}
 
 	void AIMapping::cleanAIDB()

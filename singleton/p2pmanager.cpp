@@ -502,4 +502,27 @@ namespace ffs2play {
 		m_settings.setValue("P2P/ShadowEnable",pFlag);
 		m_Shadow=pFlag;
 	}
+
+	QString CP2PManager::getTitle(const QString &pPeerName)
+	{
+		for (CPeer* Peer : m_peers)
+		{
+			if (Peer->CallSign == pPeerName)
+			{
+				return Peer->m_data.Title;
+			}
+		}
+		return "";
+	}
+
+	void CP2PManager::ResetAI(const QString &pPeerName)
+	{
+		for (CPeer* Peer : m_peers)
+		{
+			if (Peer->CallSign == pPeerName)
+			{
+				return Peer->resetAI();
+			}
+		}
+	}
 }

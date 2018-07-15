@@ -270,13 +270,20 @@ namespace ffs2play
 			{
 				m_AIMapping->addPath(Path);
 				ui->lvItems->addItem(Path);
+				m_AIMapping->startScanSimObject();
 			}
 		}
 	}
 
 	void DialogP2P::on_btnDelItem_released()
 	{
-		qDebug() << QString::number(ui->lvItems->currentRow());
+		QListWidgetItem* item = ui->lvItems->currentItem();
+		if (item!=nullptr)
+		{
+			m_AIMapping->delPath(item->text());
+			//ui->lvItems->removeItemWidget(item);
+			delete item;
+		}
 	}
 
 	void DialogP2P::on_numPort_valueChanged(int)

@@ -78,6 +78,7 @@ namespace ffs2play
 		bool				m_changed;
 		bool				m_needP2PRestart;
 		bool				m_needDBReload;
+
 		void				checkIfChanged();
 
 		void				applyChangedItem();

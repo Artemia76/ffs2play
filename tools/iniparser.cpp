@@ -120,7 +120,12 @@ namespace ffs2play
 					parser[0].remove("\t");
 					if (parser[0].compare(Parameter,Qt::CaseInsensitive)==0)
 					{
-						Result.setValue(parser[1]);
+						QString Value = parser[1];
+						if (Value.contains("//"))
+						{
+							Value = Value.left(Value.indexOf("//"));
+						}
+						Result.setValue(Value.remove("//(.*?)\r?\n"));
 						break;
 					}
 				}

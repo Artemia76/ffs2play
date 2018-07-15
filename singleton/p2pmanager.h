@@ -77,6 +77,8 @@ namespace ffs2play
 		void				setAIRadius(int pAIRadius);
 		bool				getShadowMode();
 		void				setShadowMode(bool pFlag);
+		QString				getTitle(const QString& pPeerName);
+		void				ResetAI(const QString& pPeerName);
 
 	signals:
 		void				firePeerAdd(QString);

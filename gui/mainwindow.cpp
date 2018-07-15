@@ -27,6 +27,7 @@
 #include "ui_mainwindow.h"
 #include "dialogprofils.h"
 #include "dialogp2p.h"
+#include "aireplace.h"
 #include "tools/getappversion.h"
 
 namespace ffs2play
@@ -115,6 +116,9 @@ namespace ffs2play
 #else
 		delete ui->dwDebugOpt;
 #endif
+		m_simManager->open_close();
+		m_webManager->Connect();
+		QApplication::setPalette(this->palette());
 	}
 
 	///
@@ -647,14 +651,19 @@ void ffs2play::MainWindow::OnPeerShowContextMenu(const QPoint&pos)
 		QPoint globalPos = ui->lwPeer->mapToGlobal(pos);
 		// Create menu and insert some actions
 		QMenu myMenu(this);
-		myMenu.addAction("Mapping", this, SLOT(OpenMappingBox()));
+		// If Title is available on the peer, we enable AI replacement tool
+		if (m_P2PManager->getTitle(temp->text()) !=  "")
+		{
+			myMenu.addAction("Mapping", this, SLOT(OpenMappingBox()));
+		}
 		// Show context menu at handling position
 		myMenu.exec(globalPos);
-
 	}
 }
 
 void ffs2play::MainWindow::OpenMappingBox()
 {
-	m_log->log("click)");
+	QListWidgetItem* item = ui->lwPeer->currentItem();
+	AIReplace* Dialog = new AIReplace(item->text());
+	Dialog->show();
 }
