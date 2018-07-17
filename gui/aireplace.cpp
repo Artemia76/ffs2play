@@ -75,6 +75,10 @@ namespace ffs2play
 			ui->btnDeleteRule->setVisible(true);
 		}
 		else ui->btnDeleteRule->setVisible(false);
+        ui->cbReplacement->setStyleSheet("color: blue;"
+                                         "background-color: yellow;"
+                                         "selection-color: yellow;"
+                                         "selection-background-color: blue;");
 	}
 
 	///

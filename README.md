@@ -1,4 +1,4 @@
-FFS2PLAY
+﻿FFS2PLAY
 
 This project is a fork of the FFSTracker written in C# for FFS2 Flight Simulator virtual company.
 
