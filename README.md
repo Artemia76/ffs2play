@@ -1,6 +1,8 @@
-﻿<p>FFS2PLAY</p>
-<P>This project is a fork of the FFSTracker written in C# for FFS2 Flight Simulator virtual company.</p>
-<p>FFS2PLAY will be designed on open source project model and will be writted in C++ with portable library (Qt)</p>
+﻿FFS2Play client build instruction
+====================
+
+This project is a fork of the FFSTracker written in C# for FFS2 Flight Simulator virtual company.
+FFS2PLAY will be designed on open source project model and will be writted in C++ with portable library (Qt)
 
 The core will be universal to work with P2P multiplayer Layer
 
@@ -22,53 +24,54 @@ The license is as published by the Free Software
 Foundation and appearing in the file LICENSE.GPL3
 included in the packaging of this software. Please review the following
 information to ensure the GNU General Public License requirements will
-be met: https://www.gnu.org/licenses/gpl-3.0.html.
+be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
-1. DEPENDENCIES
+>1. DEPENDENCIES
 
 - Last Qt Release (QT5.10 at this date)
 - Protobuf : 3.0.2 is advised
 - miniupnpc : 1.9+
 - openssl : 1.0.2
 
-2. BUILD
-2.1 LINUX
-2.1.1 UBUNTU
+>2. BUILD
+>2.1 LINUX
+>2.1.1 UBUNTU
 
- * On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play :
+* On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play:
 
- sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler
+  sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler
 
- * on some qt installation you will need opengl devel :
-	sudo apt-get install mesa-common-dev
-	
-	On Xenial , Qt packages are too old for FFS2Play , you can use PPA to give you opportunity de build on supported packages:
-	
-	Qt:
+* on some qt installation you will need opengl devel :
+
+
+  sudo apt-get install mesa-common-dev
+
+On Xenial , Qt packages are too old for FFS2Play , you can use PPA to give you opportunity de build on supported packages:
+
 	sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-xenial
 	sudo apt-get update
 	sudo apt-get install qt510-meta-full qt510creator
-	
-	
-2.1.2 Gentoo / Calculate Linux
+
+>2.1.2 Gentoo / Calculate Linux
 
 	Prepare dependencies on terminal as superuser:
-	
-	emerge crypto++ miniupnpc openssl protobuf @qt5-essentials 
 
-2.1.3 Arch Linux
+	emerge crypto++ miniupnpc openssl protobuf @qt5-essentials
 
-	Prepare dependencies on terminal :
-	
+>2.1.3 Arch Linux
+
+Prepare dependencies on terminal :
+
 	sudo yaourt -S base-devel gdb qt5-base miniupnpc crypto++ openssl protobuf
-	
-2.1.4 Final build:
 
-	on git root :
+>2.1.4 Final build:
+
+  on git root :
+
 	qmake ffs2play.pro
 	make -j3
 	./release/ffs2play
-	
-2.2 WIN(Visual studio community edition)
+
+>2.2 WIN(Visual studio community edition)
 
 coming ...
