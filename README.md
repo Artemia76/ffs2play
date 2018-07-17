@@ -26,52 +26,45 @@ included in the packaging of this software. Please review the following
 information to ensure the GNU General Public License requirements will
 be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
->1. DEPENDENCIES
+1. DEPENDENCIES
 
-- Last Qt Release (QT5.10 at this date)
-- Protobuf : 3.0.2 is advised
-- miniupnpc : 1.9+
-- openssl : 1.0.2
+  - Last Qt Release (QT5.10 at this date)
+  - Protobuf : 3.0.2 is advised
+  - miniupnpc : 1.9+
+  - openssl : 1.0.2
 
->2. BUILD
->2.1 LINUX
->2.1.1 UBUNTU
+1. BUILD
+  1. LINUX
+    1. UBUNTU
 
-* On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play:
+        On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play:
+              sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler
 
-  sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler
+        On some qt installation you will need opengl devel :
+              sudo apt-get install mesa-common-dev
 
-* on some qt installation you will need opengl devel :
+        On Xenial , Qt packages are too old for FFS2Play , you can use PPA to give you opportunity de build on supported packages:
 
+              sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-xenial
+              sudo apt-get update
+              sudo apt-get install qt510-meta-full qt510creator
 
-  sudo apt-get install mesa-common-dev
+    1. Gentoo / Calculate Linux
 
-On Xenial , Qt packages are too old for FFS2Play , you can use PPA to give you opportunity de build on supported packages:
+        Prepare dependencies on terminal as superuser:
+              emerge crypto++ miniupnpc openssl protobuf @qt5-essentials
 
-	sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-xenial
-	sudo apt-get update
-	sudo apt-get install qt510-meta-full qt510creator
+    1. Arch Linux
+        Prepare dependencies on terminal :
+              sudo yaourt -S base-devel gdb qt5-base miniupnpc crypto++ openssl protobuf
 
->2.1.2 Gentoo / Calculate Linux
+    1. Final build:
 
-	Prepare dependencies on terminal as superuser:
+        on git root :
+              qmake ffs2play.pro
+	            make -j3
+	            ./release/ffs2play
 
-	emerge crypto++ miniupnpc openssl protobuf @qt5-essentials
+  1. WIN(Visual studio community edition)
 
->2.1.3 Arch Linux
-
-Prepare dependencies on terminal :
-
-	sudo yaourt -S base-devel gdb qt5-base miniupnpc crypto++ openssl protobuf
-
->2.1.4 Final build:
-
-  on git root :
-
-	qmake ffs2play.pro
-	make -j3
-	./release/ffs2play
-
->2.2 WIN(Visual studio community edition)
-
-coming ...
+    coming ...
