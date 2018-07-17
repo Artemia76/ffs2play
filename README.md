@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 ﻿<p>FFS2PLAY</p>
-=======
-FFS2PLAY
->>>>>>> 854d5b0d952bb1637f0f4c7b8c259551894de205
-
 <P>This project is a fork of the FFSTracker written in C# for FFS2 Flight Simulator virtual company.</p>
-
 <p>FFS2PLAY will be designed on open source project model and will be writted in C++ with portable library (Qt)</p>
 
 The core will be universal to work with P2P multiplayer Layer
