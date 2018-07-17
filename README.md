@@ -1,4 +1,4 @@
-﻿FFS2PLAY
+FFS2PLAY
 
 This project is a fork of the FFSTracker written in C# for FFS2 Flight Simulator virtual company.
 
@@ -25,12 +25,13 @@ Foundation and appearing in the file LICENSE.GPL3
 included in the packaging of this software. Please review the following
 information to ensure the GNU General Public License requirements will
 be met: https://www.gnu.org/licenses/gpl-3.0.html.
+
 1. DEPENDENCIES
 
 - Last Qt Release (QT5.10 at this date)
- - Protobuf : 3.0.2 is advised
- - miniupnpc : 1.9+
- - openssl : 1.0.2
+- Protobuf : 3.0.2 is advised
+- miniupnpc : 1.9+
+- openssl : 1.0.2
 
 2. BUILD
 2.1 LINUX
