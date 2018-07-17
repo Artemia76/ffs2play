@@ -52,15 +52,18 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
     1. Gentoo / Calculate Linux
 
         Prepare dependencies on terminal as superuser:
+
               emerge crypto++ miniupnpc openssl protobuf @qt5-essentials
 
     1. Arch Linux
         Prepare dependencies on terminal :
+
               sudo yaourt -S base-devel gdb qt5-base miniupnpc crypto++ openssl protobuf
 
     1. Final build:
 
         on git root :
+
               qmake ffs2play.pro
 	            make -j3
 	            ./release/ffs2play
