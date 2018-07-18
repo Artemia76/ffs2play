@@ -246,6 +246,11 @@ namespace ffs2play
 					else if (sim==SIM_TYPE::XPLANE)
 					{
 						Title = s.value("properties", "acf/_name").toString();
+                        if (Title=="")
+                        {
+                            QFileInfo File(Path);
+                            Title = File.baseName();
+                        }
 						Editor = s.value("properties", "acf/_studio").toString();
 						Atc_model = s.value("properties","acf/_ICAO").toString();
 						Atc_type = s.value("properties","acf/_manufacturer").toString();
