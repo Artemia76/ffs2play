@@ -128,7 +128,12 @@ namespace ffs2play
 			QDomDocument Doc;
 			if (pRequest->getAsXml(Doc))
 			{
-				CheckWhazzup(Doc);
+				if (CheckError(Doc))
+				{
+					Disconnect();
+					return;
+				}
+				else CheckWhazzup(Doc);
 			}
 		}
 		pRequest->deleteLater();

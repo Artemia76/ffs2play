@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "FFS2Play2"
-#define MyAppVersion "2_0_10"
+#define MyAppVersion "2_0_12"
 #define MyAppPublisher "FFS2"
 #define MyAppURL "http://ffs2play.fr/"
 #define MyAppExeName "ffs2play.exe"
