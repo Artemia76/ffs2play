@@ -20,10 +20,13 @@ CONFIG(release, debug|release) {
 	MOC_DIR = release/.moc
 	RCC_DIR = release/.rcc
 	UI_DIR = release/.ui
+#	If debug info is needed for windows release to avoid
+#	Install VS Studio Debug Env, just uncomment the line below
+#    DEFINES += FFS_DEBUG
 } else {
 	DESTDIR = debug
 	OBJECTS_DIR = debug/.obj
-	MOC_DIR = debug/.moc
+    MOC_DIR = debug/.moc
 	RCC_DIR = debug/.rcc
 	UI_DIR = debug/.ui
 	DEFINES += FFS_DEBUG
@@ -215,7 +218,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 12
+VERSION_BUILD = 13
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

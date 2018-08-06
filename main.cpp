@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	QTranslator FFS2PlayTS;
 	FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
 	QApplication app(argc, argv);
-	//app.installTranslator(&FFS2PlayTS);
+	app.installTranslator(&FFS2PlayTS);
 	ffs2play::MainWindow mainWindow;
 	mainWindow.show();
 	return app.exec();
