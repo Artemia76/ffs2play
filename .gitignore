@@ -8,6 +8,7 @@
 *.exe
 *.zip
 *.7z
+ui*.h
 
 # Build results
 

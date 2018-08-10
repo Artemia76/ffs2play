@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>FFS2Play</Name>
+    <Version>2.0.6</Version>
+    <Title>FFS2Play Installer</Title>
+    <Publisher>FFS2</Publisher>
+    <StartMenuDir>FFS2Play</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/FFS2Play</TargetDir>
+</Installer>
