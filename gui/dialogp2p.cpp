@@ -75,6 +75,11 @@ namespace ffs2play
 		ui->numAIRadius->setValue(m_P2PManager->getAIRadius());
 		ui->numAILimit->setValue(m_P2PManager->getAILimit());
 		ui->numP2PTx->setValue(m_P2PManager->getTxRate());
+#ifdef FFS_DEBUG
+        ui->cbShadow->setChecked(m_P2PManager->getShadowMode());
+#else
+        ui->cbShadow->setVisible(false);
+#endif
 		ui->cbShadow->setChecked(m_P2PManager->getShadowMode());
 		m_needP2PRestart=false;
 		m_needDBReload=false;

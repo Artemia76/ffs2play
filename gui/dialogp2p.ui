@@ -847,6 +847,9 @@
       </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="cbShadow">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>0</width>
