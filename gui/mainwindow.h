@@ -74,6 +74,8 @@ namespace ffs2play
 		void			on_leTchatSend_returnPressed();
 		void			OnPeerShowContextMenu(const QPoint&);
 		void			OpenMappingBox();
+        void            UnblockData();
+        void            BlockData();
 
 	private:
 		Ui::MainWindow*	ui;

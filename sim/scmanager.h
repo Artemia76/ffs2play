@@ -317,6 +317,7 @@ static	void			CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, vo
 		bool			updateAI(uint pObjectID, const CAircraftState& pData);
 		bool			removeAI(uint& pObjectID);
 		void			freezeAI(uint pObjectID,bool pState);
+        void            sendOptions(){}
 	};
 }
 #endif // SIMCONNECT_H

@@ -190,11 +190,13 @@ namespace ffs2play
 	void CXPManager::sendPing()
 	{
 #ifdef FFS_DEBUG
-		m_log->log("XPManager : " + tr("Send PING"), Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("XPManager : " + tr("Send PING Option=") + QString::number(m_options), Qt::darkBlue,LEVEL_NORMAL);
 #endif
 		QByteArray Data;
 		QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
 		stream << (quint8)PING;
+        stream << (quint32)m_options;
 		QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
 		Server->send(Output);
 	}

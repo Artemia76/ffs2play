@@ -55,6 +55,7 @@ namespace ffs2play
 		bool			removeAI(uint&);
 		bool			updateAI(uint, const CAircraftState&);
 		void			freezeAI(uint, bool);
+        void            sendOptions(){}
 
 	private slots:
 		void			OnPingTimer();

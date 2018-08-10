@@ -71,6 +71,7 @@ namespace ffs2play
 		ui->cbUPNP->setChecked(m_settings.value("UPNPEnable",true).toBool());
 		ui->numPort->setValue(m_settings.value("Port", 54857).toInt());
 		m_settings.endGroup();
+        ui->cbEnableCallsign->setChecked(m_SimManager->getOption(DisplayCallSign));
 		ui->numAIRadius->setValue(m_P2PManager->getAIRadius());
 		ui->numAILimit->setValue(m_P2PManager->getAILimit());
 		ui->numP2PTx->setValue(m_P2PManager->getTxRate());
@@ -151,6 +152,10 @@ namespace ffs2play
 		{
 			m_needDBReload=false;
 		}
+        if (ui->cbEnableCallsign->isChecked() != m_SimManager->getOption(DisplayCallSign))
+        {
+            m_SimManager->setOptionChange(DisplayCallSign, ui->cbEnableCallsign->isChecked());
+        }
 		m_changed=false;
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 	}
@@ -230,6 +235,10 @@ namespace ffs2play
 		{
 			m_changed = true;
 		}
+        if (ui->cbEnableCallsign->isChecked() != m_SimManager->getOption(DisplayCallSign))
+        {
+            m_changed = true;
+        }
 		ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(m_changed);
 	}
 
@@ -300,4 +309,9 @@ namespace ffs2play
 	{
 		checkIfChanged();
 	}
+
+    void DialogP2P::on_cbEnableCallsign_stateChanged(int arg1)
+    {
+        checkIfChanged();
+    }
 }

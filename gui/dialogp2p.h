@@ -97,6 +97,7 @@ namespace ffs2play
 		void				on_numPort_valueChanged(int);
 		void				on_numAIRadius_valueChanged(int);
 		void				on_numAILimit_valueChanged(int);
-	};
+        void on_cbEnableCallsign_stateChanged(int arg1);
+    };
 }
 #endif // DIALOGP2P_H

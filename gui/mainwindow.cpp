@@ -656,6 +656,17 @@ void ffs2play::MainWindow::OnPeerShowContextMenu(const QPoint&pos)
 		{
 			myMenu.addAction("Mapping", this, SLOT(OpenMappingBox()));
 		}
+#ifdef FFS_DEBUG
+        //Block data
+        if (m_P2PManager->getBlockedData(temp->text()))
+        {
+            myMenu.addAction("Unblock Data", this, SLOT(UnblockData()));
+        }
+        else
+        {
+            myMenu.addAction("Block Data", this, SLOT(BlockData()));
+        }
+#endif
 		// Show context menu at handling position
 		myMenu.exec(globalPos);
 	}
@@ -666,4 +677,22 @@ void ffs2play::MainWindow::OpenMappingBox()
 	QListWidgetItem* item = ui->lwPeer->currentItem();
 	AIReplace* Dialog = new AIReplace(item->text());
 	Dialog->show();
+}
+
+void ffs2play::MainWindow::UnblockData()
+{
+    QListWidgetItem* item = ui->lwPeer->currentItem();
+    if (item != nullptr)
+    {
+        m_P2PManager->setBlockedData(item->text(),false);
+    }
+}
+
+void ffs2play::MainWindow::BlockData()
+{
+    QListWidgetItem* item = ui->lwPeer->currentItem();
+    if (item != nullptr)
+    {
+        m_P2PManager->setBlockedData(item->text(),true);
+    }
 }

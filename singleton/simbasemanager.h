@@ -59,6 +59,7 @@ namespace ffs2play
 		SimConnector*			m_connector;
 		QThread*				m_thread;
 		bool					m_bRunning;
+        bool                    m_bEnaDispCallSign;
 		SIM_TYPE				m_simType;
 		QList<SIM_TYPE>			m_simAvailable;
 
@@ -81,6 +82,10 @@ namespace ffs2play
 		bool					removeAI(uint& pObjectID);
 		bool					updateAI(uint pObjectID, const CAircraftState& pData);
 		void					freezeAI(uint pObjectID, bool pState);
+        void                    enableCallSign(bool pState);
+        void                    setOptionChange(SimOption pOption,bool pFlag);
+        bool                    getOption(SimOption pOption);
+
 	private slots:
 		void					mainThread();
 		void					OnSimVariableEvent(CAircraftState);

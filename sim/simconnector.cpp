@@ -28,6 +28,9 @@ namespace ffs2play
 	{
 		m_log=CLogger::instance();
 		m_connected = false;
+        m_settings.beginGroup("Sim");
+        m_options = m_settings.value("EnableDisplayCallSign",0x00000001).toUInt();
+        m_settings.endGroup();
 	}
 
 	SimConnector::~SimConnector()
@@ -39,6 +42,28 @@ namespace ffs2play
 	{
 		return m_connected;
 	}
+
+    void SimConnector::setOptionChange(SimOption pOption,bool pFlag)
+    {
+        quint32 mask = (quint32)pOption;
+        if (!pFlag)
+        {
+            m_options = m_options & (~mask);
+        }
+        else
+        {
+            m_options = m_options | mask;
+        }
+        m_settings.beginGroup("Sim");
+        m_settings.setValue("EnableDisplayCallSign",m_options);
+        m_settings.endGroup();
+        sendOptions();
+    }
+
+    bool SimConnector::getOption(SimOption pOption)
+    {
+        return (m_options & (quint32)pOption) > 0;
+    }
 
 	CAircraftState SimConnector::getState()
 	{

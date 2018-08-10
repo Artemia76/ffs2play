@@ -79,6 +79,8 @@ namespace ffs2play
 		void				setShadowMode(bool pFlag);
 		QString				getTitle(const QString& pPeerName);
 		void				ResetAI(const QString& pPeerName);
+        bool                getBlockedData(const QString &pPeerName);
+        void                setBlockedData(const QString &pPeerName, bool pFlag);
 
 	signals:
 		void				firePeerAdd(QString);

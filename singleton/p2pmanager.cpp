@@ -525,4 +525,27 @@ namespace ffs2play {
 			}
 		}
 	}
+
+    bool CP2PManager::getBlockedData(const QString &pPeerName)
+    {
+        for (CPeer* Peer : m_peers)
+        {
+            if (Peer->CallSign == pPeerName)
+            {
+                return Peer->m_blockData;
+            }
+        }
+        return false;
+    }
+
+    void CP2PManager::setBlockedData(const QString &pPeerName, bool pFlag)
+    {
+        for (CPeer* Peer : m_peers)
+        {
+            if (Peer->CallSign == pPeerName)
+            {
+                Peer->m_blockData=pFlag;
+            }
+        }
+    }
 }

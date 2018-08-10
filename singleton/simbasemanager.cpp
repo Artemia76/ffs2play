@@ -354,4 +354,21 @@ namespace ffs2play
 		m_log->log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
 		close();
 	}
+
+    void simbasemanager::setOptionChange(SimOption pOption,bool pFlag)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            m_connector->setOptionChange(pOption,pFlag);
+        }
+    }
+
+    bool simbasemanager::getOption(SimOption pOption)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            return m_connector->getOption(pOption);
+        }
+        return false;
+    }
 }

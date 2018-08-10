@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QMutex>
+#include <QSettings>
 #include "sim/aircraftstate.h"
 #include "singleton/clogger.h"
 #include "tools/datetime.h"
@@ -80,6 +81,11 @@ namespace ffs2play
 		datetime Time;
 	};
 
+    enum SimOption : unsigned int
+    {
+        DisplayCallSign = 0x01
+    };
+
 	class SimConnector : public QObject
 	{
 		Q_OBJECT
@@ -107,7 +113,13 @@ namespace ffs2play
 		bool			m_connected;
 		CAircraftState  m_state;
 		QMutex			m_Mutex;
+        QSettings       m_settings;
+        quint32         m_options;
 
+        void            setOptionChange(SimOption pOption,bool pFlag);
+        bool            getOption(SimOption pOption);
+
+virtual void            sendOptions()=0;
 virtual	void			open()=0;
 virtual void			close()=0;
 virtual	void			main_loop()=0;
