@@ -93,7 +93,7 @@ namespace ffs2play
 	}
 }
 
-void ffs2play::AIReplace::on_btnOk_clicked(QAbstractButton *button)
+void ffs2play::AIReplace::on_btnOk_clicked(QAbstractButton*)
 {
 	if (m_ExistingRule != ui->cbReplacement->currentText())
 	{

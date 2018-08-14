@@ -42,7 +42,11 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationName("FFS2Play");
 	QString locale = QLocale::system().name();
 	QTranslator FFS2PlayTS;
+#ifdef Q_OS_LINUX
+    FFS2PlayTS.load("/usr/share/ffs2play/translations/ffs2play_" + locale +".qm");
+#else
 	FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
+#endif
 	QApplication app(argc, argv);
 	app.installTranslator(&FFS2PlayTS);
 	ffs2play::MainWindow mainWindow;

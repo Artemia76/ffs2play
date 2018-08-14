@@ -25,73 +25,81 @@
 
 namespace ffs2play
 {
-	///
-	/// \brief CWebManager::Connect
-	///
+    ///
+    /// \brief CWebManager::Connect
+    ///
 
-	void CWebManager::Connect()
-	{
-		if (m_bConnected) return;
-		if (m_currentUser == 0) return;
-		QDomDocument SendHello;
-		XmlBuild(SendHello, hello);
-		CHttpRequest* Request = new CHttpRequest(this);
-		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
-		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendHello);
-	}
+    void CWebManager::Connect()
+    {
+        if (m_bConnected) return;
+        if (m_currentUser == 0) return;
+        QDomDocument SendHello;
+        XmlBuild(SendHello, hello);
+        CHttpRequest* Request = new CHttpRequest(this);
+        connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
+        Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendHello);
+    }
 
-	///
-	/// \brief CWebManager::Disconnect
-	///
+    ///
+    /// \brief CWebManager::Disconnect
+    ///
 
-	void CWebManager::Disconnect()
-	{
-		if (!m_bConnected) return;
-		m_ATCTimer.stop();
-		OnLiveUpdate();
-		QDomDocument SendLogout;
-		XmlBuild(SendLogout, logout);
-		CHttpRequest* Request = new CHttpRequest(this);
-		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
-		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
-		m_P2P->clear();
-		m_bConnected = false;
-		m_ATCTimer.stop();
-		emit (FireDisconnected());
-	}
+    void CWebManager::Disconnect()
+    {
+        if (!m_bConnected) return;
+        m_ATCTimer.stop();
+        OnLiveUpdate();
+        QDomDocument SendLogout;
+        XmlBuild(SendLogout, logout);
+        CHttpRequest* Request = new CHttpRequest(this);
+        connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
+        Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
+        m_P2P->clear();
+        m_bConnected = false;
+        m_ATCTimer.stop();
+        emit (FireDisconnected());
+    }
 
-	///
-	/// \brief CWebManager::SendVerify
-	///
+    ///
+    /// \brief CWebManager::SendVerify
+    ///
 
-	void CWebManager::SendVerify()
-	{
-		QDomDocument SendVerify;
-		XmlBuild(SendVerify, verify);
-		CHttpRequest* Request = new CHttpRequest(this);
-		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)));
-		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendVerify);
-	}
+    void CWebManager::SendVerify()
+    {
+        QDomDocument SendVerify;
+        XmlBuild(SendVerify, verify);
+        CHttpRequest* Request = new CHttpRequest(this);
+        connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)));
+        Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendVerify);
+    }
 
-	///
-	/// \brief CWebManager::SendLiveUpdate
-	///
+    ///
+    /// \brief CWebManager::SendLiveUpdate
+    ///
 
-	void CWebManager::SendLiveUpdate()
-	{
-		QDomDocument SendLiveUpdate;
-		XmlBuild(SendLiveUpdate, liveupdate);
-		CHttpRequest* Request = new CHttpRequest(this);
-		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
-		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLiveUpdate);
-	}
+    void CWebManager::SendLiveUpdate()
+    {
+        QDomDocument SendLiveUpdate;
+        XmlBuild(SendLiveUpdate, liveupdate);
+        CHttpRequest* Request = new CHttpRequest(this);
+        connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
+        Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLiveUpdate);
+    }
 
-	void CWebManager::SendATCUpdate()
-	{
-		QDomDocument SendAtcUpdate;
-		XmlBuild(SendAtcUpdate, atc);
-		CHttpRequest* Request = new CHttpRequest(this);
-		connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ATCCallback (CHttpRequest*)));
-		Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendAtcUpdate);
-	}
+    void CWebManager::SendATCUpdate()
+    {
+        QDomDocument SendAtcUpdate;
+        XmlBuild(SendAtcUpdate, atc);
+        CHttpRequest* Request = new CHttpRequest(this);
+        connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ATCCallback (CHttpRequest*)));
+        Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendAtcUpdate);
+    }
+
+    void CWebManager::CheckNewVersion()
+    {
+        QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=ffs2play&beta=1";
+        CHttpRequest* Request =new CHttpRequest(this);
+        connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckNewVersionCallback (CHttpRequest*)));
+        Request->execute(CheckVersionURL);
+    }
 }

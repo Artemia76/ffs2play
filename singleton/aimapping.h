@@ -8,60 +8,64 @@
 #include "singleton/simbasemanager.h"
 #include "protobuf/ffs2play.pb.h"
 
+#define AIDB_AIRCRAFTS_VERSION 1
+#define AIDB_SIMPATHS_VERSION 1
+#define AIDB_REPLACEMENT_VERSION 1
+
 namespace ffs2play
 {
-	class AIMapping : public QObject
-	{
-		Q_OBJECT
-		friend class FileExplorer;
-	private:
-		explicit			AIMapping(QObject *parent = nullptr);
-		static	AIMapping*	createInstance();
-		//QString				findInstallationPath (const QString& pKey);
-		void				initSQLite();
-		void				checkSimTable();
-		void				DBFileUpdate(const QString& pKey,const QString& pPath);
-		void				DBFilePurge ();
-		QString				MD5Hash(const QString& pFileName);
+    class AIMapping : public QObject
+    {
+        Q_OBJECT
+        friend class FileExplorer;
+    private:
+        explicit            AIMapping(QObject *parent = nullptr);
+        static  AIMapping*  createInstance();
+        //QString           findInstallationPath (const QString& pKey);
+        void                initSQLite();
+        void                DBFileUpdate(const QString& pKey,const QString& pPath);
+        void                DBFilePurge ();
+        void                DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);
+        QString             MD5Hash(const QString& pFileName);
 
-		bool				m_Initialized;
-		CLogger*			m_log;
-		QSqlDatabase		m_DB;
-		QThread*			m_thread;
-		simbasemanager*		m_simManager;
-		QString				m_Table;
-		QStringList			m_AircraftPaths;
-		int					m_NbAdded;
-		int					m_NbUpdated;
+        bool                m_Initialized;
+        CLogger*            m_log;
+        QSqlDatabase        m_DB;
+        QThread*            m_thread;
+        simbasemanager*     m_simManager;
+        QString             m_Table;
+        QStringList         m_AircraftPaths;
+        int                 m_NbAdded;
+        int                 m_NbUpdated;
 
-	public:
-							~AIMapping();
-		static	AIMapping*	instance();
-		void				startScanSimObject();
-		AIResol				SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
-		QStringList			getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
-		QStringList			getCategoryList();
-		QStringList			getEditeurList();
-		QStringList			getATCTypeList();
-		QStringList			getATCModelList();
-		QString				getRule(const QString& pTitre);
-		void				addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
-		void				delRule(const QString& pRemoteTitle);
-		void				cleanAIDB();
-		QMap<QString,QString> getList();
-		QString				getAircraftPath(const QString& pTitle);
-		QString				getFileData(const QString& pKey);
-		QStringList			getPathList();
-		bool				addPath(const QString& pPath);
-		bool				delPath(const QString& pPath);
+    public:
+                            ~AIMapping();
+        static	AIMapping*  instance();
+        void				startScanSimObject();
+        AIResol				SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
+        QStringList			getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
+        QStringList			getCategoryList();
+        QStringList			getEditeurList();
+        QStringList			getATCTypeList();
+        QStringList			getATCModelList();
+        QString				getRule(const QString& pTitre);
+        void				addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
+        void				delRule(const QString& pRemoteTitle);
+        void				cleanAIDB();
+        QMap<QString,QString> getList();
+        QString				getAircraftPath(const QString& pTitle);
+        QString				getFileData(const QString& pKey);
+        QStringList			getPathList();
+        bool				addPath(const QString& pPath);
+        bool				delPath(const QString& pPath);
 
-	signals:
-
-	private slots:
-		void				onSimReceiveOpen();
-		void				onSimReceiveClose();
-		void				scanSimObject();
-	public slots:
-	};
+    signals:
+        void                fireScanFinished();
+    private slots:
+        void				onSimReceiveOpen();
+        void				onSimReceiveClose();
+        void				scanSimObject();
+    public slots:
+    };
 }
 #endif // AIMAPPING_H

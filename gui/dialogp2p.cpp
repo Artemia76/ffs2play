@@ -315,7 +315,7 @@ namespace ffs2play
 		checkIfChanged();
 	}
 
-    void DialogP2P::on_cbEnableCallsign_stateChanged(int arg1)
+    void DialogP2P::on_cbEnableCallsign_stateChanged(int)
     {
         checkIfChanged();
     }

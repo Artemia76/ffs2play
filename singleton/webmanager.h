@@ -36,6 +36,7 @@
 #include "singleton/clogger.h"
 #include "singleton/simbasemanager.h"
 #include "singleton/p2pmanager.h"
+#include "singleton/analyzer.h"
 #include "net/chttprequest.h"
 #include "tools/crypto.h"
 #include "sim/aircraftstate.h"
@@ -43,92 +44,96 @@
 namespace ffs2play
 {
 
-	struct SUser
-	{
-		QString Profil;
-		QString Login;
-		QString Password;
-		QString URL;
-	};
+    struct SUser
+    {
+        QString Profil;
+        QString Login;
+        QString Password;
+        QString URL;
+    };
 }
 
 Q_DECLARE_METATYPE(QVector<ffs2play::SUser>)
 
 namespace ffs2play
 {
-	QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v);
-	QDataStream& operator>>(QDataStream& in, QVector<SUser>& v);
+    QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v);
+    QDataStream& operator>>(QDataStream& in, QVector<SUser>& v);
 
-	class CWebManager : public QObject
-	{
-		Q_OBJECT
-		friend class		DialogProfils;
-	public:
-		enum XmlCode
-		{
-			hello,
-			verify,
-			liveupdate,
-			atc,
-			logout
-		};
-		Q_ENUM(XmlCode)
+    class CWebManager : public QObject
+    {
+        Q_OBJECT
+        friend class        DialogProfils;
+    public:
+        enum XmlCode
+        {
+            hello,
+            verify,
+            liveupdate,
+            atc,
+            logout
+        };
+        Q_ENUM(XmlCode)
 
-	private:
-							CWebManager(QObject *parent = 0);
-		static CWebManager*	createInstance();
-		QSettings			m_settings;
-		QTimer				m_liveUpdateTimer;
-		QTimer				m_ATCTimer;
-		simbasemanager*		m_simManager;
-		CP2PManager*		m_P2P;
-		CLogger*			m_log;
-		QMetaEnum			m_metaXmlCode;
+    private:
+                            CWebManager(QObject *parent = nullptr);
+        static CWebManager* createInstance();
+        QSettings           m_settings;
+        QTimer              m_liveUpdateTimer;
+        QTimer              m_ATCTimer;
+        simbasemanager*     m_simManager;
+        CP2PManager*        m_P2P;
+        CLogger*            m_log;
+        Analyzer*           m_Analyzer;
+        QMetaEnum           m_metaXmlCode;
 
-		// Etat de la connexion
-		bool				m_bConnected;
-		bool				m_SyncAIDone;
-		bool				m_AIManagement;
-		QString				m_sURL;
-		QString				m_sCrypted_AESKey;
-		QDateTime			m_lastGoodUpdate;
-		int					m_currentUser;
-		QString				m_key;
-		CCrypto				m_crypto;
-		void				XmlBuild(QDomDocument& pDoc, XmlCode pCode);
-		bool				CheckError(QDomDocument& pDoc);
-		void				CheckWhazzup (QDomDocument& pDoc);
+        // Etat de la connexion
+        bool                m_bConnected;
+        bool                m_SyncAIDone;
+        bool                m_AIManagement;
+        QString             m_sURL;
+        QString             m_sCrypted_AESKey;
+        QDateTime           m_lastGoodUpdate;
+        int                 m_currentUser;
+        QString             m_key;
+        CCrypto             m_crypto;
+        void                XmlBuild(QDomDocument& pDoc, XmlCode pCode);
+        bool                CheckError(QDomDocument& pDoc);
+        void                CheckWhazzup (QDomDocument& pDoc);
 
-	protected:
-		QVector<SUser>		m_users;
-		void				SaveConfig();
-		void				SetCurrentUser(int pNum);
+    protected:
+        QVector<SUser>      m_users;
+        void                SaveConfig();
+        void                SetCurrentUser(int pNum);
 
-	public:
-							~CWebManager();
-		static CWebManager*	instance();
-		bool				DelayedExit;
-		void				Connect();
-		void				Disconnect();
-		bool				isConnected();
-	signals:
-		void				FireHelloCallback();
-		void				FireConnected();
-		void				FireDisconnected();
-	public slots:
-		void				connect_disconnect();
-	private slots:
-		void				HelloCallback (CHttpRequest* pRequest);
-		void				ConnectCallback (CHttpRequest* pRequest);
-		void				LiveUpdateCallback (CHttpRequest* pRequest);
-		void				ATCCallback (CHttpRequest* pRequest);
-		void				LogoutCallback (CHttpRequest* pRequest);
-		void				SendVerify();
-		void				SendLiveUpdate();
-		void				SendATCUpdate();
-		void				OnATCUpdate();
-		void				OnLiveUpdate();
-	};
+    public:
+                            ~CWebManager();
+        static CWebManager*	instance();
+        void                Connect();
+        void                Disconnect();
+        bool                isConnected();
+        void                CheckNewVersion();
+
+    signals:
+        void                FireHelloCallback();
+        void                FireConnected();
+        void                FireDisconnected();
+        void                FireExit();
+    public slots:
+        void                connect_disconnect();
+    private slots:
+        void                HelloCallback (CHttpRequest* pRequest);
+        void                ConnectCallback (CHttpRequest* pRequest);
+        void                LiveUpdateCallback (CHttpRequest* pRequest);
+        void                ATCCallback (CHttpRequest* pRequest);
+        void                LogoutCallback (CHttpRequest* pRequest);
+        void                CheckNewVersionCallback (CHttpRequest* pRequest);
+        void                SendVerify();
+        void                SendLiveUpdate();
+        void                SendATCUpdate();
+        void                OnATCUpdate();
+        void                OnLiveUpdate();
+    };
 }
 
 #endif // WEBMANAGER_H

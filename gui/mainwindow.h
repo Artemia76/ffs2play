@@ -35,6 +35,7 @@
 #include "singleton/p2pmanager.h"
 #include "singleton/webmanager.h"
 #include "singleton/aimapping.h"
+#include "singleton/analyzer.h"
 
 namespace Ui {
 class MainWindow;
@@ -42,52 +43,68 @@ class MainWindow;
 
 namespace ffs2play
 {
-	class MainWindow : public QMainWindow
-	{
-		Q_OBJECT
+    class MainWindow : public QMainWindow
+    {
+        Q_OBJECT
 
-	public:
-		explicit		MainWindow(QWidget *pParent = 0);
-						~MainWindow();
-	private slots:
-		void			onLog(const QString& pMessage,QColor pColor, CL_DEBUG_LEVEL pLevel);
-		void			onSCM_Opened();
-		void			onSCM_Closed();
-		void			onSCM_Loaded(SIM_TYPE);
-		void			onWM_Connected();
-		void			onWM_Disconnected();
-		void			onUpdate();
-		void			on_afServeurCon_triggered();
-		void			on_afProfil_triggered();
-		void			on_afAide_triggered();
-		void			on_afFSCon_triggered();
-		void			on_afP2P_triggered();
-		void			OnPeerRemove(QString pCallSign);
-		void			OnPeerChange(QString pCallSign,int pSignal);
-		void			OnPeerAdd(QString pCallSign);
-		void			OnPeerReceiveTChat(QString,QString);
-		void			on_rb_filterNone_toggled(bool checked);
-		void			on_rb_filterNormal_toggled(bool checked);
-		void			on_rb_filterVerbose_toggled(bool checked);
-		void			on_cb_filter_currentIndexChanged(const QString &arg1);
-		void			on_afFSType_triggered();
-		void			on_leTchatSend_returnPressed();
-		void			OnPeerShowContextMenu(const QPoint&);
-		void			OpenMappingBox();
-        void            UnblockData();
-        void            BlockData();
+    public:
+        ///
+        /// \brief MainWindow Constructor
+        /// \param pParent
+        ///
+        explicit    MainWindow(QWidget *pParent = 0);
 
-	private:
-		Ui::MainWindow*	ui;
-		CLogger*		m_log;
-		simbasemanager*	m_simManager;
-		CP2PManager*	m_P2PManager;
-		CWebManager*	m_webManager;
-		AIMapping*		m_AIMapping;
-		QSettings		m_settings;
-		QTimer			m_updateTimer;
-		quint32			m_maxLine;
-		void			closeEvent(QCloseEvent* pEvent);
-	};
+        ///
+        /// \brief MainWindow Destructor
+        ///
+                    ~MainWindow();
+    private slots:
+        void        onLog(const QString& pMessage,QColor pColor, CL_DEBUG_LEVEL pLevel);
+        void        onSCM_Opened();
+        void        onSCM_Closed();
+        void        onSCM_Loaded(SIM_TYPE);
+        void        onWM_Connected();
+        void        onWM_Disconnected();
+        void        onWM_Exit();
+        void        onUpdate();
+        void        on_afServeurCon_triggered();
+        void        on_afProfil_triggered();
+        void        on_afAide_triggered();
+        void        on_afFSCon_triggered();
+        void        on_afP2P_triggered();
+        void        onPeerRemove(QString pCallSign);
+        void        onPeerChange(QString pCallSign,int pSignal);
+        void        onPeerAdd(QString pCallSign);
+        void        onPeerReceiveTChat(QString,QString);
+        void        onAIScanFinished();
+        void        onAnaTouchSpeed(double pTouchSpeed);
+        void        on_rb_filterNone_toggled(bool checked);
+        void        on_rb_filterNormal_toggled(bool checked);
+        void        on_rb_filterVerbose_toggled(bool checked);
+        void        on_cb_filter_currentIndexChanged(const QString &arg1);
+        void        on_afFSType_triggered();
+        void        on_leTchatSend_returnPressed();
+        void        onPeerShowContextMenu(const QPoint&);
+        void        openMappingBox();
+        void        unblockData();
+        void        blockData();
+        void        clearLog();
+        void        saveLog();
+
+        void        on_pteLogger_customContextMenuRequested(const QPoint &pos);
+
+    private:
+        Ui::MainWindow* ui;
+        CLogger*        m_log;
+        simbasemanager* m_simManager;
+        CP2PManager*    m_P2PManager;
+        CWebManager*    m_webManager;
+        AIMapping*      m_AIMapping;
+        Analyzer*       m_Analyzer;
+        QSettings       m_settings;
+        QTimer          m_updateTimer;
+        quint32         m_maxLine;
+        void            closeEvent(QCloseEvent* pEvent);
+    };
 }
 #endif // MAINWINDOW_H

@@ -74,6 +74,7 @@ SOURCES +=		main.cpp \
 				gui/dialogprofils.cpp \
 				gui/mainwindow.cpp \
 				gui/dialogp2p.cpp \
+                                gui/aireplace.cpp \
 				net/chttprequest.cpp \
 				net/peer.cpp \
 				net/peer.Requests.cpp \
@@ -96,14 +97,15 @@ SOURCES +=		main.cpp \
 				tools/datetime.cpp \
 				tools/calculation.cpp \
 				tools/datagram.cpp \
-				tools/iniparser.cpp \
-    gui/aireplace.cpp
+                                tools/iniparser.cpp \
+    singleton/analyzer.cpp
 win32 {
 SOURCES +=		sim/scmanager.cpp
 }
 HEADERS  +=     gui/dialogprofils.h \
 				gui/mainwindow.h \
 				gui/dialogp2p.h \
+                                gui/aireplace.h \
 				net/chttprequest.h \
 				net/peer.h \
 				net/udpserver.h \
@@ -124,8 +126,8 @@ HEADERS  +=     gui/dialogprofils.h \
 				tools/version.h \
 				tools/calculation.h \
 				tools/datagram.h \
-				tools/iniparser.h \
-    gui/aireplace.h
+                                tools/iniparser.h \
+    singleton/analyzer.h
 win32 {
 HEADERS	+=		sim/scmanager.h
 }
@@ -218,7 +220,7 @@ QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\
 
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 14
+VERSION_BUILD = 15
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
