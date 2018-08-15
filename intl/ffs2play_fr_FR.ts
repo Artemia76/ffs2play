@@ -27,116 +27,126 @@
 <context>
     <name>CP2PManager</name>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="117"/>
+        <location filename="../singleton/p2pmanager.cpp" line="120"/>
         <source> become unvisible</source>
         <translation> deviens invisible</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="126"/>
+        <location filename="../singleton/p2pmanager.cpp" line="129"/>
         <source> become visible</source>
         <translation> deviens visible</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="176"/>
+        <location filename="../singleton/p2pmanager.cpp" line="181"/>
         <source>UPNP Windows Socket failed.</source>
         <translation>Socket Windows UPNP a échoué.</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="201"/>
+        <location filename="../singleton/p2pmanager.cpp" line="206"/>
         <source>IGP Desc = </source>
         <translation>IGP Desc = </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="201"/>
+        <location filename="../singleton/p2pmanager.cpp" line="206"/>
         <source> st: </source>
         <translation> st: </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="211"/>
+        <location filename="../singleton/p2pmanager.cpp" line="216"/>
         <source>Found valid IGD : </source>
         <translation>Trouvé un IGD Valide : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="216"/>
+        <location filename="../singleton/p2pmanager.cpp" line="221"/>
         <source>Found a (not connected?) IGD : </source>
         <translation>Trouvé un IGD (non connecté?) : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="221"/>
+        <location filename="../singleton/p2pmanager.cpp" line="226"/>
         <source>UPnP device found. Is it an IGD ? : </source>
         <translation>Routeur UPnP trouvé. Est ce un IGD ? : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="226"/>
+        <location filename="../singleton/p2pmanager.cpp" line="231"/>
         <source>Found device (IGD ?) : </source>
         <translation>Trouvé un appareil (IGD ?) : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="235"/>
+        <location filename="../singleton/p2pmanager.cpp" line="240"/>
         <source>Local LAN IP address : </source>
         <translation>Adresse IP LAN Locale : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="238"/>
+        <location filename="../singleton/p2pmanager.cpp" line="243"/>
         <source>IP address : </source>
         <translation>Adresse IP : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="240"/>
+        <location filename="../singleton/p2pmanager.cpp" line="245"/>
         <source>Internet IP address : </source>
         <translation>Adresse IP Internet : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="254"/>
+        <location filename="../singleton/p2pmanager.cpp" line="259"/>
         <source>Adding port mappping failed with code </source>
         <translation>Création du mapping de port a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="259"/>
+        <location filename="../singleton/p2pmanager.cpp" line="264"/>
         <source>No valid UPNP Internet Gateway Device found.</source>
         <translation>Aucune passerelle UPNP valide trouvée.</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="265"/>
+        <location filename="../singleton/p2pmanager.cpp" line="270"/>
         <source>No IGD UPNP Device found on the network !</source>
         <translation>Aucun dispositif IGD UPNP trouvé sur le réseau !</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="280"/>
+        <location filename="../singleton/p2pmanager.cpp" line="285"/>
         <source>Delete port mapping failed with code </source>
         <translation>La suppression du mapping de port à échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="352"/>
-        <location filename="../singleton/p2pmanager.cpp" line="380"/>
+        <location filename="../singleton/p2pmanager.cpp" line="357"/>
+        <location filename="../singleton/p2pmanager.cpp" line="385"/>
         <source>Bad IP Address</source>
         <translation>Mauvaise adresse IP</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="362"/>
+        <location filename="../singleton/p2pmanager.cpp" line="367"/>
         <source>Adding P2P user callsign = </source>
         <translation>Ajoût de l&apos;utilisateur P2P indicatif = </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="367"/>
+        <location filename="../singleton/p2pmanager.cpp" line="372"/>
         <source>User </source>
         <translation>Utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="386"/>
+        <location filename="../singleton/p2pmanager.cpp" line="391"/>
         <source>Change IP for user </source>
         <translation>Changement de l&apos;IP pour l&apos;utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="392"/>
+        <location filename="../singleton/p2pmanager.cpp" line="397"/>
         <source>Change port for user </source>
         <translation>Changement du port pour l&apos;utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="415"/>
-        <location filename="../singleton/p2pmanager.cpp" line="440"/>
+        <location filename="../singleton/p2pmanager.cpp" line="420"/>
+        <location filename="../singleton/p2pmanager.cpp" line="445"/>
         <source>Remove user </source>
         <translation>Suppression de l&apos;utilisateur </translation>
+    </message>
+    <message>
+        <location filename="../singleton/p2pmanager.cpp" line="584"/>
+        <source>Drop rate : </source>
+        <translation>Taux de chute : </translation>
+    </message>
+    <message>
+        <location filename="../singleton/p2pmanager.cpp" line="584"/>
+        <source> ft/min</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -366,6 +376,21 @@
         <location filename="../gui/dialogp2p.ui" line="1408"/>
         <source>Add here folders witch contain aircraft models on corresponding simulator. Exemple : the IVAO MTL library</source>
         <translation>Ajouter ici les répertoires qui contiennent les models d&apos;avions du simulateur correspondant. Example : la bibliothèque IVAO MTL</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="1467"/>
+        <source>Miscelaneous</source>
+        <translation>Divers</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="1479"/>
+        <source>Display Touch Vertical Speed</source>
+        <translation>Afficher le taux de chute</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="1492"/>
+        <source>Publish Touch Vertical Speed</source>
+        <translation>Publier le taux de chute</translation>
     </message>
     <message>
         <source>Users Profils</source>
@@ -950,161 +975,166 @@
         <translation type="vanished">AIMapping : Impossible de créer la table Version</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="166"/>
+        <location filename="../singleton/aimapping.cpp" line="167"/>
         <source>AIMapping : Fail to create Version Table : </source>
         <translation>AIMapping : Echec de la création de la table Version : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="178"/>
+        <location filename="../singleton/aimapping.cpp" line="179"/>
         <source>AIMapping : Fail to create SimPath Table</source>
         <translation>AIMapping : Impossible de créer la table SimPath</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="190"/>
+        <location filename="../singleton/aimapping.cpp" line="191"/>
         <source>AIMapping : Fail to create Aircrafts Table</source>
         <translation>AIMapping : Impossible de créer la table Aircrafts</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="202"/>
+        <location filename="../singleton/aimapping.cpp" line="203"/>
         <source>AIMapping : Fail to create Replacement Table</source>
         <translation>AIMapping : Impossible de créer la table Replacement</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="241"/>
+        <location filename="../singleton/aimapping.cpp" line="242"/>
         <source>AIMapping : Fail to query Version Table : </source>
         <translatorcomment>AIMapping : Echec de la requête sur la table Version.</translatorcomment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="275"/>
+        <location filename="../singleton/aimapping.cpp" line="276"/>
         <source>Start updating aircraft database...</source>
         <translation>Début de la mise à jour de la base de donée des avions...</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="287"/>
+        <location filename="../singleton/aimapping.cpp" line="304"/>
+        <source>AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion</source>
+        <translation>AIMapping : Impossible de démarrer le thread de mise à jour des chemins objets à cause de la connexion SQLITE</translation>
+    </message>
+    <message>
+        <location filename="../singleton/aimapping.cpp" line="309"/>
         <source>End of update : </source>
         <translation>Fin de la mise à jour : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="287"/>
+        <location filename="../singleton/aimapping.cpp" line="309"/>
         <source> aircrafts added and </source>
         <translation> avions ajoutés et </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="287"/>
+        <location filename="../singleton/aimapping.cpp" line="309"/>
         <source> updated.</source>
         <translation> mis à jour.</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="304"/>
+        <location filename="../singleton/aimapping.cpp" line="327"/>
         <source>AIMapping : No record was found for </source>
         <translation>AIMapping : Aucun enregistrement trouvé pour </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="343"/>
+        <location filename="../singleton/aimapping.cpp" line="366"/>
         <source>AIMapping : Path = </source>
         <translation>AIMapping : Chemin = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="344"/>
+        <location filename="../singleton/aimapping.cpp" line="367"/>
         <source>AIMapping : Editor = </source>
         <translation>AIMapping : Editeur = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="345"/>
+        <location filename="../singleton/aimapping.cpp" line="368"/>
         <source>AIMapping : ATCModel = </source>
         <translation>AIMapping : Model ATC = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="346"/>
+        <location filename="../singleton/aimapping.cpp" line="369"/>
         <source>AIMapping : ATCType = </source>
         <translation>AIMapping : Type ATC = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="347"/>
+        <location filename="../singleton/aimapping.cpp" line="370"/>
         <source>AIMapping : Category = </source>
         <translation>AIMapping : Categorie = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="348"/>
+        <location filename="../singleton/aimapping.cpp" line="371"/>
         <source>AIMapping : EngineType = </source>
         <translation>AIMapping : Type de moteurr = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="349"/>
+        <location filename="../singleton/aimapping.cpp" line="372"/>
         <source>AIMapping : CG Height = </source>
         <translation>AIMapping : Hauteur CG = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="350"/>
+        <location filename="../singleton/aimapping.cpp" line="373"/>
         <source>AIMapping : Pitch = </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="363"/>
+        <location filename="../singleton/aimapping.cpp" line="386"/>
         <source>AIMapping : Engine quantity = </source>
         <translation>AIMapping : Nombre de moteursr = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="374"/>
+        <location filename="../singleton/aimapping.cpp" line="397"/>
         <source>AIMapping : livery found Title = </source>
         <translation>AIMapping : Variante trouvée Titre = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="429"/>
+        <location filename="../singleton/aimapping.cpp" line="452"/>
         <source>AIMapping : IniParser error = </source>
         <translation>AIMapping : erreur du IniParser = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="433"/>
+        <location filename="../singleton/aimapping.cpp" line="456"/>
         <source>AIMapping : Error = </source>
         <translation>AIMapping : Erreur = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="467"/>
+        <location filename="../singleton/aimapping.cpp" line="490"/>
         <source>AIMapping : Local rule found in DB : </source>
         <translation>AIMapping : Règle locale trouvée dans la DB : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="467"/>
+        <location filename="../singleton/aimapping.cpp" line="490"/>
         <source> replaced by </source>
         <translation> remplacé par </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="486"/>
+        <location filename="../singleton/aimapping.cpp" line="509"/>
         <source>AIMapping : Title Match found in database : </source>
         <translation>AIMapping : Correspondance de Titre trouvé dans la base de donnée : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="503"/>
+        <location filename="../singleton/aimapping.cpp" line="526"/>
         <source>AIMapping : ATC Model Match found in database : </source>
         <translation>AIMapping : Correspondance du Model ATC trouvé dans la base de donnée : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="510"/>
-        <location filename="../singleton/aimapping.cpp" line="519"/>
+        <location filename="../singleton/aimapping.cpp" line="533"/>
+        <location filename="../singleton/aimapping.cpp" line="542"/>
         <source>AIMapping : Fail to query database.</source>
         <translation>AIMapping : Echec de la requête sur la base de donnée.</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="691"/>
-        <location filename="../singleton/aimapping.cpp" line="731"/>
+        <location filename="../singleton/aimapping.cpp" line="714"/>
+        <location filename="../singleton/aimapping.cpp" line="754"/>
         <source>AIMapping : Fail to query path list for simulator </source>
         <translation>AIMapping : Echec de la requête de la liste des chemins pour les simulateurs </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="748"/>
+        <location filename="../singleton/aimapping.cpp" line="771"/>
         <source>AIMapping : Fail to add path </source>
         <translation>AIMapping : Impossible d&apos;ajouter le chemin du répertoire </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="748"/>
-        <location filename="../singleton/aimapping.cpp" line="767"/>
+        <location filename="../singleton/aimapping.cpp" line="771"/>
+        <location filename="../singleton/aimapping.cpp" line="790"/>
         <source> for simulator </source>
         <translation> pour le simulateur </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="767"/>
+        <location filename="../singleton/aimapping.cpp" line="790"/>
         <source>AIMapping : Fail to remove path </source>
         <translation>AIMapping : Impossible de supprimer le répertoire </translation>
     </message>
@@ -1532,12 +1562,12 @@
 <context>
     <name>ffs2play::DialogP2P</name>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="184"/>
+        <location filename="../gui/dialogp2p.cpp" line="194"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="185"/>
+        <location filename="../gui/dialogp2p.cpp" line="195"/>
         <source>There is some modifications on selected profil. Do you want apply them?</source>
         <translation>Il y a des modifications en cours dans le profil sélectionné. souhaitez vous les appliquer?</translation>
     </message>
@@ -1568,56 +1598,50 @@
 <context>
     <name>ffs2play::MainWindow</name>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="90"/>
+        <location filename="../gui/mainwindow.cpp" line="92"/>
         <source>Welcome to FFS2Play</source>
         <translation>Bienvenue sur FFS2Play</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="243"/>
+        <location filename="../gui/mainwindow.cpp" line="244"/>
         <source>Simulator Aircraft Folder</source>
         <translation>Dossier des appareils du Simulateur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="243"/>
+        <location filename="../gui/mainwindow.cpp" line="244"/>
         <source>at least one folder is not configured for your simulator. Do you want add the path location now?</source>
         <translation>au moins un dossier n&apos;est pas configuré pour votre simulateur. Voulez vous en ajouter un maintenant?</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="532"/>
+        <location filename="../gui/mainwindow.cpp" line="533"/>
         <source>About</source>
         <translation>A Propos</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="737"/>
+        <location filename="../gui/mainwindow.cpp" line="738"/>
         <source>Clear</source>
         <translation>Vider</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="738"/>
+        <location filename="../gui/mainwindow.cpp" line="739"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="754"/>
+        <location filename="../gui/mainwindow.cpp" line="755"/>
         <source>Web File (*.htm *.html)</source>
         <translation>Fichier Web (*.htm *.html)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="775"/>
         <source>Touch Speed = </source>
-        <translation>Taux de chute = </translation>
-    </message>
-    <message>
-        <location filename="../gui/mainwindow.cpp" line="775"/>
-        <source>ft/min</source>
-        <translation></translation>
+        <translation type="vanished">Taux de chute = </translation>
     </message>
     <message>
         <source>Web File (*.htm *.html</source>
         <translation type="vanished">Fichier Web (*.htm *.html)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="764"/>
+        <location filename="../gui/mainwindow.cpp" line="765"/>
         <source>An Error occur while opening </source>
         <translation>Une erreur est survenue lors de l&apos;ouverture de </translation>
     </message>

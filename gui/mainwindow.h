@@ -77,7 +77,6 @@ namespace ffs2play
         void        onPeerAdd(QString pCallSign);
         void        onPeerReceiveTChat(QString,QString);
         void        onAIScanFinished();
-        void        onAnaTouchSpeed(double pTouchSpeed);
         void        on_rb_filterNone_toggled(bool checked);
         void        on_rb_filterNormal_toggled(bool checked);
         void        on_rb_filterVerbose_toggled(bool checked);

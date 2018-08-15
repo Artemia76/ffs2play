@@ -218,7 +218,7 @@ namespace ffs2play
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "ATC MODEL", NULL, SIMCONNECT_DATATYPE_STRING256);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "CATEGORY", NULL, SIMCONNECT_DATATYPE_STRING256);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "PLANE ALTITUDE", "feet", SIMCONNECT_DATATYPE_FLOAT64);
-		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "PLANE ALT ABOVE GROUND", "feet",SIMCONNECT_DATATYPE_FLOAT64);
+		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "GROUND ALTITUDE", "feet",SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "VERTICAL SPEED", "feet per second",SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "PLANE HEADING DEGREES TRUE", "degrees",SIMCONNECT_DATATYPE_FLOAT64);
 		hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "Plane Longitude", "degrees",SIMCONNECT_DATATYPE_FLOAT64);

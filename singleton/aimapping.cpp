@@ -148,15 +148,16 @@ namespace ffs2play
     void AIMapping::initSQLite()
     {
         if (m_Initialized) return;
-        m_DB=QSqlDatabase::addDatabase("QSQLITE");
+		m_DB=QSqlDatabase::addDatabase("QSQLITE");
         QString PathDatabase = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
         if (!QDir(PathDatabase).exists())
         {
             QDir().mkpath(PathDatabase);
         }
-        m_DB.setDatabaseName(PathDatabase + QString("/AIDB.sqlite"));
+		m_BaseFile = PathDatabase + QString("/AIDB.sqlite");
+		m_DB.setDatabaseName(m_BaseFile);
         m_DB.open();
-        QSqlQuery query;
+		QSqlQuery query(m_DB);
 
         //create if not exist the Version Table
         query.prepare("create table if not exists Version (TableName varchar(256) UNIQUE, Version int)");
@@ -209,7 +210,7 @@ namespace ffs2play
     void AIMapping::DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean)
     {
         if (!m_DB.isOpen()) return;
-        QSqlQuery query;
+		QSqlQuery query(m_DB);
         bool NeedUpdate = false;
         query.prepare("SELECT Version FROM Version WHERE TableName = :TableName");
         query.bindValue(":TableName", pTable);
@@ -273,26 +274,47 @@ namespace ffs2play
         m_NbAdded=0;
         m_NbUpdated=0;
         m_log->log(tr("Start updating aircraft database..."));
-        for (QString Directory : m_AircraftPaths)
-        {
-            QDirIterator it(Directory, QStringList() << "aircraft.cfg" << "sim.cfg" << "*.acf", QDir::Files, QDirIterator::Subdirectories);
-            while (it.hasNext())
-            {
-                QString FileName = it.next();
-                QString Hash = MD5Hash(FileName);
-                DBFileUpdate(Hash,FileName);
-            }
-        }
-        DBFilePurge();
-        m_log->log(tr("End of update : ") + QString::number(m_NbAdded) + tr(" aircrafts added and ") + QString::number(m_NbUpdated) + tr(" updated."));
-        emit(fireScanFinished());
+		//Since QT5.11, create new connexion for thread
+		const QString thread_address = QLatin1String("0x") + QString::number((quintptr)QThread::currentThreadId(), 16);
+		QSqlDatabase Thread_DB=QSqlDatabase::database(thread_address);
+		Thread_DB.setDatabaseName(m_BaseFile);
+		if ((!Thread_DB.isOpen()) || (!Thread_DB.isValid()))
+		{
+			Thread_DB = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), thread_address);
+		}
+		m_Thread_DB = Thread_DB;
+		m_Thread_DB.setDatabaseName(m_BaseFile);
+		if (m_Thread_DB.open())
+		{
+			for (QString Directory : m_AircraftPaths)
+			{
+				QDirIterator it(Directory, QStringList() << "aircraft.cfg" << "sim.cfg" << "*.acf", QDir::Files, QDirIterator::Subdirectories);
+				while (it.hasNext())
+				{
+					QString FileName = it.next();
+					QString Hash = MD5Hash(FileName);
+					DBFileUpdate(Hash,FileName);
+				}
+			}
+			DBFilePurge();
+		}
+		else
+		{
+#if FFS_DEBUG
+			m_log->log(tr("AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion"),Qt::darkMagenta);
+#endif
+		}
+		//Close DB Connexion
+		m_Thread_DB.close();
+		m_log->log(tr("End of update : ") + QString::number(m_NbAdded) + tr(" aircrafts added and ") + QString::number(m_NbUpdated) + tr(" updated."));
+		emit(fireScanFinished());
     }
 
     void AIMapping::DBFileUpdate(const QString &pKey, const QString &pPath)
     {
         if ((!m_Initialized) || m_Table.isEmpty()) return;
-		if (!m_DB.isOpen()) return;
-        QSqlQuery query;
+		if (!m_Thread_DB.isOpen()) return;
+		QSqlQuery query(m_Thread_DB);
         QString Path= pPath;
         query.prepare( "SELECT checksum FROM Aircrafts WHERE (checksum = :checksum) and (Sim = :Sim)");
         query.bindValue(":checksum",pKey);
@@ -470,7 +492,7 @@ namespace ffs2play
             Title = Rule;
         }
         // Check if Title exist in database
-        QSqlQuery query;
+		QSqlQuery query(m_DB);
         query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
         query.bindValue(":Sim",m_Table);
         query.bindValue(":Title",Title);
@@ -534,7 +556,7 @@ namespace ffs2play
             if (pModel == "*") pModel = "";
             bool Category, Editor, Type, Model;
             Category=Editor=Type=Model=false;
-            QSqlQuery query;
+			QSqlQuery query(m_DB);
             QString command =  "SELECT Title FROM Aircrafts WHERE Sim = :Sim";
             if (pCategory.length()>0)
             {
@@ -620,7 +642,7 @@ namespace ffs2play
         QString Response="";
         if (m_Initialized)
         {
-            QSqlQuery query;
+			QSqlQuery query(m_DB);
             query.prepare("SELECT LocalTitle FROM Replacement WHERE (RemoteTitle like :RemoteTitle) and (Sim like :Sim)");
             query.bindValue(":Sim",m_Table);
             query.bindValue(":RemoteTitle",pTitre);
@@ -638,7 +660,7 @@ namespace ffs2play
     void AIMapping::addRule(const QString &pRemoteTitle, const QString &pLocalTitle)
     {
         if (!m_Initialized) return;
-        QSqlQuery query;
+		QSqlQuery query(m_DB);
         query.prepare("INSERT OR REPLACE INTO Replacement (RemoteTitle, LocalTitle, Sim) VALUES ( :RemoteTitle , :LocalTitle , :Sim );");
         query.bindValue(":Sim",m_Table);
         query.bindValue(":RemoteTitle",pRemoteTitle);
@@ -649,7 +671,7 @@ namespace ffs2play
     void AIMapping::delRule(const QString &pRemoteTitle)
     {
         if (!m_Initialized) return;
-        QSqlQuery query;
+		QSqlQuery query(m_DB);
         query.prepare("DELETE FROM Replacement WHERE ( RemoteTitle = :RemoteTitle ) and ( Sim =:Sim );");
         query.bindValue(":Sim",m_Table);
         query.bindValue(":RemoteTitle",pRemoteTitle);
@@ -676,7 +698,7 @@ namespace ffs2play
         QString Response;
         if (m_Initialized)
         {
-            QSqlQuery query;
+			QSqlQuery query(m_DB);
             query.prepare("SELECT Path FROM Aircrafts WHERE Title = :Title;");
             query.bindValue(":Title",pTitle);
             if (query.exec())
@@ -716,7 +738,7 @@ namespace ffs2play
         QStringList Result;
         if (m_Initialized && (!m_Table.isEmpty()))
         {
-            QSqlQuery query;
+			QSqlQuery query(m_DB);
             query.prepare("SELECT Path FROM SimPaths WHERE Sim = :Sim;");
             query.bindValue(":Sim",m_Table);
             if (query.exec())
@@ -739,7 +761,7 @@ namespace ffs2play
     bool AIMapping::addPath(const QString& pPath)
     {
         if ((!m_Initialized) || (m_Table.isEmpty())) return false;
-        QSqlQuery query;
+		QSqlQuery query(m_DB);
         query.prepare("INSERT INTO SimPaths (Sim , Path) VALUES (:Sim , :Path);");
         query.bindValue(":Sim",m_Table);
         query.bindValue(":Path",pPath);
@@ -758,7 +780,7 @@ namespace ffs2play
     bool AIMapping::delPath(const QString& pPath)
     {
         if ((!m_Initialized) || (m_Table.isEmpty())) return false;
-        QSqlQuery query;
+		QSqlQuery query(m_DB);
         query.prepare("DELETE FROM SimPaths WHERE (Sim  = :Sim ) and (Path = :Path);");
         query.bindValue(":Sim",m_Table);
         query.bindValue(":Path",pPath);

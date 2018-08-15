@@ -19,52 +19,54 @@ namespace ffs2play
         Q_OBJECT
         friend class FileExplorer;
     private:
-        explicit            AIMapping(QObject *parent = nullptr);
-        static  AIMapping*  createInstance();
-        //QString           findInstallationPath (const QString& pKey);
-        void                initSQLite();
-        void                DBFileUpdate(const QString& pKey,const QString& pPath);
-        void                DBFilePurge ();
-        void                DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);
-        QString             MD5Hash(const QString& pFileName);
+        explicit                AIMapping(QObject *parent = nullptr);
+        static  AIMapping*      createInstance();
+        //QString               findInstallationPath (const QString& pKey);
+        void                    initSQLite();
+        void                    DBFileUpdate(const QString& pKey,const QString& pPath);
+        void                    DBFilePurge ();
+        void                    DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);
+        QString                 MD5Hash(const QString& pFileName);
 
-        bool                m_Initialized;
-        CLogger*            m_log;
-        QSqlDatabase        m_DB;
-        QThread*            m_thread;
-        simbasemanager*     m_simManager;
-        QString             m_Table;
-        QStringList         m_AircraftPaths;
-        int                 m_NbAdded;
-        int                 m_NbUpdated;
+        bool                    m_Initialized;
+        QString                 m_BaseFile;
+        CLogger*                m_log;
+        QSqlDatabase            m_DB;
+        QSqlDatabase            m_Thread_DB; //Since QT5.11, we need to separate DB connexion between threads
+        QThread*                m_thread;
+        simbasemanager*         m_simManager;
+        QString                 m_Table;
+        QStringList             m_AircraftPaths;
+        int                     m_NbAdded;
+        int                     m_NbUpdated;
 
     public:
-                            ~AIMapping();
-        static	AIMapping*  instance();
-        void				startScanSimObject();
-        AIResol				SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
-        QStringList			getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
-        QStringList			getCategoryList();
-        QStringList			getEditeurList();
-        QStringList			getATCTypeList();
-        QStringList			getATCModelList();
-        QString				getRule(const QString& pTitre);
-        void				addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
-        void				delRule(const QString& pRemoteTitle);
-        void				cleanAIDB();
-        QMap<QString,QString> getList();
-        QString				getAircraftPath(const QString& pTitle);
-        QString				getFileData(const QString& pKey);
-        QStringList			getPathList();
-        bool				addPath(const QString& pPath);
-        bool				delPath(const QString& pPath);
+                                ~AIMapping();
+        static	AIMapping*      instance();
+        void                    startScanSimObject();
+        AIResol                 SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
+        QStringList             getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
+        QStringList             getCategoryList();
+        QStringList             getEditeurList();
+        QStringList             getATCTypeList();
+        QStringList             getATCModelList();
+        QString                 getRule(const QString& pTitre);
+        void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
+        void                    delRule(const QString& pRemoteTitle);
+        void                    cleanAIDB();
+        QMap<QString,QString>   getList();
+        QString                 getAircraftPath(const QString& pTitle);
+        QString                 getFileData(const QString& pKey);
+        QStringList             getPathList();
+        bool                    addPath(const QString& pPath);
+        bool                    delPath(const QString& pPath);
 
     signals:
-        void                fireScanFinished();
+        void                    fireScanFinished();
     private slots:
-        void				onSimReceiveOpen();
-        void				onSimReceiveClose();
-        void				scanSimObject();
+        void                    onSimReceiveOpen();
+        void                    onSimReceiveClose();
+        void                    scanSimObject();
     public slots:
     };
 }
