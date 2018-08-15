@@ -465,76 +465,76 @@
         <translation>Barre d&apos;outils</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1002"/>
+        <location filename="../gui/mainwindow.ui" line="1012"/>
         <source>Log</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1154"/>
+        <location filename="../gui/mainwindow.ui" line="1164"/>
         <source>Debug Options</source>
         <translation>Options Debug</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="650"/>
         <location filename="../gui/mainwindow.ui" line="655"/>
         <location filename="../gui/mainwindow.ui" line="660"/>
         <location filename="../gui/mainwindow.ui" line="665"/>
-        <location filename="../gui/mainwindow.ui" line="1164"/>
+        <location filename="../gui/mainwindow.ui" line="670"/>
+        <location filename="../gui/mainwindow.ui" line="1174"/>
         <source>None</source>
         <translation>Aucune</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1171"/>
+        <location filename="../gui/mainwindow.ui" line="1181"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1178"/>
+        <location filename="../gui/mainwindow.ui" line="1188"/>
         <source>Verbose</source>
         <translation>Bavard</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1189"/>
+        <location filename="../gui/mainwindow.ui" line="1199"/>
         <source>*</source>
         <translation>*</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1194"/>
+        <location filename="../gui/mainwindow.ui" line="1204"/>
         <source>AIMapping*</source>
         <translation>AIMapping*</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1204"/>
+        <location filename="../gui/mainwindow.ui" line="1214"/>
         <source>HttpRequest*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1209"/>
+        <location filename="../gui/mainwindow.ui" line="1219"/>
         <source>P2PManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1214"/>
+        <location filename="../gui/mainwindow.ui" line="1224"/>
         <source>Peer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1219"/>
+        <location filename="../gui/mainwindow.ui" line="1229"/>
         <source>UDPServer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1224"/>
+        <location filename="../gui/mainwindow.ui" line="1234"/>
         <source>SCManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1229"/>
+        <location filename="../gui/mainwindow.ui" line="1239"/>
         <source>XPManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1239"/>
+        <location filename="../gui/mainwindow.ui" line="1249"/>
         <source>WEBManager*</source>
         <translation></translation>
     </message>
@@ -575,235 +575,243 @@
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="430"/>
-        <source>Altitude</source>
+        <source>Phase</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="435"/>
+        <source>Altitude</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="440"/>
         <source>Ground Altitude</source>
         <translation>Altitude du sol</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="440"/>
+        <location filename="../gui/mainwindow.ui" line="445"/>
         <source>Vertical Speed</source>
         <translation>Vitesse verticale</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="445"/>
+        <location filename="../gui/mainwindow.ui" line="450"/>
         <source>Heading</source>
         <translation>Direction</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="450"/>
+        <location filename="../gui/mainwindow.ui" line="455"/>
         <source>Longitude</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="455"/>
+        <location filename="../gui/mainwindow.ui" line="460"/>
         <source>Latitude</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="460"/>
+        <location filename="../gui/mainwindow.ui" line="465"/>
         <source>Ground Speed</source>
         <translation>Vitesse Sol</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="465"/>
+        <location filename="../gui/mainwindow.ui" line="470"/>
         <source>TAS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="470"/>
+        <location filename="../gui/mainwindow.ui" line="475"/>
         <source>Total Fuel Qty</source>
         <translation>Quantité totale de carburant</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="475"/>
+        <location filename="../gui/mainwindow.ui" line="480"/>
         <source>Total Fuel Capacity</source>
         <translation>Capacité totale de carburant</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="480"/>
+        <location filename="../gui/mainwindow.ui" line="485"/>
         <source>Fuel Weight per Gallon</source>
         <translation>Poids du carburant au Gallon</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="485"/>
+        <location filename="../gui/mainwindow.ui" line="490"/>
         <source>Pitch</source>
         <translation>Tangage</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="490"/>
+        <location filename="../gui/mainwindow.ui" line="495"/>
         <source>Bank</source>
         <translation>Roulis</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="495"/>
+        <location filename="../gui/mainwindow.ui" line="500"/>
         <source>G Force</source>
         <translation>Force G</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="500"/>
+        <location filename="../gui/mainwindow.ui" line="505"/>
         <source>Total Weight</source>
         <translation>Poids Total</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="505"/>
+        <location filename="../gui/mainwindow.ui" line="510"/>
         <source>Realism</source>
         <translation>Réalisme</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="510"/>
+        <location filename="../gui/mainwindow.ui" line="515"/>
         <source>Ambient Wind Velocity</source>
         <translation>Vitesse du vent ambient</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="515"/>
+        <location filename="../gui/mainwindow.ui" line="520"/>
         <source>Ambient Wind Direction</source>
         <translation>Direction du vent ambiant</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="520"/>
+        <location filename="../gui/mainwindow.ui" line="525"/>
         <source>Ambiant Precipitation State</source>
         <translation>Etat de la précipitation ambiante</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="525"/>
+        <location filename="../gui/mainwindow.ui" line="530"/>
         <source>Sea level Pressure</source>
         <translation>Pression au niveau de la mer</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="530"/>
+        <location filename="../gui/mainwindow.ui" line="535"/>
         <source>IAS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="535"/>
+        <location filename="../gui/mainwindow.ui" line="540"/>
         <source>Elevator Position</source>
         <translation>Position profondeur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="540"/>
+        <location filename="../gui/mainwindow.ui" line="545"/>
         <source>Aileron Position</source>
         <translation>Position des ailerons</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="545"/>
+        <location filename="../gui/mainwindow.ui" line="550"/>
         <source>Rudder Position</source>
         <translation>Position de la dérive</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="550"/>
+        <location filename="../gui/mainwindow.ui" line="555"/>
         <source>Simulation Rate</source>
         <translation>Vitesse de simulation</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="555"/>
+        <location filename="../gui/mainwindow.ui" line="560"/>
         <source>Exit 0</source>
         <translation>Sortie 0</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="560"/>
+        <location filename="../gui/mainwindow.ui" line="565"/>
         <source>Exit 1</source>
         <translation>Sortie 1</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="565"/>
+        <location filename="../gui/mainwindow.ui" line="570"/>
         <source>Exit 2</source>
         <translation>Sortie 2</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="570"/>
+        <location filename="../gui/mainwindow.ui" line="575"/>
         <source>Exit 3</source>
         <translation>Sortie 3</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="575"/>
+        <location filename="../gui/mainwindow.ui" line="580"/>
         <source>Parking Brake</source>
         <translation>Frein de parking</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="580"/>
+        <location filename="../gui/mainwindow.ui" line="585"/>
         <source>Throttle 0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="585"/>
+        <location filename="../gui/mainwindow.ui" line="590"/>
         <source>Throttle 1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="590"/>
+        <location filename="../gui/mainwindow.ui" line="595"/>
         <source>Throttle 2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="595"/>
+        <location filename="../gui/mainwindow.ui" line="600"/>
         <source>Throttle 3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="600"/>
+        <location filename="../gui/mainwindow.ui" line="605"/>
         <source>Beacon Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="605"/>
+        <location filename="../gui/mainwindow.ui" line="610"/>
         <source>Landing Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="610"/>
+        <location filename="../gui/mainwindow.ui" line="615"/>
         <source>Strobe Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="615"/>
+        <location filename="../gui/mainwindow.ui" line="620"/>
         <source>Nav Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="620"/>
+        <location filename="../gui/mainwindow.ui" line="625"/>
         <source>Reco Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="625"/>
+        <location filename="../gui/mainwindow.ui" line="630"/>
         <source>State Engine 1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="630"/>
+        <location filename="../gui/mainwindow.ui" line="635"/>
         <source>State Engine 2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="635"/>
+        <location filename="../gui/mainwindow.ui" line="640"/>
         <source>State Engine 3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="640"/>
+        <location filename="../gui/mainwindow.ui" line="645"/>
         <source>State Engine 4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="645"/>
+        <location filename="../gui/mainwindow.ui" line="650"/>
         <source>Data</source>
         <translation>Données</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="670"/>
+        <location filename="../gui/mainwindow.ui" line="675"/>
+        <source>IDLE</source>
+        <translation>IDLE</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="680"/>
         <source>0 ft</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="675"/>
-        <location filename="../gui/mainwindow.ui" line="680"/>
         <location filename="../gui/mainwindow.ui" line="685"/>
-        <location filename="../gui/mainwindow.ui" line="700"/>
-        <location filename="../gui/mainwindow.ui" line="705"/>
+        <location filename="../gui/mainwindow.ui" line="690"/>
+        <location filename="../gui/mainwindow.ui" line="695"/>
         <location filename="../gui/mainwindow.ui" line="710"/>
         <location filename="../gui/mainwindow.ui" line="715"/>
         <location filename="../gui/mainwindow.ui" line="720"/>
@@ -839,40 +847,42 @@
         <location filename="../gui/mainwindow.ui" line="870"/>
         <location filename="../gui/mainwindow.ui" line="875"/>
         <location filename="../gui/mainwindow.ui" line="880"/>
+        <location filename="../gui/mainwindow.ui" line="885"/>
+        <location filename="../gui/mainwindow.ui" line="890"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="690"/>
-        <location filename="../gui/mainwindow.ui" line="695"/>
+        <location filename="../gui/mainwindow.ui" line="700"/>
+        <location filename="../gui/mainwindow.ui" line="705"/>
         <source>0°</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1199"/>
+        <location filename="../gui/mainwindow.ui" line="1209"/>
         <source>Analyzer*</source>
         <translation>Analyzer*</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1234"/>
+        <location filename="../gui/mainwindow.ui" line="1244"/>
         <source>FGManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1254"/>
-        <location filename="../gui/mainwindow.ui" line="1257"/>
+        <location filename="../gui/mainwindow.ui" line="1264"/>
+        <location filename="../gui/mainwindow.ui" line="1267"/>
         <source>Connect to Sim</source>
         <translation>Connection au Simulateur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1267"/>
-        <location filename="../gui/mainwindow.ui" line="1270"/>
+        <location filename="../gui/mainwindow.ui" line="1277"/>
+        <location filename="../gui/mainwindow.ui" line="1280"/>
         <source>Connect to web server</source>
         <extracomment>Connexion au serveur</extracomment>
         <translation>Connection au serveur Web</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1279"/>
+        <location filename="../gui/mainwindow.ui" line="1289"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
@@ -881,23 +891,23 @@
         <translation type="vanished">Options de Log</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1297"/>
-        <location filename="../gui/mainwindow.ui" line="1300"/>
+        <location filename="../gui/mainwindow.ui" line="1307"/>
+        <location filename="../gui/mainwindow.ui" line="1310"/>
         <source>P2P Settings</source>
         <translation>Paramètres P2P</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1309"/>
+        <location filename="../gui/mainwindow.ui" line="1319"/>
         <source>Sim Type</source>
         <translation>Type de simulateur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1312"/>
+        <location filename="../gui/mainwindow.ui" line="1322"/>
         <source>Choose Sim to use</source>
         <translation>Choisissez le type de simulateur à utiliser</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1288"/>
+        <location filename="../gui/mainwindow.ui" line="1298"/>
         <source>Profil</source>
         <translation>Profil</translation>
     </message>
@@ -936,155 +946,165 @@
 <context>
     <name>ffs2play::AIMapping</name>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="166"/>
         <source>AIMapping : Fail to create Version Table</source>
-        <translation>AIMapping : Impossible de créer la table Version</translation>
+        <translation type="vanished">AIMapping : Impossible de créer la table Version</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="199"/>
+        <location filename="../singleton/aimapping.cpp" line="166"/>
+        <source>AIMapping : Fail to create Version Table : </source>
+        <translation>AIMapping : Echec de la création de la table Version : </translation>
+    </message>
+    <message>
+        <location filename="../singleton/aimapping.cpp" line="178"/>
         <source>AIMapping : Fail to create SimPath Table</source>
         <translation>AIMapping : Impossible de créer la table SimPath</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="209"/>
+        <location filename="../singleton/aimapping.cpp" line="190"/>
         <source>AIMapping : Fail to create Aircrafts Table</source>
         <translation>AIMapping : Impossible de créer la table Aircrafts</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="219"/>
+        <location filename="../singleton/aimapping.cpp" line="202"/>
         <source>AIMapping : Fail to create Replacement Table</source>
         <translation>AIMapping : Impossible de créer la table Replacement</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="256"/>
+        <location filename="../singleton/aimapping.cpp" line="241"/>
+        <source>AIMapping : Fail to query Version Table : </source>
+        <translatorcomment>AIMapping : Echec de la requête sur la table Version.</translatorcomment>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../singleton/aimapping.cpp" line="275"/>
         <source>Start updating aircraft database...</source>
         <translation>Début de la mise à jour de la base de donée des avions...</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="268"/>
+        <location filename="../singleton/aimapping.cpp" line="287"/>
         <source>End of update : </source>
         <translation>Fin de la mise à jour : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="268"/>
+        <location filename="../singleton/aimapping.cpp" line="287"/>
         <source> aircrafts added and </source>
         <translation> avions ajoutés et </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="268"/>
+        <location filename="../singleton/aimapping.cpp" line="287"/>
         <source> updated.</source>
         <translation> mis à jour.</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="285"/>
+        <location filename="../singleton/aimapping.cpp" line="304"/>
         <source>AIMapping : No record was found for </source>
         <translation>AIMapping : Aucun enregistrement trouvé pour </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="324"/>
+        <location filename="../singleton/aimapping.cpp" line="343"/>
         <source>AIMapping : Path = </source>
         <translation>AIMapping : Chemin = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="325"/>
+        <location filename="../singleton/aimapping.cpp" line="344"/>
         <source>AIMapping : Editor = </source>
         <translation>AIMapping : Editeur = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="326"/>
+        <location filename="../singleton/aimapping.cpp" line="345"/>
         <source>AIMapping : ATCModel = </source>
         <translation>AIMapping : Model ATC = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="327"/>
+        <location filename="../singleton/aimapping.cpp" line="346"/>
         <source>AIMapping : ATCType = </source>
         <translation>AIMapping : Type ATC = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="328"/>
+        <location filename="../singleton/aimapping.cpp" line="347"/>
         <source>AIMapping : Category = </source>
         <translation>AIMapping : Categorie = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="329"/>
+        <location filename="../singleton/aimapping.cpp" line="348"/>
         <source>AIMapping : EngineType = </source>
         <translation>AIMapping : Type de moteurr = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="330"/>
+        <location filename="../singleton/aimapping.cpp" line="349"/>
         <source>AIMapping : CG Height = </source>
         <translation>AIMapping : Hauteur CG = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="331"/>
+        <location filename="../singleton/aimapping.cpp" line="350"/>
         <source>AIMapping : Pitch = </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="344"/>
+        <location filename="../singleton/aimapping.cpp" line="363"/>
         <source>AIMapping : Engine quantity = </source>
         <translation>AIMapping : Nombre de moteursr = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="355"/>
+        <location filename="../singleton/aimapping.cpp" line="374"/>
         <source>AIMapping : livery found Title = </source>
         <translation>AIMapping : Variante trouvée Titre = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="410"/>
+        <location filename="../singleton/aimapping.cpp" line="429"/>
         <source>AIMapping : IniParser error = </source>
         <translation>AIMapping : erreur du IniParser = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="414"/>
+        <location filename="../singleton/aimapping.cpp" line="433"/>
         <source>AIMapping : Error = </source>
         <translation>AIMapping : Erreur = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="448"/>
+        <location filename="../singleton/aimapping.cpp" line="467"/>
         <source>AIMapping : Local rule found in DB : </source>
         <translation>AIMapping : Règle locale trouvée dans la DB : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="448"/>
+        <location filename="../singleton/aimapping.cpp" line="467"/>
         <source> replaced by </source>
         <translation> remplacé par </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="467"/>
+        <location filename="../singleton/aimapping.cpp" line="486"/>
         <source>AIMapping : Title Match found in database : </source>
         <translation>AIMapping : Correspondance de Titre trouvé dans la base de donnée : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="484"/>
+        <location filename="../singleton/aimapping.cpp" line="503"/>
         <source>AIMapping : ATC Model Match found in database : </source>
         <translation>AIMapping : Correspondance du Model ATC trouvé dans la base de donnée : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="491"/>
-        <location filename="../singleton/aimapping.cpp" line="500"/>
+        <location filename="../singleton/aimapping.cpp" line="510"/>
+        <location filename="../singleton/aimapping.cpp" line="519"/>
         <source>AIMapping : Fail to query database.</source>
         <translation>AIMapping : Echec de la requête sur la base de donnée.</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="672"/>
-        <location filename="../singleton/aimapping.cpp" line="712"/>
+        <location filename="../singleton/aimapping.cpp" line="691"/>
+        <location filename="../singleton/aimapping.cpp" line="731"/>
         <source>AIMapping : Fail to query path list for simulator </source>
         <translation>AIMapping : Echec de la requête de la liste des chemins pour les simulateurs </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="729"/>
+        <location filename="../singleton/aimapping.cpp" line="748"/>
         <source>AIMapping : Fail to add path </source>
         <translation>AIMapping : Impossible d&apos;ajouter le chemin du répertoire </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="729"/>
         <location filename="../singleton/aimapping.cpp" line="748"/>
+        <location filename="../singleton/aimapping.cpp" line="767"/>
         <source> for simulator </source>
         <translation> pour le simulateur </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="748"/>
+        <location filename="../singleton/aimapping.cpp" line="767"/>
         <source>AIMapping : Fail to remove path </source>
         <translation>AIMapping : Impossible de supprimer le répertoire </translation>
     </message>
@@ -1092,7 +1112,7 @@
 <context>
     <name>ffs2play::Analyzer</name>
     <message>
-        <location filename="../singleton/analyzer.cpp" line="296"/>
+        <location filename="../singleton/analyzer.cpp" line="418"/>
         <source>Change Phase = </source>
         <translation>Change de Phase = </translation>
     </message>
@@ -1553,27 +1573,51 @@
         <translation>Bienvenue sur FFS2Play</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="509"/>
+        <location filename="../gui/mainwindow.cpp" line="243"/>
+        <source>Simulator Aircraft Folder</source>
+        <translation>Dossier des appareils du Simulateur</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="243"/>
+        <source>at least one folder is not configured for your simulator. Do you want add the path location now?</source>
+        <translation>au moins un dossier n&apos;est pas configuré pour votre simulateur. Voulez vous en ajouter un maintenant?</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="532"/>
         <source>About</source>
         <translation>A Propos</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="714"/>
+        <location filename="../gui/mainwindow.cpp" line="737"/>
         <source>Clear</source>
         <translation>Vider</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="715"/>
+        <location filename="../gui/mainwindow.cpp" line="738"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="731"/>
-        <source>Web File (*.htm *.html</source>
+        <location filename="../gui/mainwindow.cpp" line="754"/>
+        <source>Web File (*.htm *.html)</source>
         <translation>Fichier Web (*.htm *.html)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="741"/>
+        <location filename="../gui/mainwindow.cpp" line="775"/>
+        <source>Touch Speed = </source>
+        <translation>Taux de chute = </translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="775"/>
+        <source>ft/min</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Web File (*.htm *.html</source>
+        <translation type="vanished">Fichier Web (*.htm *.html)</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="764"/>
         <source>An Error occur while opening </source>
         <translation>Une erreur est survenue lors de l&apos;ouverture de </translation>
     </message>

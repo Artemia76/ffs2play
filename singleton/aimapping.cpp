@@ -260,9 +260,9 @@ namespace ffs2play
             if (m_thread->isRunning()) m_thread->exit();
         }
         m_thread = new QThread();
-        m_thread->setPriority(QThread::IdlePriority);
         connect(m_thread, SIGNAL(started()), this, SLOT(scanSimObject()),Qt::DirectConnection);
         m_thread->start();
+		m_thread->setPriority(QThread::IdlePriority);
     }
 
     ///
@@ -291,6 +291,7 @@ namespace ffs2play
     void AIMapping::DBFileUpdate(const QString &pKey, const QString &pPath)
     {
         if ((!m_Initialized) || m_Table.isEmpty()) return;
+		if (!m_DB.isOpen()) return;
         QSqlQuery query;
         QString Path= pPath;
         query.prepare( "SELECT checksum FROM Aircrafts WHERE (checksum = :checksum) and (Sim = :Sim)");

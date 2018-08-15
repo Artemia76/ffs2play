@@ -93,7 +93,13 @@ namespace ffs2play
 	}
 }
 
-void ffs2play::AIReplace::on_btnOk_clicked(QAbstractButton*)
+void ffs2play::AIReplace::on_btnDeleteRule_clicked()
+{
+	m_AIMapping->delRule(ui->leOriginal->text());
+	ui->btnDeleteRule->setVisible(false);
+}
+
+void ffs2play::AIReplace::on_btnBox_accepted()
 {
 	if (m_ExistingRule != ui->cbReplacement->currentText())
 	{
@@ -102,8 +108,7 @@ void ffs2play::AIReplace::on_btnOk_clicked(QAbstractButton*)
 	}
 }
 
-void ffs2play::AIReplace::on_btnDeleteRule_clicked()
+void ffs2play::AIReplace::on_btnBox_rejected()
 {
-	m_AIMapping->delRule(ui->leOriginal->text());
-	ui->btnDeleteRule->setVisible(false);
+
 }

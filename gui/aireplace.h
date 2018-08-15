@@ -78,8 +78,9 @@ namespace ffs2play
 		QString				m_ExistingRule;
 
 	private slots:
-		void on_btnOk_clicked(QAbstractButton *button);
 		void on_btnDeleteRule_clicked();
+		void on_btnBox_accepted();
+		void on_btnBox_rejected();
 	};
 }
 #endif // DIALOGP2P_H

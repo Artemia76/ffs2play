@@ -720,7 +720,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QDialogButtonBox" name="btnOk">
+      <widget class="QDialogButtonBox" name="btnBox">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -736,7 +736,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>btnOk</sender>
+   <sender>btnBox</sender>
    <signal>accepted()</signal>
    <receiver>AIReplace</receiver>
    <slot>accept()</slot>
@@ -752,7 +752,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>btnOk</sender>
+   <sender>btnBox</sender>
    <signal>rejected()</signal>
    <receiver>AIReplace</receiver>
    <slot>reject()</slot>
