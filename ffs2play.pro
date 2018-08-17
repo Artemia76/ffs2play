@@ -216,8 +216,21 @@ DEPLOY_TARGET = $$shell_quote($$shell_path($${DESTDIR}/$${TARGET}$${TARGET_CUSTO
 # Use += instead of = if you use multiple QMAKE_POST_LINKs
 QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\n\t))
 }
-# Application Version
 
+unix {
+# Linux specific install
+PREFIX = /usr
+
+Binary.path = $${PREFIX}/bin
+Binary.files = $${DESTDIR}/$${TARGET}
+INSTALLS += Binary
+
+Translation.path = $${PREFIX}/share/$${TARGET}/translations
+Translation.files = $${DESTDIR}/translations/*.qm
+INSTALLS += Translation
+}
+
+# Application Version
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
 VERSION_BUILD = 17

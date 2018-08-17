@@ -28,10 +28,11 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
 1. DEPENDENCIES
 
-  - Last Qt Release (QT5.10 at this date)
-  - Protobuf : 3.0.2 is advised
-  - miniupnpc : 1.9+
-  - openssl : 1.0.2
+  - Qt : >=5.9
+  - Protobuf : >=3.0.0
+  - miniupnpc : >=1.9
+  - openssl : >=1.0.2
+  - crypto++ : >= 5.6
 
 1. BUILD
   1. LINUX
