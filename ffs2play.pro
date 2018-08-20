@@ -42,10 +42,10 @@ win32 {
 CONFIG( debug, debug|release ) {
     CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\Win32\Output\Debug"
     MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\build\Debug
-} else {
+    } else {
     CRYPTOPP_LIB_PATH = "E:\devel\git\cryptopp\Win32\Output\Release"
     MINIUPNPC_LIB_PATH = $${MINIUPNPC_PATH}\build\Release
-}
+    }
     PROTOBUF_LIB_PATH = "D:\Program Files (x86)\protobuf\lib"
     PROTOBUF_INCLUDE_PATH = "D:\Program Files (x86)\protobuf\include"
 
@@ -58,9 +58,14 @@ CONFIG( debug, debug|release ) {
                 $${PROTOBUF_INCLUDE_PATH} \
 }
 
-unix{
+unix:!macx{
     INCLUDEPATH += /usr/include/miniupnpc \
                     /usr/include/cryptopp
+}
+
+macx: {
+    INCLUDEPATH += /usr/local/include/cryptopp
+    INCLUDEPATH += /usr/local/include
 }
 
 #Protobuf generation
@@ -68,13 +73,13 @@ unix{
 PROTOS = $$files(protobuf/*.proto)
 include(protobuf.pri)
 
-UI_DIR =		gui
+UI_DIR = gui
 
-SOURCES +=		main.cpp \
+SOURCES +=      main.cpp \
                 gui/dialogprofils.cpp \
                 gui/mainwindow.cpp \
                 gui/dialogp2p.cpp \
-                                gui/aireplace.cpp \
+                gui/aireplace.cpp \
                 net/chttprequest.cpp \
                 net/peer.cpp \
                 net/peer.Requests.cpp \
@@ -97,15 +102,16 @@ SOURCES +=		main.cpp \
                 tools/datetime.cpp \
                 tools/calculation.cpp \
                 tools/datagram.cpp \
-                                tools/iniparser.cpp \
-    singleton/analyzer.cpp
+                tools/iniparser.cpp \
+                singleton/analyzer.cpp
 win32 {
-SOURCES +=		sim/scmanager.cpp
+SOURCES +=      sim/scmanager.cpp
 }
+
 HEADERS  +=     gui/dialogprofils.h \
                 gui/mainwindow.h \
                 gui/dialogp2p.h \
-                                gui/aireplace.h \
+                gui/aireplace.h \
                 net/chttprequest.h \
                 net/peer.h \
                 net/udpserver.h \
@@ -126,16 +132,17 @@ HEADERS  +=     gui/dialogprofils.h \
                 tools/version.h \
                 tools/calculation.h \
                 tools/datagram.h \
-                                tools/iniparser.h \
-    singleton/analyzer.h
+                tools/iniparser.h \
+                singleton/analyzer.h
+
 win32 {
-HEADERS	+=		sim/scmanager.h
+HEADERS +=      sim/scmanager.h
 }
 
-FORMS	+=		gui/dialogprofils.ui \
+FORMS +=        gui/dialogprofils.ui \
                 gui/mainwindow.ui \
                 gui/dialogp2p.ui \
-    gui/aireplace.ui
+                gui/aireplace.ui
 
 TRANSLATIONS += intl/ffs2play_fr_FR.ts
 
@@ -145,35 +152,35 @@ INSTALLS += trans
 
 win32 {
     #Libs path
-    LIBS	+= -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17134.0\um\x86"
-    LIBS	+= -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
-    #LIBS	+= -L"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\lib"
-    LIBS	+= -L$${OPENSSL_LIB_PATH}
-    LIBS	+= -L$${MINIUPNPC_LIB_PATH}
-    LIBS	+= -L$${CRYPTOPP_LIB_PATH}
-    LIBS	+= -L$${PROTOBUF_LIB_PATH}
+    LIBS += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17134.0\um\x86"
+    LIBS += -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
+    #LIBS += -L"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\lib"
+    LIBS += -L$${OPENSSL_LIB_PATH}
+    LIBS += -L$${MINIUPNPC_LIB_PATH}
+    LIBS += -L$${CRYPTOPP_LIB_PATH}
+    LIBS += -L$${PROTOBUF_LIB_PATH}
 
     #Libs to load
-    LIBS	+= -lSimConnect
-    LIBS	+= -lWs2_32
-    LIBS	+= -liphlpapi
-    LIBS	+= -lminiupnpc
-    LIBS	+= -lcryptlib
-    LIBS	+= -llibeay32
+    LIBS += -lSimConnect
+    LIBS += -lWs2_32
+    LIBS += -liphlpapi
+    LIBS += -lminiupnpc
+    LIBS += -lcryptlib
+    LIBS += -llibeay32
 CONFIG( debug, debug|release ) {
-    LIBS	+= -llibprotobufd
-} else {
-    LIBS	+= -llibprotobuf
-}
+    LIBS += -llibprotobufd
+    } else {
+    LIBS += -llibprotobuf
+    }
 
-RC_FILE = ffs2play.rc
+    RC_FILE = ffs2play.rc
 }
 
 RESOURCES += ressources.qrc
 
 CONFIG += c++14
 
-unix {
+unix:!macx{
 CONFIG += link_pkgconfig
 PKGCONFIG += protobuf
 
@@ -181,6 +188,20 @@ LIBS	+= -lminiupnpc
 LIBS	+= -lssl
 LIBS	+= -lcryptopp
 LIBS	+= -lcrypto
+
+}
+
+macx{
+QT_CONFIG -= no-pkg-config
+CONFIG += link_pkgconfig
+PKG_CONFIG = /usr/local/bin/pkg-config
+PKGCONFIG += protobuf
+PKGCONFIG += miniupnpc
+
+LIBS += -L/usr/local/lib
+LIBS += -lssl
+LIBS += -lcryptopp
+LIBS += -lcrypto
 
 }
 
@@ -217,7 +238,7 @@ DEPLOY_TARGET = $$shell_quote($$shell_path($${DESTDIR}/$${TARGET}$${TARGET_CUSTO
 QMAKE_POST_LINK += $$quote($${DEPLOY_COMMAND} $${DEPLOY_TARGET}$$escape_expand(\n\t))
 }
 
-unix {
+unix:!macx{
 # Linux specific install
 PREFIX = /usr
 
