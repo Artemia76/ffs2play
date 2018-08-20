@@ -66,7 +66,9 @@ namespace ffs2play
         void        onWM_Connected();
         void        onWM_Disconnected();
         void        onWM_Exit();
+#ifdef FFS_DEBUG
         void        onUpdate();
+#endif
         void        on_afServeurCon_triggered();
         void        on_afProfil_triggered();
         void        on_afAide_triggered();
@@ -101,7 +103,9 @@ namespace ffs2play
         AIMapping*      m_AIMapping;
         Analyzer*       m_Analyzer;
         QSettings       m_settings;
+#ifdef FFS_DEBUG
         QTimer          m_updateTimer;
+#endif
         quint32         m_maxLine;
         void            closeEvent(QCloseEvent* pEvent);
     };

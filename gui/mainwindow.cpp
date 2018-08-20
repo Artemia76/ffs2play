@@ -37,7 +37,6 @@ namespace ffs2play
     /// \brief MainWindow::MainWindow
     /// \param parent
     ///
-
     MainWindow::MainWindow(QWidget *pParent) :
         QMainWindow(pParent),
         ui(new Ui::MainWindow)
@@ -96,9 +95,6 @@ namespace ffs2play
         connect(m_simManager,  SIGNAL(closed()),this, SLOT(onSCM_Closed()));
         connect(m_simManager, SIGNAL(loaded(SIM_TYPE)),this, SLOT(onSCM_Loaded(SIM_TYPE)));
         onSCM_Loaded(m_simManager->getType());
-        //Start timer to updating GUI
-        connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
-        m_updateTimer.start(500);
 
         m_P2PManager = CP2PManager::instance();
         m_P2PManager->init(true);
@@ -120,22 +116,26 @@ namespace ffs2play
 
         ui->lwPeer->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(ui->lwPeer, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onPeerShowContextMenu(QPoint)));
-    #ifdef FFS_DEBUG
+#ifdef FFS_DEBUG
         ui->dwDebugOpt->setEnabled(true);
         setWindowTitle("FFS2Play(debug)");
-    #else
+        //Start timer to updating GUI
+        connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
+        m_updateTimer.start(500);
+#else
         delete ui->dwDebugOpt;
-    #endif
+        delete ui->dwSimVariable;
+#endif
         m_simManager->open_close();
         m_webManager->CheckNewVersion();
         m_webManager->Connect();
         QApplication::setPalette(this->palette());
+        if(!ui->mainToolBar->isVisible()) ui->mainToolBar->setVisible(true);
     }
 
     ///
     /// \brief MainWindow::~MainWindow
     ///
-
     MainWindow::~MainWindow()
     {
         //delete ui;
@@ -144,7 +144,6 @@ namespace ffs2play
     ///
     /// \brief MainWindow::closeEvent
     ///
-
     void MainWindow::closeEvent(QCloseEvent*)
     {
         m_settings.beginGroup("MainWindow");
@@ -166,7 +165,7 @@ namespace ffs2play
     /// \param pLevel
     ///
     /// Redirect Log Text flow to Plain Text Edit on main Window
-
+    ///
     void MainWindow::onLog (const QString& pMessage, QColor pColor, CL_DEBUG_LEVEL)
     {
         QTextCharFormat fmt;
@@ -249,6 +248,7 @@ namespace ffs2play
         }
     }
 
+#ifdef FFS_DEBUG
     ///
     /// \brief MainWindow::onUpdate
     ///
@@ -503,7 +503,7 @@ namespace ffs2play
             }
         }
     }
-
+#endif
     ///
     /// \brief MainWindow::on_afServeurCon_triggered
     ///
