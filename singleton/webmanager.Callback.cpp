@@ -135,7 +135,15 @@ namespace ffs2play
                     Disconnect();
                     return;
                 }
-                else CheckWhazzup(Doc);
+                else
+                {
+                    CheckWhazzup(Doc);
+                    QDomElement Element = Doc.elementsByTagName("new_key").at(0).toElement();
+                    if (!Element.isNull())
+                    {
+                        m_key = Element.text();
+                    }
+                }
             }
         }
         pRequest->deleteLater();
