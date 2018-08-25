@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * webmanager.h is part of FF2Play project
+ *
+ * This singleton provide Web Manager for web server communication
+ * **************************************************************************/
+
 #ifndef WEBMANAGER_H
 #define WEBMANAGER_H
 

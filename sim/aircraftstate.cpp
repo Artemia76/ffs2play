@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * aircraftstate.cpp is part of FF2Play project
+ *
+ * This class is used to embed aircraft data used for players states
+ * It can be used for both player and peer data
+ * **************************************************************************/
+
 #include "sim/aircraftstate.h"
 
 namespace ffs2play

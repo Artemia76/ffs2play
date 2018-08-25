@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * Peer.Requests.cpp is part of FF2Play project
+ *
+ * This class purpose a dialog interface to manage account profils
+ * to connect severals FFS2Play networks servers
+ * **************************************************************************/
+
 #include "peer.h"
 #include <QBuffer>
 
@@ -29,128 +36,128 @@ namespace ffs2play
     /// \brief CPeer::send
     /// \param pOutput
     ///
-	void CPeer::send(const QByteArray &pOutput)
-	{
-		if (!m_EP.isNull())
-		{
-			QNetworkDatagram Output(pOutput,m_EP, m_port);
-			m_server->send(Output);
-		}
-		else
-		{
-			if (m_local && (m_internalIP.count()>0))
-			{
-				if (m_sel_iplocal >= m_internalIP.count()) m_sel_iplocal = 0;
-				QNetworkDatagram Output(pOutput,m_internalIP[m_sel_iplocal], m_port);
-				m_server->send(Output);
-				m_sel_iplocal++;
-			}
-		}
-	}
+    void CPeer::send(const QByteArray &pOutput)
+    {
+        if (!m_EP.isNull())
+        {
+            QNetworkDatagram Output(pOutput,m_EP, m_port);
+            m_server->send(Output);
+        }
+        else
+        {
+            if (m_local && (m_internalIP.count()>0))
+            {
+                if (m_sel_iplocal >= m_internalIP.count()) m_sel_iplocal = 0;
+                QNetworkDatagram Output(pOutput,m_internalIP[m_sel_iplocal], m_port);
+                m_server->send(Output);
+                m_sel_iplocal++;
+            }
+        }
+    }
 
     ///
     /// \brief CPeer::sendChat
     /// \param pMessage
     ///
-	void CPeer::sendChat(const QString &pMessage)
-	{
-		QString Message=pMessage;
-		if (!m_onLine) return;
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		if (Message.length()>255)
-		{
-			Message=Message.left(255);
-		}
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::CHAT;
-		StringToStream(stream,pMessage);
-		send(Data);
-	}
+    void CPeer::sendChat(const QString &pMessage)
+    {
+        QString Message=pMessage;
+        if (!m_onLine) return;
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        if (Message.length()>255)
+        {
+            Message=Message.left(255);
+        }
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << (quint8)Protocol::CHAT;
+        StringToStream(stream,pMessage);
+        send(Data);
+    }
 
     ///
     /// \brief CPeer::sendPing
     ///
-	void CPeer::sendPing()
-	{
-		m_lastPing = Now();
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::PING;
-		send(Data);
-		m_counter++;
-		if ((m_counter > 2) && m_onLine)
-		{
+    void CPeer::sendPing()
+    {
+        m_lastPing = Now();
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << (quint8)Protocol::PING;
+        send(Data);
+        m_counter++;
+        if ((m_counter > 2) && m_onLine)
+        {
 #ifdef FFS_DEBUG
-			if (m_counter > 2)
-				m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Timeout"),Qt::darkBlue,LEVEL_NORMAL);
-			else
-				m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Diconnected"),Qt::darkBlue,LEVEL_NORMAL);
+            if (m_counter > 2)
+                m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Timeout"),Qt::darkBlue,LEVEL_NORMAL);
+            else
+                m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Diconnected"),Qt::darkBlue,LEVEL_NORMAL);
 #endif
-			m_onLine = false;
-			m_version = 0;
-			m_miniPing = milliseconds(1000);
+            m_onLine = false;
+            m_version = 0;
+            m_miniPing = milliseconds(1000);
             spawnAI(false);
-		}
-	}
+        }
+    }
 
     ///
     /// \brief CPeer::sendPong
     /// \param pTime
     ///
-	void CPeer::sendPong(const datetime& pTime)
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::PONG;
-		stream << (quint64)toTimeStamp(pTime);
-		send(Data);
-	}
+    void CPeer::sendPong(const datetime& pTime)
+    {
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << (quint8)Protocol::PONG;
+        stream << (quint64)toTimeStamp(pTime);
+        send(Data);
+    }
 
     ///
     /// \brief CPeer::sendVersion
     ///
-	void CPeer::sendVersion()
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::VERSION;
-		stream << PROTO_VERSION;
-		StringToStream(stream,QString::fromStdString(m_sendData.title()));
-		StringToStream(stream,QString::fromStdString(m_sendData.type()));
-		StringToStream(stream,QString::fromStdString(m_sendData.model()));
-		StringToStream(stream,QString::fromStdString(m_sendData.category()));
-		send(Data);
-	}
+    void CPeer::sendVersion()
+    {
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << (quint8)Protocol::VERSION;
+        stream << PROTO_VERSION;
+        StringToStream(stream,QString::fromStdString(m_sendData.title()));
+        StringToStream(stream,QString::fromStdString(m_sendData.type()));
+        StringToStream(stream,QString::fromStdString(m_sendData.model()));
+        StringToStream(stream,QString::fromStdString(m_sendData.category()));
+        send(Data);
+    }
 
     ///
     /// \brief CPeer::requestVersion
     ///
-	void CPeer::requestVersion()
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::REQ_VERSION;
-		send(Data);
-	}
+    void CPeer::requestVersion()
+    {
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << (quint8)Protocol::REQ_VERSION;
+        send(Data);
+    }
 
     ///
     /// \brief CPeer::sendData
     ///
-	void CPeer::sendData()
-	{
-		QByteArray Data;
-		QDataStream stream(&Data,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << (quint8)Protocol::DATA;
-		if (m_counter_Out == 255) m_counter_Out = 0;
-		else m_counter_Out++;
-		stream << m_counter_Out;
-		ProtobufToStream(stream,m_sendData);
-		send(Data);
-	}
+    void CPeer::sendData()
+    {
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << (quint8)Protocol::DATA;
+        if (m_counter_Out == 255) m_counter_Out = 0;
+        else m_counter_Out++;
+        stream << m_counter_Out;
+        ProtobufToStream(stream,m_sendData);
+        send(Data);
+    }
 }

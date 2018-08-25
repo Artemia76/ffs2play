@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * chttprequest.cpp is part of FF2Play project
+ *
+ * This class is used to send web request in POST or GET mode
+ * It also provide a programmed callback is case of response needs
+ * **************************************************************************/
+
 #include "net/chttprequest.h"
 
 namespace ffs2play
@@ -31,14 +38,17 @@ namespace ffs2play
     ///
     QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = NULL;
 
+    ///
+    /// \brief CHttpRequest::m_nbInstance
+    ///
     int CHttpRequest::m_nbInstance =0;
+
     ///
     /// \brief CHttpRequest::CHttpRequest
     /// \param parent
     ///
     /// Default Constructor
     ///
-
     CHttpRequest::CHttpRequest(QObject *pParent) : QObject(pParent)
     {
         qRegisterMetaType<CHttpRequest*>("CHttpRequest*");
@@ -54,7 +64,6 @@ namespace ffs2play
     ///
     /// Default Destructor
     ///
-
     CHttpRequest::~CHttpRequest()
     {
     }
@@ -66,7 +75,6 @@ namespace ffs2play
     ///
     /// Exexute POST HTTP request
     ///
-
     void CHttpRequest::execute(const QString& pURL, QDomDocument& pDoc)
     {
         m_request.setUrl(QUrl(pURL));
@@ -84,7 +92,6 @@ namespace ffs2play
     /// \brief CHttpRequest::execute
     /// \param URL
     ///
-
     void CHttpRequest::execute(const QString& URL)
     {
         m_request.setUrl(QUrl(URL));
@@ -98,7 +105,6 @@ namespace ffs2play
     ///
     /// \brief CHttpRequest::callback
     ///
-
     void CHttpRequest::callback()
     {
         if (m_reply!= NULL) m_response = (QString) m_reply->readAll();

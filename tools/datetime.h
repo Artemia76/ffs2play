@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * datetime.h is part of FF2Play project
+ *
+ * These types and function provide time convertion between timestamp format
+ * and std::chrono tools
+ * **************************************************************************/
+
 #ifndef DATETIME_H
 #define DATETIME_H
 
@@ -28,15 +35,15 @@
 
 namespace ffs2play
 {
-	using namespace std::chrono;
+    using namespace std::chrono;
 
-	using datetime = time_point<system_clock,milliseconds>;
+    using datetime = time_point<system_clock,milliseconds>;
 
-	using timespan = milliseconds;
+    using timespan = milliseconds;
 
-	datetime Now();
+    datetime Now();
 
-	datetime fromTimeStamp(uint64_t pTS);
-	uint64_t toTimeStamp(datetime pTime);
+    datetime fromTimeStamp(uint64_t pTS);
+    uint64_t toTimeStamp(datetime pTime);
 }
 #endif

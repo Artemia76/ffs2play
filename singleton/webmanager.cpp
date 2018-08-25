@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * webmanager.cpp is part of FF2Play project
+ *
+ * This singleton provide Web Manager for web server communication
+ * **************************************************************************/
+
 #include "singleton/webmanager.h"
 #include "singleton/singleton.h"
 
@@ -34,8 +40,6 @@ namespace ffs2play
     /// \brief CWebManager::CWebManager
     /// \param parent
     /// Creates a CWebManager singleton object.
-
-
     CWebManager::CWebManager(QObject *parent) : QObject(parent)
     {
         m_bConnected=false;
@@ -94,7 +98,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::~CWebManager
     ///
-
     CWebManager::~CWebManager()
     {
 
@@ -104,7 +107,6 @@ namespace ffs2play
     /// \brief CWebManager::createInstance
     /// \return
     ///
-
     CWebManager* CWebManager::createInstance()
     {
         return new CWebManager();
@@ -114,7 +116,6 @@ namespace ffs2play
     /// \brief CWebManager::instance
     /// \return
     ///
-
     CWebManager* CWebManager::instance()
     {
         return Singleton<CWebManager>::instance(CWebManager::createInstance);
@@ -123,7 +124,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::SaveConfig
     ///
-
     void CWebManager::SaveConfig()
     {
         QByteArray profils;
@@ -146,7 +146,6 @@ namespace ffs2play
     /// \brief CWebManager::SetCurrentUser
     /// \param num
     ///
-
     void CWebManager::SetCurrentUser(int pNum)
     {
         if ((pNum<1) || (pNum>m_users.count())) return;
@@ -157,7 +156,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::connect_disconnect
     ///
-
     void CWebManager::connect_disconnect()
     {
         if (m_bConnected) Disconnect();
@@ -169,7 +167,6 @@ namespace ffs2play
     /// \param Doc
     /// \param Code
     ///
-
     void CWebManager::XmlBuild (QDomDocument& pDoc, XmlCode pCode)
     {
         QDomProcessingInstruction Header = pDoc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");

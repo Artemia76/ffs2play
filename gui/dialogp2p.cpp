@@ -44,7 +44,6 @@ namespace ffs2play
     /// Constructor read users list previously loaded by webmanager constructor
     /// Then it sync the List Widget with profil name as key
     ///
-
     DialogP2P::DialogP2P(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::DialogP2P)
@@ -105,7 +104,6 @@ namespace ffs2play
     ///
     /// Destructor
     ///
-
     DialogP2P::~DialogP2P()
     {
         delete ui;
@@ -114,7 +112,6 @@ namespace ffs2play
     ///
     /// \brief DialogP2P::applyChangedItem
     ///
-
     void DialogP2P::applyChangedItem()
     {
         if (!m_changed) return;
@@ -179,7 +176,6 @@ namespace ffs2play
     /// \brief DialogP2P::on_buttonBox_clicked
     /// \param button
     ///
-
     void DialogP2P::on_buttonBox_clicked(QAbstractButton *button)
     {
         if (button == ui->buttonBox->button(QDialogButtonBox::Apply))
@@ -191,13 +187,7 @@ namespace ffs2play
         {
             if (m_changed)
             {
-                int ret = QMessageBox::warning(this,tr("Warning"),
-                                               tr("There is some modifications on selected profil. Do you want apply them?"),
-                                               QMessageBox::Yes |QMessageBox::No);
-                if (ret == QMessageBox::Yes)
-                {
-                    applyChangedItem();
-                }
+                applyChangedItem();
             }
             this->close();
         }
@@ -211,7 +201,6 @@ namespace ffs2play
     ///
     /// \brief DialogP2P::checkIfChanged
     /// Check if something is changed in current profil edition
-
     void DialogP2P::checkIfChanged()
     {
         m_changed = false;
@@ -265,31 +254,49 @@ namespace ffs2play
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(m_changed);
     }
 
+    ///
+    /// \brief DialogP2P::on_cbShadow_stateChanged
+    ///
     void DialogP2P::on_cbShadow_stateChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_cbInfoSim_stateChanged
+    ///
     void DialogP2P::on_cbInfoSim_stateChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_numP2PTx_valueChanged
+    ///
     void DialogP2P::on_numP2PTx_valueChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_cbUPNP_stateChanged
+    ///
     void DialogP2P::on_cbUPNP_stateChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_cbBeta_stateChanged
+    ///
     void DialogP2P::on_cbBeta_stateChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_btnAddItem_released
+    ///
     void DialogP2P::on_btnAddItem_released()
     {
         QFileDialog FileDlg(this);
@@ -307,6 +314,9 @@ namespace ffs2play
         }
     }
 
+    ///
+    /// \brief DialogP2P::on_btnDelItem_released
+    ///
     void DialogP2P::on_btnDelItem_released()
     {
         QListWidgetItem* item = ui->lvItems->currentItem();
@@ -318,31 +328,49 @@ namespace ffs2play
         }
     }
 
+    ///
+    /// \brief DialogP2P::on_numPort_valueChanged
+    ///
     void DialogP2P::on_numPort_valueChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_numAIRadius_valueChanged
+    ///
     void DialogP2P::on_numAIRadius_valueChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_numAILimit_valueChanged
+    ///
     void DialogP2P::on_numAILimit_valueChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_cbEnableCallsign_stateChanged
+    ///
     void DialogP2P::on_cbEnableCallsign_stateChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_cbDropRateDisp_stateChanged
+    ///
     void DialogP2P::on_cbDropRateDisp_stateChanged(int)
     {
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_cbSendDropRate_stateChanged
+    ///
     void DialogP2P::on_cbSendDropRate_stateChanged(int)
     {
         checkIfChanged();

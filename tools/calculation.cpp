@@ -20,66 +20,102 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * calculation.cpp is part of FF2Play project
+ *
+ * These functions provide mathematicals and binary tools for convertions
+ * **************************************************************************/
+
 #include "calculation.h"
 #include <QDataStream>
 
 namespace ffs2play
 {
-	double distance(double lat1, double lon1, double lat2, double lon2, char unit)
-	{
-		double theta = lon1 - lon2;
-		double dist = std::sin(deg2rad(lat1)) * std::sin(deg2rad(lat2)) + std::cos(deg2rad(lat1)) * std::cos(deg2rad(lat2)) * std::cos(deg2rad(theta));
-		dist = std::acos(dist);
-		dist = rad2deg(dist);
-		dist = dist * 60 * 1.1515;
-		if (unit == 'K')
-		{
-			dist = dist * 1.609344;
-		}
-		else if (unit == 'N')
-		{
-			dist = dist * 0.8684;
-		}
-		if (std::isnan(dist)) dist = 0;
-		return (dist);
-	}
 
-	double deg2rad(double deg)
-	{
-		return (deg * M_PI  / 180.0);
-	}
+    ///
+    /// \brief distance
+    /// \param lat1
+    /// \param lon1
+    /// \param lat2
+    /// \param lon2
+    /// \param unit
+    /// \return
+    ///
+    double distance(double lat1, double lon1, double lat2, double lon2, char unit)
+    {
+        double theta = lon1 - lon2;
+        double dist = std::sin(deg2rad(lat1)) * std::sin(deg2rad(lat2)) + std::cos(deg2rad(lat1)) * std::cos(deg2rad(lat2)) * std::cos(deg2rad(theta));
+        dist = std::acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        if (unit == 'K')
+        {
+            dist = dist * 1.609344;
+        }
+        else if (unit == 'N')
+        {
+            dist = dist * 0.8684;
+        }
+        if (std::isnan(dist)) dist = 0;
+        return (dist);
+    }
 
-	double rad2deg(double rad)
-	{
-		return (rad / M_PI * 180.0);
-	}
+    ///
+    /// \brief deg2rad
+    /// \param deg
+    /// \return
+    ///
+    double deg2rad(double deg)
+    {
+        return (deg * M_PI  / 180.0);
+    }
 
-	double Average(QVector<double> Array)
-	{
-		double total = 0;
-		for (double Value : Array) total += Value;
-		return total / (double)Array.count();
-	}
+    ///
+    /// \brief rad2deg
+    /// \param rad
+    /// \return
+    ///
+    double rad2deg(double rad)
+    {
+        return (rad / M_PI * 180.0);
+    }
 
-	int ConvertToBinaryCodedDecimal(int Code)
-	{
-		QByteArray bytes;
-		QDataStream stream(&bytes,QIODevice::WriteOnly);
-		stream.setByteOrder(QDataStream::LittleEndian);
-		stream << Code;
-		int Length = bytes.length();
-		if (Length > 2) Length = 2;
-		QString bcd;
-		for (int i = Length - 1; i >= 0; i--)
-		{
-			quint8 bcdByte = bytes[i];
-			int idHigh = (bcdByte >> 4) & 0X07;
-			int idLow = bcdByte & 0x07;
-			QString High, Low;
-			High.setNum(idHigh,16);
-			Low.setNum(idLow,16);
-			bcd += High + Low;
-		}
-		return bcd.toInt();
-	}
+    ///
+    /// \brief Average
+    /// \param Array
+    /// \return
+    ///
+    double Average(QVector<double> Array)
+    {
+        double total = 0;
+        for (double Value : Array) total += Value;
+        return total / (double)Array.count();
+    }
+
+    ///
+    /// \brief ConvertToBinaryCodedDecimal
+    /// \param Code
+    /// \return
+    ///
+    int ConvertToBinaryCodedDecimal(int Code)
+    {
+        QByteArray bytes;
+        QDataStream stream(&bytes,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << Code;
+        int Length = bytes.length();
+        if (Length > 2) Length = 2;
+        QString bcd;
+        for (int i = Length - 1; i >= 0; i--)
+        {
+            quint8 bcdByte = bytes[i];
+            int idHigh = (bcdByte >> 4) & 0X07;
+            int idLow = bcdByte & 0x07;
+            QString High, Low;
+            High.setNum(idHigh,16);
+            Low.setNum(idLow,16);
+            bcd += High + Low;
+        }
+        return bcd.toInt();
+    }
 }

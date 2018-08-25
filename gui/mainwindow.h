@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * mainwindow.h is part of FF2Play project
+ *
+ * This class define the main window of the application
+ * **************************************************************************/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -107,6 +113,8 @@ namespace ffs2play
         QTimer          m_updateTimer;
 #endif
         quint32         m_maxLine;
+        QString         m_windowStyle;
+        QString         m_dialogStyle;
         void            closeEvent(QCloseEvent* pEvent);
     };
 }

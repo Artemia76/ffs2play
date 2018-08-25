@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * fgmanager.h is part of FF2Play project
+ *
+ * This is the Flight Gear Connector
+ * It use the abastractive SimConnector
+ * **************************************************************************/
+
 #ifndef FGMANAGER_H
 #define FGMANAGER_H
 
@@ -31,34 +38,34 @@
 
 namespace ffs2play
 {
-	///
-	/// \brief The CFGManager class
-	///
+    ///
+    /// \brief The CFGManager class
+    ///
 
-	class CFGManager : public SimConnector
-	{
-		Q_OBJECT
-	public:
-		explicit CFGManager(QObject *parent = 0);
-		~CFGManager();
-	private:
-		QTimer			m_PingTimer;
-		datetime		m_LastPong;
+    class CFGManager : public SimConnector
+    {
+        Q_OBJECT
+    public:
+        explicit CFGManager(QObject *parent = 0);
+        ~CFGManager();
+    private:
+        QTimer          m_PingTimer;
+        datetime        m_LastPong;
 
-	protected:
-		void			open();
-		void			close();
-		void			main_loop();
-		SIM_VERSION		getVersion();
-		void			sendScrollingText(const QString&);
-		bool			createAI(AIResol&, const QString&, const CAircraftState&, bool);
-		bool			removeAI(uint&);
-		bool			updateAI(uint, const CAircraftState&);
-		void			freezeAI(uint, bool);
+    protected:
+        void            open();
+        void            close();
+        void            main_loop();
+        SIM_VERSION     getVersion();
+        void            sendScrollingText(const QString&);
+        bool            createAI(AIResol&, const QString&, const CAircraftState&, bool);
+        bool            removeAI(uint&);
+        bool            updateAI(uint, const CAircraftState&);
+        void            freezeAI(uint, bool);
         void            sendOptions(){}
 
-	private slots:
-		void			OnPingTimer();
-	};
+    private slots:
+        void            OnPingTimer();
+    };
 }
 #endif // FGMANAGER_H

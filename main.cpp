@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * main.cpp is part of FF2Play project
+ *
+ * This is the entry point of ffs2play application
+ * **************************************************************************/
+
 #include "gui/mainwindow.h"
 #include <QApplication>
 #include <QSettings>
@@ -31,25 +37,30 @@
 /// \param argv
 /// \return
 ///
-
-//using namespace ffs2play;
-
 int main(int argc, char *argv[])
 {
-	QSettings::setDefaultFormat(QSettings::IniFormat);
-	QCoreApplication::setOrganizationName("FFS2P");
-	QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
-	QCoreApplication::setApplicationName("FFS2Play");
-	QString locale = QLocale::system().name();
-	QTranslator FFS2PlayTS;
+    QSettings::setDefaultFormat(QSettings::IniFormat);
+    QCoreApplication::setOrganizationName("FFS2P");
+    QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
+    QCoreApplication::setApplicationName("FFS2Play");
+    QString locale = QLocale::system().name();
+    QTranslator FFS2PlayTS;
 #ifdef Q_OS_LINUX
     FFS2PlayTS.load("/usr/share/ffs2play/translations/ffs2play_" + locale +".qm");
 #else
-	FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
+    FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
 #endif
-	QApplication app(argc, argv);
-	app.installTranslator(&FFS2PlayTS);
-	ffs2play::MainWindow mainWindow;
-	mainWindow.show();
-	return app.exec();
+    QApplication app(argc, argv);
+    app.installTranslator(&FFS2PlayTS);
+    //Load Style Sheet
+    QFile styleFile ( "ffs2play.qss");
+    styleFile.open(QFile::ReadOnly);
+    if (styleFile.isOpen())
+    {
+        app.setStyleSheet(styleFile.readAll());
+        styleFile.close();
+    }
+    ffs2play::MainWindow mainWindow;
+    mainWindow.show();
+    return app.exec();
 }

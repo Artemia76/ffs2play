@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * calculation.h is part of FF2Play project
+ *
+ * These functions provide mathematicals and binary tools for convertions
+ * **************************************************************************/
+
 #ifndef CALCULATION_H
 #define CALCULATION_H
 
@@ -29,11 +35,11 @@
 
 namespace ffs2play
 {
-	double distance(double lat1, double lon1, double lat2, double lon2, char unit);
-	double deg2rad(double deg);
-	double rad2deg(double rad);
-	double Average(QVector<double>& Array);
-	int ConvertToBinaryCodedDecimal(int Code);
+    double distance(double lat1, double lon1, double lat2, double lon2, char unit);
+    double deg2rad(double deg);
+    double rad2deg(double rad);
+    double Average(QVector<double>& Array);
+    int ConvertToBinaryCodedDecimal(int Code);
 }
 
 #endif // CALCULATION_H

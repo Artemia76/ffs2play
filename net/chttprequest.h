@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * chttprequest.h is part of FF2Play project
+ *
+ * This class is used to send web request in POST or GET mode
+ * It also provide a programmed callback is case of response needs
+ * **************************************************************************/
+
 #ifndef CHTTPREQUEST_H
 #define CHTTPREQUEST_H
 

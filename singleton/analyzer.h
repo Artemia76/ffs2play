@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * analyzer.h is part of FF2Play project
+ *
+ * This singleton provide analysis tools to detect aircraft situation and
+ * phases
+ * **************************************************************************/
+
 #ifndef ANALYZER_H
 #define ANALYZER_H
 

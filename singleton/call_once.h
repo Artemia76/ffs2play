@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * call_once.h is part of FF2Play project
+ *
+ * This template provide safe thread calls for singletons
+ * **************************************************************************/
+
 #ifndef CALL_ONCE_H
 #define CALL_ONCE_H
 

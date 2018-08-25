@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * p2pmanager.h is part of FF2Play project
+ *
+ * This singleton provide peers manager from peer to peer network
+ * **************************************************************************/
+
 #ifndef P2PMANAGER_H
 #define P2PMANAGER_H
 
@@ -41,50 +47,50 @@ namespace ffs2play
         Q_OBJECT
     private:
                             CP2PManager(QObject *parent = 0);
-        static CP2PManager*	createInstance();
-        void				initUPNP(bool flag);
-        CLogger*			m_log;
+        static CP2PManager* createInstance();
+        void                initUPNP(bool flag);
+        CLogger*            m_log;
         Analyzer*           m_analyser;
-        UDPServer*			m_server;
-        QSettings			m_settings;
-        int					m_port;
-        int					m_AILimit;
-        int					m_AIRadius;
-        int					m_P2PRate;
-        bool				m_bUPNP;
-        bool				m_Shadow;
+        UDPServer*          m_server;
+        QSettings           m_settings;
+        int                 m_port;
+        int                 m_AILimit;
+        int                 m_AIRadius;
+        int                 m_P2PRate;
+        bool                m_bUPNP;
+        bool                m_Shadow;
         bool                m_DropRateDisplay;
         bool                m_SendDropRate;
         datetime            m_LastDropRate;
-        LocalIPList			m_InternalIP;
-        QHostAddress		m_ExternalIP;
-        QString				m_CallSign;
-        UPNPUrls			m_urls;
-        IGDdatas			m_data;
-        QVector<CPeer*>		m_peers;
-        QTimer				m_checkAITimer;
+        LocalIPList         m_InternalIP;
+        QHostAddress        m_ExternalIP;
+        QString             m_CallSign;
+        UPNPUrls            m_urls;
+        IGDdatas            m_data;
+        QVector<CPeer*>     m_peers;
+        QTimer              m_checkAITimer;
     public:
         ~CP2PManager();
         static CP2PManager*	instance();
-        void				init (bool pFlag);
-        int					getPort();
-        QString				getLocalIPs();
-        void				setCallsign(const QString& pCallSign);
-        QString				getCallsign();
-        void				whazzup_Update(QVector<PeerData>& pWhazzup);
-        bool				isDisabled(const QString& pCallsign);
-        void				clear();
-        void				sendTChat(const QString& pMessage);
-        int					getTxRate();
-        void				setTxRate(int pTxRate);
-        int					getAILimit();
-        void				setAILimit(int pAILimit);
-        int					getAIRadius();
-        void				setAIRadius(int pAIRadius);
-        bool				getShadowMode();
-        void				setShadowMode(bool pFlag);
-        QString				getTitle(const QString& pPeerName);
-        void				ResetAI(const QString& pPeerName);
+        void                init (bool pFlag);
+        int                 getPort();
+        QString             getLocalIPs();
+        void                setCallsign(const QString& pCallSign);
+        QString             getCallsign();
+        void                whazzup_Update(QVector<PeerData>& pWhazzup);
+        bool                isDisabled(const QString& pCallsign);
+        void                clear();
+        void                sendTChat(const QString& pMessage);
+        int                 getTxRate();
+        void                setTxRate(int pTxRate);
+        int                 getAILimit();
+        void                setAILimit(int pAILimit);
+        int                 getAIRadius();
+        void                setAIRadius(int pAIRadius);
+        bool                getShadowMode();
+        void                setShadowMode(bool pFlag);
+        QString             getTitle(const QString& pPeerName);
+        void                ResetAI(const QString& pPeerName);
         bool                getBlockedData(const QString &pPeerName);
         void                setBlockedData(const QString &pPeerName, bool pFlag);
         bool                getDropRateDisplay();
@@ -93,14 +99,14 @@ namespace ffs2play
         void                setSendDropRate(bool pFlag);
 
     signals:
-        void				firePeerAdd(QString);
-        void				firePeerRemove(QString);
-        void				firePeerChange(QString,int);
-        void				fireSendTChat(QString);
-        void				fireReceiveTChat(QString,QString);
+        void                firePeerAdd(QString);
+        void                firePeerRemove(QString);
+        void                firePeerChange(QString,int);
+        void                fireSendTChat(QString);
+        void                fireReceiveTChat(QString,QString);
     private slots:
-        void				onCheckAI();
-        void				onReceiveTChat(QString,QString);
+        void                onCheckAI();
+        void                onReceiveTChat(QString,QString);
         void                onLanding(double pVSpeed);
     };
 }

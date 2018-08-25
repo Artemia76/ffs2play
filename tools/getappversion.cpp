@@ -20,26 +20,37 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * getappversion.cpp is part of FF2Play project
+ *
+ * This function return current version of ffs2play application with string
+ * and numeric structure
+ * **************************************************************************/
+
 #include "tools/version.h"
 #include "tools/getappversion.h"
 
 namespace ffs2play
 {
-	sVersion GetAppVersion()
-	{
-		sVersion Version;
-		Version.Major = APP_MAJOR;
-		Version.Minor = APP_MINOR;
-		Version.Build = APP_BUILD;
-		Version.Name = APP_NAME;
-		QTextStream out(&Version.FullVersion);
-		out << Version.Name
-		   << "_"
-		   << Version.Major
-		   << "_"
-		   << Version.Minor
-		   << "_"
-		   << Version.Build;
-		return Version;
-	}
+    ///
+    /// \brief GetAppVersion
+    /// \return
+    ///
+    sVersion GetAppVersion()
+    {
+        sVersion Version;
+        Version.Major = APP_MAJOR;
+        Version.Minor = APP_MINOR;
+        Version.Build = APP_BUILD;
+        Version.Name = APP_NAME;
+        QTextStream out(&Version.FullVersion);
+        out << Version.Name
+           << "_"
+           << Version.Major
+           << "_"
+           << Version.Minor
+           << "_"
+           << Version.Build;
+        return Version;
+    }
 }

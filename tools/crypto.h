@@ -20,6 +20,14 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * crypto.h is part of FF2Play project
+ *
+ * This class provide tools for encryption needs
+ * It use AES cipher for xml texte based protocol
+ * it provide RSA encryption for AES key exchange
+ * **************************************************************************/
+
 #ifndef CRYPTO_H
 #define CRYPTO_H
 
@@ -47,22 +55,22 @@ using CryptoPP::AutoSeededRandomPool;
 
 namespace ffs2play
 {
-	class CCrypto : public QObject
-	{
-		QByteArray			m_key;
-		CLogger*			m_log;
-		Q_OBJECT
-	public:
-		explicit			CCrypto(QObject *pParent = 0);
-		const QByteArray&	EncryptionKey();
-		QString				EncryptionKeyString();
-		QString				EncryptToBase64(const QString& pData);
-		QString				DecryptFromBase64(const QString& pData);
-		QString				RSA_EncryptToBase64(const QString& pCert, const QByteArray& pData);
-	signals:
+    class CCrypto : public QObject
+    {
+        QByteArray          m_key;
+        CLogger*            m_log;
+        Q_OBJECT
+    public:
+        explicit            CCrypto(QObject *pParent = 0);
+        const QByteArray&   EncryptionKey();
+        QString             EncryptionKeyString();
+        QString             EncryptToBase64(const QString& pData);
+        QString             DecryptFromBase64(const QString& pData);
+        QString             RSA_EncryptToBase64(const QString& pCert, const QByteArray& pData);
+    signals:
 
-	public slots:
-	};
+    public slots:
+    };
 }
 
 #endif // CRYPTO_H

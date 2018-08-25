@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * webmanager.Callback.cpp is part of FF2Play project
+ *
+ * This singleton provide Web Manager for web server communication
+ * **************************************************************************/
+
 #include "singleton/webmanager.h"
 #include "singleton/singleton.h"
 #include "tools/getappversion.h"
@@ -35,7 +41,6 @@ namespace ffs2play
     /// \brief CWebManager::HelloCallback
     /// \param Request
     ///
-
     void CWebManager::HelloCallback (CHttpRequest* Request)
     {
     #ifdef FFS_DEBUG
@@ -59,7 +64,6 @@ namespace ffs2play
     /// \brief CWebManager::ConnectCallback
     /// \param Request
     ///
-
     void CWebManager::ConnectCallback(CHttpRequest *pRequest)
     {
     #ifdef FFS_DEBUG
@@ -120,6 +124,10 @@ namespace ffs2play
         pRequest->deleteLater();
     }
 
+    ///
+    /// \brief CWebManager::LiveUpdateCallback
+    /// \param pRequest
+    ///
     void CWebManager::LiveUpdateCallback(CHttpRequest* pRequest)
     {
     #ifdef FFS_DEBUG
@@ -149,6 +157,10 @@ namespace ffs2play
         pRequest->deleteLater();
     }
 
+    ///
+    /// \brief CWebManager::ATCCallback
+    /// \param pRequest
+    ///
     void CWebManager::ATCCallback(CHttpRequest *pRequest)
     {
 #ifdef FFS_DEBUG
@@ -156,11 +168,11 @@ namespace ffs2play
 #endif
         pRequest->deleteLater();
     }
+
     ///
     /// \brief CWebManager::LogoutCallback
     /// \param Request
     ///
-
     void CWebManager::LogoutCallback(CHttpRequest* 	pRequest)
     {
     #ifdef FFS_DEBUG
@@ -172,7 +184,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::OnATCUpdate
     ///
-
     void CWebManager::OnATCUpdate()
     {
     #ifdef FFS_DEBUG
@@ -189,7 +200,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::OnLiveUpdate
     ///
-
     void CWebManager::OnLiveUpdate()
     {
     #ifdef FFS_DEBUG
@@ -201,6 +211,10 @@ namespace ffs2play
         }
     }
 
+    ///
+    /// \brief CWebManager::CheckNewVersionCallback
+    /// \param pRequest
+    ///
     void CWebManager::CheckNewVersionCallback(CHttpRequest* pRequest)
     {
         sVersion Actual = GetAppVersion();

@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * webmanager.Requests.cpp is part of FF2Play project
+ *
+ * This singleton provide Web Manager for web server communication
+ * **************************************************************************/
+
 #include "singleton/webmanager.h"
 #include "singleton/singleton.h"
 
@@ -28,7 +34,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::Connect
     ///
-
     void CWebManager::Connect()
     {
         if (m_bConnected) return;
@@ -43,7 +48,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::Disconnect
     ///
-
     void CWebManager::Disconnect()
     {
         if (!m_bConnected) return;
@@ -63,7 +67,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::SendVerify
     ///
-
     void CWebManager::SendVerify()
     {
         QDomDocument SendVerify;
@@ -76,7 +79,6 @@ namespace ffs2play
     ///
     /// \brief CWebManager::SendLiveUpdate
     ///
-
     void CWebManager::SendLiveUpdate()
     {
         QDomDocument SendLiveUpdate;
@@ -86,6 +88,9 @@ namespace ffs2play
         Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLiveUpdate);
     }
 
+    ///
+    /// \brief CWebManager::SendATCUpdate
+    ///
     void CWebManager::SendATCUpdate()
     {
         QDomDocument SendAtcUpdate;
@@ -95,6 +100,9 @@ namespace ffs2play
         Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendAtcUpdate);
     }
 
+    ///
+    /// \brief CWebManager::CheckNewVersion
+    ///
     void CWebManager::CheckNewVersion()
     {
         QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=ffs2play&beta=1";

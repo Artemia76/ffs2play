@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * mainwindow.cpp is part of FF2Play project
+ *
+ * This class define the main window of the application
+ * **************************************************************************/
+
 #include <QByteArray>
 #include <QMessageBox>
 #include <QMenu>
@@ -42,7 +48,6 @@ namespace ffs2play
         ui(new Ui::MainWindow)
     {
         ui->setupUi(this);
-
         // Specify custom handler for contextual menu
         ui->pteLogger->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -142,23 +147,6 @@ namespace ffs2play
     }
 
     ///
-    /// \brief MainWindow::closeEvent
-    ///
-    void MainWindow::closeEvent(QCloseEvent*)
-    {
-        m_settings.beginGroup("MainWindow");
-        m_settings.setValue("Geometry",saveGeometry());
-        m_settings.setValue("State",saveState());
-        m_settings.endGroup();
-        m_settings.beginGroup("Log");
-        m_settings.setValue("MaxLine",m_maxLine);
-        m_settings.endGroup();
-        if (m_webManager!=nullptr) m_webManager->Disconnect();
-        if (m_P2PManager!=nullptr) m_P2PManager->init(false);
-        if (m_simManager!=nullptr) m_simManager->close();
-    }
-
-    ///
     /// \brief MainWindow::onLog
     /// \param Texte
     /// \param pColor
@@ -177,7 +165,6 @@ namespace ffs2play
     ///
     /// \brief MainWindow::onSCM_Opened
     ///
-
     void MainWindow::onSCM_Opened()
     {
         ui->afFSCon->setIcon(QIcon(":/gfx/plane_green.png"));
@@ -186,12 +173,15 @@ namespace ffs2play
     ///
     /// \brief MainWindow::onSCM_Closed
     ///
-
     void MainWindow::onSCM_Closed()
     {
         ui->afFSCon->setIcon(QIcon(":/gfx/plane_gris.png"));
     }
 
+    ///
+    /// \brief MainWindow::onSCM_Loaded
+    /// \param pSimType
+    ///
     void MainWindow::onSCM_Loaded(SIM_TYPE pSimType)
     {
         switch (pSimType)
@@ -212,10 +202,10 @@ namespace ffs2play
             }
         }
     }
+
     ///
     /// \brief MainWindow::onWM_Connected
     ///
-
     void MainWindow::onWM_Connected()
     {
         ui->afServeurCon->setIcon(QIcon(":/gfx/connect2_V.png"));
@@ -224,17 +214,22 @@ namespace ffs2play
     ///
     /// \brief MainWindow::onWM_Disconnected
     ///
-
     void MainWindow::onWM_Disconnected()
     {
         ui->afServeurCon->setIcon(QIcon(":/gfx/connect2_R.png"));
     }
 
+    ///
+    /// \brief MainWindow::onWM_Exit
+    ///
     void MainWindow::onWM_Exit()
     {
         this->close();
     }
 
+    ///
+    /// \brief MainWindow::onAIScanFinished
+    ///
     void MainWindow::onAIScanFinished()
     {
         if (m_AIMapping->getPathList().count()==0)
@@ -248,11 +243,93 @@ namespace ffs2play
         }
     }
 
+    ///
+    /// \brief MainWindow::OnPeerAdd
+    /// \param pCallSign
+    ///
+    void MainWindow::onPeerAdd(QString pCallSign)
+    {
+        QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
+        if (item_list.count()==0)
+        {
+            QListWidgetItem* item = new QListWidgetItem	(QIcon(":/gfx/signal_0.png"),pCallSign);
+            ui->lwPeer->addItem(item);
+        }
+        else
+        {
+            m_log->log("Try to add existing peer in the list, ignore it",Qt::darkMagenta);
+        }
+    }
+
+    ///
+    /// \brief MainWindow::OnPeerChange
+    /// \param pCallSign
+    ///
+    void MainWindow::onPeerChange(QString pCallSign, int pSignal)
+    {
+        QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
+        if (item_list.count()>0)
+        {
+            QString icon;
+            switch (pSignal)
+            {
+                case 0:
+                    icon=":/gfx/signal_0.png";
+                    break;
+                case 1:
+                    icon=":/gfx/signal_1.png";
+                    break;
+                case 2:
+                    icon=":/gfx/signal_2.png";
+                    break;
+                case 3:
+                    icon=":/gfx/signal_3.png";
+                    break;
+                case 4:
+                    icon=":/gfx/close.png";
+                    break;
+                default:
+                    icon=":/gfx/close.png";
+                    break;
+            }
+            item_list[0]->setIcon(QIcon(icon));
+        }
+    }
+
+    ///
+    /// \brief MainWindow::OnPeerRemove
+    /// \param pCallSign
+    ///
+    void MainWindow::onPeerRemove(QString pCallSign)
+    {
+        //QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
+        //if (item_list.count()>0)
+        for (int i=0; ui->lwPeer->count();i++)
+        {
+            if (ui->lwPeer->item(i)->text()==pCallSign)
+            {
+                QListWidgetItem* item = ui->lwPeer->takeItem(i);
+                delete item;
+                return;
+            }
+        }
+        m_log->log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
+    }
+
+    ///
+    /// \brief MainWindow::onPeerReceiveTChat
+    /// \param pCallSign
+    /// \param pMessage
+    ///
+    void MainWindow::onPeerReceiveTChat(QString pCallSign,QString pMessage)
+    {
+        ui->teTChatZone->append(pCallSign + " : " + pMessage);
+    }
+
 #ifdef FFS_DEBUG
     ///
     /// \brief MainWindow::onUpdate
     ///
-
     void MainWindow::onUpdate()
     {
         CAircraftState State = m_simManager->getAircraftState();
@@ -504,270 +581,4 @@ namespace ffs2play
         }
     }
 #endif
-    ///
-    /// \brief MainWindow::on_afServeurCon_triggered
-    ///
-
-    void MainWindow::on_afServeurCon_triggered()
-    {
-        m_webManager->connect_disconnect();
-    }
-
-    ///
-    /// \brief MainWindow::on_afProfil_triggered
-    ///
-
-    void MainWindow::on_afProfil_triggered()
-    {
-        DialogProfils* dialog = new DialogProfils();
-        dialog->show();
-    }
-
-    ///
-    /// \brief MainWindow::on_afAide_triggered
-    ///
-
-    void MainWindow::on_afAide_triggered()
-    {
-        sVersion Version = GetAppVersion();
-        QMessageBox::about(this,tr("About"), Version.FullVersion );
-    }
-
-    ///
-    /// \brief MainWindow::on_afFSCon_triggered
-    ///
-
-    void MainWindow::on_afFSCon_triggered()
-    {
-        m_simManager->open_close();
-    }
-
-    ///
-    /// \brief MainWindow::on_afP2P_triggered
-    ///
-
-    void MainWindow::on_afP2P_triggered()
-    {
-        DialogP2P* dialog = new DialogP2P();
-        dialog->show();
-    }
-
-    ///
-    /// \brief MainWindow::OnPeerAdd
-    /// \param pCallSign
-    ///
-
-    void MainWindow::onPeerAdd(QString pCallSign)
-    {
-        QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
-        if (item_list.count()==0)
-        {
-            QListWidgetItem* item = new QListWidgetItem	(QIcon(":/gfx/signal_0.png"),pCallSign);
-            ui->lwPeer->addItem(item);
-        }
-        else
-        {
-            m_log->log("Try to add existing peer in the list, ignore it",Qt::darkMagenta);
-        }
-    }
-
-    ///
-    /// \brief MainWindow::OnPeerChange
-    /// \param pCallSign
-    ///
-
-    void MainWindow::onPeerChange(QString pCallSign, int pSignal)
-    {
-        QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
-        if (item_list.count()>0)
-        {
-            QString icon;
-            switch (pSignal)
-            {
-                case 0:
-                    icon=":/gfx/signal_0.png";
-                    break;
-                case 1:
-                    icon=":/gfx/signal_1.png";
-                    break;
-                case 2:
-                    icon=":/gfx/signal_2.png";
-                    break;
-                case 3:
-                    icon=":/gfx/signal_3.png";
-                    break;
-                case 4:
-                    icon=":/gfx/close.png";
-                    break;
-                default:
-                    icon=":/gfx/close.png";
-                    break;
-            }
-            item_list[0]->setIcon(QIcon(icon));
-        }
-    }
-
-    ///
-    /// \brief MainWindow::OnPeerRemove
-    /// \param pCallSign
-    ///
-
-    void MainWindow::onPeerRemove(QString pCallSign)
-    {
-        //QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
-        //if (item_list.count()>0)
-        for (int i=0; ui->lwPeer->count();i++)
-        {
-            if (ui->lwPeer->item(i)->text()==pCallSign)
-            {
-                QListWidgetItem* item = ui->lwPeer->takeItem(i);
-                delete item;
-                return;
-            }
-        }
-        m_log->log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
-    }
-
-    void MainWindow::onPeerReceiveTChat(QString pCallSign,QString pMessage)
-    {
-        ui->teTChatZone->append(pCallSign + " : " + pMessage);
-    }
-
-    void MainWindow::on_rb_filterNone_toggled(bool checked)
-    {
-        if (checked) m_log->setDebugLevel(LEVEL_NONE);
-    }
-
-    void MainWindow::on_rb_filterNormal_toggled(bool checked)
-    {
-        if (checked) m_log->setDebugLevel(LEVEL_NORMAL);
-    }
-
-    void MainWindow::on_rb_filterVerbose_toggled(bool checked)
-    {
-        if (checked) m_log->setDebugLevel(LEVEL_VERBOSE);
-    }
-
-    void MainWindow::on_cb_filter_currentIndexChanged(const QString &arg1)
-    {
-        m_log->setFilter(arg1);
-    }
-
-    void MainWindow::on_afFSType_triggered()
-    {
-        if (m_simManager->getSimList().count()==1) return;
-        int index = m_simManager->getSimList().indexOf(m_simManager->getType());
-        if (index == (m_simManager->getSimList().count()-1))
-            index=0;
-        else
-            index++;
-        m_simManager->setSimType(m_simManager->getSimList()[index]);
-    }
-
-    void MainWindow::on_leTchatSend_returnPressed()
-    {
-        QString Message = ui->leTchatSend->text();
-        ui->leTchatSend->clear();
-        if(m_webManager->isConnected())
-        {
-            ui->teTChatZone->append(m_P2PManager->getCallsign() + " : " + Message);
-            m_P2PManager->sendTChat(Message);
-        }
-    }
-
-    void MainWindow::onPeerShowContextMenu(const QPoint&pos)
-    {
-        QListWidgetItem* temp = ui->lwPeer->itemAt(pos);
-        if (temp != nullptr)
-        {
-            // Handle global position
-            QPoint globalPos = ui->lwPeer->mapToGlobal(pos);
-            // Create menu and insert some actions
-            QMenu myMenu(this);
-            // If Title is available on the peer, we enable AI replacement tool
-            if (m_P2PManager->getTitle(temp->text()) !=  "")
-            {
-                myMenu.addAction("Mapping", this, SLOT(openMappingBox()));
-            }
-    #ifdef FFS_DEBUG
-            //Block data
-            if (m_P2PManager->getBlockedData(temp->text()))
-            {
-                myMenu.addAction("Unblock Data", this, SLOT(unblockData()));
-            }
-            else
-            {
-                myMenu.addAction("Block Data", this, SLOT(blockData()));
-            }
-    #endif
-            // Show context menu at handling position
-            myMenu.exec(globalPos);
-        }
-    }
-
-    void MainWindow::openMappingBox()
-    {
-        QListWidgetItem* item = ui->lwPeer->currentItem();
-        AIReplace* Dialog = new AIReplace(item->text());
-        Dialog->show();
-    }
-
-    void MainWindow::unblockData()
-    {
-        QListWidgetItem* item = ui->lwPeer->currentItem();
-        if (item != nullptr)
-        {
-            m_P2PManager->setBlockedData(item->text(),false);
-        }
-    }
-
-    void MainWindow::blockData()
-    {
-        QListWidgetItem* item = ui->lwPeer->currentItem();
-        if (item != nullptr)
-        {
-            m_P2PManager->setBlockedData(item->text(),true);
-        }
-    }
-
-    void MainWindow::on_pteLogger_customContextMenuRequested(const QPoint &pos)
-    {
-        QMenu *menu = ui->pteLogger->createStandardContextMenu();
-        // Handle global position
-        QPoint globalPos = ui->pteLogger->mapToGlobal(pos);
-        menu->addAction(tr("Clear"),this,SLOT(clearLog()));
-        menu->addAction(tr("Save"),this,SLOT(saveLog()));
-        menu->exec(globalPos);
-        delete menu;
-    }
-
-    void MainWindow::clearLog()
-    {
-        ui->pteLogger->clear();
-    }
-
-    void MainWindow::saveLog()
-    {
-        QFileDialog FileDlg(this);
-        QString File;
-        FileDlg.setAcceptMode(QFileDialog::AcceptSave);
-        FileDlg.setDefaultSuffix("htm");
-        FileDlg.setNameFilter(tr("Web File (*.htm *.html)"));
-        if (FileDlg.exec())
-        {
-            File = FileDlg.selectedFiles().first();
-            if (!File.isEmpty())
-            {
-                QTextDocument* Doc = ui->pteLogger->document();
-                QFile document (File);
-                if(!document.open(QFile::WriteOnly | QFile::Text))
-                {
-                    m_log->log(tr("An Error occur while opening ") + document.fileName(),Qt::darkMagenta);
-                    return;
-                }
-                QTextStream writer (&document);
-                writer << Doc->toHtml();
-            }
-        }
-    }
 }

@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * clogger.h is part of FF2Play project
+ *
+ * This singleton provide log messaging manager
+ * **************************************************************************/
+
 #ifndef CLOGGER_H
 #define CLOGGER_H
 
@@ -31,39 +37,39 @@
 
 namespace ffs2play
 {
-	enum CL_DEBUG_LEVEL
-	{
-		LEVEL_NONE,
-		LEVEL_NORMAL,
-		LEVEL_VERBOSE
-	};
+    enum CL_DEBUG_LEVEL
+    {
+        LEVEL_NONE,
+        LEVEL_NORMAL,
+        LEVEL_VERBOSE
+    };
 
-	class CLogger : public QObject
-	{
-		Q_OBJECT
+    class CLogger : public QObject
+    {
+        Q_OBJECT
 
-	private:
-								CLogger(QObject* pParent = 0);
-		static CLogger*			createInstance();
-		void					updatePattern();
-		CL_DEBUG_LEVEL			m_DebugLevel;
-		QSettings				m_settings;
-		bool					m_logToFile;
-		QString					m_filtreLog;
-		QRegExp					m_rx;
-		QMutex					m_mutex;
+    private:
+                                CLogger(QObject* pParent = 0);
+        static CLogger*         createInstance();
+        void                    updatePattern();
+        CL_DEBUG_LEVEL          m_DebugLevel;
+        QSettings               m_settings;
+        bool                    m_logToFile;
+        QString                 m_filtreLog;
+        QRegExp                 m_rx;
+        QMutex                  m_mutex;
 
-	public:
-								~CLogger();
-		const CL_DEBUG_LEVEL&	DebugLevel;
-		static CLogger*			instance();
-		void					setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-		void					log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-		void					setFilter(const QString& pFilter);
-		QString					getFilter();
+    public:
+                                ~CLogger();
+        const CL_DEBUG_LEVEL&   DebugLevel;
+        static CLogger*         instance();
+        void                    setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+        void                    log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+        void                    setFilter(const QString& pFilter);
+        QString                 getFilter();
 
-	signals:
-		void					fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
-	};
+    signals:
+        void                    fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
+    };
 }
 #endif // CLOGGER_H

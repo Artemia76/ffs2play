@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * iniparser.h is part of FF2Play project
+ *
+ * This clas provide ini based configuration file parser
+ * **************************************************************************/
+
 #ifndef INIPARSER_H
 #define INIPARSER_H
 
@@ -29,23 +35,23 @@
 
 namespace ffs2play
 {
-	class IniParserException : public std::exception
-	{
-	public:
-		QString Message;
-	};
+    class IniParserException : public std::exception
+    {
+    public:
+        QString Message;
+    };
 
-	class IniParser : public QObject
-	{
-		Q_OBJECT
-	public:
-							IniParser(const QString& pFilename, const SIM_TYPE pSimType = SIM_TYPE::FSX);
-	virtual					~IniParser();
-		QVariant			value(const QString& pGroup, const QString& pParameter, const QVariant& pDefaultValue = QVariant()) const;
-	private:
-		SIM_TYPE			m_simType;
-		QString				m_Selected_Group;
-		QMap<QString,QStringList>	m_GroupMap;
-	};
+    class IniParser : public QObject
+    {
+        Q_OBJECT
+    public:
+                                    IniParser(const QString& pFilename, const SIM_TYPE pSimType = SIM_TYPE::FSX);
+    virtual                         ~IniParser();
+        QVariant                    value(const QString& pGroup, const QString& pParameter, const QVariant& pDefaultValue = QVariant()) const;
+    private:
+        SIM_TYPE                    m_simType;
+        QString                     m_Selected_Group;
+        QMap<QString,QStringList>   m_GroupMap;
+    };
 }
 #endif // INIPARSER_H

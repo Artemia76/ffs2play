@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * getappversion.h is part of FF2Play project
+ *
+ * This function return current version of ffs2play application with string
+ * and numeric structure
+ * **************************************************************************/
+
 #ifndef GETAPPVERSION_H
 #define GETAPPVERSION_H
 
@@ -28,15 +35,15 @@
 
 namespace ffs2play
 {
-	struct sVersion
-	{
-		QString Name;
-		QString FullVersion;
-		int Major;
-		int Minor;
-		int Build;
-	};
+    struct sVersion
+    {
+        QString Name;
+        QString FullVersion;
+        int Major;
+        int Minor;
+        int Build;
+    };
 
-	sVersion GetAppVersion();
+    sVersion GetAppVersion();
 }
 #endif

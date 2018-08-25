@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * xpmanager.h is part of FF2Play project
+ *
+ * This is the X-Plane Connector
+ * It use the abastractive SimConnector
+ * **************************************************************************/
+
 #ifndef XPMANAGER_H
 #define XPMANAGER_H
 
@@ -34,57 +41,57 @@
 
 namespace ffs2play
 {
-	enum FFS2Proto
-	{
-		PING = 0x00, // Ping receive
-		PONG = 0x01, // Pong With protocol Version
-		DATA = 0x02, // Ask start or stop receive data
-		DATA_SEND = 0x03, // Contain data of user plane
-		DISC = 0x04, // Disconnect client
-		ADD_PEER = 0x05, // Add peer
-		DEL_PEER = 0x06 // Remove Peer
-	};
+    enum FFS2Proto
+    {
+        PING = 0x00, // Ping receive
+        PONG = 0x01, // Pong With protocol Version
+        DATA = 0x02, // Ask start or stop receive data
+        DATA_SEND = 0x03, // Contain data of user plane
+        DISC = 0x04, // Disconnect client
+        ADD_PEER = 0x05, // Add peer
+        DEL_PEER = 0x06 // Remove Peer
+    };
 
-	///
-	/// \brief The CXPManager class
-	///
+    ///
+    /// \brief The CXPManager class
+    ///
 
-	class CXPManager : public SimConnector
-	{
-		Q_OBJECT
-	public:
-		explicit CXPManager(QObject *parent = 0);
-		~CXPManager();
-	private:
-		qint64			m_SimRate;
-		qint64			m_VariableRate;
-		quint16			m_DestPort;
-		quint16			m_LocalPort;
-		datetime		m_LastPong;
-		UDPServer*		Server;
-		AirData			PlayerData;
-		QTimer			m_PingTimer;
-		QHostAddress	m_XPPlugin;
-		AirData			SendData;
+    class CXPManager : public SimConnector
+    {
+        Q_OBJECT
+    public:
+        explicit CXPManager(QObject *parent = 0);
+        ~CXPManager();
+    private:
+        qint64          m_SimRate;
+        qint64          m_VariableRate;
+        quint16         m_DestPort;
+        quint16         m_LocalPort;
+        datetime        m_LastPong;
+        UDPServer*      Server;
+        AirData         PlayerData;
+        QTimer          m_PingTimer;
+        QHostAddress    m_XPPlugin;
+        AirData         SendData;
 
-	protected:
-		void			open();
-		void			close();
-		void			main_loop();
-		SIM_VERSION		getVersion();
-		void			sendScrollingText(const QString&);
-		bool			createAI(AIResol&, const QString&, const CAircraftState&, bool);
-		bool			removeAI(uint&);
-		bool			updateAI(uint, const CAircraftState&);
-		void			freezeAI(uint, bool);
+    protected:
+        void            open();
+        void            close();
+        void            main_loop();
+        SIM_VERSION     getVersion();
+        void            sendScrollingText(const QString&);
+        bool            createAI(AIResol&, const QString&, const CAircraftState&, bool);
+        bool            removeAI(uint&);
+        bool            updateAI(uint, const CAircraftState&);
+        void            freezeAI(uint, bool);
         void            sendOptions(){}
 
-		void			sendPing();
-		void			sendData(bool pFlag);
-		void			sendDisc();
-	private slots:
-		void			OnReceiveDatagram(QNetworkDatagram datagram);
-		void			OnPingTimer();
-	};
+        void            sendPing();
+        void            sendData(bool pFlag);
+        void            sendDisc();
+    private slots:
+        void            OnReceiveDatagram(QNetworkDatagram datagram);
+        void            OnPingTimer();
+    };
 }
 #endif // XPMANAGER_H

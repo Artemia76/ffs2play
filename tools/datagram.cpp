@@ -20,33 +20,56 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * datagram.cpp is part of FF2Play project
+ *
+ * These functions provide standard stream conversion to work with QTStream
+ * properly
+ * **************************************************************************/
+
 #include "datagram.h"
 
 namespace ffs2play
 {
-	QString StringFromStream(QDataStream& pStream)
-	{
-		quint8 Len;
-		pStream >> Len;
-		char* Buffer = new char[Len+1];
-		pStream.readRawData(Buffer,Len);
-		Buffer[Len]='\0';
-		QString Result(Buffer);
-		delete[] Buffer;
-		return Result;
-	}
+    ///
+    /// \brief StringFromStream
+    /// \param pStream
+    /// \return
+    ///
+    QString StringFromStream(QDataStream& pStream)
+    {
+        quint8 Len;
+        pStream >> Len;
+        char* Buffer = new char[Len+1];
+        pStream.readRawData(Buffer,Len);
+        Buffer[Len]='\0';
+        QString Result(Buffer);
+        delete[] Buffer;
+        return Result;
+    }
 
-	void StringToStream(QDataStream& pStream,const QString& pString)
-	{
-		pStream << (quint8)pString.toStdString().length();
-		pStream.writeRawData(pString.toStdString().c_str(),pString.toStdString().length());
-	}
-	void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage)
-	{
-		char* buffer = new char[pMessage.ByteSize()];
-		pMessage.SerializeToArray(buffer,pMessage.ByteSize());
-		pStream.writeRawData(buffer,pMessage.ByteSize());
-		delete[] buffer;
-	}
+    ///
+    /// \brief StringToStream
+    /// \param pStream
+    /// \param pString
+    ///
+    void StringToStream(QDataStream& pStream,const QString& pString)
+    {
+        pStream << (quint8)pString.toStdString().length();
+        pStream.writeRawData(pString.toStdString().c_str(),pString.toStdString().length());
+    }
+
+    ///
+    /// \brief ProtobufToStream
+    /// \param pStream
+    /// \param pMessage
+    ///
+    void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage)
+    {
+        char* buffer = new char[pMessage.ByteSize()];
+        pMessage.SerializeToArray(buffer,pMessage.ByteSize());
+        pStream.writeRawData(buffer,pMessage.ByteSize());
+        delete[] buffer;
+    }
 }
 

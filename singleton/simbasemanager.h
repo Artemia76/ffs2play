@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * simbasemanager.h is part of FF2Play project
+ *
+ * This singleton provide simulator manager interface
+ * It working friendly
+ * **************************************************************************/
+
 #ifndef SIMBASEMANAGER_H
 #define SIMBASEMANAGER_H
 
@@ -29,89 +36,88 @@
 #include <QSettings>
 #include "singleton/clogger.h"
 
-//#include "sim/simconnector.h"
-
 #ifdef Q_OS_WIN
-	#include "sim/scmanager.h"
+    #include "sim/scmanager.h"
 #endif
+
 #include "sim/xpmanager.h"
 #include "sim/fgmanager.h"
 #include "protobuf/ffs2play.pb.h"
 
 namespace ffs2play
 {
-	enum class SIM_TYPE
-	{
-		FSX,
-		XPLANE,
-		FLIGHTGEAR
-	};
+    enum class SIM_TYPE
+    {
+        FSX,
+        XPLANE,
+        FLIGHTGEAR
+    };
 
-	class simbasemanager : public QObject
-	{
-		Q_OBJECT
-	private:
-	static	simbasemanager*		createInstance();
-		explicit				simbasemanager(QObject *parent = nullptr);
-		CLogger*				m_log;
-		QSettings				m_settings;
-		bool					m_initialized;
-		SimConnector*			m_connector;
-		QThread*				m_thread;
-		bool					m_bRunning;
-        bool                    m_bEnaDispCallSign;
-		SIM_TYPE				m_simType;
-		QList<SIM_TYPE>			m_simAvailable;
+    class simbasemanager : public QObject
+    {
+        Q_OBJECT
+    private:
+    static	simbasemanager*         createInstance();
+        explicit                    simbasemanager(QObject *parent = nullptr);
+        CLogger*                    m_log;
+        QSettings                   m_settings;
+        bool                        m_initialized;
+        SimConnector*               m_connector;
+        QThread*                    m_thread;
+        bool                        m_bRunning;
+        bool                        m_bEnaDispCallSign;
+        SIM_TYPE                    m_simType;
+        QList<SIM_TYPE>             m_simAvailable;
 
-	public:
-	static simbasemanager*		instance();
-								~simbasemanager();
-		void					load(SIM_TYPE pSimType);
-		void					unload();
-		void					open();
-		void					close();
-		bool					isConnected();
-		bool					isInitialized();
-		const CAircraftState	getAircraftState();
-		void					sendScrollingText(const QString& pMessage);
-		SimConnector::SIM_VERSION getVersion();
-		SIM_TYPE				getType();
-		const QList<SIM_TYPE>&	getSimList();
-		void					setSimType(SIM_TYPE pSimType);
-		bool					createAI(AIResol& pAircraft, const QString& pTail, const CAircraftState& pData, bool pNonAIObject);
-		bool					removeAI(uint& pObjectID);
-		bool					updateAI(uint pObjectID, const CAircraftState& pData);
-		void					freezeAI(uint pObjectID, bool pState);
-        void                    enableCallSign(bool pState);
-        void                    setOptionChange(SimOption pOption,bool pFlag);
-        bool                    getOption(SimOption pOption);
+    public:
+    static simbasemanager*          instance();
+                                    ~simbasemanager();
+        void                        load(SIM_TYPE pSimType);
+        void                        unload();
+        void                        open();
+        void                        close();
+        bool                        isConnected();
+        bool                        isInitialized();
+        const CAircraftState        getAircraftState();
+        void                        sendScrollingText(const QString& pMessage);
+        SimConnector::SIM_VERSION   getVersion();
+        SIM_TYPE                    getType();
+        const QList<SIM_TYPE>&      getSimList();
+        void                        setSimType(SIM_TYPE pSimType);
+        bool                        createAI(AIResol& pAircraft, const QString& pTail, const CAircraftState& pData, bool pNonAIObject);
+        bool                        removeAI(uint& pObjectID);
+        bool                        updateAI(uint pObjectID, const CAircraftState& pData);
+        void                        freezeAI(uint pObjectID, bool pState);
+        void                        enableCallSign(bool pState);
+        void                        setOptionChange(SimOption pOption,bool pFlag);
+        bool                        getOption(SimOption pOption);
 
-	private slots:
-		void					mainThread();
-		void					OnSimVariableEvent(CAircraftState);
-		void					OnSimEvent(SimEvent);
-		void					OnSimAICreated(QString,uint);
-		void					OnSimAIUpdated(CAircraftState, uint);
-		void					OnSimAIRemoved(uint);
-		void					OnSimEventFrame(float,float);
-		void					OnSimConnected();
-		void					OnSimDisconnected();
-		void					OnSimTimedOut();
+    private slots:
+        void                        mainThread();
+        void                        OnSimVariableEvent(CAircraftState);
+        void                        OnSimEvent(SimEvent);
+        void                        OnSimAICreated(QString,uint);
+        void                        OnSimAIUpdated(CAircraftState, uint);
+        void                        OnSimAIRemoved(uint);
+        void                        OnSimEventFrame(float,float);
+        void                        OnSimConnected();
+        void                        OnSimDisconnected();
+        void                        OnSimTimedOut();
 
-	public slots:
-		void					open_close();
+    public slots:
+        void                        open_close();
 
-	signals:
-		void					finished();
-		void					loaded(SIM_TYPE);
-		void					opened();
-		void					closed();
-		void					fireSimVariableEvent(CAircraftState);
-		void					fireSimEvent(SimEvent);
-		void					fireSimAICreated(QString,uint);
-		void					fireSimAIUpdated(CAircraftState, uint);
-		void					fireSimAIRemoved(uint);
-		void					fireSimEventFrame(float,float);
-	};
+    signals:
+        void                        finished();
+        void                        loaded(SIM_TYPE);
+        void                        opened();
+        void                        closed();
+        void                        fireSimVariableEvent(CAircraftState);
+        void                        fireSimEvent(SimEvent);
+        void                        fireSimAICreated(QString,uint);
+        void                        fireSimAIUpdated(CAircraftState, uint);
+        void                        fireSimAIRemoved(uint);
+        void                        fireSimEventFrame(float,float);
+    };
 }
 #endif // SIMBASEMANAGER_H

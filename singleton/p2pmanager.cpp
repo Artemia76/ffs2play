@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * p2pmanager.cpp is part of FF2Play project
+ *
+ * This singleton provide peers manager from peer to peer network
+ * **************************************************************************/
+
 #include "singleton/p2pmanager.h"
 #include <QNetworkDatagram>
 #include "singleton/singleton.h"
@@ -30,12 +36,12 @@
 
 #include <sstream>
 
-namespace ffs2play {
+namespace ffs2play
+{
     ///
     /// \brief CP2PManager::CP2PManager
     /// \param parent
     ///
-
     CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     {
         m_log=CLogger::instance();
@@ -51,7 +57,6 @@ namespace ffs2play {
     /// \brief CP2PManager::createInstance
     /// \return
     ///
-
     CP2PManager* CP2PManager::createInstance()
     {
         return new CP2PManager();
@@ -60,7 +65,6 @@ namespace ffs2play {
     ///
     /// \brief CP2PManager::~CP2PManager
     ///
-
     CP2PManager::~CP2PManager()
     {
         init(false);
@@ -70,12 +74,14 @@ namespace ffs2play {
     /// \brief CP2PManager::instance
     /// \return
     ///
-
     CP2PManager* CP2PManager::instance()
     {
         return Singleton<CP2PManager>::instance(CP2PManager::createInstance);
     }
 
+    ///
+    /// \brief CP2PManager::onCheckAI
+    ///
     void CP2PManager::onCheckAI()
     {
         int NbInvisible = 0;
@@ -135,7 +141,6 @@ namespace ffs2play {
     /// \brief CP2PManager::init
     /// \param flag
     ///
-
     void CP2PManager::init(bool flag)
     {
         if (flag)
@@ -168,7 +173,6 @@ namespace ffs2play {
     /// \brief CP2PManager::initUPNP
     /// \param flag
     ///
-
     void CP2PManager::initUPNP(bool flag)
     {
         if (flag)
@@ -287,11 +291,19 @@ namespace ffs2play {
         }
     }
 
+    ///
+    /// \brief CP2PManager::getPort
+    /// \return
+    ///
     int CP2PManager::getPort()
     {
         return m_port;
     }
 
+    ///
+    /// \brief CP2PManager::getLocalIPs
+    /// \return
+    ///
     QString CP2PManager::getLocalIPs()
     {
         std::ostringstream out;
@@ -300,21 +312,37 @@ namespace ffs2play {
         return QString(OutPut.toBase64());
     }
 
+    ///
+    /// \brief CP2PManager::setCallsign
+    /// \param pCallSign
+    ///
     void CP2PManager::setCallsign(const QString &pCallSign)
     {
         m_CallSign = pCallSign;
     }
 
+    ///
+    /// \brief CP2PManager::getCallsign
+    /// \return
+    ///
     QString CP2PManager::getCallsign()
     {
         return m_CallSign;
     }
 
+    ///
+    /// \brief CP2PManager::sendTChat
+    /// \param pMessage
+    ///
     void CP2PManager::sendTChat(const QString &pMessage)
     {
         emit(fireSendTChat(pMessage));
     }
 
+    ///
+    /// \brief CP2PManager::whazzup_Update
+    /// \param pWhazzup
+    ///
     void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
     {
         QString UserName = m_CallSign.replace('[','_');
@@ -428,6 +456,11 @@ namespace ffs2play {
         }
     }
 
+    ///
+    /// \brief CP2PManager::isDisabled
+    /// \param pCallsign
+    /// \return
+    ///
     bool CP2PManager::isDisabled(const QString &pCallsign)
     {
         m_settings.beginGroup("P2P");
@@ -436,6 +469,9 @@ namespace ffs2play {
         return List.contains(pCallsign);
     }
 
+    ///
+    /// \brief CP2PManager::clear
+    ///
     void CP2PManager::clear ()
     {
         for (QVector<CPeer*>::iterator it = m_peers.begin(); it != m_peers.end() ; ++it)
@@ -452,16 +488,29 @@ namespace ffs2play {
         m_peers.clear();
     }
 
+    ///
+    /// \brief CP2PManager::onReceiveTChat
+    /// \param pCallSign
+    /// \param pMessage
+    ///
     void CP2PManager::onReceiveTChat(QString pCallSign, QString pMessage)
     {
         emit (fireReceiveTChat(pCallSign,pMessage));
     }
 
+    ///
+    /// \brief CP2PManager::getTxRate
+    /// \return
+    ///
     int	CP2PManager::getTxRate()
     {
         return m_P2PRate;
     }
 
+    ///
+    /// \brief CP2PManager::setTxRate
+    /// \param pTxRate
+    ///
     void CP2PManager::setTxRate(int pTxRate)
     {
         if ((pTxRate<50) || (pTxRate>5000)) return;
@@ -473,11 +522,19 @@ namespace ffs2play {
         }
     }
 
+    ///
+    /// \brief CP2PManager::getAILimit
+    /// \return
+    ///
     int	CP2PManager::getAILimit()
     {
         return m_AILimit;
     }
 
+    ///
+    /// \brief CP2PManager::setAILimit
+    /// \param pAILimit
+    ///
     void CP2PManager::setAILimit(int pAILimit)
     {
         if ((pAILimit<-1) || (pAILimit>30)) return;
@@ -485,11 +542,19 @@ namespace ffs2play {
         m_AILimit=pAILimit;
     }
 
+    ///
+    /// \brief CP2PManager::getAIRadius
+    /// \return
+    ///
     int	CP2PManager::getAIRadius()
     {
         return m_AIRadius;
     }
 
+    ///
+    /// \brief CP2PManager::setAIRadius
+    /// \param pAIRadius
+    ///
     void CP2PManager::setAIRadius(int pAIRadius)
     {
         if ((pAIRadius<0) || (pAIRadius>99)) return;
@@ -497,17 +562,30 @@ namespace ffs2play {
         m_AIRadius=pAIRadius;
     }
 
+    ///
+    /// \brief CP2PManager::getShadowMode
+    /// \return
+    ///
     bool CP2PManager::getShadowMode()
     {
         return m_Shadow;
     }
 
+    ///
+    /// \brief CP2PManager::setShadowMode
+    /// \param pFlag
+    ///
     void CP2PManager::setShadowMode(bool pFlag)
     {
         m_settings.setValue("P2P/ShadowEnable",pFlag);
         m_Shadow=pFlag;
     }
 
+    ///
+    /// \brief CP2PManager::getTitle
+    /// \param pPeerName
+    /// \return
+    ///
     QString CP2PManager::getTitle(const QString &pPeerName)
     {
         for (CPeer* Peer : m_peers)
@@ -520,6 +598,10 @@ namespace ffs2play {
         return "";
     }
 
+    ///
+    /// \brief CP2PManager::ResetAI
+    /// \param pPeerName
+    ///
     void CP2PManager::ResetAI(const QString &pPeerName)
     {
         for (CPeer* Peer : m_peers)
@@ -531,6 +613,11 @@ namespace ffs2play {
         }
     }
 
+    ///
+    /// \brief CP2PManager::getBlockedData
+    /// \param pPeerName
+    /// \return
+    ///
     bool CP2PManager::getBlockedData(const QString &pPeerName)
     {
         for (CPeer* Peer : m_peers)
@@ -543,6 +630,11 @@ namespace ffs2play {
         return false;
     }
 
+    ///
+    /// \brief CP2PManager::setBlockedData
+    /// \param pPeerName
+    /// \param pFlag
+    ///
     void CP2PManager::setBlockedData(const QString &pPeerName, bool pFlag)
     {
         for (CPeer* Peer : m_peers)
@@ -554,28 +646,48 @@ namespace ffs2play {
         }
     }
 
+    ///
+    /// \brief CP2PManager::getDropRateDisplay
+    /// \return
+    ///
     bool CP2PManager::getDropRateDisplay()
     {
         return m_DropRateDisplay;
     }
 
+    ///
+    /// \brief CP2PManager::setDropRateDisplay
+    /// \param pFlag
+    ///
     void CP2PManager::setDropRateDisplay(bool pFlag)
     {
         m_settings.setValue("P2P/DropRateDisplay",pFlag);
         m_DropRateDisplay=pFlag;
     }
 
+    ///
+    /// \brief CP2PManager::getSendDropRate
+    /// \return
+    ///
     bool CP2PManager::getSendDropRate()
     {
         return m_SendDropRate;
     }
 
+    ///
+    /// \brief CP2PManager::setSendDropRate
+    /// \param pFlag
+    ///
     void CP2PManager::setSendDropRate(bool pFlag)
     {
         m_settings.setValue("P2P/SendDropRate",pFlag);
         m_SendDropRate=pFlag;
     }
 
+    ///
+    /// \brief CP2PManager::onLanding
+    /// \param pVSpeed
+    ///
     void CP2PManager::onLanding(double pVSpeed)
     {
         if (m_DropRateDisplay)

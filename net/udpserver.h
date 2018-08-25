@@ -20,6 +20,12 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * udpserver.h is part of FF2Play project
+ *
+ * This class provide an udp server to receive and send data over networks
+ * **************************************************************************/
+
 #ifndef UDPSERVER_H
 #define UDPSERVER_H
 
@@ -32,26 +38,26 @@
 
 namespace ffs2play
 {
-	class UDPServer : public QObject
-	{
-		Q_OBJECT
-	private:
-		QUdpSocket*	m_pListenner;
-		CLogger*	m_log;
-		bool		m_running;
-		int			m_port;
-	public:
-					UDPServer(QObject *pParent = 0);
-					~UDPServer();
-		void		start();
-		void		stop();
-		void		setPort(int pPort);
-		void		send(const QNetworkDatagram& pData);
-	signals:
-		void		fireIncomingData (QNetworkDatagram);
-	private slots:
-		void		incomingData () ;
-	};
+    class UDPServer : public QObject
+    {
+        Q_OBJECT
+    private:
+        QUdpSocket* m_pListenner;
+        CLogger*    m_log;
+        bool        m_running;
+        int         m_port;
+    public:
+                    UDPServer(QObject *pParent = 0);
+                    ~UDPServer();
+        void        start();
+        void        stop();
+        void        setPort(int pPort);
+        void        send(const QNetworkDatagram& pData);
+    signals:
+        void        fireIncomingData (QNetworkDatagram);
+    private slots:
+        void        incomingData () ;
+    };
 }
 
 #endif // UDPSERVER_H

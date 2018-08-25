@@ -44,43 +44,43 @@ class AIReplace;
 
 namespace ffs2play
 {
-	class AIReplace : public QDialog
-	{
-		Q_OBJECT
+    class AIReplace : public QDialog
+    {
+        Q_OBJECT
 
-	public:
-		// Constructor whith QT Widget inherit
-		explicit			AIReplace(const QString& pPeer, QWidget *parent = 0);
+    public:
+        // Constructor whith QT Widget inherit
+        explicit            AIReplace(const QString& pPeer, QWidget *parent = 0);
 
-		// Destructor
-		~AIReplace();
+        // Destructor
+        ~AIReplace();
 
-	private:
+    private:
 
-		// UI Designer GUI
-		Ui::AIReplace*		ui;
+        // UI Designer GUI
+        Ui::AIReplace*      ui;
 
-		// Logger singleton instance
-		CLogger*			m_log;
+        // Logger singleton instance
+        CLogger*            m_log;
 
-		// Web Manager singleton instance
-		CP2PManager*		m_P2PManager;
+        // Web Manager singleton instance
+        CP2PManager*        m_P2PManager;
 
-		// Simulator Manager singleton instance
-		simbasemanager*		m_SimManager;
+        // Simulator Manager singleton instance
+        simbasemanager*     m_SimManager;
 
-		// Configuration file Access
-		QSettings			m_settings;
+        // Configuration file Access
+        QSettings           m_settings;
 
-		AIMapping*			m_AIMapping;
+        AIMapping*          m_AIMapping;
 
-		QString				m_Peer;
-		QString				m_ExistingRule;
+        QString             m_Peer;
+        QString             m_ExistingRule;
 
-	private slots:
-		void on_btnDeleteRule_clicked();
-		void on_btnBox_accepted();
-		void on_btnBox_rejected();
-	};
+    private slots:
+        void                on_btnDeleteRule_clicked();
+        void                on_btnBox_accepted();
+        void                on_btnBox_rejected();
+    };
 }
 #endif // DIALOGP2P_H

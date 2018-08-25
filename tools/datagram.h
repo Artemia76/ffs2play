@@ -20,6 +20,13 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * datagram.h is part of FF2Play project
+ *
+ * These functions provide standard stream conversion to work with QTStream
+ * properly
+ * **************************************************************************/
+
 #ifndef DATAGRAM_H
 #define DATAGRAM_H
 
@@ -29,9 +36,9 @@
 
 namespace ffs2play
 {
-	QString StringFromStream(QDataStream& pStream);
-	void	StringToStream(QDataStream& pStream,const QString& pString);
-	void	ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage);
+    QString StringFromStream(QDataStream& pStream);
+    void    StringToStream(QDataStream& pStream,const QString& pString);
+    void    ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage);
 }
 
 #endif // DATAGRAM_H

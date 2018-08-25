@@ -20,341 +20,434 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * simbasemanager.cpp is part of FF2Play project
+ *
+ * This singleton provide simulator manager interface
+ * It working friendly
+ * **************************************************************************/
+
 #include "simbasemanager.h"
 #include "singleton/singleton.h"
 
 namespace ffs2play
 {
-	///
-	/// \brief CSCManager::CSCManager
-	/// \param parent
-	///
-
-	simbasemanager::simbasemanager(QObject* parent):
-		QObject(parent)
-	{
-		qRegisterMetaType<SimEvent>("SimEvent");
-		qRegisterMetaType<CAircraftState>("CAircraftState");
-		qRegisterMetaType<SIM_TYPE>("SIM_TYPE");
-		m_log = CLogger::instance();
-		m_connector =nullptr;
-		m_initialized = false;
-		m_bRunning = false;
+    ///
+    /// \brief CSCManager::CSCManager
+    /// \param parent
+    ///
+    simbasemanager::simbasemanager(QObject* parent):
+        QObject(parent)
+    {
+        qRegisterMetaType<SimEvent>("SimEvent");
+        qRegisterMetaType<CAircraftState>("CAircraftState");
+        qRegisterMetaType<SIM_TYPE>("SIM_TYPE");
+        m_log = CLogger::instance();
+        m_connector =nullptr;
+        m_initialized = false;
+        m_bRunning = false;
 #ifdef Q_OS_WIN
-		m_simAvailable.append(SIM_TYPE::FSX);
+        m_simAvailable.append(SIM_TYPE::FSX);
 #endif
-		m_simAvailable.append(SIM_TYPE::XPLANE);
-		m_simAvailable.append(SIM_TYPE::FLIGHTGEAR);
-		m_settings.beginGroup("Sim");
-		m_simType = (SIM_TYPE)m_settings.value("DefaultSim",(int)m_simAvailable.first()).toInt();
-		m_settings.endGroup();
-		if (!m_simAvailable.contains(m_simType))
-		{
-			m_simType=m_simAvailable.first();
-		}
-		m_thread = new QThread();
-		//this->moveToThread(m_thread);
-		connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()),Qt::DirectConnection);
-		connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
-		load(m_simType);
-	}
+        m_simAvailable.append(SIM_TYPE::XPLANE);
+        m_simAvailable.append(SIM_TYPE::FLIGHTGEAR);
+        m_settings.beginGroup("Sim");
+        m_simType = (SIM_TYPE)m_settings.value("DefaultSim",(int)m_simAvailable.first()).toInt();
+        m_settings.endGroup();
+        if (!m_simAvailable.contains(m_simType))
+        {
+            m_simType=m_simAvailable.first();
+        }
+        m_thread = new QThread();
+        //this->moveToThread(m_thread);
+        connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()),Qt::DirectConnection);
+        connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
+        load(m_simType);
+    }
 
-	///
-	/// \brief CSCManager::createInstance
-	/// \return
-	///
+    ///
+    /// \brief CSCManager::createInstance
+    /// \return
+    ///
+    simbasemanager* simbasemanager::createInstance()
+    {
+        return new simbasemanager();
+    }
 
-	simbasemanager* simbasemanager::createInstance()
-	{
-		return new simbasemanager();
-	}
+    ///
+    /// \brief CSCManager::~CSCManager
+    ///
+    simbasemanager::~simbasemanager()
+    {
+        unload();
+    }
 
-	///
-	/// \brief CSCManager::~CSCManager
-	///
+    ///
+    /// \brief CSCManager::instance
+    /// \return
+    ///
+    simbasemanager* simbasemanager::instance()
+    {
+        return Singleton<simbasemanager>::instance(simbasemanager::createInstance);
+    }
 
-	simbasemanager::~simbasemanager()
-	{
-		unload();
-	}
-
-	///
-	/// \brief CSCManager::instance
-	/// \return
-	///
-
-	simbasemanager* simbasemanager::instance()
-	{
-		return Singleton<simbasemanager>::instance(simbasemanager::createInstance);
-	}
-
-	void simbasemanager::load(SIM_TYPE pSimType)
-	{
-		unload();
-		switch (pSimType)
-		{
+    ///
+    /// \brief simbasemanager::load
+    /// \param pSimType
+    ///
+    void simbasemanager::load(SIM_TYPE pSimType)
+    {
+        unload();
+        switch (pSimType)
+        {
 #ifdef Q_OS_WIN
-			case SIM_TYPE::FSX:
-			{
-				m_connector = new CSCManager(this);
-				break;
-			}
+            case SIM_TYPE::FSX:
+            {
+                m_connector = new CSCManager(this);
+                break;
+            }
 #endif
-			case SIM_TYPE::XPLANE:
-			{
-				m_connector = new CXPManager(this);
-				break;
-			}
+            case SIM_TYPE::XPLANE:
+            {
+                m_connector = new CXPManager(this);
+                break;
+            }
 
-			case SIM_TYPE::FLIGHTGEAR:
-			{
-				m_connector = new CFGManager(this);
-				break;
-			}
-			default:
-			{
-				return;
-			}
-		}
-		m_initialized=true;
-		connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
-		connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
-		connect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
-		connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
-		connect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-		connect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-		connect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
-		connect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
-		connect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
-		emit(loaded(m_simType));
-	}
+            case SIM_TYPE::FLIGHTGEAR:
+            {
+                m_connector = new CFGManager(this);
+                break;
+            }
+            default:
+            {
+                return;
+            }
+        }
+        m_initialized=true;
+        connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
+        connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+        connect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
+        connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
+        connect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
+        connect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+        connect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
+        connect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
+        connect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
+        emit(loaded(m_simType));
+    }
 
-	void simbasemanager::unload()
-	{
-		if (!m_initialized) return;
-		if (m_connector!=nullptr)
-		{
-			close();
-			disconnect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
-			disconnect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
-			disconnect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
-			disconnect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
-			disconnect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-			disconnect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-			disconnect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
-			disconnect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
-			disconnect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
-			delete m_connector;
-			m_connector=nullptr;
-		}
-	}
+    ///
+    /// \brief simbasemanager::unload
+    ///
+    void simbasemanager::unload()
+    {
+        if (!m_initialized) return;
+        if (m_connector!=nullptr)
+        {
+            close();
+            disconnect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
+            disconnect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
+            disconnect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
+            disconnect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
+            disconnect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
+            disconnect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+            disconnect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
+            disconnect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
+            disconnect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
+            delete m_connector;
+            m_connector=nullptr;
+        }
+    }
 
-	///
-	/// \brief CSCManager::open_close
-	///
+    ///
+    /// \brief CSCManager::open_close
+    ///
+    void simbasemanager::open_close()
+    {
+        if (!isConnected()) open();
+        else close();
+    }
 
-	void simbasemanager::open_close()
-	{
-		if (!isConnected()) open();
-		else close();
-	}
+    ///
+    /// \brief CSCManager::open
+    ///
+    void simbasemanager::open ()
+    {
+        if (!isInitialized()) return;
+        if (!m_connector->isConnected())
+        {
+            m_connector->open();
+            // Thread starting
+            m_thread->start();
+        }
+    }
 
-	///
-	/// \brief CSCManager::open
-	///
+    ///
+    /// \brief CSCManager::close
+    ///
+    void simbasemanager::close ()
+    {
+        if (!m_bRunning) return;
+        m_bRunning=false;
+        m_thread->wait(0);
+        if (m_connector->isConnected())
+        {
+            m_connector->close();
+        }
+        emit(closed());
+    }
 
-	void simbasemanager::open ()
-	{
-		if (!isInitialized()) return;
-		if (!m_connector->isConnected())
-		{
-			m_connector->open();
-			// Thread starting
-			m_thread->start();
-		}
-	}
+    ///
+    /// \brief simbasemanager::isInitialized
+    /// \return
+    ///
+    bool simbasemanager::isInitialized()
+    {
+        if (m_connector==NULL) return false;
+        return m_initialized;
+    }
 
-	///
-	/// \brief CSCManager::close
-	///
+    ///
+    /// \brief simbasemanager::isConnected
+    /// \return
+    ///
+    bool simbasemanager::isConnected()
+    {
+        if (m_connector==NULL) return false;
+        return m_connector->isConnected();
+    }
 
-	void simbasemanager::close ()
-	{
-		if (!m_bRunning) return;
-		m_bRunning=false;
-		m_thread->wait(0);
-		if (m_connector->isConnected())
-		{
-			m_connector->close();
-		}
-		emit(closed());
-	}
+    ///
+    /// \brief CSCManager::mainThread
+    ///
+    void simbasemanager::mainThread()
+    {
+        m_bRunning=true;
+        while (m_bRunning)
+        {
+            m_connector->main_loop();
+            //QApplication::processEvents();
+            m_thread->msleep(1);
+        }
+        emit(finished());
+    }
 
-	bool simbasemanager::isInitialized()
-	{
-		if (m_connector==NULL) return false;
-		return m_initialized;
-	}
+    ///
+    /// \brief simbasemanager::getAircraftState
+    /// \return
+    ///
+    const CAircraftState simbasemanager::getAircraftState()
+    {
+        CAircraftState State;
+        if (m_initialized && (m_connector!=NULL))
+            State = m_connector->getState();
+        return State;
+    }
 
-	bool simbasemanager::isConnected()
-	{
-		if (m_connector==NULL) return false;
-		return m_connector->isConnected();
-	}
+    ///
+    /// \brief simbasemanager::sendScrollingText
+    /// \param pMessage
+    ///
+    void simbasemanager::sendScrollingText(const QString &pMessage)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            m_connector->sendScrollingText(pMessage);
+        }
+    }
 
-	///
-	/// \brief CSCManager::mainThread
-	///
+    ///
+    /// \brief simbasemanager::getVersion
+    /// \return
+    ///
+    SimConnector::SIM_VERSION simbasemanager::getVersion()
+    {
+        SimConnector::SIM_VERSION Version = SimConnector::SIM_VERSION::UNKNOWN;
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            Version = m_connector->getVersion();
+        }
+        return Version;
+    }
 
-	void simbasemanager::mainThread()
-	{
-		m_bRunning=true;
-		while (m_bRunning)
-		{
-			m_connector->main_loop();
-			//QApplication::processEvents();
-			m_thread->msleep(1);
-		}
-		emit(finished());
-	}
+    ///
+    /// \brief simbasemanager::getType
+    /// \return
+    ///
+    SIM_TYPE simbasemanager::getType()
+    {
+        return m_simType;
+    }
 
-	///
-	/// \brief simbasemanager::getAircraftState
-	/// \return
-	///
+    ///
+    /// \brief simbasemanager::getSimList
+    /// \return
+    ///
+    const QList<SIM_TYPE>& simbasemanager::getSimList()
+    {
+        return m_simAvailable;
+    }
 
-	const CAircraftState simbasemanager::getAircraftState()
-	{
-		CAircraftState State;
-		if (m_initialized && (m_connector!=NULL))
-			State = m_connector->getState();
-		return State;
-	}
+    ///
+    /// \brief simbasemanager::setSimType
+    /// \param pSimType
+    ///
+    void simbasemanager::setSimType(SIM_TYPE pSimType)
+    {
+        if (!m_simAvailable.contains(pSimType)) return;
+        m_simType = pSimType;
+        m_settings.beginGroup("Sim");
+        m_settings.setValue("DefaultSim",(int)m_simType);
+        m_settings.endGroup();
+        if (m_initialized) load(m_simType);
+    }
 
-	///
-	/// \brief simbasemanager::sendScrollingText
-	/// \param pMessage
-	///
+    ///
+    /// \brief simbasemanager::createAI
+    /// \param pAircraft
+    /// \param pTail
+    /// \param pData
+    /// \param pNonAIObject
+    /// \return
+    ///
+    bool simbasemanager::createAI(AIResol& pAircraft, const QString& pTail, const CAircraftState& pData,bool pNonAIObject)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            return m_connector->createAI(pAircraft,pTail,pData,pNonAIObject);
+        }
+        return false;
+    }
 
-	void simbasemanager::sendScrollingText(const QString &pMessage)
-	{
-		if (m_initialized && (m_connector!=nullptr))
-		{
-			m_connector->sendScrollingText(pMessage);
-		}
-	}
+    ///
+    /// \brief simbasemanager::updateAI
+    /// \param pObjectID
+    /// \param pData
+    /// \return
+    ///
+    bool simbasemanager::updateAI(uint pObjectID, const CAircraftState &pData)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            return m_connector->updateAI(pObjectID,pData);
+        }
+        return false;
+    }
 
-	SimConnector::SIM_VERSION simbasemanager::getVersion()
-	{
-		SimConnector::SIM_VERSION Version = SimConnector::SIM_VERSION::UNKNOWN;
-		if (m_initialized && (m_connector!=nullptr))
-		{
-			Version = m_connector->getVersion();
-		}
-		return Version;
-	}
+    ///
+    /// \brief simbasemanager::removeAI
+    /// \param pObjectID
+    /// \return
+    ///
+    bool simbasemanager::removeAI(uint& pObjectID)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            return m_connector->removeAI(pObjectID);
+        }
+        return false;
+    }
 
-	SIM_TYPE simbasemanager::getType()
-	{
-		return m_simType;
-	}
+    ///
+    /// \brief simbasemanager::freezeAI
+    /// \param pObjectID
+    /// \param pState
+    ///
+    void simbasemanager::freezeAI(uint pObjectID, bool pState)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            m_connector->freezeAI(pObjectID,pState);
+        }
+    }
 
-	const QList<SIM_TYPE>& simbasemanager::getSimList()
-	{
-		return m_simAvailable;
-	}
+    ///
+    /// \brief simbasemanager::OnSimVariableEvent
+    /// \param pState
+    ///
+    void simbasemanager::OnSimVariableEvent(CAircraftState pState)
+    {
+        emit(fireSimVariableEvent(pState));
+    }
 
-	void simbasemanager::setSimType(SIM_TYPE pSimType)
-	{
-		if (!m_simAvailable.contains(pSimType)) return;
-		m_simType = pSimType;
-		m_settings.beginGroup("Sim");
-		m_settings.setValue("DefaultSim",(int)m_simType);
-		m_settings.endGroup();
-		if (m_initialized) load(m_simType);
-	}
+    ///
+    /// \brief simbasemanager::OnSimEvent
+    /// \param pEvent
+    ///
+    void simbasemanager::OnSimEvent(SimEvent pEvent)
+    {
+        emit(fireSimEvent(pEvent));
+    }
 
-	bool simbasemanager::createAI(AIResol& pAircraft, const QString& pTail, const CAircraftState& pData,bool pNonAIObject)
-	{
-		if (m_initialized && (m_connector!=nullptr))
-		{
-			return m_connector->createAI(pAircraft,pTail,pData,pNonAIObject);
-		}
-		return false;
-	}
+    ///
+    /// \brief simbasemanager::OnSimAICreated
+    /// \param pTail
+    /// \param pObjectID
+    ///
+    void simbasemanager::OnSimAICreated(QString pTail, uint pObjectID)
+    {
+        emit(fireSimAICreated(pTail,pObjectID));
+    }
 
-	bool simbasemanager::updateAI(uint pObjectID, const CAircraftState &pData)
-	{
-		if (m_initialized && (m_connector!=nullptr))
-		{
-			return m_connector->updateAI(pObjectID,pData);
-		}
-		return false;
-	}
+    ///
+    /// \brief simbasemanager::OnSimAIUpdated
+    /// \param pAIData
+    /// \param pObjectID
+    ///
+    void simbasemanager::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
+    {
+        emit(fireSimAIUpdated(pAIData,pObjectID));
+    }
 
-	bool simbasemanager::removeAI(uint& pObjectID)
-	{
-		if (m_initialized && (m_connector!=nullptr))
-		{
-			return m_connector->removeAI(pObjectID);
-		}
-		return false;
-	}
+    ///
+    /// \brief simbasemanager::OnSimAIRemoved
+    /// \param pObjectID
+    ///
+    void simbasemanager::OnSimAIRemoved(uint pObjectID)
+    {
+        emit(fireSimAIRemoved(pObjectID));
+    }
 
-	void simbasemanager::freezeAI(uint pObjectID, bool pState)
-	{
-		if (m_initialized && (m_connector!=nullptr))
-		{
-			m_connector->freezeAI(pObjectID,pState);
-		}
-	}
+    ///
+    /// \brief simbasemanager::OnSimEventFrame
+    /// \param pFramRate
+    /// \param SimSpeed
+    ///
+    void simbasemanager::OnSimEventFrame(float pFramRate, float SimSpeed)
+    {
+        emit(fireSimEventFrame(pFramRate, SimSpeed));
+    }
 
-	void simbasemanager::OnSimVariableEvent(CAircraftState pState)
-	{
-		emit(fireSimVariableEvent(pState));
-	}
+    ///
+    /// \brief simbasemanager::OnSimConnected
+    ///
+    void simbasemanager::OnSimConnected()
+    {
+        emit(opened());
+    }
 
-	void simbasemanager::OnSimEvent(SimEvent pEvent)
-	{
-		emit(fireSimEvent(pEvent));
-	}
+    ///
+    /// \brief simbasemanager::OnSimDisconnected
+    ///
+    void simbasemanager::OnSimDisconnected()
+    {
+        close();
+    }
 
-	void simbasemanager::OnSimAICreated(QString pTail, uint pObjectID)
-	{
-		emit(fireSimAICreated(pTail,pObjectID));
-	}
+    ///
+    /// \brief simbasemanager::OnSimTimedOut
+    ///
+    void simbasemanager::OnSimTimedOut()
+    {
+        m_log->log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
+        close();
+    }
 
-	void simbasemanager::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
-	{
-		emit(fireSimAIUpdated(pAIData,pObjectID));
-	}
-
-	void simbasemanager::OnSimAIRemoved(uint pObjectID)
-	{
-		emit(fireSimAIRemoved(pObjectID));
-	}
-
-	void simbasemanager::OnSimEventFrame(float pFramRate, float SimSpeed)
-	{
-		emit(fireSimEventFrame(pFramRate, SimSpeed));
-	}
-
-	void simbasemanager::OnSimConnected()
-	{
-		emit(opened());
-	}
-
-	void simbasemanager::OnSimDisconnected()
-	{
-		close();
-	}
-
-	void simbasemanager::OnSimTimedOut()
-	{
-		m_log->log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
-		close();
-	}
-
+    ///
+    /// \brief simbasemanager::setOptionChange
+    /// \param pOption
+    /// \param pFlag
+    ///
     void simbasemanager::setOptionChange(SimOption pOption,bool pFlag)
     {
         if (m_initialized && (m_connector!=nullptr))
@@ -363,6 +456,11 @@ namespace ffs2play
         }
     }
 
+    ///
+    /// \brief simbasemanager::getOption
+    /// \param pOption
+    /// \return
+    ///
     bool simbasemanager::getOption(SimOption pOption)
     {
         if (m_initialized && (m_connector!=nullptr))

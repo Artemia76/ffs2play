@@ -78,6 +78,7 @@ UI_DIR = gui
 SOURCES +=      main.cpp \
                 gui/dialogprofils.cpp \
                 gui/mainwindow.cpp \
+                gui/mainwindow.GuiEvents.cpp \
                 gui/dialogp2p.cpp \
                 gui/aireplace.cpp \
                 net/chttprequest.cpp \
@@ -90,6 +91,7 @@ SOURCES +=      main.cpp \
                 sim/xpmanager.cpp \
                 sim/fgmanager.cpp \
                 singleton/aimapping.cpp \
+                singleton/analyzer.cpp \
                 singleton/clogger.cpp \
                 singleton/p2pmanager.cpp \
                 singleton/simbasemanager.cpp \
@@ -97,13 +99,12 @@ SOURCES +=      main.cpp \
                 singleton/webmanager.cpp \
                 singleton/webmanager.Requests.cpp \
                 singleton/webmanager.Utils.cpp \
-                tools/crypto.cpp \
-                tools/getappversion.cpp \
-                tools/datetime.cpp \
                 tools/calculation.cpp \
+                tools/crypto.cpp \
                 tools/datagram.cpp \
+                tools/datetime.cpp \
+                tools/getappversion.cpp \
                 tools/iniparser.cpp \
-                singleton/analyzer.cpp
 win32 {
 SOURCES +=      sim/scmanager.cpp
 }
@@ -120,29 +121,29 @@ HEADERS  +=     gui/dialogprofils.h \
                 sim/xpmanager.h \
                 sim/fgmanager.h \
                 singleton/aimapping.h \
+                singleton/analyzer.h \
                 singleton/call_once.h \
                 singleton/clogger.h \
                 singleton/p2pmanager.h \
                 singleton/simbasemanager.h \
                 singleton/singleton.h \
                 singleton/webmanager.h \
+                tools/calculation.h \
                 tools/crypto.h \
+                tools/datagram.h \
                 tools/datetime.h \
                 tools/getappversion.h \
-                tools/version.h \
-                tools/calculation.h \
-                tools/datagram.h \
                 tools/iniparser.h \
-                singleton/analyzer.h
+                tools/version.h
 
 win32 {
 HEADERS +=      sim/scmanager.h
 }
 
-FORMS +=        gui/dialogprofils.ui \
-                gui/mainwindow.ui \
+FORMS +=        gui/aireplace.ui \
                 gui/dialogp2p.ui \
-                gui/aireplace.ui
+                gui/dialogprofils.ui \
+                gui/mainwindow.ui
 
 TRANSLATIONS += intl/ffs2play_fr_FR.ts
 
@@ -211,7 +212,8 @@ win {
 
 DISTFILES += \
     README.md \
-    ffs2play.iss
+    ffs2play.iss \
+    gui/ffs2play.qss
 
 
 isEmpty(TARGET_EXT) {

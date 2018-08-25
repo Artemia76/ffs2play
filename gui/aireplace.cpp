@@ -37,78 +37,81 @@
 
 namespace ffs2play
 {
-	///
-	/// \brief DialogBox constructor
-	/// \param parent
-	///
-	/// Constructor read users list previously loaded by webmanager constructor
-	/// Then it sync the List Widget with profil name as key
-	///
+    ///
+    /// \brief DialogBox constructor
+    /// \param parent
+    ///
+    /// Constructor read users list previously loaded by webmanager constructor
+    /// Then it sync the List Widget with profil name as key
+    ///
+    AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::AIReplace)
+    {
+        // Init GUI Part
+        ui->setupUi(this);
 
-	AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
-		QDialog(parent),
-		ui(new Ui::AIReplace)
-	{
-		// Init GUI Part
-		ui->setupUi(this);
+        // Get Logger instance
+        m_log = CLogger::instance();
 
-		// Get Logger instance
-		m_log = CLogger::instance();
+        // Get P2PManager instance
+        m_P2PManager = CP2PManager::instance();
 
-		// Get P2PManager instance
-		m_P2PManager = CP2PManager::instance();
+        // Get AIMapping instance
+        m_AIMapping = AIMapping::instance();
 
-		// Get AIMapping instance
-		m_AIMapping = AIMapping::instance();
+        // Get SimManager instance
+        m_SimManager = simbasemanager::instance();
 
-		// Get SimManager instance
-		m_SimManager = simbasemanager::instance();
+        m_Peer = pPeer;
+        QString RemoteAI = m_P2PManager->getTitle(m_Peer);
+        ui->leOriginal->setText(RemoteAI);
+        ui->cbReplacement->addItems(m_AIMapping->getAITitreDispo("*","*","*","*"));
+        m_ExistingRule = m_AIMapping->getRule(RemoteAI);
+        if (m_ExistingRule != "")
+        {
+            ui->cbReplacement->setCurrentIndex(ui->cbReplacement->findText(m_ExistingRule));
+            ui->btnDeleteRule->setVisible(true);
+        }
+        else
+        {
+            int index =ui->cbReplacement->findText(RemoteAI);
+            if (index>-1)
+            {
+                ui->cbReplacement->setCurrentIndex(index);
+            }
+            ui->btnDeleteRule->setVisible(false);
+        }
+    }
 
-		m_Peer = pPeer;
-		QString RemoteAI = m_P2PManager->getTitle(m_Peer);
-		ui->leOriginal->setText(RemoteAI);
-		ui->cbReplacement->addItems(m_AIMapping->getAITitreDispo("*","*","*","*"));
-		m_ExistingRule = m_AIMapping->getRule(RemoteAI);
-		if (m_ExistingRule != "")
-		{
-			ui->cbReplacement->setCurrentIndex(ui->cbReplacement->findText(m_ExistingRule));
-			ui->btnDeleteRule->setVisible(true);
-		}
-		else ui->btnDeleteRule->setVisible(false);
-        ui->cbReplacement->setStyleSheet("color: white;"
-                                         "background-color: rgb(104,125,135);"
-                                         "selection-color: white;"
-                                         "selection-background-color: blue;");
-	}
+    ///
+    /// \brief AIReplace::~AIReplace
+    ///
+    /// Destructor
+    ///
+    AIReplace::~AIReplace()
+    {
+        delete ui;
+    }
 
-	///
-	/// \brief AIReplace::~AIReplace
-	///
-	/// Destructor
-	///
+    ///
+    /// \brief AIReplace::on_btnDeleteRule_clicked
+    ///
+    void AIReplace::on_btnDeleteRule_clicked()
+    {
+        m_AIMapping->delRule(ui->leOriginal->text());
+        ui->btnDeleteRule->setVisible(false);
+    }
 
-	AIReplace::~AIReplace()
-	{
-		delete ui;
-	}
-}
-
-void ffs2play::AIReplace::on_btnDeleteRule_clicked()
-{
-	m_AIMapping->delRule(ui->leOriginal->text());
-	ui->btnDeleteRule->setVisible(false);
-}
-
-void ffs2play::AIReplace::on_btnBox_accepted()
-{
-	if (m_ExistingRule != ui->cbReplacement->currentText())
-	{
-		m_AIMapping->addRule(ui->leOriginal->text(),ui->cbReplacement->currentText());
-		m_P2PManager->ResetAI(m_Peer);
-	}
-}
-
-void ffs2play::AIReplace::on_btnBox_rejected()
-{
-
+    ///
+    /// \brief AIReplace::on_btnBox_accepted
+    ///
+    void AIReplace::on_btnBox_accepted()
+    {
+        if (m_ExistingRule != ui->cbReplacement->currentText())
+        {
+            m_AIMapping->addRule(ui->leOriginal->text(),ui->cbReplacement->currentText());
+            m_P2PManager->ResetAI(m_Peer);
+        }
+    }
 }

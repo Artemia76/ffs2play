@@ -20,29 +20,52 @@
 ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ****************************************************************************/
 
+/****************************************************************************
+ * simconnector.cpp is part of FF2Play project
+ *
+ * This is the simulator abstractive class use to define a standard base for
+ * all simulators
+ * **************************************************************************/
+
 #include "simconnector.h"
 
 namespace ffs2play
 {
-	SimConnector::SimConnector(QObject *parent) : QObject(parent)
-	{
-		m_log=CLogger::instance();
-		m_connected = false;
+    ///
+    /// \brief SimConnector::SimConnector
+    /// \param parent
+    ///
+    SimConnector::SimConnector(QObject *parent) : QObject(parent)
+    {
+        m_log=CLogger::instance();
+        m_connected = false;
         m_settings.beginGroup("Sim");
         m_options = m_settings.value("EnableDisplayCallSign",0x00000001).toUInt();
         m_settings.endGroup();
-	}
+    }
 
-	SimConnector::~SimConnector()
-	{
+    ///
+    /// \brief SimConnector::~SimConnector
+    ///
+    SimConnector::~SimConnector()
+    {
 
-	}
+    }
 
-	bool SimConnector::isConnected()
-	{
-		return m_connected;
-	}
+    ///
+    /// \brief SimConnector::isConnected
+    /// \return
+    ///
+    bool SimConnector::isConnected()
+    {
+        return m_connected;
+    }
 
+    ///
+    /// \brief SimConnector::setOptionChange
+    /// \param pOption
+    /// \param pFlag
+    ///
     void SimConnector::setOptionChange(SimOption pOption,bool pFlag)
     {
         quint32 mask = (quint32)pOption;
@@ -60,17 +83,26 @@ namespace ffs2play
         sendOptions();
     }
 
+    ///
+    /// \brief SimConnector::getOption
+    /// \param pOption
+    /// \return
+    ///
     bool SimConnector::getOption(SimOption pOption)
     {
         return (m_options & (quint32)pOption) > 0;
     }
 
-	CAircraftState SimConnector::getState()
-	{
-		CAircraftState state;
-		m_Mutex.lock();
-		state=m_state;
-		m_Mutex.unlock();
-		return state;
-	}
+    ///
+    /// \brief SimConnector::getState
+    /// \return
+    ///
+    CAircraftState SimConnector::getState()
+    {
+        CAircraftState state;
+        m_Mutex.lock();
+        state=m_state;
+        m_Mutex.unlock();
+        return state;
+    }
 }

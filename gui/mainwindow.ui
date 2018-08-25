@@ -16,241 +16,12 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="palette">
-   <palette>
-    <active>
-     <colorrole role="Button">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Light">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>184</red>
-        <green>227</green>
-        <blue>255</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Midlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>127</red>
-        <green>179</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Base">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Window">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Highlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>134</red>
-        <green>171</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="AlternateBase">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>127</red>
-        <green>179</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="NoRole">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>184</red>
-        <green>227</green>
-        <blue>255</blue>
-       </color>
-      </brush>
-     </colorrole>
-    </active>
-    <inactive>
-     <colorrole role="Button">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Light">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>184</red>
-        <green>227</green>
-        <blue>255</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Midlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>127</red>
-        <green>179</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Base">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Window">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Highlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>112</red>
-        <green>153</green>
-        <blue>204</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="AlternateBase">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>127</red>
-        <green>179</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="NoRole">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>184</red>
-        <green>227</green>
-        <blue>255</blue>
-       </color>
-      </brush>
-     </colorrole>
-    </inactive>
-    <disabled>
-     <colorrole role="Button">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Light">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>184</red>
-        <green>227</green>
-        <blue>255</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Midlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>127</red>
-        <green>179</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Base">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Window">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>189</red>
-        <green>227</green>
-        <blue>248</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="Highlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>127</red>
-        <green>179</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="AlternateBase">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>127</red>
-        <green>179</green>
-        <blue>217</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="NoRole">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>184</red>
-        <green>227</green>
-        <blue>255</blue>
-       </color>
-      </brush>
-     </colorrole>
-    </disabled>
-   </palette>
-  </property>
   <property name="windowTitle">
    <string>FFS2Play</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../ressources.qrc">
     <normaloff>:/gfx/plane.png</normaloff>:/gfx/plane.png</iconset>
-  </property>
-  <property name="styleSheet">
-   <string notr="true">Background:#bde3f8;</string>
   </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
@@ -280,10 +51,6 @@
   <widget class="QToolBar" name="mainToolBar">
    <property name="windowTitle">
     <string>Tool Bar</string>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">Background : #7fb3d9;
-border : none</string>
    </property>
    <property name="allowedAreas">
     <set>Qt::AllToolBarAreas</set>
@@ -365,9 +132,6 @@ border : none</string>
        <property name="columnCount">
         <number>1</number>
        </property>
-       <attribute name="verticalHeaderDefaultSectionSize">
-        <number>20</number>
-       </attribute>
        <row>
         <property name="text">
          <string>Title</string>
