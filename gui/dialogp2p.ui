@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>DialogP2P</class>
  <widget class="QDialog" name="DialogP2P">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>792</width>
+    <height>560</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>P2P Settings</string>
   </property>
@@ -299,6 +307,12 @@
    </item>
    <item row="0" column="1" rowspan="2">
     <widget class="QGroupBox" name="gbSearchFolder">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
       <string>AI Folders</string>
      </property>
@@ -308,6 +322,18 @@
       </item>
       <item row="0" column="1">
        <widget class="QWidget" name="verticalWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
           <widget class="QPushButton" name="btnAddItem">
@@ -322,7 +348,7 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>84</width>
+             <width>30</width>
              <height>30</height>
             </size>
            </property>
@@ -330,6 +356,12 @@
             <size>
              <width>30</width>
              <height>30</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>30</width>
+             <height>0</height>
             </size>
            </property>
            <property name="text">
@@ -350,7 +382,7 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>84</width>
+             <width>30</width>
              <height>30</height>
             </size>
            </property>

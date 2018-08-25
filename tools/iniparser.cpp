@@ -114,7 +114,7 @@ namespace ffs2play
     /// \param pDefaultValue
     /// \return
     ///
-    QVariant IniParser::value(const QString& pGroup, const QString& pParameter, const QVariant& pDefaultValue) const
+    QVariant IniParser::value(const QString& pGroup, const QString& pParameter, const QVariant& /*pDefaultValue*/) const
     {
         QVariant Result;
         Result.setValue(QString(""));

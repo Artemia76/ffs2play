@@ -26,16 +26,10 @@
  * This class define the main window of the application
  * **************************************************************************/
 
-#include <QByteArray>
 #include <QMessageBox>
-#include <QMenu>
-#include <QFileDialog>
+#include <QByteArray>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dialogprofils.h"
-#include "dialogp2p.h"
-#include "aireplace.h"
-#include "tools/getappversion.h"
 
 namespace ffs2play
 {

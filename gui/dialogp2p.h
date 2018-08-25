@@ -50,7 +50,7 @@ namespace ffs2play
 
     public:
         // Constructor whith QT Widget inherit
-        explicit			DialogP2P(QWidget *parent = 0);
+        explicit            DialogP2P(QWidget *parent = 0);
 
         // Destructor
         ~DialogP2P();
@@ -58,48 +58,45 @@ namespace ffs2play
     private:
 
         // UI Designer GUI
-        Ui::DialogP2P*		ui;
+        Ui::DialogP2P*      ui;
 
         // Logger singleton instance
-        CLogger*			m_log;
+        CLogger*            m_log;
 
         // Web Manager singleton instance
-        CP2PManager*		m_P2PManager;
+        CP2PManager*        m_P2PManager;
 
         // Simulator Manager singleton instance
-        simbasemanager*		m_SimManager;
+        simbasemanager*     m_SimManager;
 
         // Configuration file Access
-        QSettings			m_settings;
+        QSettings           m_settings;
 
-        AIMapping*			m_AIMapping;
+        AIMapping*          m_AIMapping;
 
         // Flag to memorize if something is changed on current profil edition
-        bool				m_changed;
-        bool				m_needP2PRestart;
-        bool				m_needDBReload;
+        bool                m_changed;
+        bool                m_needP2PRestart;
+        bool                m_needDBReload;
 
-        void				checkIfChanged();
-
-        void				applyChangedItem();
+        void                checkIfChanged();
+        void                applyChangedItem();
 
     private slots:
-
-        // Button in ButtonBox is clicked
-        void				on_buttonBox_clicked(QAbstractButton* button);
-        void				on_cbShadow_stateChanged(int);
-        void				on_cbInfoSim_stateChanged(int);
-        void				on_numP2PTx_valueChanged(int);
-        void				on_cbUPNP_stateChanged(int);
-        void				on_cbBeta_stateChanged(int);
-        void				on_btnAddItem_released();
-        void				on_btnDelItem_released();
-        void				on_numPort_valueChanged(int);
-        void				on_numAIRadius_valueChanged(int);
-        void				on_numAILimit_valueChanged(int);
-        void on_cbEnableCallsign_stateChanged(int arg1);
-        void on_cbDropRateDisp_stateChanged(int arg1);
-        void on_cbSendDropRate_stateChanged(int arg1);
+        void                on_buttonBox_clicked(QAbstractButton* button);
+        void                on_cbShadow_stateChanged(int);
+        void                on_cbInfoSim_stateChanged(int);
+        void                on_numP2PTx_valueChanged(int);
+        void                on_cbUPNP_stateChanged(int);
+        void                on_cbBeta_stateChanged(int);
+        void                on_btnAddItem_released();
+        void                on_btnDelItem_released();
+        void                on_numPort_valueChanged(int);
+        void                on_numAIRadius_valueChanged(int);
+        void                on_numAILimit_valueChanged(int);
+        void                on_cbEnableCallsign_stateChanged(int arg1);
+        void                on_cbDropRateDisp_stateChanged(int arg1);
+        void                on_cbSendDropRate_stateChanged(int arg1);
     };
 }
 #endif // DIALOGP2P_H
