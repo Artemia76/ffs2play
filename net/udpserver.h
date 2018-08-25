@@ -49,7 +49,7 @@ namespace ffs2play
     public:
                     UDPServer(QObject *pParent = 0);
                     ~UDPServer();
-        void        start();
+        bool        start();
         void        stop();
         void        setPort(int pPort);
         void        send(const QNetworkDatagram& pData);

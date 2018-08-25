@@ -27,7 +27,12 @@
  * It use the abastractive SimConnector
  * **************************************************************************/
 
+#include <QDataStream>
+#include <QNetworkDatagram>
+
 #include "fgmanager.h"
+
+#include "tools/datagram.h"
 
 namespace ffs2play
 {
@@ -38,8 +43,12 @@ namespace ffs2play
     CFGManager::CFGManager(QObject* parent):
         SimConnector(parent)
     {
-        m_log->log("FGManager : " + tr("FlightGear Module loaded"));
+        m_LocalPort=5000;
+        m_FGPort=0;
+        m_Server = new UDPServer(this);
+        connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
         connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
+        m_log->log("FGManager : " + tr("FlightGear Module loaded"));
     }
 
     ///
@@ -48,6 +57,7 @@ namespace ffs2play
     CFGManager::~CFGManager()
     {
         close();
+        m_Server->stop();
         m_log->log("FGManager : " + tr("FlightGear Module unloaded"));
     }
 
@@ -59,7 +69,14 @@ namespace ffs2play
         if (!m_connected)
         {
             m_log->log(tr("Connecting to FlightGear ..."));
-            m_PingTimer.start(5000);
+            m_Server->setPort(m_LocalPort);
+            m_PingTimer.start(500);
+            if (m_Server->start())
+            {
+                m_connected=true;
+                m_log->log(tr("Connected to FlightGear."));
+                emit(fireSimConnected());
+            }
         }
     }
 
@@ -70,6 +87,9 @@ namespace ffs2play
     {
         if (m_connected)
         {
+            m_PingTimer.stop();
+            m_Server->stop();
+            sendDisc();
             m_connected=false;
             m_log->log(tr("Disconnected from FlightGear."));
         }
@@ -144,17 +164,132 @@ namespace ffs2play
     }
 
     ///
+    /// \brief CFGManager::sendPing
+    ///
+    void CFGManager::sendPing()
+    {
+#ifdef FFS_DEBUG
+        m_log->log("FGManager : " + tr("Send PING"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+        /*QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        stream << (quint8)PING;
+        stream << (quint32)m_options;
+        QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+        m_Server->send(Output);*/
+    }
+
+    ///
+    /// \brief CFGManager::sendData
+    ///
+    void CFGManager::sendData()
+    {
+        if (m_connected)
+        {
+#ifdef FFS_DEBUG
+            m_log->log("FGManager : " + tr("Send DATA"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+            /*QByteArray Data;
+            QDataStream stream(&Data,QIODevice::WriteOnly);
+            stream << (quint8)DATA;
+            stream << (quint8)pFlag;
+            QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+            m_Server->send(Output);*/
+        }
+    }
+
+    ///
+    /// \brief CFGManager::sendDisc
+    ///
+    void CFGManager::sendDisc()
+    {
+        /*QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream << (quint8)DISC;
+        QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+        m_Server->send(Output);*/
+    }
+
+    ///
+    /// \brief CXPManager::OnReceiveDatagram
+    ///
+    void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
+    {
+        m_FGAddress = datagram.senderAddress();
+        m_FGPort = datagram.senderPort();
+        QByteArray data(datagram.data());
+        QDataStream stream(&data,QIODevice::ReadOnly);
+        // Reading Header
+        quint32 Magic;
+        stream >> Magic;
+        quint32 Version;
+        stream >> Version;
+        quint32 MsgId;
+        stream >> MsgId;
+        quint32 MsgLen;
+        stream >> MsgLen;
+        quint32 Requested_Visibility;
+        stream >> Requested_Visibility;
+        quint32 Replyport;
+        stream >> Replyport;
+        QString CallSign = CStringFromStream(stream,8);
+#ifdef FFS_DEBUG
+        m_log->log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
+                Magic,
+                Version,
+                MsgId,
+                MsgLen,
+                Requested_Visibility,
+                Replyport) + CallSign,
+            Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+        switch ((FGProto)MsgId)
+        {
+            case FGProto::CHAT:
+            {
+                QString Message = CStringFromStream(stream,MsgLen);
+#ifdef FFS_DEBUG
+                m_log->log("FGManager : " + tr("Received Tchat from FG : ") + Message, Qt::darkBlue,LEVEL_NORMAL);
+#endif
+                break;
+            }
+            case FGProto::DATA:
+            {
+                QString ModelName = CStringFromStream(stream,96);
+                double Time,Lag,PosX,PosY,PosZ;
+                float OriX,OriY,OriZ,VelX,VelY,VelZ,AV1,AV2,AV3,LA1,LA2,LA3,AA1,AA2,AA3;
+                stream >> Time;
+                stream >> Lag;
+                stream >> PosX;
+                stream >> PosY;
+                stream >> PosZ;
+        #ifdef FFS_DEBUG
+                m_log->log("FGManager : " + tr("Received Data from FG : Model = ") +
+                ModelName +
+                " , Time = " + QString::number(Time) +
+                " , Lag = " + QString::number(Lag) +
+                " , PosX = " + QString::number(PosX) +
+                " , PosY = " + QString::number(PosY) +
+                " , PosZ = " + QString::number(PosZ)
+                , Qt::darkBlue,LEVEL_VERBOSE);
+        #endif
+            }
+        }
+    }
+
+    ///
     /// \brief CFGManager::OnPingTimer
     ///
     void CFGManager::OnPingTimer()
     {
         if (m_connected)
         {
-            if(timespan(Now() - m_LastPong).count()>10000)
+            /*if(timespan(Now() - m_LastPong).count()>10000)
             {
                 close();
                 emit(fireSimTimedOut());
-            }
+            }*/
             //else sendPing();
         }
         else

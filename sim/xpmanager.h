@@ -68,11 +68,11 @@ namespace ffs2play
         quint16         m_DestPort;
         quint16         m_LocalPort;
         datetime        m_LastPong;
-        UDPServer*      Server;
-        AirData         PlayerData;
+        UDPServer*      m_Server;
+        AirData         m_PlayerData;
         QTimer          m_PingTimer;
         QHostAddress    m_XPPlugin;
-        AirData         SendData;
+        AirData         m_SendData;
 
     protected:
         void            open();

@@ -62,16 +62,24 @@ namespace ffs2play
     ///
     /// \brief UDPServer::start
     ///
-    void UDPServer::start ()
+    bool UDPServer::start ()
     {
         if ((!m_running) && (m_pListenner!=NULL))
         {
             if (m_pListenner->isOpen()) stop();
             m_running = m_pListenner->bind (QHostAddress::AnyIPv4, m_port);
+            if (m_running)
+            {
 #ifdef FFS_DEBUG
-            m_log->log("UPDServer : " + tr("listenning on port ") + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
+                m_log->log("UPDServer : " + tr("listenning on port ") + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
 #endif
+            }
+            else
+            {
+                m_log->log("UDPServer : " + tr("Failed to open UDP port ") + QString::number(m_port), Qt::darkMagenta);
+            }
         }
+        return m_running;
     }
 
     ///

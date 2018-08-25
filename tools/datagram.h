@@ -37,8 +37,9 @@
 namespace ffs2play
 {
     QString StringFromStream(QDataStream& pStream);
-    void    StringToStream(QDataStream& pStream,const QString& pString);
-    void    ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage);
+    void StringToStream(QDataStream& pStream,const QString& pString);
+    void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage);
+    QString CStringFromStream(QDataStream& pStream, size_t pLen);
 }
 
 #endif // DATAGRAM_H

@@ -50,11 +50,11 @@ namespace ffs2play
         m_XPPlugin.setAddress("127.0.0.1");
         m_LocalPort=47600;
         m_DestPort=47500;
-        Server = new UDPServer(this);
-        connect (Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
+        m_Server = new UDPServer(this);
+        connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
         connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
-        Server->setPort(m_LocalPort);
-        Server->start();
+        m_Server->setPort(m_LocalPort);
+        m_Server->start();
         m_log->log("XPManager : " + tr("XPlane Module loaded"));
     }
 
@@ -64,7 +64,7 @@ namespace ffs2play
     CXPManager::~CXPManager()
     {
         close();
-        Server->stop();
+        m_Server->stop();
         m_log->log("XPManager : " + tr("XPlane Module unloaded"));
         //delete Server;
     }
@@ -138,12 +138,12 @@ namespace ffs2play
 #endif
             QByteArray Data;
             QDataStream stream(&Data,QIODevice::WriteOnly);
-            pData.toAirData(SendData);
+            pData.toAirData(m_SendData);
             stream << (quint8)ADD_PEER;
             StringToStream(stream,pTail);
             ProtobufToStream(stream,pAircraft);
             QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-            Server->send(Output);
+            m_Server->send(Output);
             return true;
         }
         return false;
@@ -166,7 +166,7 @@ namespace ffs2play
             stream << (quint8)DEL_PEER;
             stream << pObjectID;
             QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-            Server->send(Output);
+            m_Server->send(Output);
             pObjectID = 0;
             return true;
         }
@@ -191,10 +191,10 @@ namespace ffs2play
             stream.setByteOrder(QDataStream::LittleEndian);
             stream << (quint8)DATA_SEND;
             stream << pObjectID;
-            pData.toAirData(SendData);
-            ProtobufToStream(stream,SendData);
+            pData.toAirData(m_SendData);
+            ProtobufToStream(stream,m_SendData);
             QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-            Server->send(Output);
+            m_Server->send(Output);
             return true;
         }
         return false;
@@ -227,7 +227,7 @@ namespace ffs2play
         stream << (quint8)PING;
         stream << (quint32)m_options;
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        Server->send(Output);
+        m_Server->send(Output);
     }
 
     ///
@@ -246,7 +246,7 @@ namespace ffs2play
             stream << (quint8)DATA;
             stream << (quint8)pFlag;
             QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-            Server->send(Output);
+            m_Server->send(Output);
         }
     }
 
@@ -259,7 +259,7 @@ namespace ffs2play
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream << (quint8)DISC;
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        Server->send(Output);
+        m_Server->send(Output);
     }
 
     ///
@@ -292,8 +292,8 @@ namespace ffs2play
                 try
                 {
                     data.remove(0,1);
-                    PlayerData.ParseFromString(data.toStdString());
-                    m_state.fromAirData(PlayerData);
+                    m_PlayerData.ParseFromString(data.toStdString());
+                    m_state.fromAirData(m_PlayerData);
 #ifdef FFS_DEBUG
                     m_log->log("XPManager : " + tr("Receive DATA_SEND event"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif

@@ -35,9 +35,17 @@
 #include <QTimer>
 
 #include "sim/simconnector.h"
+#include "net/udpserver.h"
 
 namespace ffs2play
 {
+
+    enum class FGProto
+    {
+        CHAT = 0x01,
+        DATA = 0x07
+    };
+
     ///
     /// \brief The CFGManager class
     ///
@@ -51,6 +59,10 @@ namespace ffs2play
     private:
         QTimer          m_PingTimer;
         datetime        m_LastPong;
+        QHostAddress    m_FGAddress;
+        quint16         m_FGPort;
+        quint16         m_LocalPort;
+        UDPServer*      m_Server;
 
     protected:
         void            open();
@@ -64,7 +76,12 @@ namespace ffs2play
         void            freezeAI(uint, bool);
         void            sendOptions(){}
 
+        void            sendPing();
+        void            sendData();
+        void            sendDisc();
+
     private slots:
+        void            OnReceiveDatagram(QNetworkDatagram datagram);
         void            OnPingTimer();
     };
 }

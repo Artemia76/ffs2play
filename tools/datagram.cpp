@@ -71,5 +71,15 @@ namespace ffs2play
         pStream.writeRawData(buffer,pMessage.ByteSize());
         delete[] buffer;
     }
+
+    QString CStringFromStream(QDataStream& pStream, size_t pLen)
+    {
+        QString Response;
+        char* str = new char[pLen];
+        pStream.readRawData(str,pLen);
+        Response = QString::fromLocal8Bit(str);
+        delete[] str;
+        return Response;
+    }
 }
 
