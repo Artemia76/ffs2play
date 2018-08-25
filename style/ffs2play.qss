@@ -1,0 +1,66 @@
+QMainWindow
+{
+    Background-color : #BDE3F8;
+}
+
+QToolBar{
+    Background : #7fb3d9;
+    Background-color : #7fb3d9;
+    border: none;
+}
+
+QDialog {
+    background-color: #687D87;
+    color: white;
+}
+
+QGroupBox {
+    font: bold;
+    color: white;
+    border: 1px solid silver;
+    border-radius: 6px;
+    margin-top: 6px;
+}
+
+QGroupBox::title {
+    background-color: #687D87;
+    subcontrol-origin: margin;
+    left: 7px;
+    padding: 0px 5px 0px 5px;
+}
+
+QCheckBox{
+    border: none;
+    color: white;
+}
+
+QPushButton
+{
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+
+    background-color:  qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                        stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}
+
+QLabel{
+    color: white;
+}
+
+QComboBox{
+    color: black;
+}
