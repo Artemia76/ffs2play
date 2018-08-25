@@ -800,7 +800,7 @@ namespace ffs2play
     /// \param pKey
     /// \return
     ///
-    QString AIMapping::getFileData(const QString &pKey)
+    QString AIMapping::getFileData(const QString& /*&pKey*/)
     {
         QString Response;
         if (m_Initialized)

@@ -26,7 +26,17 @@
  * This class define the main window of the application
  * **************************************************************************/
 
+#include <QMessageBox>
+#include <QMenu>
+#include <QFileDialog>
+
 #include "mainwindow.h"
+
+#include "dialogprofils.h"
+#include "dialogp2p.h"
+#include "aireplace.h"
+#include "tools/getappversion.h"
+#include "ui_mainwindow.h"
 
 namespace ffs2play
 {
@@ -61,7 +71,6 @@ namespace ffs2play
     void MainWindow::on_afProfil_triggered()
     {
         DialogProfils* dialog = new DialogProfils();
-        //dialog->setStyleSheet(m_dialogStyle);
         dialog->show();
     }
 

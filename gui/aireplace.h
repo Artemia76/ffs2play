@@ -56,12 +56,11 @@ namespace ffs2play
         ~AIReplace();
 
     private:
-
         // UI Designer GUI
-        Ui::AIReplace*      ui;
+        Ui::AIReplace*      m_UI;
 
         // Logger singleton instance
-        CLogger*            m_log;
+        CLogger*            m_Log;
 
         // Web Manager singleton instance
         CP2PManager*        m_P2PManager;
@@ -70,7 +69,7 @@ namespace ffs2play
         simbasemanager*     m_SimManager;
 
         // Configuration file Access
-        QSettings           m_settings;
+        QSettings           m_Settings;
 
         AIMapping*          m_AIMapping;
 
@@ -80,7 +79,7 @@ namespace ffs2play
     private slots:
         void                on_btnDeleteRule_clicked();
         void                on_btnBox_accepted();
-        void                on_btnBox_rejected();
+        void on_btnBox_rejected();
     };
 }
 #endif // DIALOGP2P_H

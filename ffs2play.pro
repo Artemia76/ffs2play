@@ -104,7 +104,7 @@ SOURCES +=      main.cpp \
                 tools/datagram.cpp \
                 tools/datetime.cpp \
                 tools/getappversion.cpp \
-                tools/iniparser.cpp \
+                tools/iniparser.cpp
 win32 {
 SOURCES +=      sim/scmanager.cpp
 }
@@ -213,7 +213,7 @@ win {
 DISTFILES += \
     README.md \
     ffs2play.iss \
-    gui/ffs2play.qss
+    style/ffs2play.qss
 
 
 isEmpty(TARGET_EXT) {
@@ -252,6 +252,14 @@ Translation.path = $${PREFIX}/share/$${TARGET}/translations
 Translation.files = $${DESTDIR}/translations/*.qm
 INSTALLS += Translation
 }
+
+#copy needed file to build directory
+
+copydata.commands = $(COPY_DIR) $$PWD/style/ffs2play.qss $$DESTDIR
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
 
 # Application Version
 VERSION_MAJOR = 2

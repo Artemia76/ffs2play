@@ -46,13 +46,13 @@ namespace ffs2play
     ///
     AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::AIReplace)
+        m_UI(new Ui::AIReplace)
     {
         // Init GUI Part
-        ui->setupUi(this);
+        m_UI->setupUi(this);
 
         // Get Logger instance
-        m_log = CLogger::instance();
+        m_Log = CLogger::instance();
 
         // Get P2PManager instance
         m_P2PManager = CP2PManager::instance();
@@ -65,22 +65,22 @@ namespace ffs2play
 
         m_Peer = pPeer;
         QString RemoteAI = m_P2PManager->getTitle(m_Peer);
-        ui->leOriginal->setText(RemoteAI);
-        ui->cbReplacement->addItems(m_AIMapping->getAITitreDispo("*","*","*","*"));
+        m_UI->leOriginal->setText(RemoteAI);
+        m_UI->cbReplacement->addItems(m_AIMapping->getAITitreDispo("*","*","*","*"));
         m_ExistingRule = m_AIMapping->getRule(RemoteAI);
         if (m_ExistingRule != "")
         {
-            ui->cbReplacement->setCurrentIndex(ui->cbReplacement->findText(m_ExistingRule));
-            ui->btnDeleteRule->setVisible(true);
+            m_UI->cbReplacement->setCurrentIndex(m_UI->cbReplacement->findText(m_ExistingRule));
+            m_UI->btnDeleteRule->setVisible(true);
         }
         else
         {
-            int index =ui->cbReplacement->findText(RemoteAI);
+            int index =m_UI->cbReplacement->findText(RemoteAI);
             if (index>-1)
             {
-                ui->cbReplacement->setCurrentIndex(index);
+                m_UI->cbReplacement->setCurrentIndex(index);
             }
-            ui->btnDeleteRule->setVisible(false);
+            m_UI->btnDeleteRule->setVisible(false);
         }
     }
 
@@ -91,7 +91,7 @@ namespace ffs2play
     ///
     AIReplace::~AIReplace()
     {
-        delete ui;
+        delete m_UI;
     }
 
     ///
@@ -99,8 +99,8 @@ namespace ffs2play
     ///
     void AIReplace::on_btnDeleteRule_clicked()
     {
-        m_AIMapping->delRule(ui->leOriginal->text());
-        ui->btnDeleteRule->setVisible(false);
+        m_AIMapping->delRule(m_UI->leOriginal->text());
+        m_UI->btnDeleteRule->setVisible(false);
     }
 
     ///
@@ -108,10 +108,18 @@ namespace ffs2play
     ///
     void AIReplace::on_btnBox_accepted()
     {
-        if (m_ExistingRule != ui->cbReplacement->currentText())
+        if (m_ExistingRule != m_UI->cbReplacement->currentText())
         {
-            m_AIMapping->addRule(ui->leOriginal->text(),ui->cbReplacement->currentText());
+            m_AIMapping->addRule(m_UI->leOriginal->text(),m_UI->cbReplacement->currentText());
             m_P2PManager->ResetAI(m_Peer);
         }
+    }
+
+    ///
+    /// \brief AIReplace::on_btnBox_rejected
+    ///
+    void AIReplace::on_btnBox_rejected()
+    {
+        close();
     }
 }
