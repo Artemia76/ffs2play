@@ -33,19 +33,14 @@
 #include <QObject>
 #include <QDateTime>
 #include <QTimer>
+#include <QVector>
 
 #include "sim/simconnector.h"
+#include "sim/fgdatagram.h"
 #include "net/udpserver.h"
 
 namespace ffs2play
 {
-
-    enum class FGProto
-    {
-        CHAT = 0x01,
-        DATA = 0x07
-    };
-
     ///
     /// \brief The CFGManager class
     ///

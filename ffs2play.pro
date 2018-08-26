@@ -104,7 +104,8 @@ SOURCES +=      main.cpp \
                 tools/datagram.cpp \
                 tools/datetime.cpp \
                 tools/getappversion.cpp \
-                tools/iniparser.cpp
+                tools/iniparser.cpp \
+    sim/fgdatagram.cpp
 win32 {
 SOURCES +=      sim/scmanager.cpp
 }
@@ -134,7 +135,8 @@ HEADERS  +=     gui/dialogprofils.h \
                 tools/datetime.h \
                 tools/getappversion.h \
                 tools/iniparser.h \
-                tools/version.h
+                tools/version.h \
+    sim/fgdatagram.h
 
 win32 {
 HEADERS +=      sim/scmanager.h

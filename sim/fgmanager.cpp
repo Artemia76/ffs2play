@@ -221,60 +221,34 @@ namespace ffs2play
         QByteArray data(datagram.data());
         QDataStream stream(&data,QIODevice::ReadOnly);
         // Reading Header
-        quint32 Magic;
-        stream >> Magic;
-        quint32 Version;
-        stream >> Version;
-        quint32 MsgId;
-        stream >> MsgId;
-        quint32 MsgLen;
-        stream >> MsgLen;
-        quint32 Requested_Visibility;
-        stream >> Requested_Visibility;
-        quint32 Replyport;
-        stream >> Replyport;
-        QString CallSign = CStringFromStream(stream,8);
-#ifdef FFS_DEBUG
-        m_log->log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
-                Magic,
-                Version,
-                MsgId,
-                MsgLen,
-                Requested_Visibility,
-                Replyport) + CallSign,
-            Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-        switch ((FGProto)MsgId)
+        FGDatagram FGData;
+        FGData.Read(stream);
+        if (!FGData.IsSane()) return;
+        FGHeader header;
+        if (FGData.GetHeader(header))
         {
-            case FGProto::CHAT:
-            {
-                QString Message = CStringFromStream(stream,MsgLen);
 #ifdef FFS_DEBUG
-                m_log->log("FGManager : " + tr("Received Tchat from FG : ") + Message, Qt::darkBlue,LEVEL_NORMAL);
+            m_log->log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
+                header.Magic,
+                header.Version,
+                header.MsgId,
+                header.MsgLen,
+                header.Requested_Visibility,
+                header.Replyport) + header.CallSign,
+                Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-                break;
-            }
-            case FGProto::DATA:
-            {
-                QString ModelName = CStringFromStream(stream,96);
-                double Time,Lag,PosX,PosY,PosZ;
-                float OriX,OriY,OriZ,VelX,VelY,VelZ,AV1,AV2,AV3,LA1,LA2,LA3,AA1,AA2,AA3;
-                stream >> Time;
-                stream >> Lag;
-                stream >> PosX;
-                stream >> PosY;
-                stream >> PosZ;
-        #ifdef FFS_DEBUG
-                m_log->log("FGManager : " + tr("Received Data from FG : Model = ") +
-                ModelName +
-                " , Time = " + QString::number(Time) +
-                " , Lag = " + QString::number(Lag) +
-                " , PosX = " + QString::number(PosX) +
-                " , PosY = " + QString::number(PosY) +
-                " , PosZ = " + QString::number(PosZ)
+        }
+        CAircraftState AirData;
+        if (FGData.GetAirData(AirData))
+        {
+#ifdef FFS_DEBUG
+            m_log->log("FGManager : " + tr("Received Data from FG : Model = ") +
+                AirData.Title +
+                " , Latitude = " + QString::number(AirData.Latitude) +
+                " , Longitude = " + QString::number(AirData.Longitude) +
+                " , Altitude = " + QString::number(AirData.Altitude)
                 , Qt::darkBlue,LEVEL_VERBOSE);
-        #endif
-            }
+#endif
         }
     }
 
