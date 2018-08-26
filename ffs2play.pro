@@ -257,7 +257,7 @@ INSTALLS += Translation
 
 #copy needed file to build directory
 
-copydata.commands = $(COPY_DIR) $$PWD/style/ffs2play.qss $$DESTDIR
+copydata.commands = $(COPY) $$shell_quote($$shell_path($$PWD/style/ffs2play.qss))  $$shell_quote($$shell_path($$PWD/$$DESTDIR))
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)
