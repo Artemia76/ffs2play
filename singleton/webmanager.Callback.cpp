@@ -70,56 +70,71 @@ namespace ffs2play
         m_log->log("WebManager : " + tr("Get ConnectCallback"),Qt::darkBlue,LEVEL_VERBOSE);
     #endif
         QDomDocument Doc;
-        if (pRequest->getAsXml(Doc))
+        try
         {
-            bool bError = CheckError(Doc);
-            QDomElement Element = Doc.elementsByTagName("loginStatus").at(0).toElement();
-            if (!Element.isNull())
+            if (pRequest->getAsXml(Doc))
             {
-                m_bConnected = Element.firstChild().nodeValue().toInt()==1;
-                if (m_bConnected && (!bError))
+                bool bError = CheckError(Doc);
+                QDomElement Element = Doc.elementsByTagName("loginStatus").at(0).toElement();
+                if (!Element.isNull())
                 {
-                    m_log->log(tr("FFS2Play is connected on server"));
-                    QDomElement xmlExternalIP = Doc.elementsByTagName("your_ip").at(0).toElement();
-                    if (!xmlExternalIP.isNull())
+                    m_bConnected = Element.firstChild().nodeValue().toInt()==1;
+                    if (m_bConnected && (!bError))
                     {
-                        QHostAddress ExternalIP (xmlExternalIP.firstChild().nodeValue());
-    #ifdef FFS_DEBUG
-                        if (ExternalIP.isNull())
+                        m_log->log(tr("FFS2Play is connected on server"));
+                        QDomElement xmlExternalIP = Doc.elementsByTagName("your_ip").at(0).toElement();
+                        if (!xmlExternalIP.isNull())
                         {
-                            m_log->log("WebManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
+                            QHostAddress ExternalIP (xmlExternalIP.firstChild().nodeValue());
+        #ifdef FFS_DEBUG
+                            if (ExternalIP.isNull())
+                            {
+                                m_log->log("WebManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
+                            }
+                            else
+                            {
+                                m_log->log("WebManager : " + tr("Get external IP = ") + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
+                            }
+        #endif
                         }
-                        else
+                        QDomElement xmlKey = Doc.elementsByTagName("key").at(0).toElement();
+                        if (!xmlKey.isNull())
                         {
-                            m_log->log("WebManager : " + tr("Get external IP = ") + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
+                            m_key = xmlKey.firstChild().nodeValue();
+                            OnLiveUpdate();
                         }
-    #endif
-                    }
-                    QDomElement xmlKey = Doc.elementsByTagName("key").at(0).toElement();
-                    if (!xmlKey.isNull())
-                    {
-                        m_key = xmlKey.firstChild().nodeValue();
-                        OnLiveUpdate();
-                    }
-                    QDomElement xmlAtc = Doc.elementsByTagName("atc").at(0).toElement();
-                    if (!xmlAtc.isNull())
-                    {
-                        if (xmlAtc.firstChild().nodeValue().toInt()==1)
+                        QDomElement xmlAtc = Doc.elementsByTagName("atc").at(0).toElement();
+                        if (!xmlAtc.isNull())
                         {
-                            m_ATCTimer.start();
+                            if (xmlAtc.firstChild().nodeValue().toInt()==1)
+                            {
+                                m_ATCTimer.start();
+                            }
                         }
+                        QDomElement AIManagement = Doc.elementsByTagName("AI_Management").at(0).toElement();
+                        if (!AIManagement.isNull())
+                        {
+                            m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
+                        }
+                        m_P2P->setCallsign(m_users[m_currentUser-1].Login);
+                        m_ATCTimer.start();
+                        CheckWhazzup(Doc);
+                        emit (FireConnected());
                     }
-                    QDomElement AIManagement = Doc.elementsByTagName("AI_Management").at(0).toElement();
-                    if (!AIManagement.isNull())
-                    {
-                        m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
-                    }
-                    m_P2P->setCallsign(m_users[m_currentUser-1].Login);
-                    m_ATCTimer.start();
-                    CheckWhazzup(Doc);
-                    emit (FireConnected());
+                }
+                else
+                {
+                    throw(std::logic_error("Invalid Xml Response"));
                 }
             }
+            else
+            {
+                throw(std::logic_error("TimeOut"));
+            }
+        }
+        catch (std::exception& e)
+        {
+            m_log->log(tr("Connexion to server failed."),Qt::darkMagenta);
         }
         pRequest->deleteLater();
     }

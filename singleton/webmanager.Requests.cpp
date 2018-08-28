@@ -41,6 +41,7 @@ namespace ffs2play
         QDomDocument SendHello;
         XmlBuild(SendHello, hello);
         CHttpRequest* Request = new CHttpRequest(this);
+        m_log->log(tr("Connecting to server ..."));
         connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
         Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendHello);
     }
@@ -56,6 +57,7 @@ namespace ffs2play
         QDomDocument SendLogout;
         XmlBuild(SendLogout, logout);
         CHttpRequest* Request = new CHttpRequest(this);
+        m_log->log(tr("Disconnecting from server ..."));
         connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
         Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
         m_P2P->clear();

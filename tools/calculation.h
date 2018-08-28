@@ -101,6 +101,7 @@ namespace ffs2play
     double Average(QVector<double>& Array);
     int ConvertToBinaryCodedDecimal(int Code);
     void CartToGeod(const double pX, const double pY, const double pZ, double& pLon, double& pLat, double& pAlt);
+    void GeodToCart(const double pLon, const double pLat, const double pAlt, double& pX, double& pY, double& pZ);
 }
 
 #endif

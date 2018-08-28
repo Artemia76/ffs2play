@@ -28,6 +28,7 @@
 
 #include "calculation.h"
 #include <QDataStream>
+#include <limits>
 
 namespace ffs2play
 {
@@ -123,10 +124,6 @@ namespace ffs2play
     {
       double XXpYY = pX*pX+pY*pY;
       if( XXpYY + pZ*pZ < 25 ) {
-        // This function fails near the geocenter region, so catch that special case here.
-        // Define the innermost sphere of small radius as earth center and return the
-        // coordinates 0/0/-EQURAD. It may be any other place on geoide's surface,
-        // the Northpole, Hawaii or Wentorf. This one was easy to code ;-)
         pLon= 0.0;
         pLat= 0.0;
         pAlt= ( -EQURAD );
@@ -138,12 +135,7 @@ namespace ffs2play
       double q = pZ*pZ*(1-e2)*ra2;
       double r = 1/6.0*(p+q-e4);
       double s = e4*p*q/(4*r*r*r);
-    /*
-      s*(2+s) is negative for s = [-2..0]
-      slightly negative values for s due to floating point rounding errors
-      cause nan for sqrt(s*(2+s))
-      We can probably clamp the resulting parable to positive numbers
-    */
+
       if( s >= -2.0 && s <= 0.0 )
         s = 0.0;
       double t = pow(1+s+sqrt(s*(2+s)), 1/3.0);
@@ -153,8 +145,23 @@ namespace ffs2play
       double k = sqrt(u+v+w*w)-w;
       double D = k*sqrtXXpYY/(k+e2);
       pLon = 2*atan2(pY, pX+sqrtXXpYY)*SGD_RADIANS_TO_DEGREES;
-      double sqrtDDpZZ = sqrt(D*D+pZ*pZ) * SG_METER_TO_FEET;
+      double sqrtDDpZZ = sqrt(D*D+pZ*pZ);
       pLat = 2*atan2(pZ, D+sqrtDDpZZ)*SGD_RADIANS_TO_DEGREES;
-      pAlt =(k+e2-1)*sqrtDDpZZ/k;
+      pAlt =(k+e2-1)*sqrtDDpZZ/k* SG_METER_TO_FEET;
+    }
+
+    void GeodToCart(const double pLon, const double pLat, const double pAlt, double& pX, double& pY, double& pZ)
+    {
+        double lambda = pLon * SGD_DEGREES_TO_RADIANS;
+        double phi = pLat * SGD_DEGREES_TO_RADIANS;
+        double h = pAlt * SG_FEET_TO_METER;
+        double sphi = sin(phi);
+        double n = a/sqrt(1-e2*sphi*sphi);
+        double cphi = cos(phi);
+        double slambda = sin(lambda);
+        double clambda = cos(lambda);
+        pX = (h+n)*cphi*clambda;
+        pY = (h+n)*cphi*slambda;
+        pZ = (h+n-e2*n)*sphi;
     }
 }

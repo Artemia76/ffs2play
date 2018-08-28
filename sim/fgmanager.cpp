@@ -88,8 +88,8 @@ namespace ffs2play
         if (m_connected)
         {
             m_PingTimer.stop();
-            m_Server->stop();
             sendDisc();
+            m_Server->stop();
             m_connected=false;
             m_log->log(tr("Disconnected from FlightGear."));
         }
@@ -238,17 +238,18 @@ namespace ffs2play
                 Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         }
-        CAircraftState AirData;
-        if (FGData.GetAirData(AirData))
+        if (FGData.GetAirData(m_state))
         {
 #ifdef FFS_DEBUG
             m_log->log("FGManager : " + tr("Received Data from FG : Model = ") +
-                AirData.Title +
-                " , Latitude = " + QString::number(AirData.Latitude) +
-                " , Longitude = " + QString::number(AirData.Longitude) +
-                " , Altitude = " + QString::number(AirData.Altitude)
+                m_state.Title +
+                " , Latitude = " + QString::number(m_state.Latitude) +
+                " , Longitude = " + QString::number(m_state.Longitude) +
+                " , Altitude = " + QString::number(m_state.Altitude)
                 , Qt::darkBlue,LEVEL_VERBOSE);
 #endif
+            emit(fireSimVariableEvent(m_state));
+            emit(fireSimEventFrame(20,50));
         }
     }
 

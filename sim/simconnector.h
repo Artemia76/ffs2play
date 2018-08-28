@@ -125,6 +125,7 @@ friend  class           simbasemanager;
 
         void            setOptionChange(SimOption pOption,bool pFlag);
         bool            getOption(SimOption pOption);
+        CAircraftState  getState();
 
 virtual void            sendOptions()=0;
 virtual	void            open()=0;
@@ -136,7 +137,7 @@ virtual	bool            createAI(AIResol& pAircraft,const QString& Tail,const CA
 virtual	bool            removeAI(uint& pObjectID)=0;
 virtual bool            updateAI(uint pObjectID, const CAircraftState& data)=0;
 virtual	void            freezeAI(uint pObjectID, bool pState)=0;
-virtual CAircraftState  getState();
+
     signals:
         void            finished();
         void            fireSimVariableEvent(CAircraftState);

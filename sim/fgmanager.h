@@ -37,6 +37,7 @@
 
 #include "sim/simconnector.h"
 #include "sim/fgdatagram.h"
+#include "sim/aircraftstate.h"
 #include "net/udpserver.h"
 
 namespace ffs2play
