@@ -2,10 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "FFS2Play2"
-#define MyAppVersion "2_0_17"
+#define MyAppVersion "2_0_18"
 #define MyAppPublisher "FFS2"
 #define MyAppURL "http://ffs2play.fr/"
 #define MyAppExeName "ffs2play.exe"
+
+
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -38,7 +40,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "E:\devel\git\ffs2play\release\ffs2play.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\ffs2play.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\devel\git\ffs2play\release\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\devel\git\ffs2play\release\Microsoft.FlightSimulator.SimConnect.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\devel\git\ffs2play\release\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -49,6 +51,7 @@ Source: "E:\devel\git\ffs2play\release\Qt5Svg.dll"; DestDir: "{app}"; Flags: ign
 Source: "E:\devel\git\ffs2play\release\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\devel\git\ffs2play\release\Qt5Xml.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\devel\git\ffs2play\release\SimConnect.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\devel\git\ffs2play\release\ffs2play.qss"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\devel\git\ffs2play\release\translations\*"; DestDir: "{app}\translations"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "E:\devel\git\ffs2play\release\platforms\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "E:\devel\git\ffs2play\release\sqldrivers\*"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion recursesubdirs createallsubdirs
