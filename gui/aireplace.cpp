@@ -113,6 +113,7 @@ namespace ffs2play
             m_AIMapping->addRule(m_UI->leOriginal->text(),m_UI->cbReplacement->currentText());
             m_P2PManager->ResetAI(m_Peer);
         }
+        close();
     }
 
     ///
