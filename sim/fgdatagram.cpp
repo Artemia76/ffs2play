@@ -35,6 +35,7 @@ namespace ffs2play
     ///
     FGDatagram::FGDatagram()
     {
+        m_Log = CLogger::instance();
         m_Sane = false;
     }
 
@@ -64,7 +65,16 @@ namespace ffs2play
         pStream.readRawData(&m_Header.CallSign[0],sizeof(m_Header.CallSign));
         if (m_Header.Magic != MSG_MAGIC) return;
         m_Sane = true;
-
+#ifdef FFS_DEBUG
+        m_Log->log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
+            m_Header.Magic,
+            m_Header.Version,
+            m_Header.MsgId,
+            m_Header.MsgLen,
+            m_Header.Requested_Visibility,
+            m_Header.Replyport) + m_Header.CallSign,
+            Qt::darkBlue,LEVEL_VERBOSE);
+#endif
         //Reading Position Data
         pStream.readRawData(&m_Pos.ModelName[0],sizeof (m_Pos.ModelName));
         pStream >> m_Pos.Time;
@@ -77,6 +87,13 @@ namespace ffs2play
         for (int i=0; i<3; i++) pStream >> m_Pos.AngularAccel[i];
         char Dummy[8];
         pStream.readRawData(&Dummy[0],8);
+#ifdef FFS_DEBUG
+        m_Log->log(QString::asprintf("FGManager : a=%f , b=%f , c=%f",
+            m_Pos.Orientation[0],
+            m_Pos.Orientation[1],
+            m_Pos.Orientation[2]
+            ),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
     }
 
     ///

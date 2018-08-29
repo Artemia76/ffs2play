@@ -34,6 +34,7 @@
 
 #include "tools/calculation.h"
 #include "sim/aircraftstate.h"
+#include "singleton/clogger.h"
 
 ///
 /// Imported from SimGear of FlightGear Project
@@ -141,6 +142,7 @@ namespace ffs2play
         FGPos                   m_Pos;
         QVector<FGPropertyData> m_Props;
         bool                    m_Sane;
+        CLogger*                m_Log;
     };
 }
 

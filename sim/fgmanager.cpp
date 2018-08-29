@@ -224,20 +224,6 @@ namespace ffs2play
         FGDatagram FGData;
         FGData.Read(stream);
         if (!FGData.IsSane()) return;
-        FGHeader header;
-        if (FGData.GetHeader(header))
-        {
-#ifdef FFS_DEBUG
-            m_log->log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
-                header.Magic,
-                header.Version,
-                header.MsgId,
-                header.MsgLen,
-                header.Requested_Visibility,
-                header.Replyport) + header.CallSign,
-                Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-        }
         if (FGData.GetAirData(m_state))
         {
 #ifdef FFS_DEBUG
