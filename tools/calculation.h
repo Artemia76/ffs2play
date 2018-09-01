@@ -102,6 +102,7 @@ namespace ffs2play
     int ConvertToBinaryCodedDecimal(int Code);
     void CartToGeod(const double pX, const double pY, const double pZ, double& pLon, double& pLat, double& pAlt);
     void GeodToCart(const double pLon, const double pLat, const double pAlt, double& pX, double& pY, double& pZ);
+    void EulerToAngle(const float pX,  const float pY, const float pZ, float& pYaw, float& pPitch, float& pRoll );
 }
 
 #endif

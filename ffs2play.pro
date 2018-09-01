@@ -49,6 +49,9 @@ CONFIG( debug, debug|release ) {
     PROTOBUF_LIB_PATH = "D:\Program Files (x86)\protobuf\lib"
     PROTOBUF_INCLUDE_PATH = "D:\Program Files (x86)\protobuf\include"
 
+    EIGEN3_LIB_PATH = "D:\Program Files (x86)\protobuf\eigen3\lib"
+    EIGEN3_INCLUDE_PATH = "D:\Program Files (x86)\eigen3\include"
+
     INCLUDEPATH +=	\
                 "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
 #				"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\Inc" \
@@ -186,6 +189,7 @@ CONFIG += c++14
 unix:!macx{
 CONFIG += link_pkgconfig
 PKGCONFIG += protobuf
+PKGCONFIG += eigen3
 
 LIBS	+= -lminiupnpc
 LIBS	+= -lssl
@@ -200,6 +204,7 @@ CONFIG += link_pkgconfig
 PKG_CONFIG = /usr/local/bin/pkg-config
 PKGCONFIG += protobuf
 PKGCONFIG += miniupnpc
+PKGCONFIG += eigen3
 
 LIBS += -L/usr/local/lib
 LIBS += -lssl

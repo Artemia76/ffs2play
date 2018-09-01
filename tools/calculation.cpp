@@ -30,6 +30,7 @@
 #include <QDataStream>
 #include <limits>
 
+
 namespace ffs2play
 {
 
@@ -163,5 +164,12 @@ namespace ffs2play
         pX = (h+n)*cphi*clambda;
         pY = (h+n)*cphi*slambda;
         pZ = (h+n-e2*n)*sphi;
+    }
+
+    void EulerToAngle(const float pX,  const float pY, const float pZ, float& pYaw, float& pPitch, float& pRoll )
+    {
+        pPitch = asin(pX / cos(asin(pY)));
+        pYaw = asin(pY);
+        pRoll = 0;
     }
 }

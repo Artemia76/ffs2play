@@ -87,13 +87,26 @@ namespace ffs2play
         for (int i=0; i<3; i++) pStream >> m_Pos.AngularAccel[i];
         char Dummy[8];
         pStream.readRawData(&Dummy[0],8);
+        float Roll, Pitch , Yaw;
+        EulerToAngle (m_Pos.Orientation[0],m_Pos.Orientation[1],m_Pos.Orientation[2],Yaw,Pitch,Roll);
 #ifdef FFS_DEBUG
-        m_Log->log(QString::asprintf("FGManager : a=%f , b=%f , c=%f",
+        m_Log->log(QString::asprintf("FGManager : Yaw=%f , Roll=%f , Pitch=%f",
             m_Pos.Orientation[0],
             m_Pos.Orientation[1],
             m_Pos.Orientation[2]
             ),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
+        //Reading Property data
+        m_Props.clear();
+        while (!pStream.atEnd())
+        {
+            FGPropertyData prop;
+            pStream >> (quint16&)(prop.id);
+#ifdef FFS_DEBUG
+            m_Log->log(QString::asprintf("FGManager : Property Id=%d , Type=%d", prop.id,(quint32)prop.type),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+            break;
+        }
     }
 
     ///
@@ -182,5 +195,58 @@ namespace ffs2play
     bool FGDatagram::SetAirData(const CAircraftState& pData)
     {
         if (!m_Sane) return false;
+        return true;
+    }
+
+    ///
+    /// \brief FGDatagram::GetProperty
+    /// \param pStream
+    /// \return
+    ///
+    bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
+    {
+        quint16 id;
+        bool Decoded=false;
+        pStream >> id;
+        for (IdPropertyList item : sIdPropertyList)
+        {
+            if (item.id==id)
+            {
+                pPropData.id=id;
+                pPropData.type = item.type;
+                switch (item.TransmitAs)
+                {
+                    case TT_ASIS:
+                    {
+                        switch (item.type)
+                        {
+                            case STRING:
+                            case INT:
+                            case LONG:
+                            case FLOAT:
+                            case DOUBLE:
+                            default:
+                                break;
+                        }
+                        break;
+                    }
+                    case TT_BOOL:
+                    case TT_INT:
+                    case TT_FLOAT:
+                    case TT_STRING:
+                    case TT_SHORTINT:
+                    case TT_SHORT_FLOAT_NORM:
+                    case TT_SHORT_FLOAT_1:
+                    case TT_SHORT_FLOAT_2:
+                    case TT_SHORT_FLOAT_3:
+                    case TT_SHORT_FLOAT_4:
+                    case TT_BOOLARRAY:
+                    case TT_CHAR:
+                    default:
+                        break;
+                }
+            }
+        }
+        return Decoded;
     }
 }
