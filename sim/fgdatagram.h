@@ -36,6 +36,8 @@
 #include "sim/aircraftstate.h"
 #include "singleton/clogger.h"
 
+#define MAX_TEXT_SIZE 768 // Increased for 2017.3 to allow for long Emesary messages.
+
 ///
 /// Imported from SimGear of FlightGear Project
 /// simgear/src/props/props.hxx
@@ -106,6 +108,23 @@ namespace ffs2play
         TT_CHAR,
         TT_NOSEND, // Do not send this property - probably the receive element for a custom encoded property
     };
+    /*
+     * Definitions for the version of the protocol to use to transmit the items defined in the IdPropertyList
+     *
+     * The MP2017(V2) protocol allows for much better packing of strings, new types that are transmitted in 4bytes by transmitting
+     * with short int (sometimes scaled) for the values (a lot of the properties that are transmitted will pack nicely into 16bits).
+     * The MP2017(V2) protocol also allows for properties to be transmitted automatically as a different type and the encode/decode will
+     * take this into consideration.
+     * The pad magic is used to force older clients to use verifyProperties and as the first property transmitted is short int encoded it
+     * will cause the rest of the packet to be discarded. This is the section of the packet that contains the properties defined in the list
+     * here - the basic motion properties remain compatible, so the older client will see just the model, not chat, not animations etc.
+     * The lower 16 bits of the prop_id (version) are the version and the upper 16bits are for meta data.
+     */
+    const int V1_1_PROP_ID = 1;
+    const int V1_1_2_PROP_ID = 2;
+    const int V2_PROP_ID_PROTOCOL = 0x10001;
+
+    const int V2_PAD_MAGIC = 0x1face002;
 
     struct IdPropertyList{
         unsigned short id;
@@ -571,6 +590,35 @@ namespace ffs2play
         { FALLBACK_MODEL_ID, "sim/model/fallback-model-index", INT, TT_SHORTINT},
     };
 
+    /*
+     * For the 2017.x version 2 protocol the properties are sent in two partitions,
+     * the first of these is a V1 protocol packet (which should be fine with all clients), and a V2 partition
+     * which will contain the newly supported shortint and fixed string encoding schemes.
+     * This is to possibly allow for easier V1/V2 conversion - as the packet can simply be truncated at the
+     * first V2 property based on ID.
+     */
+    const int MAX_PARTITIONS = 2;
+    const unsigned int numProperties = (sizeof(sIdPropertyList) / sizeof(sIdPropertyList[0]));
+
+    struct ComparePropertyId
+      {
+        bool operator()(const IdPropertyList& lhs,
+                        const IdPropertyList& rhs)
+        {
+          return lhs.id < rhs.id;
+        }
+        bool operator()(const IdPropertyList& lhs,
+                        unsigned id)
+        {
+          return lhs.id < id;
+        }
+        bool operator()(unsigned id,
+                        const IdPropertyList& rhs)
+        {
+          return id < rhs.id;
+        }
+      };
+
     struct FGHeader
     {
         quint32 Magic;
@@ -638,6 +686,7 @@ namespace ffs2play
         bool                    m_Sane;
         CLogger*                m_Log;
         bool                    GetProperty(QDataStream& pStream, FGPropertyData& pPropData);
+const   IdPropertyList*         FindProperty(unsigned short pID);
 
     };
 }

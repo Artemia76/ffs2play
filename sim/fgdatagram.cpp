@@ -101,11 +101,37 @@ namespace ffs2play
         while (!pStream.atEnd())
         {
             FGPropertyData prop;
-            pStream >> (quint16&)(prop.id);
+            if (!GetProperty(pStream,prop))
+            {
+                break;
+            }
 #ifdef FFS_DEBUG
-            m_Log->log(QString::asprintf("FGManager : Property Id=%d , Type=%d", prop.id,(quint32)prop.type),Qt::darkBlue,LEVEL_VERBOSE);
+            QString Value;
+            switch (prop.type)
+            {
+            case TT_SHORTINT:
+            case TT_SHORT_FLOAT_1:
+            case TT_SHORT_FLOAT_2:
+            case TT_SHORT_FLOAT_3:
+            case TT_SHORT_FLOAT_4:
+            case TT_SHORT_FLOAT_NORM:
+            case INT:
+            case LONG:
+            case BOOL:
+                Value = QString::number(prop.int_value);
+                break;
+            case FLOAT:
+            case DOUBLE:
+                Value = QString::number(prop.float_value);
+                break;
+            case STRING:
+            case UNSPECIFIED:
+                Value = prop.string_value;
+                break;
+            }
+            m_Log->log(QString::asprintf("FGManager : Property Id=%d , Value = ", prop.id)+Value,Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-            break;
+            //break;
         }
     }
 
@@ -201,52 +227,166 @@ namespace ffs2play
     ///
     /// \brief FGDatagram::GetProperty
     /// \param pStream
-    /// \return
+    /// \return true if property was succesfully readed, else false
     ///
     bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
     {
         quint16 id;
         bool Decoded=false;
+        bool short_int_encoded = true;
         pStream >> id;
-        for (IdPropertyList item : sIdPropertyList)
+        //Detect if we have 4 Byte int ID format
+        if( id == 0)
         {
-            if (item.id==id)
+            short_int_encoded =false;
+            pStream >> id;
+        }
+
+        const IdPropertyList* Item = FindProperty(id);
+        if (Item!=nullptr)
+        {
+            pPropData.id=Item->id;
+            pPropData.type = Item->type;
+            switch (pPropData.type)
             {
-                pPropData.id=id;
-                pPropData.type = item.type;
-                switch (item.TransmitAs)
+                case BOOL:
                 {
-                    case TT_ASIS:
+                    if (id >= BOOLARRAY_START_ID && id<= BOOLARRAY_END_ID)
                     {
-                        switch (item.type)
+                        quint32 val;
+                        pStream >> val;
+                        for (int bitidx = 0; bitidx <= 30; bitidx++)
                         {
-                            case STRING:
-                            case INT:
-                            case LONG:
-                            case FLOAT:
-                            case DOUBLE:
-                            default:
-                                break;
+                            // ensure that this property is in the master list.
+                            const IdPropertyList* plistBool = FindProperty(id + bitidx);
+
+                            if (plistBool)
+                            {
+                                pPropData.id = id + bitidx;
+                                pPropData.int_value = (val & (1 << bitidx)) != 0;
+                                pPropData.type = BOOL;
+                                Decoded=true;;
+                            }
                         }
                         break;
                     }
-                    case TT_BOOL:
-                    case TT_INT:
-                    case TT_FLOAT:
-                    case TT_STRING:
-                    case TT_SHORTINT:
-                    case TT_SHORT_FLOAT_NORM:
-                    case TT_SHORT_FLOAT_1:
-                    case TT_SHORT_FLOAT_2:
-                    case TT_SHORT_FLOAT_3:
-                    case TT_SHORT_FLOAT_4:
-                    case TT_BOOLARRAY:
-                    case TT_CHAR:
-                    default:
-                        break;
+                }
+                case INT:
+                case LONG:
+                {
+                    if (short_int_encoded)
+                    {
+                        qint16 Value;
+                        pStream >> Value;
+                        pPropData.int_value = Value;
+                        Decoded = true;
+                    }
+                    else
+                    {
+                        pStream >> pPropData.int_value;
+                        Decoded = true;
+                    }
+                    break;
+                }
+                case FLOAT:
+                case DOUBLE:
+                {
+                    if (short_int_encoded)
+                    {
+                        qint16 Value;
+                        pStream >> Value;
+                        switch (Item->TransmitAs)
+                        {
+                            case TT_SHORT_FLOAT_1:
+                            {
+                                pPropData.float_value = (double)Value / 10.0;
+                                Decoded=true;
+                                break;
+                            }
+                            case TT_SHORT_FLOAT_2:
+                            {
+                                pPropData.float_value = (double)Value / 100.0;
+                                Decoded=true;
+                                break;
+                            }
+                            case TT_SHORT_FLOAT_3:
+                            {
+                                pPropData.float_value = (double)Value / 1000.0;
+                                Decoded=true;
+                                break;
+                            }
+                            case TT_SHORT_FLOAT_4:
+                            {
+                                pPropData.float_value = (double)Value / 10000.0;
+                                Decoded=true;
+                                break;
+                            }
+                            case TT_SHORT_FLOAT_NORM:
+                            {
+                                pPropData.float_value = (double)Value / 32767.0;
+                                Decoded=true;
+                                break;
+                            }
+                            default:
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+                        float Value;
+                        pStream >> Value;
+                        pPropData.float_value = Value;
+                        Decoded=true;
+                    }
+                    break;
+                }
+                case STRING:
+                case UNSPECIFIED:
+                {
+                    if (short_int_encoded)
+                    {
+                        quint16 Len;
+                        pStream >> Len;
+                        pPropData.string_value = new char [Len +1];
+                        pStream.readRawData(pPropData.string_value,Len);
+                        pPropData.string_value[Len]='\0'; // Null Ended String for C Compatibility
+                    }
+                    else
+                    {
+                        quint32 Len;
+                        pStream >> Len;
+                        if (Len > MAX_TEXT_SIZE)
+                            Len = MAX_TEXT_SIZE;
+                        pPropData.string_value = new char [Len +1];
+                        if (Len>0) pStream.readRawData(pPropData.string_value,Len);
+                        pPropData.string_value[Len]='\0'; // Null Ended String for C Compatibility
+                    }
+                    Decoded=true;
+                    break;
+                }
+                default:
+                {
+                    pStream >> pPropData.float_value;
+                    Decoded=true;
+                    break;
                 }
             }
+            return Decoded;
         }
-        return Decoded;
+    }
+
+    const IdPropertyList* FGDatagram::FindProperty(unsigned short pId)
+    {
+      std::pair<const IdPropertyList*, const IdPropertyList*> result
+        = std::equal_range(sIdPropertyList, sIdPropertyList + numProperties, pId,
+                           ComparePropertyId());
+      if (result.first == result.second) {
+        return nullptr;
+      } else {
+        return result.first;
+      }
     }
 }
