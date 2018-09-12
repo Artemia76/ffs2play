@@ -34,10 +34,8 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 	- openssl : >=1.0.2
 	- crypto++ : >= 5.6
 
-1. BUILD
-	1. LINUX
-
-		1. UBUNTU
+1. Build on Linux
+	1. UBUNTU
 
 		On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play:
 
@@ -53,19 +51,19 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 			sudo apt-get update
 			sudo apt-get install qt510-meta-full qt510creator
 
-		1. Gentoo / Calculate Linux
+	1. Gentoo / Calculate Linux
 
 		Prepare dependencies on terminal as superuser:
 
 			emerge crypto++ miniupnpc openssl protobuf @qt5-essentials
 
-		1. Arch Linux
+	1. Arch Linux
 
 		Prepare dependencies on terminal :
 
 			sudo yaourt -S base-devel gdb qt5-base miniupnpc crypto++ openssl protobuf
 
-		1. Final build:
+	1. Final build:
 
 		on git root :
 
@@ -73,6 +71,6 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 			make -j3
 			./release/ffs2play
 
-	1. WIN(Visual studio community edition)
+1. WIN(Visual studio community edition)
 
 	coming ...
