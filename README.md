@@ -1,5 +1,4 @@
-FFS2Play client build instruction
-====================
+#FFS2Play client build instruction
 
 This project is a fork of the FFSTracker written in C# for FFS2 Flight Simulator virtual company.
 FFS2PLAY will be designed on open source project model and will be writted in C++ with portable library (Qt)
