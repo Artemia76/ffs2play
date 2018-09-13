@@ -571,6 +571,11 @@ namespace ffs2play
                     ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng4));
                     break;
                 }
+                case 48:
+                {
+                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.FlapsIndex));
+                    break;
+                }
             }
         }
     }
