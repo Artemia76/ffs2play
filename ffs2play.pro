@@ -67,6 +67,7 @@ unix:!macx{
 }
 
 macx: {
+    INCLUDEPATH += /usr/local/include/miniupnpc
     INCLUDEPATH += /usr/local/include/cryptopp
     INCLUDEPATH += /usr/local/include
 }
@@ -202,12 +203,12 @@ QT_CONFIG -= no-pkg-config
 CONFIG += link_pkgconfig
 PKG_CONFIG = /usr/local/bin/pkg-config
 PKGCONFIG += protobuf
-PKGCONFIG += miniupnpc
 
 LIBS += -L/usr/local/lib
 LIBS += -lssl
 LIBS += -lcryptopp
 LIBS += -lcrypto
+LIBS += -lminiupnpc
 
 }
 

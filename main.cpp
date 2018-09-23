@@ -44,13 +44,14 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
     QCoreApplication::setApplicationName("FFS2Play");
     QString locale = QLocale::system().name();
+    QApplication app(argc, argv);
+    QDir::setCurrent(app.applicationDirPath());
     QTranslator FFS2PlayTS;
 #ifdef Q_OS_LINUX
     FFS2PlayTS.load("/usr/share/ffs2play/translations/ffs2play_" + locale +".qm");
 #else
     FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
 #endif
-    QApplication app(argc, argv);
     app.installTranslator(&FFS2PlayTS);
     //Load Style Sheet
     QFile styleFile ( "ffs2play.qss");
