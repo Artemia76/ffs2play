@@ -38,7 +38,7 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
 		On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play:
 
-			sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler
+			sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler qtbase5-dev
 
 		On some qt installation you will need opengl devel :
 
