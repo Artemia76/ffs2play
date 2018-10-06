@@ -265,7 +265,6 @@ namespace ffs2play
         // We have fresh data and are ready to compute extrapolation
         if (m_spawned >=6)
         {
-            double CoefHoriz = 0;
             m_predictiveTime = m_remoteRefreshRate*3;
             // Extrapolation compute
             timespan Retard = m_lastData - m_data.TimeStamp; //Calcul du retard absolu de la donnée
@@ -284,7 +283,7 @@ namespace ffs2play
                 m_actualPos.Pitch = m_AIData.Pitch;
 
                 m_futurData.TimeStamp = m_lastRender + m_predictiveTime;
-                CoefHoriz = (m_futurData.TimeStamp - m_data.TimeStamp) / m_remoteRefreshRate;
+                double CoefHoriz = static_cast<double>((m_futurData.TimeStamp - m_data.TimeStamp).count()) / static_cast<double>(m_remoteRefreshRate.count());
                 m_futurData.Altitude = m_data.Altitude + ((m_data.Altitude - m_oldData.Altitude) * CoefHoriz);
                 m_futurData.Longitude = m_data.Longitude + ((m_data.Longitude - m_oldData.Longitude) * CoefHoriz);
                 m_futurData.Latitude = m_data.Latitude + ((m_data.Latitude - m_oldData.Latitude) * CoefHoriz);
@@ -319,6 +318,11 @@ namespace ffs2play
                 m_deltaBank = m_futurData.Bank - m_actualPos.Bank;
                 if (m_deltaBank < -180) m_deltaBank += 360;
                 if (m_deltaBank >= 180) m_deltaBank -= 360;
+                /*m_log->log(tr("Horizon = ") + QString::number(CoefHoriz) +
+                           " Retard = " + QString::number(Retard.count()) +
+                           " RemoteRefreshyRate =" + QString::number(m_remoteRefreshRate.count()) +
+                           " m_predictiveTime =" + QString::number(m_predictiveTime.count())
+                           ,Qt::darkBlue,LEVEL_NORMAL);*/
             }
             m_spawned = 7;
             m_actualPos.Pitch = m_AIData.Pitch;
