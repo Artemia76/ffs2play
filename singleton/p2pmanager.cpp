@@ -146,7 +146,7 @@ namespace ffs2play
         if (flag)
         {
             m_settings.beginGroup("P2P");
-            m_port = m_settings.value("Port",54857).toInt();
+            m_port = static_cast<quint16>(m_settings.value("Port",54857).toInt());
             m_bUPNP = false;
             m_server->setPort(m_port);
             m_server->start();
@@ -189,8 +189,8 @@ namespace ffs2play
             UPNPDev* devlist;
             char lanaddr[64]; // IP address on the LAN
             char wanaddr[64]; // IP address on the Internet
-            const char* multicastif = 0;
-            const char* minissdpdpath = 0;
+            const char* multicastif = nullptr;
+            const char* minissdpdpath = nullptr;
             int error;
             devlist = upnpDiscover(
                         1000,
@@ -202,10 +202,10 @@ namespace ffs2play
                         4,
     #endif
                         &error);
-            if (devlist != NULL)
+            if (devlist != nullptr)
             {
 #ifdef FFS_DEBUG
-                for (UPNPDev* device = devlist; device !=NULL; device = device->pNext)
+                for (UPNPDev* device = devlist; device !=nullptr; device = device->pNext)
                 {
                     m_log->log("P2PManager : " + tr("IGP Desc = ") + QString(device->descURL) + tr(" st: ") + QString(device->st),Qt::darkBlue,LEVEL_NORMAL);
                 }
@@ -256,7 +256,7 @@ namespace ffs2play
                             lanaddr,
                             "FFS2Play",
                             "UDP",
-                            NULL,
+                            nullptr,
                             "0"
                     );
                     if (error != UPNPCOMMAND_SUCCESS)
@@ -283,7 +283,7 @@ namespace ffs2play
                         m_data.first.servicetype,
                         QString::number(m_port).toStdString().c_str(),
                         "UDP",
-                        NULL
+                        nullptr
             );
             if (error != UPNPCOMMAND_SUCCESS)
                 m_log->log("P2PManager : " + tr("Delete port mapping failed with code ") + QString::number(error),Qt::red);
@@ -693,7 +693,7 @@ namespace ffs2play
         if (m_DropRateDisplay)
         {
             if ( duration_cast<milliseconds> (Now() - m_LastDropRate).count() < 2000) return;
-            QString Message = tr("Drop rate : ") + QString::number((int)pVSpeed) + tr(" ft/min");
+            QString Message = tr("Drop rate : ") + QString::number(static_cast<int>(pVSpeed)) + tr(" ft/min");
             m_log->log(Message);
             if (m_SendDropRate)
             {

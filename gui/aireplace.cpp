@@ -101,6 +101,7 @@ namespace ffs2play
     {
         m_AIMapping->delRule(m_UI->leOriginal->text());
         m_UI->btnDeleteRule->setVisible(false);
+        m_P2PManager->ResetAI(m_Peer);
     }
 
     ///

@@ -52,7 +52,7 @@ namespace ffs2play
         m_simAvailable.append(SIM_TYPE::XPLANE);
         m_simAvailable.append(SIM_TYPE::FLIGHTGEAR);
         m_settings.beginGroup("Sim");
-        m_simType = (SIM_TYPE)m_settings.value("DefaultSim",(int)m_simAvailable.first()).toInt();
+        m_simType = static_cast<SIM_TYPE>(m_settings.value("DefaultSim",static_cast<int>(m_simAvailable.first())).toInt());
         m_settings.endGroup();
         if (!m_simAvailable.contains(m_simType))
         {
@@ -117,10 +117,6 @@ namespace ffs2play
             {
                 m_connector = new CFGManager(this);
                 break;
-            }
-            default:
-            {
-                return;
             }
         }
         m_initialized=true;
@@ -203,7 +199,7 @@ namespace ffs2play
     ///
     bool simbasemanager::isInitialized()
     {
-        if (m_connector==NULL) return false;
+        if (m_connector==nullptr) return false;
         return m_initialized;
     }
 
@@ -213,7 +209,7 @@ namespace ffs2play
     ///
     bool simbasemanager::isConnected()
     {
-        if (m_connector==NULL) return false;
+        if (m_connector==nullptr) return false;
         return m_connector->isConnected();
     }
 
@@ -239,7 +235,7 @@ namespace ffs2play
     const CAircraftState simbasemanager::getAircraftState()
     {
         CAircraftState State;
-        if (m_initialized && (m_connector!=NULL))
+        if (m_initialized && (m_connector!=nullptr))
             State = m_connector->getState();
         return State;
     }
@@ -297,7 +293,7 @@ namespace ffs2play
         if (!m_simAvailable.contains(pSimType)) return;
         m_simType = pSimType;
         m_settings.beginGroup("Sim");
-        m_settings.setValue("DefaultSim",(int)m_simType);
+        m_settings.setValue("DefaultSim",static_cast<int>(m_simType));
         m_settings.endGroup();
         if (m_initialized) load(m_simType);
     }

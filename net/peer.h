@@ -101,7 +101,7 @@ namespace ffs2play
                                 CPeer(
                                     UDPServer*pServer,
                                     QHostAddress pExternalIP,
-                                    int pPort,
+                                    quint16 pPort,
                                     QString pCallSign,
                                     bool pDisabled=false,
                                     bool pLocal = false,

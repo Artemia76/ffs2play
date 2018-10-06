@@ -55,8 +55,8 @@ namespace ffs2play
     ///
     void StringToStream(QDataStream& pStream,const QString& pString)
     {
-        pStream << (quint8)pString.toStdString().length();
-        pStream.writeRawData(pString.toStdString().c_str(),pString.toStdString().length());
+        pStream << static_cast<quint8>(pString.toStdString().length());
+        pStream.writeRawData(pString.toStdString().c_str(),static_cast<int>(pString.toStdString().length()));
     }
 
     ///
@@ -66,7 +66,7 @@ namespace ffs2play
     ///
     void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage)
     {
-        char* buffer = new char[pMessage.ByteSize()];
+        char* buffer = new char[static_cast<uint>(pMessage.ByteSize())];
         pMessage.SerializeToArray(buffer,pMessage.ByteSize());
         pStream.writeRawData(buffer,pMessage.ByteSize());
         delete[] buffer;
@@ -76,7 +76,7 @@ namespace ffs2play
     {
         QString Response;
         char* str = new char[pLen];
-        pStream.readRawData(str,pLen);
+        pStream.readRawData(str,static_cast<int>(pLen));
         Response = QString::fromLocal8Bit(str);
         delete[] str;
         return Response;

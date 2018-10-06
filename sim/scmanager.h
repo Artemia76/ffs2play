@@ -42,7 +42,7 @@
 
 namespace ffs2play
 {
-    const int WM_USER_SIMCONNECT = 0x402;
+    //const HANDLE WM_USER_SIMCONNECT = static_cast<HANDLE>(0x402);
 
     #pragma pack(1)
 

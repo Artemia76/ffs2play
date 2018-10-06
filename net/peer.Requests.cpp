@@ -70,7 +70,7 @@ namespace ffs2play
             Message=Message.left(255);
         }
         stream.setByteOrder(QDataStream::LittleEndian);
-        stream << (quint8)Protocol::CHAT;
+        stream << static_cast<quint8>(Protocol::CHAT);
         StringToStream(stream,pMessage);
         send(Data);
     }
@@ -84,7 +84,7 @@ namespace ffs2play
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream.setByteOrder(QDataStream::LittleEndian);
-        stream << (quint8)Protocol::PING;
+        stream << static_cast<quint8>(Protocol::PING);
         send(Data);
         m_counter++;
         if ((m_counter > 2) && m_onLine)
@@ -111,8 +111,8 @@ namespace ffs2play
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream.setByteOrder(QDataStream::LittleEndian);
-        stream << (quint8)Protocol::PONG;
-        stream << (quint64)toTimeStamp(pTime);
+        stream << static_cast<quint8>(Protocol::PONG);
+        stream << static_cast<quint64>(toTimeStamp(pTime));
         send(Data);
     }
 
@@ -124,7 +124,7 @@ namespace ffs2play
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream.setByteOrder(QDataStream::LittleEndian);
-        stream << (quint8)Protocol::VERSION;
+        stream << static_cast<quint8>(Protocol::VERSION);
         stream << PROTO_VERSION;
         StringToStream(stream,QString::fromStdString(m_sendData.title()));
         StringToStream(stream,QString::fromStdString(m_sendData.type()));
@@ -141,7 +141,7 @@ namespace ffs2play
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream.setByteOrder(QDataStream::LittleEndian);
-        stream << (quint8)Protocol::REQ_VERSION;
+        stream << static_cast<quint8>(Protocol::REQ_VERSION);
         send(Data);
     }
 
@@ -153,7 +153,7 @@ namespace ffs2play
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream.setByteOrder(QDataStream::LittleEndian);
-        stream << (quint8)Protocol::DATA;
+        stream << static_cast<quint8>(Protocol::DATA);
         if (m_counter_Out == 255) m_counter_Out = 0;
         else m_counter_Out++;
         stream << m_counter_Out;

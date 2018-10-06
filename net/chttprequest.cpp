@@ -36,7 +36,7 @@ namespace ffs2play
     ///
     /// Static Pointer to acces Qt Network Manager Layer
     ///
-    QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = NULL;
+    QNetworkAccessManager* CHttpRequest::m_ptNetworkManager = nullptr;
 
     ///
     /// \brief CHttpRequest::m_nbInstance
@@ -52,11 +52,11 @@ namespace ffs2play
     CHttpRequest::CHttpRequest(QObject *pParent) : QObject(pParent)
     {
         qRegisterMetaType<CHttpRequest*>("CHttpRequest*");
-        if (m_ptNetworkManager==NULL) m_ptNetworkManager=new QNetworkAccessManager(pParent);
+        if (m_ptNetworkManager==nullptr) m_ptNetworkManager=new QNetworkAccessManager(pParent);
         //m_nbInstance++;
         m_request.setRawHeader("User-Agent","FFS2Play");
         m_log = CLogger::instance();
-        m_reply=NULL;
+        m_reply=nullptr;
     }
 
     ///
@@ -107,7 +107,7 @@ namespace ffs2play
     ///
     void CHttpRequest::callback()
     {
-        if (m_reply!= NULL) m_response = (QString) m_reply->readAll();
+        if (m_reply!= nullptr) m_response = m_reply->readAll();
     #ifdef FFS_DEBUG
         m_log->log("HttpRequest Response = " + m_response,Qt::darkRed,LEVEL_VERBOSE );
     #endif

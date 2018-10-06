@@ -41,7 +41,7 @@ namespace ffs2play
     {
         qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
         m_settings.beginGroup("Log");
-        m_DebugLevel = (CL_DEBUG_LEVEL)m_settings.value("DebugLevel",LEVEL_NONE).toLongLong();
+        m_DebugLevel = static_cast<CL_DEBUG_LEVEL>(m_settings.value("DebugLevel",LEVEL_NONE).toLongLong());
         m_logToFile = m_settings.value("LogToFile",false).toBool();
         m_filtreLog = m_settings.value("FiltreLog","*").toString();
         m_settings.endGroup();

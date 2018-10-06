@@ -51,7 +51,7 @@ namespace ffs2play
         restoreState(m_settings.value("State").toByteArray());
         m_settings.endGroup();
         m_settings.beginGroup("log");
-        m_maxLine = m_settings.value("MaxLine",200).toUInt();
+        m_maxLine = m_settings.value("MaxLine",200).toInt();
         m_settings.endGroup();
         QPalette p = ui->pteLogger->palette();
         p.setColor(QPalette::Text,Qt::darkBlue);
@@ -503,77 +503,77 @@ namespace ffs2play
                 }
                 case 34:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.ParkingBrake));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.ParkingBrake));
                     break;
                 }
                 case 35:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng1));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.ThrottleEng1));
                     break;
                 }
                 case 36:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng2));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.ThrottleEng2));
                     break;
                 }
                 case 37:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng3));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.ThrottleEng3));
                     break;
                 }
                 case 38:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.ThrottleEng4));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.ThrottleEng4));
                     break;
                 }
                 case 39:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.BeaconLight));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.BeaconLight));
                     break;
                 }
                 case 40:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.LandingLight));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.LandingLight));
                     break;
                 }
                 case 41:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.StrobeLight));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.StrobeLight));
                     break;
                 }
                 case 42:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.NavLight));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.NavLight));
                     break;
                 }
                 case 43:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.RecoLight));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.RecoLight));
                     break;
                 }
                 case 44:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng1));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.StateEng1));
                     break;
                 }
                 case 45:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng2));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.StateEng2));
                     break;
                 }
                 case 46:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng3));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.StateEng3));
                     break;
                 }
                 case 47:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.StateEng4));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.StateEng4));
                     break;
                 }
                 case 48:
                 {
-                    ui->twSIMData->item(i,0)->setText(QString::number((int)State.FlapsIndex));
+                    ui->twSIMData->item(i,0)->setText(QString::number(State.FlapsIndex));
                     break;
                 }
             }

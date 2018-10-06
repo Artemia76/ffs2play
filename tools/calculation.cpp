@@ -91,7 +91,7 @@ namespace ffs2play
     {
         double total = 0;
         for (double Value : Array) total += Value;
-        return total / (double)Array.count();
+        return total / static_cast<double>(Array.count());
     }
 
     ///
@@ -110,7 +110,7 @@ namespace ffs2play
         QString bcd;
         for (int i = Length - 1; i >= 0; i--)
         {
-            quint8 bcdByte = bytes[i];
+            quint8 bcdByte = static_cast<quint8>(bytes[i]);
             int idHigh = (bcdByte >> 4) & 0X07;
             int idLow = bcdByte & 0x07;
             QString High, Low;
@@ -166,7 +166,7 @@ namespace ffs2play
         pZ = (h+n-e2*n)*sphi;
     }
 
-    void EulerToAngle(const float pX,  const float pY, const float pZ, float& pYaw, float& pPitch, float& pRoll )
+    void EulerToAngle(const float pX,  const float pY, const float /*pZ*/, float& pYaw, float& pPitch, float& pRoll )
     {
         pPitch = asin(pX / cos(asin(pY)));
         pYaw = asin(pY);

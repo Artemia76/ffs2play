@@ -54,7 +54,7 @@ namespace ffs2play
         stream.setByteOrder(QDataStream::LittleEndian);
         quint8 Code;
         stream>>Code;
-        switch ((Protocol)Code)
+        switch (static_cast<Protocol>(Code))
         {
             case Protocol::PING:
             {
@@ -179,11 +179,9 @@ namespace ffs2play
                 break;
             }
             case Protocol::EVENT:
-            default:
             {
                 break;
             }
-
         }
     }
 

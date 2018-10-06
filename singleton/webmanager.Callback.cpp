@@ -132,7 +132,7 @@ namespace ffs2play
                 throw(std::logic_error("TimeOut"));
             }
         }
-        catch (std::exception& e)
+        catch (std::exception& /*e*/)
         {
             m_log->log(tr("Connexion to server failed."),Qt::darkMagenta);
         }

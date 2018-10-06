@@ -45,13 +45,13 @@ namespace ffs2play
         QUdpSocket* m_pListenner;
         CLogger*    m_log;
         bool        m_running;
-        int         m_port;
+        quint16     m_port;
     public:
                     UDPServer(QObject *pParent = 0);
                     ~UDPServer();
         bool        start();
         void        stop();
-        void        setPort(int pPort);
+        void        setPort(quint16 pPort);
         void        send(const QNetworkDatagram& pData);
     signals:
         void        fireIncomingData (QNetworkDatagram);

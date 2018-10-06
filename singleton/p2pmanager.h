@@ -53,7 +53,7 @@ namespace ffs2play
         Analyzer*           m_analyser;
         UDPServer*          m_server;
         QSettings           m_settings;
-        int                 m_port;
+        quint16             m_port;
         int                 m_AILimit;
         int                 m_AIRadius;
         int                 m_P2PRate;

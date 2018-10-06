@@ -91,9 +91,9 @@ namespace ffs2play
         EulerToAngle (m_Pos.Orientation[0],m_Pos.Orientation[1],m_Pos.Orientation[2],Yaw,Pitch,Roll);
 #ifdef FFS_DEBUG
         m_Log->log(QString::asprintf("FGManager : Yaw=%f , Roll=%f , Pitch=%f",
-            m_Pos.Orientation[0],
-            m_Pos.Orientation[1],
-            m_Pos.Orientation[2]
+            static_cast<double>(m_Pos.Orientation[0]),
+            static_cast<double>(m_Pos.Orientation[1]),
+            static_cast<double>(m_Pos.Orientation[2])
             ),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         //Reading Property data
@@ -107,7 +107,7 @@ namespace ffs2play
             }
 #ifdef FFS_DEBUG
             QString Value;
-            switch (prop.type)
+            switch (static_cast<int>(prop.type))
             {
             case TT_SHORTINT:
             case TT_SHORT_FLOAT_1:
@@ -122,7 +122,7 @@ namespace ffs2play
                 break;
             case FLOAT:
             case DOUBLE:
-                Value = QString::number(prop.float_value);
+                Value = QString::number(static_cast<double>(prop.float_value));
                 break;
             case STRING:
             case UNSPECIFIED:
@@ -139,7 +139,7 @@ namespace ffs2play
     /// \brief FGDatagram::Write
     /// \param pStream
     ///
-    void FGDatagram::Write(QDataStream& pStream)
+    void FGDatagram::Write(QDataStream& /*pStream*/)
     {
 
     }
@@ -218,7 +218,7 @@ namespace ffs2play
     /// \param pData
     /// \return
     ///
-    bool FGDatagram::SetAirData(const CAircraftState& pData)
+    bool FGDatagram::SetAirData(const CAircraftState& /*pData*/)
     {
         if (!m_Sane) return false;
         return true;
@@ -255,7 +255,7 @@ namespace ffs2play
                     {
                         quint32 val;
                         pStream >> val;
-                        for (int bitidx = 0; bitidx <= 30; bitidx++)
+                        for (quint16 bitidx = 0; bitidx <= 30; bitidx++)
                         {
                             // ensure that this property is in the master list.
                             const IdPropertyList* plistBool = FindProperty(id + bitidx);
@@ -299,31 +299,31 @@ namespace ffs2play
                         {
                             case TT_SHORT_FLOAT_1:
                             {
-                                pPropData.float_value = (double)Value / 10.0;
+                                pPropData.float_value = static_cast<float>(Value / 10.0);
                                 Decoded=true;
                                 break;
                             }
                             case TT_SHORT_FLOAT_2:
                             {
-                                pPropData.float_value = (double)Value / 100.0;
+                                pPropData.float_value = static_cast<float>(Value / 100.0);
                                 Decoded=true;
                                 break;
                             }
                             case TT_SHORT_FLOAT_3:
                             {
-                                pPropData.float_value = (double)Value / 1000.0;
+                                pPropData.float_value = static_cast<float>(Value / 1000.0);
                                 Decoded=true;
                                 break;
                             }
                             case TT_SHORT_FLOAT_4:
                             {
-                                pPropData.float_value = (double)Value / 10000.0;
+                                pPropData.float_value = static_cast<float>(Value / 10000.0);
                                 Decoded=true;
                                 break;
                             }
                             case TT_SHORT_FLOAT_NORM:
                             {
-                                pPropData.float_value = (double)Value / 32767.0;
+                                pPropData.float_value = static_cast<float>(Value / 32767.0);
                                 Decoded=true;
                                 break;
                             }
@@ -361,7 +361,7 @@ namespace ffs2play
                         if (Len > MAX_TEXT_SIZE)
                             Len = MAX_TEXT_SIZE;
                         pPropData.string_value = new char [Len +1];
-                        if (Len>0) pStream.readRawData(pPropData.string_value,Len);
+                        if (Len>0) pStream.readRawData(pPropData.string_value,static_cast<int>(Len));
                         pPropData.string_value[Len]='\0'; // Null Ended String for C Compatibility
                     }
                     Decoded=true;
@@ -374,8 +374,8 @@ namespace ffs2play
                     break;
                 }
             }
-            return Decoded;
         }
+        return Decoded;
     }
 
     const IdPropertyList* FGDatagram::FindProperty(unsigned short pId)

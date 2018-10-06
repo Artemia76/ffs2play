@@ -43,7 +43,7 @@ namespace ffs2play
         SimConnector(parent)
     {
         // Initialisation de l'état de connexion avec le simulateur
-        m_hSimConnect = NULL;
+        m_hSimConnect = nullptr;
         m_log->log("SCManager : " + tr("FSX/Prepar3D Module loaded"));
     }
 
@@ -64,10 +64,7 @@ namespace ffs2play
         if (!m_connected)
         {
             HRESULT hr;
-            if (SUCCEEDED (hr = SimConnect_Open (&m_hSimConnect,QCoreApplication::applicationName().toStdString().c_str(),NULL,NULL, (HANDLE)WM_USER_SIMCONNECT,0)))
-            {
-            }
-            else
+            if ((hr = SimConnect_Open (&m_hSimConnect,QCoreApplication::applicationName().toStdString().c_str(),nullptr,0, nullptr,0))<0)
             {
                 m_log->log(tr("Connexion to FS failed."),Qt::darkMagenta);
                 emit(fireSimTimedOut());
@@ -147,7 +144,7 @@ namespace ffs2play
         {
             case SIMCONNECT_RECV_ID_OPEN:
             {
-                OnRecvOpen ((SIMCONNECT_RECV_OPEN*) pData);
+                OnRecvOpen (reinterpret_cast<SIMCONNECT_RECV_OPEN*>(pData));
                 break;
             }
             case SIMCONNECT_RECV_ID_QUIT:
@@ -157,37 +154,37 @@ namespace ffs2play
             }
             case SIMCONNECT_RECV_ID_SYSTEM_STATE:
             {
-                OnRecvSystemState((SIMCONNECT_RECV_SYSTEM_STATE*)pData);
+                OnRecvSystemState(reinterpret_cast<SIMCONNECT_RECV_SYSTEM_STATE*>(pData));
                 break;
             }
             case SIMCONNECT_RECV_ID_EXCEPTION:
             {
-                OnRecvException((SIMCONNECT_RECV_EXCEPTION*)pData);
+                OnRecvException(reinterpret_cast<SIMCONNECT_RECV_EXCEPTION*>(pData));
                 break;
             }
             case SIMCONNECT_RECV_ID_EVENT:
             {
-                OnRecvEvent ((SIMCONNECT_RECV_EVENT*)pData);
+                OnRecvEvent (reinterpret_cast<SIMCONNECT_RECV_EVENT*>(pData));
                 break;
             }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
             {
-                OnRecvSimObjectData((SIMCONNECT_RECV_SIMOBJECT_DATA*)pData);
+                OnRecvSimObjectData(reinterpret_cast<SIMCONNECT_RECV_SIMOBJECT_DATA*>(pData));
                 break;
             }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
             {
-                OnRecvEventFrame((SIMCONNECT_RECV_EVENT_FRAME*)pData);
+                OnRecvEventFrame(reinterpret_cast<SIMCONNECT_RECV_EVENT_FRAME*>(pData));
                 break;
             }
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
             {
-                OnRecvEventObjectAddremove((SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE*)pData);
+                OnRecvEventObjectAddremove(reinterpret_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE*>(pData));
                 break;
             }
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
             {
-                OnRecvAssignedObjectId((SIMCONNECT_RECV_ASSIGNED_OBJECT_ID*)pData);
+                OnRecvAssignedObjectId(reinterpret_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID*>(pData));
                 break;
             }
             default:
@@ -207,23 +204,23 @@ namespace ffs2play
     {
         HRESULT hr;
         // Create event id for joyst
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::SLIDER,"");
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::XAXIS,"");
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::YAXIS,"");
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::RZAXIS,"");
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::HAT,"");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::SLIDER),"");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::XAXIS),"");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::YAXIS),"");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::RZAXIS),"");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::HAT),"");
         // Create notification for freeze action to AI
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::FREEZE_LATLONG,"FREEZE_LATITUDE_LONGITUDE_SET");
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::FREEZE_ALTITUDE,"FREEZE_ALTITUDE_SET");
-        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,(SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::FREEZE_ATTITUDE,"FREEZE_ATTITUDE_SET");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG),"FREEZE_LATITUDE_LONGITUDE_SET");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE),"FREEZE_ALTITUDE_SET");
+        hr = SimConnect_MapClientEventToSimEvent(m_hSimConnect,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ATTITUDE),"FREEZE_ATTITUDE_SET");
 
         // Create notification for joystick events
 
         // Données périodiques
-        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
-        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "ATC TYPE", NULL, SIMCONNECT_DATATYPE_STRING256);
-        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "ATC MODEL", NULL, SIMCONNECT_DATATYPE_STRING256);
-        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "CATEGORY", NULL, SIMCONNECT_DATATYPE_STRING256);
+        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
+        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "ATC TYPE", nullptr, SIMCONNECT_DATATYPE_STRING256);
+        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "ATC MODEL", nullptr, SIMCONNECT_DATATYPE_STRING256);
+        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "CATEGORY", nullptr, SIMCONNECT_DATATYPE_STRING256);
         hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "PLANE ALTITUDE", "feet", SIMCONNECT_DATATYPE_FLOAT64);
         hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "GROUND ALTITUDE", "feet",SIMCONNECT_DATATYPE_FLOAT64);
         hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "VERTICAL SPEED", "feet per second",SIMCONNECT_DATATYPE_FLOAT64);
@@ -267,7 +264,7 @@ namespace ffs2play
         hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::PERIODIQUE, "TRANSPONDER CODE:1", "BCO16",SIMCONNECT_DATATYPE_INT32);
 
         // Définition de la méthode à apeller pour la récéption des données
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::PERIODIQUE, DEFINITION_ID::PERIODIQUE, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT, 0, 0, 0);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect, static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::PERIODIQUE), DEFINITION_ID::PERIODIQUE, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT, 0, 0, 0);
 
         // Structure pour déplacer un AI
         hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_MOVE, "PLANE LATITUDE", "degrees", SIMCONNECT_DATATYPE_FLOAT64);
@@ -331,32 +328,32 @@ namespace ffs2play
         hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::RECOGNITION_LIGHT, "LIGHT RECOGNITION", "Bool", SIMCONNECT_DATATYPE_INT32);
         hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::SMOKE_ENABLE, "SMOKE ENABLE", "Bool", SIMCONNECT_DATATYPE_INT32);
         // Request data on change event
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::PARKING_BRAKE,DEFINITION_ID::PARKING_BRAKE,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::OVERSPEED,DEFINITION_ID::OVERSPEED,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::STALLING,DEFINITION_ID::STALLING,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::CRASH,DEFINITION_ID::CRASH,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::SLEW,DEFINITION_ID::SLEW,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::PUSHBACK,DEFINITION_ID::PUSHBACK,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::ON_GROUND,DEFINITION_ID::ON_GROUND,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::GEAR_HANDLE_POSITION,DEFINITION_ID::GEAR_HANDLE_POSITION,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::FLAPS_HANDLE_PERCENT,DEFINITION_ID::FLAPS_HANDLE_PERCENT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::FLAPS_HANDLE_INDEX,DEFINITION_ID::FLAPS_HANDLE_INDEX,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::ALTIMETER_SETTING,DEFINITION_ID::ALTIMETER_SETTING,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::LANDING_LIGHT,DEFINITION_ID::LANDING_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::STROBE_LIGHT,DEFINITION_ID::STROBE_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::BEACON_LIGHT,DEFINITION_ID::BEACON_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::NAV_LIGHT,DEFINITION_ID::NAV_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::RECOGNITION_LIGHT,DEFINITION_ID::RECOGNITION_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,(SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::SMOKE_ENABLE,DEFINITION_ID::SMOKE_ENABLE,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::PARKING_BRAKE),DEFINITION_ID::PARKING_BRAKE,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::OVERSPEED),DEFINITION_ID::OVERSPEED,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::STALLING),DEFINITION_ID::STALLING,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::CRASH),DEFINITION_ID::CRASH,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::SLEW),DEFINITION_ID::SLEW,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::PUSHBACK),DEFINITION_ID::PUSHBACK,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::ON_GROUND),DEFINITION_ID::ON_GROUND,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::GEAR_HANDLE_POSITION),DEFINITION_ID::GEAR_HANDLE_POSITION,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::FLAPS_HANDLE_PERCENT),DEFINITION_ID::FLAPS_HANDLE_PERCENT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::FLAPS_HANDLE_INDEX),DEFINITION_ID::FLAPS_HANDLE_INDEX,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::ALTIMETER_SETTING),DEFINITION_ID::ALTIMETER_SETTING,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::LANDING_LIGHT),DEFINITION_ID::LANDING_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::STROBE_LIGHT),DEFINITION_ID::STROBE_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::BEACON_LIGHT),DEFINITION_ID::BEACON_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::NAV_LIGHT),DEFINITION_ID::NAV_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::RECOGNITION_LIGHT),DEFINITION_ID::RECOGNITION_LIGHT,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+        hr = SimConnect_RequestDataOnSimObject(m_hSimConnect,static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::SMOKE_ENABLE),DEFINITION_ID::SMOKE_ENABLE,SIMCONNECT_OBJECT_ID_USER,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
 
         // Subscribe to system events
-        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, (SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::PAUSE, "Pause");
-        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, (SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::SIMSTART, "SimStart");
-        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, (SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::SIMSTOP, "simstop");
-        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, (SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::FRAME, "Frame");
-        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, (SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::ADDED_AIRCRAFT, "ObjectAdded");
-        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, (SIMCONNECT_CLIENT_EVENT_ID)EVENT_ID::REMOVED_AIRCRAFT, "ObjectRemoved");
-        hr = SimConnect_RequestSystemState(m_hSimConnect, (SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::SYSTEM, "sim");
+        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::PAUSE), "Pause");
+        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::SIMSTART), "SimStart");
+        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::SIMSTOP), "simstop");
+        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FRAME), "Frame");
+        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::ADDED_AIRCRAFT), "ObjectAdded");
+        hr = SimConnect_SubscribeToSystemEvent(m_hSimConnect, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::REMOVED_AIRCRAFT), "ObjectRemoved");
+        hr = SimConnect_RequestSystemState(m_hSimConnect, static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::SYSTEM), "sim");
     }
 
     ///
@@ -366,7 +363,7 @@ namespace ffs2play
     void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
     {
         m_log->log(tr("Connected to simulator."));
-        m_appVersionMajor = (int)data->dwApplicationVersionMajor;
+        m_appVersionMajor = static_cast<int>(data->dwApplicationVersionMajor);
         InitSimConnect();
         // Keep connexion status
         m_connected = true;
@@ -399,19 +396,19 @@ namespace ffs2play
         SimEvent Event;
         switch (data->dwRequestID)
         {
-            case REQUEST_ID::PAUSE:
+            case static_cast<DWORD>(REQUEST_ID::PAUSE):
             {
                 Event.Evt_Id = SIM_EVENT_ID::PAUSE;
-                m_state.Pause=(bool)Event.Data;
+                m_state.Pause=static_cast<bool>(Event.Data);
                 break;
             }
-            case REQUEST_ID::SIMSTART:
+            case static_cast<DWORD>(REQUEST_ID::SIMSTART):
             {
                 Event.Evt_Id = SIM_EVENT_ID::SIMSTART;
                 m_state.RunState=true;
                 break;
             }
-            case REQUEST_ID::SIMSTOP:
+            case static_cast<DWORD>(REQUEST_ID::SIMSTOP):
             {
                 Event.Evt_Id = SIM_EVENT_ID::SIMSTOP;
                 m_state.RunState=false;
@@ -447,30 +444,30 @@ namespace ffs2play
         m_log->log("SCManager : " + tr("Receive SIMCONNECT_RECV_EVENT event"), Qt::darkBlue,LEVEL_VERBOSE);
     #endif
         SimEvent Event;
-        Event.Data = data->dwData;
+        Event.Data = static_cast<int>(data->dwData);
         switch (data->uEventID)
         {
-            case EVENT_ID::PAUSE:
+            case static_cast<DWORD>(EVENT_ID::PAUSE):
             {
                 Event.Evt_Id = SIM_EVENT_ID::PAUSE;
-                m_state.Pause=(bool)Event.Data;
+                m_state.Pause=static_cast<bool>(Event.Data);
                 break;
             }
-            case EVENT_ID::SIMSTART:
+            case static_cast<DWORD>(EVENT_ID::SIMSTART):
             {
                 Event.Evt_Id = SIM_EVENT_ID::SIMSTART;
                 m_state.RunState=true;
                 break;
             }
-            case EVENT_ID::SIMSTOP:
+            case static_cast<DWORD>(EVENT_ID::SIMSTOP):
             {
                 Event.Evt_Id = SIM_EVENT_ID::SIMSTOP;
                 m_state.RunState=false;
                 break;
             }
-            case EVENT_ID::TEXT_SCROLL:
+            case static_cast<DWORD>(EVENT_ID::TEXT_SCROLL):
             {
-                if((SIMCONNECT_TEXT_RESULT)data->dwData == SIMCONNECT_TEXT_RESULT_TIMEOUT)
+                if(static_cast<SIMCONNECT_TEXT_RESULT>(data->dwData) == SIMCONNECT_TEXT_RESULT_TIMEOUT)
                 {
                     m_messageBuffer.removeAt(0);
                     if (m_messageBuffer.count()>0) sendText(m_messageBuffer[0]);
@@ -494,12 +491,12 @@ namespace ffs2play
     {
         switch (data->dwRequestID)
         {
-            case REQUEST_ID::PERIODIQUE:
+            case static_cast<DWORD>(REQUEST_ID::PERIODIQUE):
             {
 #ifdef FFS_DEBUG
                 m_log->log("SCManager : " + tr("OnRecvSimObjectData Periodic"), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-                UserState* Data =  (UserState*)(&data->dwData);
+                UserState* Data =  reinterpret_cast<UserState*>(&data->dwData);
                 m_state.TimeStamp = Now();
                 m_state.AileronPos = Data->AileronPos;
                 m_state.AmbiantPrecipState = Data->AmbiantPrecipState;
@@ -525,7 +522,7 @@ namespace ffs2play
                 m_state.Heading = Data->PlaneHeading;
                 m_state.Pitch = Data->PlanePitch;
                 m_state.Weight = Data->PlaneWeight;
-                m_state.Realism = Data->Realism;
+                m_state.Realism = static_cast<int>(Data->Realism);
                 m_state.RudderPos = Data->RudderPos;
                 m_state.SeaLevelPressure = Data->SeaLevelPressure;
                 m_state.TASSpeed = Data->TASSpeed;
@@ -533,7 +530,7 @@ namespace ffs2play
                 m_state.ThrottleEng2 = Data->ThrottleEng2;
                 m_state.ThrottleEng3 = Data->ThrottleEng3;
                 m_state.ThrottleEng4 = Data->ThrottleEng4;
-                m_state.TimeFactor = Data->TimeFactor;
+                m_state.TimeFactor = static_cast<int>(Data->TimeFactor);
                 m_state.Title = Data->Title;
                 m_state.TotalFuelCapacity = Data->TotalFuelCapacity;
                 m_state.Squawk = Data->Squawk;
@@ -544,12 +541,12 @@ namespace ffs2play
             }
             default:
             {
-                if (data->dwRequestID >= (DWORD)(REQUEST_ID::AI_UPDATE))
+                if (data->dwRequestID >= static_cast<DWORD>(REQUEST_ID::AI_UPDATE))
                 {
 #ifdef FFS_DEBUG
-                    m_log->log("SCManager : " + tr("OnRecvSimObjectData AIUpdate ObjectID = ") + QString::number(data->dwRequestID-(DWORD)(REQUEST_ID::AI_UPDATE)), Qt::darkBlue,LEVEL_VERBOSE);
+                    m_log->log("SCManager : " + tr("OnRecvSimObjectData AIUpdate ObjectID = ") + QString::number(data->dwRequestID-static_cast<DWORD>(REQUEST_ID::AI_UPDATE)), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-                    AIUpdateStruct* Data =  (AIUpdateStruct*)(&data->dwData);
+                    AIUpdateStruct* Data =  reinterpret_cast<AIUpdateStruct*>(&data->dwData);
                     CAircraftState AIData;
                     AIData.Altitude = Data->AvionAltitude;
                     AIData.GroundAltitude = Data->SolAltitude;
@@ -560,96 +557,96 @@ namespace ffs2play
                 else
                 {
                     SimEvent Event;
-                    Event.Data = data->dwData;
+                    Event.Data = static_cast<int>(data->dwData);
                     switch (data->dwRequestID)
                     {
-                        case REQUEST_ID::PARKING_BRAKE:
+                        case static_cast<DWORD>(REQUEST_ID::PARKING_BRAKE):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::PARKING_BRAKE;
-                            m_state.ParkingBrake=(bool)Event.Data;
+                            m_state.ParkingBrake=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::ALTIMETER_SETTING:
+                        case static_cast<DWORD>(REQUEST_ID::ALTIMETER_SETTING):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::ALTIMETER_SETTING;
                             m_state.AltimeterSetting=Event.Data;
                             break;
                         }
-                        case REQUEST_ID::BEACON_LIGHT:
+                        case static_cast<DWORD>(REQUEST_ID::BEACON_LIGHT):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::BEACON_LIGHT;
-                            m_state.BeaconLight=(bool)Event.Data;
+                            m_state.BeaconLight=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::CRASH:
+                        case static_cast<DWORD>(REQUEST_ID::CRASH):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::CRASH;
-                            m_state.Crash=(bool)(Event.Data==11);
+                            m_state.Crash=static_cast<bool>(Event.Data==11);
                             break;
                         }
-                        case REQUEST_ID::FLAPS_HANDLE_INDEX:
+                        case static_cast<DWORD>(REQUEST_ID::FLAPS_HANDLE_INDEX):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::FLAPS_HANDLE_INDEX;
                             m_state.FlapsIndex=Event.Data;
                             break;
                         }
-                        case REQUEST_ID::FLAPS_HANDLE_PERCENT:
+                        case static_cast<DWORD>(REQUEST_ID::FLAPS_HANDLE_PERCENT):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::FLAPS_HANDLE_PERCENT;
                             break;
                         }
-                        case REQUEST_ID::GEAR_HANDLE_POSITION:
+                        case static_cast<DWORD>(REQUEST_ID::GEAR_HANDLE_POSITION):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::GEAR_HANDLE_POSITION;
                             m_state.GearPos=Event.Data;
                             break;
                         }
-                        case REQUEST_ID::LANDING_LIGHT:
+                        case static_cast<DWORD>(REQUEST_ID::LANDING_LIGHT):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::LANDING_LIGHT;
-                            m_state.LandingLight=(bool)Event.Data;
+                            m_state.LandingLight=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::NAV_LIGHT:
+                        case static_cast<DWORD>(REQUEST_ID::NAV_LIGHT):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::NAV_LIGHT;
-                            m_state.NavLight=(bool)Event.Data;
+                            m_state.NavLight=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::ON_GROUND:
+                        case static_cast<DWORD>(REQUEST_ID::ON_GROUND):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::ON_GROUND;
-                            m_state.OnGround=(bool)Event.Data;
+                            m_state.OnGround=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::OVERSPEED:
+                        case static_cast<DWORD>(REQUEST_ID::OVERSPEED):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::OVERSPEED;
-                            m_state.OverSpeed=(bool)Event.Data;
+                            m_state.OverSpeed=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::PUSHBACK:
+                        case static_cast<DWORD>(REQUEST_ID::PUSHBACK):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::PUSHBACK;
-                            m_state.Pushback=(bool)Event.Data;
+                            m_state.Pushback=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::RECOGNITION_LIGHT:
+                        case static_cast<DWORD>(REQUEST_ID::RECOGNITION_LIGHT):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::RECOGNITION_LIGHT;
-                            m_state.RecoLight=(bool)Event.Data;
+                            m_state.RecoLight=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::SLEW:
+                        case static_cast<DWORD>(REQUEST_ID::SLEW):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::SLEW_ON;
-                            m_state.Slew=(bool)Event.Data;
+                            m_state.Slew=static_cast<bool>(Event.Data);
                             break;
                         }
-                        case REQUEST_ID::SMOKE_ENABLE:
+                        case static_cast<DWORD>(REQUEST_ID::SMOKE_ENABLE):
                         {
                             Event.Evt_Id = SIM_EVENT_ID::SMOKE_ENABLE;
-                            m_state.Smoke=(bool)Event.Data;
+                            m_state.Smoke=static_cast<bool>(Event.Data);
                             break;
                         }
                         default:
@@ -680,9 +677,9 @@ namespace ffs2play
     ///
     void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data)
     {
-        switch((EVENT_ID)data->uEventID)
+        switch(data->uEventID)
         {
-            case EVENT_ID::ADDED_AIRCRAFT:
+            case static_cast<DWORD>(EVENT_ID::ADDED_AIRCRAFT):
             {
 #ifdef FFS_DEBUG
                 m_log->log("SCManager : " + tr("Object as been created type = ") + QString::number(data->eObjType)
@@ -691,7 +688,7 @@ namespace ffs2play
 #endif
                 break;
             }
-            case EVENT_ID::REMOVED_AIRCRAFT:
+            case static_cast<DWORD>(EVENT_ID::REMOVED_AIRCRAFT):
             {
 #ifdef FFS_DEBUG
                 m_log->log("SCManager : " + tr("Object as been removed type = ") + QString::number(data->eObjType)
@@ -720,17 +717,17 @@ namespace ffs2play
                        tr(" , Object_ID = ") + QString::number(data->dwObjectID),
                        Qt::darkBlue,LEVEL_NORMAL);
 #endif
-            SimConnect_AIReleaseControl(m_hSimConnect,data->dwObjectID, (SIMCONNECT_DATA_REQUEST_ID)REQUEST_ID::AI_RELEASE);
+            SimConnect_AIReleaseControl(m_hSimConnect,data->dwObjectID, static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::AI_RELEASE));
             trace("SimConnect_AIReleaseControl:679");
-            SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ATTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ATTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             trace("SimConnect_TransmitClientEvent:681");
-            SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             trace("SimConnect_TransmitClientEvent:684");
-            SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             trace("SimConnect_TransmitClientEvent:686");
             emit(fireSimAICreated(it.value(),data->dwObjectID));
             m_AIProcess.remove(data->dwRequestID);
-            SimConnect_RequestDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + data->dwObjectID),DEFINITION_ID::AI_UPDATE,data->dwObjectID,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT,0,0,0);
+            SimConnect_RequestDataOnSimObject(m_hSimConnect, static_cast<SIMCONNECT_DATA_REQUEST_ID>(static_cast<uint>(REQUEST_ID::AI_UPDATE) + data->dwObjectID),DEFINITION_ID::AI_UPDATE,data->dwObjectID,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT,0,0,0);
             trace("SimConnect_RequestDataOnSimObject:701");
         }
         else
@@ -760,9 +757,11 @@ namespace ffs2play
     {
         if(m_connected)
         {
-            HRESULT result = SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,(SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::TEXT_SCROLL, pMessage.length()+1,(void*)pMessage.toStdString().c_str());
+            QByteArray array = pMessage.toLocal8Bit();
+            char* Text = array.data();
+            HRESULT result = SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::TEXT_SCROLL), static_cast<DWORD>(pMessage.length()+1),reinterpret_cast<void*>(Text));
             trace("SimConnect_Text:702");
-            if (result == E_FAIL)
+            if (result < 0)
             {
                 m_log->log("SCManager: " + tr("Send Text Failed"),Qt::darkMagenta);
             }
@@ -792,8 +791,8 @@ namespace ffs2play
             data.Pitch = pData.Pitch;
             data.Bank = pData.Bank;
             data.OnGround = pData.OnGround;
-            data.Airspeed = (DWORD) pData.IASSpeed;
-            uint index = (uint)m_AIProcess.count()+ (uint)REQUEST_ID::AI_CREATE;
+            data.Airspeed = static_cast<unsigned long>(pData.IASSpeed);
+            quint32 index = static_cast<quint32>(m_AIProcess.count())+ static_cast<quint32>(REQUEST_ID::AI_CREATE);
             m_AIProcess.insert(index,pTail);
             HRESULT result;
             if (!pNonAIObject)
@@ -802,7 +801,7 @@ namespace ffs2play
                                                             pAircraft.title().c_str(),
                                                             pTail.toStdString().c_str(),
                                                             data,
-                                                            (SIMCONNECT_DATA_REQUEST_ID)index);
+                                                            static_cast<SIMCONNECT_DATA_REQUEST_ID>(index));
                 trace("SimConnect_AICreateNonATCAircraft:741");
             }
             else
@@ -810,10 +809,10 @@ namespace ffs2play
                 result = SimConnect_AICreateSimulatedObject(m_hSimConnect,
                                                                pAircraft.title().c_str(),
                                                                data,
-                                                               (SIMCONNECT_DATA_REQUEST_ID)index);
+                                                               static_cast<SIMCONNECT_DATA_REQUEST_ID>(index));
                 trace("SimConnect_AICreateSimulatedObject:750");
             }
-            if (result==S_OK) return true;
+            if (result>=0) return true;
         }
         return false;
     }
@@ -830,7 +829,7 @@ namespace ffs2play
 #endif
         if (m_connected)
         {
-            SimConnect_AIRemoveObject(m_hSimConnect,pObjectID,(SIMCONNECT_DATA_REQUEST_ID)((uint)REQUEST_ID::AI_UPDATE + pObjectID));
+            SimConnect_AIRemoveObject(m_hSimConnect,pObjectID,static_cast<SIMCONNECT_DATA_REQUEST_ID>((static_cast<uint>(REQUEST_ID::AI_UPDATE) + pObjectID)));
             pObjectID = 0;
             trace("SimConnect_AIRemoveObject:768");
             return true;
@@ -885,7 +884,7 @@ namespace ffs2play
             MoveData.ThrottleEng2 = pData.ThrottleEng2;
             MoveData.ThrottleEng3 = pData.ThrottleEng3;
             MoveData.ThrottleEng4 = pData.ThrottleEng4;
-            SimConnect_SetDataOnSimObject(m_hSimConnect, (SIMCONNECT_DATA_DEFINITION_ID)DEFINITION_ID::AI_MOVE,pObjectID,SIMCONNECT_DATA_SET_FLAG_DEFAULT,0,sizeof(AIMoveStruct),&MoveData);
+            SimConnect_SetDataOnSimObject(m_hSimConnect, static_cast<SIMCONNECT_DATA_DEFINITION_ID>(DEFINITION_ID::AI_MOVE),pObjectID,SIMCONNECT_DATA_SET_FLAG_DEFAULT,0,sizeof(AIMoveStruct),&MoveData);
             trace("SimConnect_SetDataOnSimObject:816");
             return true;
         }
@@ -906,16 +905,16 @@ namespace ffs2play
         {
             if (pState)
             {
-                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 trace("SimConnect_TransmitClientEvent:832");
-                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 trace("SimConnect_TransmitClientEvent:834");
             }
             else
             {
-                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_LATLONG, 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 trace("SimConnect_TransmitClientEvent:839");
-                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, (SIMCONNECT_CLIENT_EVENT_ID) EVENT_ID::FREEZE_ALTITUDE, 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE), 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 trace("SimConnect_TransmitClientEvent:841");
             }
         }

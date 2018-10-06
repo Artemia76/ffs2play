@@ -46,7 +46,7 @@ namespace ffs2play
     ///
     CPeer::CPeer(UDPServer* pServer,
             QHostAddress pExternalIP,
-            int pPort,
+            quint16 pPort,
             QString pCallSign,
             bool pDisabled,
             bool pLocal,
@@ -63,7 +63,7 @@ namespace ffs2play
         m_callSign = pCallSign;
         m_server = pServer;
         m_externalIP = pExternalIP;
-        if (pInternalIP != NULL)
+        if (pInternalIP != nullptr)
         {
             m_internalIP = *pInternalIP;
         }
@@ -143,6 +143,7 @@ namespace ffs2play
         }
         m_settings.endGroup();
         m_disabled = false;
+        m_old_fps = std::numeric_limits<double>::quiet_NaN();
     }
 
     ///
@@ -273,8 +274,15 @@ namespace ffs2play
             if (m_remoteRefreshRate.count() > 0)
             {
                 // On mémorise la position actuelle de l'extrapolation
-                m_actualPos = m_AIData;
+                //m_actualPos = m_AIData;
                 m_actualPos.TimeStamp = m_lastRender;
+                m_actualPos.Altitude = m_AIData.Altitude;
+                m_actualPos.Latitude = m_AIData.Latitude;
+                m_actualPos.Longitude = m_AIData.Longitude;
+                m_actualPos.Heading = m_AIData.Heading;
+                m_actualPos.Bank = m_AIData.Bank;
+                m_actualPos.Pitch = m_AIData.Pitch;
+
                 m_futurData.TimeStamp = m_lastRender + m_predictiveTime;
                 CoefHoriz = (m_futurData.TimeStamp - m_data.TimeStamp) / m_remoteRefreshRate;
                 m_futurData.Altitude = m_data.Altitude + ((m_data.Altitude - m_oldData.Altitude) * CoefHoriz);
@@ -367,14 +375,14 @@ namespace ffs2play
                 // If we have enougth data (new + old) we start run interpolation
                 if (m_spawned >=7)
                 {
-                    double FPSAvg = pFPS;
-                    if (m_old_fps != 0)
+                    double FPSAvg = static_cast<double>(pFPS);
+                    if (!std::isnan(m_old_fps))
                     {
-                        FPSAvg = (double)(((double)pFPS + m_old_fps)/2);
+                        FPSAvg = (FPSAvg + m_old_fps)/2.0;
                     }
-                    m_old_fps = pFPS;
+                    m_old_fps = static_cast<double>(pFPS);
                     timespan Temps = duration_cast<milliseconds>(milliseconds(1000) / FPSAvg);
-                    double CoefInterpol = (double)Temps.count() / (double)duration_cast<milliseconds>(m_futurData.TimeStamp - m_actualPos.TimeStamp).count();
+                    double CoefInterpol = static_cast<double>(Temps.count()) / static_cast<double>(duration_cast<milliseconds>(m_futurData.TimeStamp - m_actualPos.TimeStamp).count());
                     m_lastRender = pTime;
                     m_AIData.Altitude += m_deltaAltitude * CoefInterpol;
                     m_AIData.Latitude += m_deltaLatitude * CoefInterpol;
@@ -427,7 +435,7 @@ namespace ffs2play
         if (m_disabled) return 4;
         else if (m_onLine)
         {
-            int latence = m_latence.count();
+            int latence = static_cast<int>(m_latence.count());
             if (latence < 200) return 3;
             else if ((latence >= 200) && (latence < 500)) return 2;
             else return 1;

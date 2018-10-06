@@ -54,7 +54,7 @@ namespace ffs2play
     /// \brief UDPServer::setPort
     /// \param pPort
     ///
-    void UDPServer::setPort(int pPort)
+    void UDPServer::setPort(quint16 pPort)
     {
         if (!m_running) m_port = pPort;
     }
@@ -64,7 +64,7 @@ namespace ffs2play
     ///
     bool UDPServer::start ()
     {
-        if ((!m_running) && (m_pListenner!=NULL))
+        if ((!m_running) && (m_pListenner!=nullptr))
         {
             if (m_pListenner->isOpen()) stop();
             m_running = m_pListenner->bind (QHostAddress::AnyIPv4, m_port);
@@ -87,7 +87,7 @@ namespace ffs2play
     ///
     void UDPServer::stop ()
     {
-        if ((m_running) && (m_pListenner !=NULL))
+        if ((m_running) && (m_pListenner !=nullptr))
         {
             m_pListenner->close();
             m_running = false;
@@ -126,7 +126,7 @@ namespace ffs2play
     ///
     void UDPServer::send(const QNetworkDatagram& pData)
     {
-        if ((m_running) && (m_pListenner !=NULL))
+        if ((m_running) && (m_pListenner !=nullptr))
         {
 #ifdef FFS_DEBUG
             m_log->log("UDPServer : " + tr("send data to ") +

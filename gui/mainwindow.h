@@ -112,7 +112,7 @@ namespace ffs2play
 #ifdef FFS_DEBUG
         QTimer          m_updateTimer;
 #endif
-        quint32         m_maxLine;
+        int             m_maxLine;
         QString         m_windowStyle;
         QString         m_dialogStyle;
         void            closeEvent(QCloseEvent* pEvent);

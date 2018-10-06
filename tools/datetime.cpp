@@ -60,6 +60,6 @@ namespace ffs2play
     uint64_t toTimeStamp(datetime pTime)
     {
         auto epoch = time_point<system_clock>();
-        return duration_cast<milliseconds>(pTime-epoch).count();
+        return static_cast<uint64_t>(duration_cast<milliseconds>(pTime-epoch).count());
     }
 }

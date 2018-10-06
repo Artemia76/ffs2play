@@ -173,7 +173,7 @@ namespace ffs2play
     ///
     void CAircraftState::fromAirData(const AirData &data)
     {
-        TimeStamp = fromTimeStamp(data.timestamp());
+        TimeStamp = fromTimeStamp(static_cast<uint64_t>(data.timestamp()));
         Title = QString::fromStdString(data.title());
         Model = QString::fromStdString(data.model());
         Type = QString::fromStdString(data.type());
