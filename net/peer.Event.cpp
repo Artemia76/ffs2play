@@ -139,6 +139,7 @@ namespace ffs2play
 #ifdef FFS_DEBUG
                             if ((CounterIn - m_counter_In) > 1) m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram missing quantity = ") + QString::number(CounterIn - m_counter_In - 1),Qt::darkBlue,LEVEL_NORMAL);
 #endif
+                            m_counter = 0;
                             if (m_spawned >=5) refreshData();
                         }
                     }

@@ -46,6 +46,7 @@ namespace ffs2play
     #endif
         m_running = false;
         m_pListenner = new QUdpSocket(this);
+        m_pListenner->setSocketOption(QAbstractSocket::LowDelayOption, 1);
         connect(m_pListenner, SIGNAL(readyRead()),this, SLOT(incomingData()));
         m_port = 0;
     }

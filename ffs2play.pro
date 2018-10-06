@@ -20,8 +20,8 @@ CONFIG(release, debug|release) {
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
     UI_DIR = release/.ui
-#	If debug info is needed for windows release to avoid
-#	Install VS Studio Debug Env, just uncomment the line below
+#   If debug info is needed for windows release to avoid
+#   Install VS Studio Debug Env, just uncomment the line below
 #   DEFINES += FFS_DEBUG
 } else {
     DESTDIR = debug
