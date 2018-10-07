@@ -38,7 +38,7 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
 		On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play:
 
-			sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler qtbase5-dev
+			sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler qt5-default pkg-config
 
 		On some qt installation you will need opengl devel :
 
@@ -69,7 +69,10 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 			qmake ffs2play.pro
 			make -j3
 			./release/ffs2play
+	1. Update
 
+		repeat previous commands after git pull
+	
 1. WIN(Visual studio community edition)
 
 	coming ...
