@@ -66,7 +66,7 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
 		on git root :
 
-			qmake ffs2play.pro
+			qmake CONFIG+=release
 			make -j3
 			./release/ffs2play
 	1. Update
