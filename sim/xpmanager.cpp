@@ -322,13 +322,19 @@ namespace ffs2play
                     QString CallSign;
                     CallSign=StringFromStream(stream);
                     stream >> Object_ID;
-
+                    if (Object_ID==0)
+                    {
+                        m_log->log("XPManager : " + tr("Receive ADD_PEER event, failed to create object"),Qt::darkMagenta);
+                    }
+                    else
+                    {
 #ifdef FFS_DEBUG
-                    m_log->log("XPManager : " + tr("Receive ADD_PEER event, object ID=") +
+                        m_log->log("XPManager : " + tr("Receive ADD_PEER event, object ID=") +
                         QString::number(Object_ID) + tr("callsign=") +
                         CallSign
                         , Qt::darkBlue,LEVEL_NORMAL);
 #endif
+                    }
                     emit(fireSimAICreated(CallSign,Object_ID));
                 }
                 catch (std::exception& e)

@@ -816,6 +816,34 @@ namespace ffs2play
     void AIMapping::DBFilePurge()
     {
         if (!m_Initialized) return;
+        int counter=0;
+#ifdef FFS_DEBUG
+        m_log->log(tr("AIMapping : Start of automatic cleaning..."),Qt::darkYellow,LEVEL_NORMAL);
+#endif
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT DISTINCT Path FROM Aircrafts WHERE Sim =:Sim");
+        query.bindValue(":Sim",m_Table);
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                QFile Acft(query.value(0).toString());
+                if (!Acft.exists())
+                {
+#ifdef FFS_DEBUG
+                    m_log->log(tr("AIMapping : deleting file ") + Acft.fileName() + tr(" from DB"),Qt::darkYellow,LEVEL_NORMAL);
+#endif
+                    counter++;
+                    query.prepare("DELETE FROM Aircrafts WHERE (Path =:Path) and (Sim =:Sim)");
+                    query.bindValue(":Sim",m_Table);
+                    query.bindValue(":Path",Acft.fileName());
+                    query.exec();
+                }
+            }
+        }
+#ifdef FFS_DEBUG
+        m_log->log(tr("AIMapping : End of automatic cleaning. ") + QString::number(counter)  + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
+#endif
     }
 
     ///
