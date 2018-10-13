@@ -341,9 +341,18 @@ namespace ffs2play
             }
             else
             {
-                m_AIResolution.set_title("Mooney Bravo");
-                m_AIResolution.set_cgheight(3.7);
-                m_AIResolution.set_pitch(2.9);
+                if (m_simManager->getType()==SIM_TYPE::FSX)
+                {
+                    m_AIResolution.set_title("Mooney Bravo");
+                    m_AIResolution.set_cgheight(3.7);
+                    m_AIResolution.set_pitch(2.9);
+                }
+                else if (m_simManager->getType()==SIM_TYPE::XPLANE)
+                {
+                    m_AIResolution.set_title("Beech Baron 58");
+                    m_AIResolution.set_cgheight(0.9);
+                    m_AIResolution.set_pitch(1.93);
+                }
 #ifdef FFS_DEBUG
                 m_log->log("Peer [" + m_callSign + "] " + tr(" Simulator have not created the requested AI, we are trying with default simulator aircraft") ,Qt::darkBlue,LEVEL_NORMAL);
 #endif

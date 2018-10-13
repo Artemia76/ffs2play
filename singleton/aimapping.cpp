@@ -171,6 +171,9 @@ namespace ffs2play
             QDir().mkpath(PathDatabase);
         }
         m_BaseFile = PathDatabase + QString("/AIDB.sqlite");
+#ifdef FFS_DEBUG
+        m_log->log(tr("AIMapping : open database : ") + m_BaseFile, Qt::darkYellow,LEVEL_NORMAL);
+#endif
         m_DB.setDatabaseName(m_BaseFile);
         m_DB.open();
         QSqlQuery query(m_DB);
