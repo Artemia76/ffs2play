@@ -14,6 +14,8 @@ TEMPLATE = app
 DEFINES += QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QT_NO_CAST_TO_ASCII
 
+QMAKE_CXXFLAGS = -Wno-unused-parameter
+
 CONFIG(release, debug|release) {
     DESTDIR = release
     OBJECTS_DIR = release/.obj
