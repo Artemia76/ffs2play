@@ -817,16 +817,18 @@ namespace ffs2play
     {
         if (!m_Initialized) return;
         int counter=0;
+        int total =0;
 #ifdef FFS_DEBUG
         m_log->log(tr("AIMapping : Start of automatic cleaning..."),Qt::darkYellow,LEVEL_NORMAL);
 #endif
         QSqlQuery query(m_DB);
-        query.prepare("SELECT DISTINCT Path FROM Aircrafts WHERE Sim =:Sim");
+        query.prepare("SELECT Path FROM Aircrafts WHERE Sim =:Sim");
         query.bindValue(":Sim",m_Table);
         if (query.exec())
         {
             while (query.next())
             {
+                total++;
                 QFile Acft(query.value(0).toString());
                 if (!Acft.exists())
                 {
@@ -842,7 +844,7 @@ namespace ffs2play
             }
         }
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : End of automatic cleaning. ") + QString::number(counter)  + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log(tr("AIMapping : End of automatic cleaning. ") + QString::number(counter)  + tr("  over ") + QString::number(total) + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
 #endif
     }
 
