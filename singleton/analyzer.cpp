@@ -44,6 +44,7 @@ namespace ffs2play
         m_sim = simbasemanager::instance();
         m_bFlyInProgress = false;
         m_phase = Phases::IDLE;
+        m_currentState.OnGround=true;
 
         connect(m_sim,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(onSimVariableEvent(CAircraftState)));
         connect(m_sim, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(onSimEvent(SimEvent)));
@@ -112,7 +113,7 @@ namespace ffs2play
         switch (pEvent.Evt_Id)
         {
         case SIM_EVENT_ID::PARKING_BRAKE:
-            m_currentState.ParkingBrake = (bool)pEvent.Data;
+            m_currentState.ParkingBrake = static_cast<bool>(pEvent.Data);
             break;
         case SIM_EVENT_ID::CRASH:
             if (pEvent.Data>0)
@@ -128,7 +129,7 @@ namespace ffs2play
             m_currentState.Pushback = pEvent.Data<3;
             break;
         case SIM_EVENT_ID::ON_GROUND:
-            m_currentState.OnGround = (bool)pEvent.Data;
+            m_currentState.OnGround = static_cast<bool>(pEvent.Data);
             if (m_currentState.OnGround)
             {
                 if (m_currentState.VSpeed < -800)
