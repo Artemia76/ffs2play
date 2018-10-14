@@ -201,6 +201,7 @@ LIBS	+= -lcrypto
 macx{
 QT_CONFIG -= no-pkg-config
 CONFIG += link_pkgconfig
+
 PKG_CONFIG = /usr/local/bin/pkg-config
 PKGCONFIG += protobuf
 
