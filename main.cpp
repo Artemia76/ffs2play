@@ -49,12 +49,13 @@ int main(int argc, char *argv[])
     QTranslator FFS2PlayTS;
 #ifdef Q_OS_LINUX
     FFS2PlayTS.load("/usr/share/ffs2play/translations/ffs2play_" + locale +".qm");
+    QFile styleFile ("/usr/share/ffs2play/ffs2play.qss");
 #else
     FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
+    QFile styleFile ( "ffs2play.qss");
 #endif
     app.installTranslator(&FFS2PlayTS);
     //Load Style Sheet
-    QFile styleFile ( "ffs2play.qss");
     styleFile.open(QFile::ReadOnly);
     if (styleFile.isOpen())
     {

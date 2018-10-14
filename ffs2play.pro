@@ -257,6 +257,10 @@ INSTALLS += Binary
 Translation.path = $${PREFIX}/share/$${TARGET}/translations
 Translation.files = $${DESTDIR}/translations/*.qm
 INSTALLS += Translation
+
+Theme.path = $${PREFIX}/share/$${TARGET}
+Theme.files = $${DESTDIR}/*.qss
+INSTALLS += Theme
 }
 
 #copy needed file to build directory
