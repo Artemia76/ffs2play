@@ -403,7 +403,7 @@ namespace ffs2play
                 }
                 if (m_data.OnGround)
                 {
-                    if ((m_AIData.Altitude > 10) && (m_AISimData.GroundAltitude > 10))
+                    if ((m_AIData.Altitude > 0) && (m_AISimData.GroundAltitude > 0))
                     {
                         // Mise à jour de l'altitude sol de référence
                         m_old_GND_AI = m_AISimData.GroundAltitude;
