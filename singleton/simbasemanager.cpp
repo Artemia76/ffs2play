@@ -465,4 +465,14 @@ namespace ffs2play
         }
         return false;
     }
+
+    sVersion simbasemanager::getPlugVersion()
+    {
+        sVersion version;
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            version = m_connector->m_version;
+        }
+        return version;
+    }
 }

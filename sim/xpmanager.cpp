@@ -270,7 +270,7 @@ namespace ffs2play
         QByteArray data(datagram.data());
         QDataStream stream(&data,QIODevice::ReadOnly);
         quint8 Code;
-        stream>>Code;
+        stream >> Code;
         switch ((FFS2Proto)Code)
         {
             case PONG:
@@ -281,6 +281,21 @@ namespace ffs2play
                     m_PingTimer.start(5000);
                     m_log->log(tr("Connected to XPlane."));
                     sendData(true);
+                    quint8 Proto,Major, Minor, Build;
+                    stream >> Proto;
+                    stream >> Major;
+                    stream >> Minor;
+                    stream >> Build;
+                    m_version.Major = static_cast<int>(Major);
+                    m_version.Minor = static_cast<int>(Minor);
+                    m_version.Build = static_cast<int>(Build);
+                    m_version.Name = QString::asprintf("xffs2play_%i_%i_%i", m_version.Major,m_version.Minor,m_version.Build);
+#ifdef FFS_DEBUG
+                    m_log->log("XPManager : " + tr("Plugin Version Major = ") + QString::number(m_version.Major) +
+                       tr(" Minor = ") + QString::number(m_version.Minor) +
+                       tr(" Build = ") + QString::number(m_version.Build)
+                       ,Qt::darkBlue,LEVEL_NORMAL);
+#endif
                     emit(fireSimConnected());
                 }
                 m_LastPong=Now();

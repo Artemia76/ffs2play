@@ -404,6 +404,7 @@ namespace ffs2play
             else
             {
                 CPeer* Peer = (*it);
+                bool user_change=false;
                 if (Shadow) IP = QHostAddress("127.0.0.1");
                 else
                 {
@@ -411,6 +412,7 @@ namespace ffs2play
                     if (IP.isNull())
                     {
                         m_log->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
+                        user_change=true;
                     }
                 }
                 if (!Peer->m_externalIP.isEqual(IP))
@@ -418,13 +420,16 @@ namespace ffs2play
 #ifdef FFS_DEBUG
                     m_log->log("P2PManager : " + tr("Change IP for user ") + Peer->CallSign + ", IP=" + Peer->m_externalIP.toString(),Qt::blue, LEVEL_NORMAL);
 #endif
+                    user_change=true;
                 }
                 if (Peer->m_port != data.Port)
                 {
 #ifdef FFS_DEBUG
                     m_log->log("P2PManager : " + tr("Change port for user ") + Peer->CallSign + ", Port=" + QString::number(Peer->m_port) ,Qt::blue, LEVEL_NORMAL);
 #endif
+                    user_change=true;
                 }
+                if (user_change) deleteUser(Peer->CallSign);
             }
         }
         //Make invert research to purge disconnected peers
@@ -444,15 +449,31 @@ namespace ffs2play
             }
             if (!find)
             {
-#ifdef FFS_DEBUG
-                m_log->log("P2PManager : " + tr("Remove user ") + m_peers[i]->CallSign, Qt::blue, LEVEL_NORMAL);
-#endif
-                disconnect(this, SIGNAL(fireSendTChat(QString)),m_peers.at(i),SLOT(OnSendTChat(QString)));
-                disconnect(m_peers.at(i), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
-                emit(firePeerRemove(m_peers[i]->CallSign));
-                delete m_peers.takeAt(i);
-
+                deleteUser(m_peers[i]->CallSign);
             }
+        }
+    }
+
+    ///
+    /// \brief CP2PManager::deleteUser
+    /// \param pCallsign
+    ///
+    void CP2PManager::deleteUser(const QString &pCallsign)
+    {
+        for (QVector<CPeer*>::iterator it = m_peers.begin() ; it != m_peers.end();)
+        {
+            if ((*it)->CallSign == pCallsign)
+            {
+#ifdef FFS_DEBUG
+                m_log->log("P2PManager : " + tr("Remove user ") + (*it)->CallSign, Qt::blue, LEVEL_NORMAL);
+#endif
+                disconnect(this, SIGNAL(fireSendTChat(QString)),(*it),SLOT(OnSendTChat(QString)));
+                disconnect((*it), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
+                emit(firePeerRemove((*it)->CallSign));
+                delete (*it);
+                it=m_peers.erase(it);
+            }
+            else it++;
         }
     }
 

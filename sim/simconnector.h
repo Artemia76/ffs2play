@@ -36,6 +36,7 @@
 #include "sim/aircraftstate.h"
 #include "singleton/clogger.h"
 #include "tools/datetime.h"
+#include "tools/getappversion.h"
 
 namespace ffs2play
 {
@@ -122,6 +123,7 @@ friend  class           simbasemanager;
         QMutex          m_Mutex;
         QSettings       m_settings;
         quint32         m_options;
+        sVersion        m_version;
 
         void            setOptionChange(SimOption pOption,bool pFlag);
         bool            getOption(SimOption pOption);

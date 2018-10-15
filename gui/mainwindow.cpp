@@ -130,6 +130,7 @@ namespace ffs2play
         m_webManager->Connect();
         QApplication::setPalette(this->palette());
         if(!ui->mainToolBar->isVisible()) ui->mainToolBar->setVisible(true);
+        m_P2PDialogVisible=false;
     }
 
     ///
@@ -162,6 +163,7 @@ namespace ffs2play
     void MainWindow::onSCM_Opened()
     {
         ui->afFSCon->setIcon(QIcon(":/gfx/plane_green.png"));
+        if (m_simManager->getType()==SIM_TYPE::XPLANE) m_webManager->CheckXPPluginVersion();
     }
 
     ///
@@ -226,7 +228,7 @@ namespace ffs2play
     ///
     void MainWindow::onAIScanFinished()
     {
-        if (m_AIMapping->getPathList().count()==0)
+        if ((m_AIMapping->getPathList().count()==0) && (!m_P2PDialogVisible))
         {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(this, tr("Simulator Aircraft Folder"),tr("at least one folder is not configured for your simulator. Do you want add the path location now?"),QMessageBox::Yes|QMessageBox::No);

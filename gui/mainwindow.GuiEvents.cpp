@@ -33,10 +33,10 @@
 #include "mainwindow.h"
 
 #include "dialogprofils.h"
-#include "dialogp2p.h"
 #include "aireplace.h"
 #include "tools/getappversion.h"
 #include "ui_mainwindow.h"
+#include "gui/dialogp2p.h"
 
 namespace ffs2play
 {
@@ -96,9 +96,10 @@ namespace ffs2play
     ///
     void MainWindow::on_afP2P_triggered()
     {
-        DialogP2P* dialog = new DialogP2P();
-        //dialog->setStyleSheet(m_dialogStyle);
+        m_P2PDialogVisible=true;
+        DialogP2P* dialog = new DialogP2P(this);
         dialog->show();
+        m_P2PDialogVisible=false;
     }
     ///
     /// \brief MainWindow::on_rb_filterNone_toggled

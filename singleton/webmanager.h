@@ -119,6 +119,7 @@ namespace ffs2play
         void                Disconnect();
         bool                isConnected();
         void                CheckNewVersion();
+        void                CheckXPPluginVersion();
 
     signals:
         void                FireHelloCallback();
@@ -134,6 +135,7 @@ namespace ffs2play
         void                ATCCallback (CHttpRequest* pRequest);
         void                LogoutCallback (CHttpRequest* pRequest);
         void                CheckNewVersionCallback (CHttpRequest* pRequest);
+        void                CheckXPPluginVersionCallback (CHttpRequest* pRequest);
         void                SendVerify();
         void                SendLiveUpdate();
         void                SendATCUpdate();

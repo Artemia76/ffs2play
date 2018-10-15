@@ -274,4 +274,41 @@ namespace ffs2play
         }
         pRequest->deleteLater();
     }
+
+    ///
+    /// \brief CWebManager::CheckNewVersionCallback
+    /// \param pRequest
+    ///
+    void CWebManager::CheckXPPluginVersionCallback(CHttpRequest* pRequest)
+    {
+        sVersion Actual = m_simManager->getPlugVersion();
+        QDomDocument Doc;
+        if (pRequest->getAsXml(Doc))
+        {
+            QDomElement xmlVersion = Doc.elementsByTagName("version").at(0).toElement();
+            QDomElement xmlURL = Doc.elementsByTagName("url").at(0).toElement();
+
+            if (!xmlVersion.isNull() && !xmlURL.isNull())
+            {
+                int SiteMajor = xmlVersion.attribute("major").toInt();
+                int SiteMinor = xmlVersion.attribute("minor").toInt();
+                int SiteBuild = xmlVersion.attribute("build").toInt();
+                QString URL = xmlURL.text();
+                QString Message;
+                if ((SiteMajor > Actual.Major)||
+                        ((SiteMajor == Actual.Major) && (SiteMinor > Actual.Minor)) ||
+                        ((SiteMajor == Actual.Major) && (SiteMinor == Actual.Minor) && (SiteBuild> Actual.Build)))
+                {
+                    Message = tr("The X-Plane XFFS2Play plugin is not up to date. Do you want update it?");
+                    QMessageBox::StandardButton reply;
+                    reply = QMessageBox::question(nullptr, tr("XFFS2Play Plugin Update"),Message,QMessageBox::Yes|QMessageBox::No);
+                    if (reply == QMessageBox::Yes)
+                    {
+                        QDesktopServices::openUrl(URL);
+                    }
+                }
+            }
+        }
+        pRequest->deleteLater();
+    }
 }

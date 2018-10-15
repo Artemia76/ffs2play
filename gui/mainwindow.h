@@ -115,6 +115,7 @@ namespace ffs2play
         int             m_maxLine;
         QString         m_windowStyle;
         QString         m_dialogStyle;
+        bool            m_P2PDialogVisible;
         void            closeEvent(QCloseEvent* pEvent);
     };
 }

@@ -49,6 +49,7 @@ namespace ffs2play
                             CP2PManager(QObject *parent = 0);
         static CP2PManager* createInstance();
         void                initUPNP(bool flag);
+        void                deleteUser(const QString& pCallsign);
         CLogger*            m_log;
         Analyzer*           m_analyser;
         UDPServer*          m_server;

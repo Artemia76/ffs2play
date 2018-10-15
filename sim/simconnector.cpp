@@ -42,6 +42,11 @@ namespace ffs2play
         m_settings.beginGroup("Sim");
         m_options = m_settings.value("EnableDisplayCallSign",0x00000001).toUInt();
         m_settings.endGroup();
+        m_version.Build=0;
+        m_version.FullVersion="none";
+        m_version.Major=0;
+        m_version.Minor=0;
+        m_version.Name="none";
     }
 
     ///
