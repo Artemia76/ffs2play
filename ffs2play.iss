@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "FFS2Play2"
-#define MyAppVersion "2_0_21"
+#define MyAppVersion "2_0_22"
 #define MyAppPublisher "FFS2"
 #define MyAppURL "http://ffs2play.fr/"
 #define MyAppExeName "ffs2play.exe"
@@ -24,7 +24,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=E:\devel\git\ffs2play\LICENSE.GPLv3
-InfoBeforeFile=E:\devel\git\ffs2play\README.md
+InfoBeforeFile=E:\devel\git\ffs2play\changelog.txt
 OutputDir=E:\devel\git\ffs2play\package
 OutputBaseFilename=ffs2play_{#MyAppVersion}
 SetupIconFile=E:\devel\git\ffs2play\ffs2play_48x48.ico
