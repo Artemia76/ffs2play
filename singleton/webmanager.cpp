@@ -59,7 +59,7 @@ namespace ffs2play
         int num = m_settings.value("Default",0).toInt();
         if(Profils.isEmpty() && (num>0))
         {
-            m_log->log("WebManager : " + tr("Users Profils Settings is empty but default user is set. Reset of default user"),Qt::darkMagenta);
+            m_log->log("WEBManager : " + tr("Users Profils Settings is empty but default user is set. Reset of default user"),Qt::darkMagenta);
             m_settings.setValue("Default",0);
         }
         else if (result == Check)
@@ -76,7 +76,7 @@ namespace ffs2play
         }
         else if (!Check.isEmpty())
         {
-            m_log->log("WebManager : " + tr("Users Profils Settings checkum error, repair setting datas"),Qt::darkMagenta);
+            m_log->log("WEBManager : " + tr("Users Profils Settings checkum error, repair setting datas"),Qt::darkMagenta);
             m_settings.setValue("Default",0);
             m_settings.setValue("Profils","");
             m_settings.setValue("Hash","");
@@ -84,7 +84,7 @@ namespace ffs2play
         m_settings.endGroup();
         m_currentUser = num;
     #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("AES Key generated = ") + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("WEBManager : " + tr("AES Key generated = ") + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
     #endif
         connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
 

@@ -78,6 +78,7 @@ namespace ffs2play
         {
             m_log->log(tr("Connecting to XPlane ..."));
             sendPing();
+            m_LastPong=Now();
             m_PingTimer.start(5000);
         }
     }

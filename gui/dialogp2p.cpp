@@ -64,11 +64,17 @@ namespace ffs2play
         // Get SimManager instance
         m_SimManager = simbasemanager::instance();
 
+        // Get Webmanager instance
+        m_WebManager = CWebManager::instance();
+
         // Get the default profil selected in configuration file
         m_settings.beginGroup("P2P");
         ui->cbInfoSim->setChecked(m_settings.value("InfoEnable", true).toBool());
         ui->cbUPNP->setChecked(m_settings.value("UPNPEnable",true).toBool());
         ui->numPort->setValue(m_settings.value("Port", 54857).toInt());
+        m_settings.endGroup();
+        m_settings.beginGroup("Main");
+        ui->cbBeta->setChecked(m_settings.value("Beta",true).toBool());
         m_settings.endGroup();
         ui->cbEnableCallsign->setChecked(m_SimManager->getOption(DisplayCallSign));
         ui->numAIRadius->setValue(m_P2PManager->getAIRadius());
@@ -84,9 +90,17 @@ namespace ffs2play
 
         m_needP2PRestart=false;
         m_needDBReload=false;
-        for (QString Item : m_AIMapping->getPathList())
+        if (m_SimManager->isConnected())
         {
-            ui->lvItems->addItem(Item);
+            for (QString Item : m_AIMapping->getPathList())
+            {
+                ui->lvItems->addItem(Item);
+            }
+        }
+        else
+        {
+            ui->btnAddItem->setEnabled(false);
+            ui->btnDelItem->setEnabled(false);
         }
         if (CWebManager::instance()->isConnected()) ui->numPort->setEnabled(false);
 
@@ -168,6 +182,11 @@ namespace ffs2play
         {
             m_P2PManager->setSendDropRate(ui->cbSendDropRate->isChecked());
         }
+        if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",true).toBool())
+        {
+            m_settings.setValue("Main/Beta",ui->cbBeta->isChecked());
+            m_WebManager->CheckNewVersion();
+        }
         m_changed=false;
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     }
@@ -248,6 +267,10 @@ namespace ffs2play
             m_changed = true;
         }
         if (ui->cbSendDropRate->isChecked() != m_P2PManager->getSendDropRate())
+        {
+            m_changed = true;
+        }
+        if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",true).toBool())
         {
             m_changed = true;
         }

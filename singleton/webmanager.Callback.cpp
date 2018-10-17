@@ -44,7 +44,7 @@ namespace ffs2play
     void CWebManager::HelloCallback (CHttpRequest* Request)
     {
     #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("Get HelloCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+        m_log->log("WEBManager : " + tr("Get HelloCallback"),Qt::darkBlue,LEVEL_VERBOSE);
     #endif
         QDomDocument Doc;
         if (Request->getAsXml(Doc))
@@ -53,7 +53,7 @@ namespace ffs2play
             QString SCert = NodeCert.firstChild().nodeValue();
             m_sCrypted_AESKey = m_crypto.RSA_EncryptToBase64(SCert, m_crypto.EncryptionKey());
     #ifdef FFS_DEBUG
-            m_log->log("WebManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
+            m_log->log("WEBManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
     #endif
             emit (FireHelloCallback());
         }
@@ -67,7 +67,7 @@ namespace ffs2play
     void CWebManager::ConnectCallback(CHttpRequest *pRequest)
     {
     #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("Get ConnectCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+        m_log->log("WEBManager : " + tr("Get ConnectCallback"),Qt::darkBlue,LEVEL_VERBOSE);
     #endif
         QDomDocument Doc;
         try
@@ -89,11 +89,11 @@ namespace ffs2play
         #ifdef FFS_DEBUG
                             if (ExternalIP.isNull())
                             {
-                                m_log->log("WebManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
+                                m_log->log("WEBManager : " + tr("Get invalid external IP"),Qt::darkMagenta,LEVEL_VERBOSE);
                             }
                             else
                             {
-                                m_log->log("WebManager : " + tr("Get external IP = ") + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
+                                m_log->log("WEBManager : " + tr("Get external IP = ") + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
                             }
         #endif
                         }
@@ -146,7 +146,7 @@ namespace ffs2play
     void CWebManager::LiveUpdateCallback(CHttpRequest* pRequest)
     {
     #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+        m_log->log("WEBManager : " + tr("Get LiveUpdateCallback"),Qt::darkBlue,LEVEL_VERBOSE);
     #endif
         if (m_bConnected)
         {
@@ -179,7 +179,7 @@ namespace ffs2play
     void CWebManager::ATCCallback(CHttpRequest *pRequest)
     {
 #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("Get ATCCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+        m_log->log("WEBManager : " + tr("Get ATCCallback"),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         pRequest->deleteLater();
     }
@@ -191,7 +191,7 @@ namespace ffs2play
     void CWebManager::LogoutCallback(CHttpRequest* 	pRequest)
     {
     #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("Get LogoutCallback"),Qt::darkBlue,LEVEL_VERBOSE);
+        m_log->log("WEBManager : " + tr("Get LogoutCallback"),Qt::darkBlue,LEVEL_VERBOSE);
     #endif
         pRequest->deleteLater();
     }
@@ -202,7 +202,7 @@ namespace ffs2play
     void CWebManager::OnATCUpdate()
     {
     #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("Get ATCUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
+        m_log->log("WEBManager : " + tr("Get ATCUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
     #endif
         if (isConnected() && m_simManager->isConnected())
         {
@@ -217,9 +217,9 @@ namespace ffs2play
     ///
     void CWebManager::OnLiveUpdate()
     {
-    #ifdef FFS_DEBUG
-        m_log->log("WebManager : " + tr("Get OnLiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
-    #endif
+#ifdef FFS_DEBUG
+        m_log->log("WEBManager : " + tr("Get OnLiveUpdate"),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
         if (m_bConnected && m_simManager->isConnected())
         {
             SendLiveUpdate();
@@ -236,40 +236,49 @@ namespace ffs2play
         QDomDocument Doc;
         if (pRequest->getAsXml(Doc))
         {
-            QDomElement xmlVersion = Doc.elementsByTagName("version").at(0).toElement();
-            QDomElement xmlURL = Doc.elementsByTagName("url").at(0).toElement();
-
-            if (!xmlVersion.isNull() && !xmlURL.isNull())
+            QDomElement xmlError = Doc.elementsByTagName("error").at(0).toElement();
+            if (xmlError.isNull())
             {
-                int SiteMajor = xmlVersion.attribute("major").toInt();
-                int SiteMinor = xmlVersion.attribute("minor").toInt();
-                int SiteBuild = xmlVersion.attribute("build").toInt();
-                bool maj = false;
-                bool compat = true;
-                QString URL = xmlURL.text();
-                QString Message;
-                if (SiteMajor > Actual.Major)
+                QDomElement xmlVersion = Doc.elementsByTagName("version").at(0).toElement();
+                QDomElement xmlURL = Doc.elementsByTagName("url").at(0).toElement();
+                if (!xmlVersion.isNull() && !xmlURL.isNull())
                 {
-                    Message = tr("This version of FFS2Play is legacy and does not suppported. Do you want update it ?");
-                    maj = true;
-                    compat = false;
-                }
-                else if ((SiteMinor > Actual.Minor)||((SiteMinor == Actual.Minor) && (SiteBuild> Actual.Build)))
-                {
-                    Message = tr("This version of FFS2Play is not up to date. Do you want update it?");
-                    maj =true;
-                }
-                if (maj)
-                {
-                    QMessageBox::StandardButton reply;
-                    reply = QMessageBox::question(nullptr, tr("FFS2Play Update"),Message,QMessageBox::Yes|QMessageBox::No);
-                    if (reply == QMessageBox::Yes)
+                    int SiteMajor = xmlVersion.attribute("major").toInt();
+                    int SiteMinor = xmlVersion.attribute("minor").toInt();
+                    int SiteBuild = xmlVersion.attribute("build").toInt();
+                    bool maj = false;
+                    bool compat = true;
+                    QString URL = xmlURL.text();
+                    QString Message;
+                    if (SiteMajor > Actual.Major)
                     {
-                        QDesktopServices::openUrl(URL);
-                        compat=false;
+                        Message = tr("This version of FFS2Play is legacy and does not suppported. Do you want update it ?");
+                        maj = true;
+                        compat = false;
                     }
-                    if (!compat) emit(FireExit());
+                    else if ((SiteMinor > Actual.Minor)||((SiteMinor == Actual.Minor) && (SiteBuild> Actual.Build)))
+                    {
+                        Message = tr("This version of FFS2Play is not up to date. Do you want update it?");
+                        maj =true;
+                    }
+                    if (maj)
+                    {
+                        QMessageBox::StandardButton reply;
+                        reply = QMessageBox::question(nullptr, tr("FFS2Play Update"),Message,QMessageBox::Yes|QMessageBox::No);
+                        if (reply == QMessageBox::Yes)
+                        {
+                            QDesktopServices::openUrl(URL);
+                            compat=false;
+                        }
+                        if (!compat) emit(FireExit());
+                    }
                 }
+            }
+            else
+            {
+#ifdef FFS_DEBUG
+                m_log->log("WEBManager : " + tr("Error on Version checking : ") + xmlError.text(),Qt::darkBlue,LEVEL_NORMAL);
+#endif
             }
         }
         pRequest->deleteLater();

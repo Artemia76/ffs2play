@@ -107,7 +107,19 @@ namespace ffs2play
     ///
     void CWebManager::CheckNewVersion()
     {
-        QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=ffs2play&beta=1";
+        // Get the default profil selected in configuration file
+        QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=ffs2play";
+        if (m_settings.value("Main/Beta",true).toBool())
+        {
+            CheckVersionURL +="&beta=1";
+        }
+#ifdef Q_OS_MAC
+        CheckVersionURL +="&os=mac";
+#elif defined Q_OS_LINUX
+        CheckVersionURL +="&os=lin";
+#elif defined Q_OS_WIN32
+        CheckVersionURL +="&os=win";
+#endif
         CHttpRequest* Request =new CHttpRequest(this);
         connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckNewVersionCallback (CHttpRequest*)));
         Request->execute(CheckVersionURL);

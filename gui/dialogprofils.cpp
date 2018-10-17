@@ -115,6 +115,7 @@ namespace ffs2play
         QListWidgetItem* item = new QListWidgetItem("Profil");
         ui->listWidget->insertItem(Row+1,item);
         ui->listWidget->setCurrentRow(Row+1);
+        ui->lineEdit_URL->setText("http://ffs2play.fr");
     }
 
     ///
@@ -217,16 +218,7 @@ namespace ffs2play
         }
         if (button == ui->buttonBox->button(QDialogButtonBox::Ok))
         {
-            if (m_changed)
-            {
-                int ret = QMessageBox::warning(this,tr("Warning"),
-                                               tr("There is some modifications on selected profil. Do you want apply them?"),
-                                               QMessageBox::Yes |QMessageBox::No);
-                if (ret == QMessageBox::Yes)
-                {
-                    applyChangedItem();
-                }
-            }
+            applyChangedItem();
             m_webManager->SetCurrentUser(ui->listWidget->currentRow()+1);
             m_webManager->SaveConfig();
             this->close();
