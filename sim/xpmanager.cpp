@@ -382,6 +382,12 @@ namespace ffs2play
                 m_Mutex.unlock();
                 break;
             }
+            case DISC:
+            {
+                close();
+                emit(fireSimDisconnected());
+                break;
+            }
             default:
             {
 #ifdef FFS_DEBUG
