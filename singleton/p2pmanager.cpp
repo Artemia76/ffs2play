@@ -433,12 +433,12 @@ namespace ffs2play
             }
         }
         //Make invert research to purge disconnected peers
-        for (int i = 0; i < m_peers.count() ; i++)
+        for (QVector<CPeer*>::iterator it = m_peers.begin() ; it != m_peers.end();)
         {
             bool find=false;
             for (PeerData data : pWhazzup)
             {
-                if (data.CallSign==m_peers[i]->CallSign)
+                if (data.CallSign==(*it)->CallSign)
                 {
                     if ((!m_Shadow) && (data.CallSign == m_CallSign))
                     {
@@ -449,8 +449,9 @@ namespace ffs2play
             }
             if (!find)
             {
-                deleteUser(m_peers[i]->CallSign);
+                deleteUser((*it)->CallSign);
             }
+            else it++;
         }
     }
 
@@ -458,7 +459,7 @@ namespace ffs2play
     /// \brief CP2PManager::deleteUser
     /// \param pCallsign
     ///
-    void CP2PManager::deleteUser(const QString &pCallsign)
+    void CP2PManager::deleteUser(const QString pCallsign)
     {
         for (QVector<CPeer*>::iterator it = m_peers.begin() ; it != m_peers.end();)
         {

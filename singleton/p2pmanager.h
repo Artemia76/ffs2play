@@ -46,10 +46,10 @@ namespace ffs2play
     {
         Q_OBJECT
     private:
-                            CP2PManager(QObject *parent = 0);
+                            CP2PManager(QObject *parent = nullptr);
         static CP2PManager* createInstance();
         void                initUPNP(bool flag);
-        void                deleteUser(const QString& pCallsign);
+        void                deleteUser(const QString pCallsign);
         CLogger*            m_log;
         Analyzer*           m_analyser;
         UDPServer*          m_server;
