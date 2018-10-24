@@ -5,3 +5,4 @@ ChangeLog:
 2.0.22 : P2P Dialog : disable add and del button when not connected to sim
          Profil Dialog : Auto fill url address
          Change version checking to enable multi platform (mac, win and lin)
+2.0.25 : Add CallSign Color setting only on X-Plane.
