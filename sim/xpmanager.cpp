@@ -309,6 +309,7 @@ namespace ffs2play
                        tr(" Build = ") + QString::number(m_version.Build)
                        ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
+                    sendCallSignColor();
                     emit(fireSimConnected());
                 }
                 m_LastPong=Now();
