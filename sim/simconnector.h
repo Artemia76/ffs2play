@@ -124,9 +124,12 @@ friend  class           simbasemanager;
         QSettings       m_settings;
         quint32         m_options;
         sVersion        m_version;
+        QColor          m_CallSignColor;
 
         void            setOptionChange(SimOption pOption,bool pFlag);
         bool            getOption(SimOption pOption);
+        void            setCallSignColor(const QColor& pColor);
+        QColor          getCallSignColor();
         CAircraftState  getState();
 
 virtual void            sendOptions()=0;
@@ -139,6 +142,8 @@ virtual	bool            createAI(AIResol& pAircraft,const QString& Tail,const CA
 virtual	bool            removeAI(uint& pObjectID)=0;
 virtual bool            updateAI(uint pObjectID, const CAircraftState& data)=0;
 virtual	void            freezeAI(uint pObjectID, bool pState)=0;
+virtual void            sendCallSignColor()=0;
+
 
     signals:
         void            finished();

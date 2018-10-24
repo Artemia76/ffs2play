@@ -79,11 +79,11 @@ const double STRETCH = _STRETCH;
 const double POLRAD = _POLRAD;
 
 #define E2 fabs(1 - _SQUASH*_SQUASH)
-static double a = _EQURAD;
-static double ra2 = 1/(_EQURAD*_EQURAD);
-//static double e = sqrt(E2);
-static double e2 = E2;
-static double e4 = E2*E2;
+const double a = _EQURAD;
+const double ra2 = 1/(_EQURAD*_EQURAD);
+const double e = sqrt(E2);
+const double e2 = E2;
+const double e4 = E2*E2;
 
 #undef _EQURAD
 #undef _FLATTENING

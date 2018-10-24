@@ -263,6 +263,18 @@ namespace ffs2play
         m_Server->send(Output);
     }
 
+    void CXPManager::sendCallSignColor()
+    {
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream << (quint8)CALLSIGN_COLOR;
+        stream << static_cast<quint8>(m_CallSignColor.red());
+        stream << static_cast<quint8>(m_CallSignColor.green());
+        stream << static_cast<quint8>(m_CallSignColor.blue());
+        QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+        m_Server->send(Output);
+    }
+
     ///
     /// \brief CXPManager::OnReceiveDatagram
     ///

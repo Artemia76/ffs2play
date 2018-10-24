@@ -32,6 +32,7 @@
 #include "singleton/webmanager.h"
 #include "singleton/simbasemanager.h"
 
+#include <QColorDialog>
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -90,17 +91,24 @@ namespace ffs2play
 
         m_needP2PRestart=false;
         m_needDBReload=false;
+        ui->pbTextColor->setVisible(false);
+        ui->cbEnableCallsign->setVisible(false);
+
+        m_textColor = m_SimManager->getCallSignColor();
+        ui->pbTextColor->setStyleSheet(QString("QPushButton {" "background-color : %1" "}").arg(m_textColor.name()));
+        ui->pbTextColor->update();
+
         if (m_SimManager->isConnected())
         {
             for (QString Item : m_AIMapping->getPathList())
             {
                 ui->lvItems->addItem(Item);
             }
-        }
-        else
-        {
-            ui->btnAddItem->setEnabled(false);
-            ui->btnDelItem->setEnabled(false);
+            if (m_SimManager->getType()==SIM_TYPE::XPLANE)
+            {
+                ui->pbTextColor->setVisible(true);
+                ui->cbEnableCallsign->setVisible(true);
+            }
         }
         if (CWebManager::instance()->isConnected()) ui->numPort->setEnabled(false);
 
@@ -187,6 +195,10 @@ namespace ffs2play
             m_settings.setValue("Main/Beta",ui->cbBeta->isChecked());
             m_WebManager->CheckNewVersion();
         }
+        if (m_textColor != m_SimManager->getCallSignColor())
+        {
+            m_SimManager->setCallSignColor(m_textColor.name());
+        }
         m_changed=false;
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     }
@@ -271,6 +283,10 @@ namespace ffs2play
             m_changed = true;
         }
         if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",true).toBool())
+        {
+            m_changed = true;
+        }
+        if (m_textColor != m_SimManager->getCallSignColor())
         {
             m_changed = true;
         }
@@ -398,4 +414,17 @@ namespace ffs2play
     {
         checkIfChanged();
     }
+
+    void DialogP2P::on_pbTextColor_released()
+    {
+        QColorDialog dlgColor(m_textColor,this);
+        dlgColor.exec();
+        if (dlgColor.result()==QDialog::Accepted)
+        {
+            m_textColor = dlgColor.selectedColor();
+            checkIfChanged();
+        }
+        ui->pbTextColor->setStyleSheet(QString("QPushButton {" "background-color : %1" "}").arg(m_textColor.name()));
+    }
 }
+

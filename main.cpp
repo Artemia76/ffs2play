@@ -31,6 +31,10 @@
 #include <QSettings>
 #include <QTranslator>
 
+#ifdef Q_OS_MACOS
+    #include "tools/keepalive.h"
+#endif
+
 ///
 /// \brief main
 /// \param argc
@@ -39,6 +43,9 @@
 ///
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_MACOS
+    KeepAlive kalive();
+#endif
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QCoreApplication::setOrganizationName("FFS2P");
     QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");

@@ -324,6 +324,7 @@ static	void                    CALLBACK DispatchCallback(SIMCONNECT_RECV* pData,
         bool                    removeAI(uint& pObjectID);
         void                    freezeAI(uint pObjectID,bool pState);
         void                    sendOptions(){}
+        void                    sendCallSignColor(){}
     };
 }
 #endif // SIMCONNECT_H

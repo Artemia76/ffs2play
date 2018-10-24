@@ -41,6 +41,7 @@ namespace ffs2play
         m_connected = false;
         m_settings.beginGroup("Sim");
         m_options = m_settings.value("EnableDisplayCallSign",0x00000001).toUInt();
+        m_CallSignColor = m_settings.value("CallSignColor", "#FF0000").toString();
         m_settings.endGroup();
         m_version.Build=0;
         m_version.FullVersion="none";
@@ -109,5 +110,19 @@ namespace ffs2play
         state=m_state;
         m_Mutex.unlock();
         return state;
+    }
+
+    void SimConnector::setCallSignColor(const QColor& pColor)
+    {
+        m_settings.beginGroup("Sim");
+        m_settings.setValue("CallSignColor",pColor.name());
+        m_settings.endGroup();
+        m_CallSignColor = pColor;
+        sendCallSignColor();
+    }
+
+    QColor SimConnector::getCallSignColor()
+    {
+        return m_CallSignColor;
     }
 }

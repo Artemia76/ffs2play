@@ -83,6 +83,8 @@ namespace ffs2play
         bool                m_needP2PRestart;
         bool                m_needDBReload;
 
+        QColor              m_textColor;
+
         void                checkIfChanged();
         void                applyChangedItem();
 
@@ -101,6 +103,7 @@ namespace ffs2play
         void                on_cbEnableCallsign_stateChanged(int arg1);
         void                on_cbDropRateDisp_stateChanged(int arg1);
         void                on_cbSendDropRate_stateChanged(int arg1);
+        void                on_pbTextColor_released();
     };
 }
 #endif // DIALOGP2P_H

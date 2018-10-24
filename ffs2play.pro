@@ -109,9 +109,13 @@ SOURCES +=      main.cpp \
                 tools/datetime.cpp \
                 tools/getappversion.cpp \
                 tools/iniparser.cpp \
-    sim/fgdatagram.cpp
+                sim/fgdatagram.cpp
 win32 {
 SOURCES +=      sim/scmanager.cpp
+}
+
+macx {
+SOURCES +=      tools/keepalive.mm
 }
 
 HEADERS  +=     gui/dialogprofils.h \
@@ -140,10 +144,13 @@ HEADERS  +=     gui/dialogprofils.h \
                 tools/getappversion.h \
                 tools/iniparser.h \
                 tools/version.h \
-    sim/fgdatagram.h
-
+                sim/fgdatagram.h
 win32 {
 HEADERS +=      sim/scmanager.h
+}
+
+macx {
+HEADERS +=      tools/keepalive.h
 }
 
 FORMS +=        gui/aireplace.ui \
@@ -276,7 +283,7 @@ QMAKE_EXTRA_TARGETS += first copydata
 # Application Version
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
-VERSION_BUILD = 24
+VERSION_BUILD = 25
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

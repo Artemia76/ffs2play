@@ -100,13 +100,13 @@ namespace ffs2play
         unload();
         switch (pSimType)
         {
-#ifdef Q_OS_WIN
             case SIM_TYPE::FSX:
             {
+#ifdef Q_OS_WIN
                 m_connector = new CSCManager(this);
+#endif
                 break;
             }
-#endif
             case SIM_TYPE::XPLANE:
             {
                 m_connector = new CXPManager(this);
@@ -474,5 +474,23 @@ namespace ffs2play
             version = m_connector->m_version;
         }
         return version;
+    }
+
+    QColor simbasemanager::getCallSignColor()
+    {
+        QColor color;
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            color = m_connector->getCallSignColor();
+        }
+        return color;
+    }
+
+    void simbasemanager::setCallSignColor(const QColor& pColor)
+    {
+        if (m_initialized && (m_connector!=nullptr))
+        {
+            m_connector->setCallSignColor(pColor);
+        }
     }
 }

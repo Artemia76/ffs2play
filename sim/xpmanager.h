@@ -49,7 +49,8 @@ namespace ffs2play
         DATA_SEND = 0x03, // Contain data of user plane
         DISC = 0x04, // Disconnect client
         ADD_PEER = 0x05, // Add peer
-        DEL_PEER = 0x06 // Remove Peer
+        DEL_PEER = 0x06, // Remove Peer
+        CALLSIGN_COLOR = 0x07 // Send Callsign color
     };
 
     ///
@@ -85,6 +86,7 @@ namespace ffs2play
         bool            updateAI(uint, const CAircraftState&);
         void            freezeAI(uint, bool);
         void            sendOptions(){}
+        void            sendCallSignColor();
 
         void            sendPing();
         void            sendData(bool pFlag);

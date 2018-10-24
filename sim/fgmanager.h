@@ -71,6 +71,7 @@ namespace ffs2play
         bool            updateAI(uint, const CAircraftState&);
         void            freezeAI(uint, bool);
         void            sendOptions(){}
+        void            sendCallSignColor(){}
 
         void            sendPing();
         void            sendData();

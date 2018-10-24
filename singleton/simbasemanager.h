@@ -92,6 +92,8 @@ namespace ffs2play
         void                        enableCallSign(bool pState);
         void                        setOptionChange(SimOption pOption,bool pFlag);
         bool                        getOption(SimOption pOption);
+        void                        setCallSignColor(const QColor& pColor);
+        QColor                      getCallSignColor();
 
     private slots:
         void                        mainThread();
