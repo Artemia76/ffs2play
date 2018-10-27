@@ -116,6 +116,7 @@ namespace ffs2play
         void                    Disable(bool pFlag);
         int                     GetSignal();
         void                    SetTxRate(int pTxRate);
+        void                    SetAIRadius(int pAIRadius);
 
     private:
         QSettings               m_settings;

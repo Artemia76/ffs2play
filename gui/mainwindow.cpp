@@ -109,7 +109,7 @@ namespace ffs2play
         connect(m_webManager, SIGNAL(FireExit()),this, SLOT(onWM_Exit()));
 
         m_AIMapping = AIMapping::instance();
-        connect(m_AIMapping, SIGNAL(fireScanFinished()),this, SLOT(onAIScanFinished()));
+        connect(m_AIMapping, SIGNAL(fireScanFinished(int,int,int)),this, SLOT(onAIScanFinished(int,int,int)));
 
         m_Analyzer = Analyzer::instance();
 
@@ -226,15 +226,23 @@ namespace ffs2play
     ///
     /// \brief MainWindow::onAIScanFinished
     ///
-    void MainWindow::onAIScanFinished()
+    void MainWindow::onAIScanFinished(int pNbAdded, int pNbUpdated, int pNBDeleted)
     {
-        if ((m_AIMapping->getPathList().count()==0) && (!m_P2PDialogVisible))
+        if (m_simManager->isConnected()&& (m_AIMapping->getPathList().count()==0) && (!m_P2PDialogVisible))
         {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(this, tr("Simulator Aircraft Folder"),tr("at least one folder is not configured for your simulator. Do you want add the path location now?"),QMessageBox::Yes|QMessageBox::No);
             if (reply == QMessageBox::Yes)
             {
                 on_afP2P_triggered();
+            }
+        }
+        if ((pNbAdded!=0)||(pNbUpdated!=0)||(pNBDeleted!=0))
+        {
+            if (m_webManager->isConnected())
+            {
+                m_webManager->Disconnect();
+                m_webManager->Connect();
             }
         }
     }

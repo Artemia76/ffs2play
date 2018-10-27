@@ -66,8 +66,9 @@ namespace ffs2play
         simbasemanager*         m_simManager;
         QString                 m_Table;
         QStringList             m_AircraftPaths;
-        int                     m_NbAdded;
-        int                     m_NbUpdated;
+        QAtomicInt              m_NbAdded;
+        QAtomicInt              m_NbUpdated;
+        QAtomicInt              m_NbDeleted;
 
     public:
                                 ~AIMapping();
@@ -91,7 +92,7 @@ namespace ffs2play
         bool                    delPath(const QString& pPath);
 
     signals:
-        void                    fireScanFinished();
+        void                    fireScanFinished(int pAdded, int pUpdated, int pDeleted);
     private slots:
         void                    onSimReceiveOpen();
         void                    onSimReceiveClose();

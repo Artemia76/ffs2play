@@ -88,7 +88,7 @@ namespace ffs2play
     #endif
         connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
 
-        m_ATCTimer.setInterval(5000);
+        m_ATCTimer.setInterval(1000);
         m_liveUpdateTimer.setInterval(30000);
         connect(&m_ATCTimer, SIGNAL(timeout()),this,SLOT(OnATCUpdate()));
         connect(&m_liveUpdateTimer, SIGNAL(timeout()),this,SLOT(OnLiveUpdate()));

@@ -298,6 +298,7 @@ namespace ffs2play
     {
         m_NbAdded=0;
         m_NbUpdated=0;
+        m_NbDeleted=0;
         m_log->log(tr("Start updating aircraft database..."));
         //Since QT5.11, create new connexion for thread
         const QString thread_address = QLatin1String("0x") + QString::number((quintptr)QThread::currentThreadId(), 16);
@@ -331,8 +332,10 @@ namespace ffs2play
         }
         //Close DB Connexion
         m_Thread_DB.close();
-        m_log->log(tr("End of update : ") + QString::number(m_NbAdded) + tr(" aircrafts added and ") + QString::number(m_NbUpdated) + tr(" updated."));
-        emit(fireScanFinished());
+        m_log->log(tr("End of update : ") + QString::number(m_NbAdded) +
+                   tr(" aircrafts added, ") + QString::number(m_NbUpdated) +
+                   tr(" updated and ") + QString::number(m_NbDeleted) + tr(" deleted."));
+        emit(fireScanFinished(m_NbAdded, m_NbUpdated, m_NbDeleted));
     }
 
     ///
@@ -539,7 +542,7 @@ namespace ffs2play
                 m_log->log(tr("AIMapping : Title Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
             }
-            else
+            else if (Model.count()>0)
             {
                 query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
                 query.bindValue(":Sim",m_Table);
@@ -553,8 +556,31 @@ namespace ffs2play
                         Resol.set_pitch(query.value(2).toDouble());
                         Resol.set_path(query.value(3).toString().toStdString());
         #ifdef FFS_DEBUG
-                        m_log->log(tr("AIMapping : ATC Model Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
+                        m_log->log(tr("AIMapping : ATC Model")+ Model+ tr(" Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
         #endif
+                    }
+                }
+                else
+                {
+#ifdef FFS_DEBUG
+                    m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+                }
+            }
+            else
+            {
+                Title = QString::fromStdString(Resol.title());
+                query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
+                query.bindValue(":Sim",m_Table);
+                query.bindValue(":Title",Title);
+                if (query.exec())
+                {
+                    if (query.next())
+                    {
+                        Resol.set_title(query.value(0).toString().toStdString());
+                        Resol.set_cgheight(query.value(1).toDouble());
+                        Resol.set_pitch(query.value(2).toDouble());
+                        Resol.set_path(query.value(3).toString().toStdString());
                     }
                 }
                 else
@@ -752,6 +778,13 @@ namespace ffs2play
     void AIMapping::cleanAIDB()
     {
         if (!m_Initialized) return;
+        QSqlQuery query(m_DB);
+        query.prepare("DELETE FROM Replacement");
+        query.exec();
+        query.prepare("DELETE FROM Aircrafts");
+        query.exec();
+        query.prepare("DELETE FROM SimPaths");
+        query.exec();
     }
 
     ///
@@ -819,7 +852,7 @@ namespace ffs2play
     void AIMapping::DBFilePurge()
     {
         if (!m_Initialized) return;
-        int counter=0;
+        int m_NbDeleted=0;
         int total =0;
 #ifdef FFS_DEBUG
         m_log->log(tr("AIMapping : Start of automatic cleaning..."),Qt::darkYellow,LEVEL_NORMAL);
@@ -838,7 +871,7 @@ namespace ffs2play
 #ifdef FFS_DEBUG
                     m_log->log(tr("AIMapping : deleting file ") + Acft.fileName() + tr(" from DB"),Qt::darkYellow,LEVEL_NORMAL);
 #endif
-                    counter++;
+                    m_NbDeleted++;
                     query.prepare("DELETE FROM Aircrafts WHERE (Path =:Path) and (Sim =:Sim)");
                     query.bindValue(":Sim",m_Table);
                     query.bindValue(":Path",Acft.fileName());
@@ -847,7 +880,7 @@ namespace ffs2play
             }
         }
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : End of automatic cleaning. ") + QString::number(counter)  + tr("  over ") + QString::number(total) + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log(tr("AIMapping : End of automatic cleaning. ") + QString::number(m_NbDeleted)  + tr("  over ") + QString::number(total) + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
 #endif
     }
 

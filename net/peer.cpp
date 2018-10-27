@@ -190,12 +190,6 @@ namespace ffs2play
                     Qt::darkBlue,LEVEL_NORMAL);
 #endif
             m_AIResolution = m_AIMapping->SolveTitle(m_data.Title,m_data.Model, m_data.Type);
-            if (m_AIResolution.title() != "Mooney Bravo")
-            {
-#ifdef FFS_DEBUG
-                m_log->log("Peer [" + m_callSign + "] " + tr(" the local request has find a solution"), Qt::darkBlue,LEVEL_NORMAL);
-#endif
-            }
             m_spawned = 2;
             createAI();
         }
@@ -450,5 +444,10 @@ namespace ffs2play
     void CPeer::SetTxRate(int pTxRate)
     {
         P2PRate = pTxRate;
+    }
+
+    void CPeer::SetAIRadius(int pAIRadius)
+    {
+        P2PRadius = pAIRadius;
     }
 }

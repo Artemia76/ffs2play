@@ -415,6 +415,9 @@ namespace ffs2play
         checkIfChanged();
     }
 
+    ///
+    /// \brief DialogP2P::on_pbTextColor_released
+    ///
     void DialogP2P::on_pbTextColor_released()
     {
         QColorDialog dlgColor(m_textColor,this);
@@ -426,5 +429,18 @@ namespace ffs2play
         }
         ui->pbTextColor->setStyleSheet(QString("QPushButton {" "background-color : %1" "}").arg(m_textColor.name()));
     }
-}
 
+    ///
+    /// \brief DialogP2P::on_pushButton_released
+    ///
+    void DialogP2P::on_pushButton_released()
+    {
+        int ret = QMessageBox::warning(this,tr("Warning"),
+            tr("This function reset all AI Database for all simulator, are you sure to continue?"),
+            QMessageBox::Yes |QMessageBox::No);
+        if (ret == QMessageBox::Yes)
+        {
+            m_AIMapping->cleanAIDB();
+        }
+    }
+}

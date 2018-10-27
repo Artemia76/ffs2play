@@ -84,7 +84,7 @@ namespace ffs2play
         void        onPeerChange(QString pCallSign,int pSignal);
         void        onPeerAdd(QString pCallSign);
         void        onPeerReceiveTChat(QString,QString);
-        void        onAIScanFinished();
+        void        onAIScanFinished(int pNbAdded, int pNbUpdated, int pNBDeleted);
         void        on_rb_filterNone_toggled(bool checked);
         void        on_rb_filterNormal_toggled(bool checked);
         void        on_rb_filterVerbose_toggled(bool checked);

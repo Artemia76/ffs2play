@@ -27,12 +27,9 @@
  * **************************************************************************/
 
 #include "singleton/p2pmanager.h"
-#include <QNetworkDatagram>
+#include <QNetworkInterface>
 #include "singleton/singleton.h"
 #include <cfloat>
-#ifdef Q_OS_WIN
-#include "WinSock2.h"
-#endif
 
 #include <sstream>
 
@@ -46,11 +43,25 @@ namespace ffs2play
     {
         m_log=CLogger::instance();
         m_analyser = Analyzer::instance();
+        m_bUPNP=false;
         connect (m_analyser, SIGNAL(fireTouchSpeed(double)),this,SLOT(onLanding(double)));
         m_server = new UDPServer(this);
         connect (&m_checkAITimer,SIGNAL(timeout()),this,SLOT(onCheckAI()));
         m_checkAITimer.start(5000);
         m_LastDropRate = Now();
+        QList<QHostAddress> InterfaceList = QNetworkInterface::allAddresses();
+        for (QHostAddress IP : InterfaceList)
+        {
+            if ((!IP.isLoopback())&&(IP.protocol()==QAbstractSocket::IPv4Protocol))
+                m_InternalIP.add_ip(IP.toString().toStdString());
+        }
+#ifdef FFS_DEBUG
+        m_log->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
+        for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
+        {
+            m_log->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
+        }
+#endif
     }
 
     ///
@@ -147,13 +158,10 @@ namespace ffs2play
         {
             m_settings.beginGroup("P2P");
             m_port = static_cast<quint16>(m_settings.value("Port",54857).toInt());
-            m_bUPNP = false;
             m_server->setPort(m_port);
             m_server->start();
             if (m_settings.value("UPNPEnable", true).toBool())
-            {
                 initUPNP(true);
-            }
             m_Shadow = m_settings.value("ShadowEnable", false).toBool();
             m_AILimit = m_settings.value("AILimit",-1).toInt();
             m_AIRadius = m_settings.value("AIRadius",10).toInt();
@@ -178,14 +186,6 @@ namespace ffs2play
         if (flag)
         {
             if (m_bUPNP) return;
-    #ifdef Q_OS_WIN
-            WSADATA wsaData;
-            int nResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-            if(nResult != NO_ERROR) {
-                m_log->log("P2PManager : "+ tr("UPNP Windows Socket failed."),Qt::red);
-                return;
-            }
-    #endif
             UPNPDev* devlist;
             char lanaddr[64]; // IP address on the LAN
             char wanaddr[64]; // IP address on the Internet
@@ -237,15 +237,9 @@ namespace ffs2play
                         }
                     }
 #endif
-                    m_InternalIP.add_ip(lanaddr);
                     UPNP_GetExternalIPAddress(m_urls.controlURL,m_data.first.servicetype,wanaddr);
                     m_ExternalIP = QHostAddress(QString(wanaddr));
 #ifdef FFS_DEBUG
-                    m_log->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
-                    for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
-                    {
-                        m_log->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
-                    }
                     m_log->log("P2PManager : " + tr("Internet IP address : ") + m_ExternalIP.toString(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
                     error = UPNP_AddPortMapping(
@@ -260,12 +254,12 @@ namespace ffs2play
                             "0"
                     );
                     if (error != UPNPCOMMAND_SUCCESS)
-                        m_log->log("P2PManager : " + tr("Adding port mappping failed with code ") + QString::number(error),Qt::red);
-                    else m_bUPNP=true;
+                        m_log->log("P2PManager : " + tr("Adding port mappping failed with code ") + QString::number(error),Qt::magenta);
+                        else m_bUPNP=true;
                 }
                 else
                 {
-                    m_log->log("P2PManager : " + tr("No valid UPNP Internet Gateway Device found."),Qt::red);
+                    m_log->log("P2PManager : " + tr("No valid Internet Gateway Device found."));
                 }
                 freeUPNPDevlist(devlist);
             }
@@ -286,7 +280,7 @@ namespace ffs2play
                         nullptr
             );
             if (error != UPNPCOMMAND_SUCCESS)
-                m_log->log("P2PManager : " + tr("Delete port mapping failed with code ") + QString::number(error),Qt::red);
+                m_log->log("P2PManager : " + tr("Delete port mapping failed with code ") + QString::number(error),Qt::magenta);
             m_bUPNP = false;
         }
     }
@@ -582,6 +576,10 @@ namespace ffs2play
         if ((pAIRadius<0) || (pAIRadius>99)) return;
         m_settings.setValue("P2P/AIRadius",pAIRadius);
         m_AIRadius=pAIRadius;
+        for (CPeer* Peer: m_peers)
+        {
+            Peer->SetAIRadius(m_AIRadius);
+        }
     }
 
     ///
