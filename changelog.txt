@@ -6,3 +6,5 @@ ChangeLog:
          Profil Dialog : Auto fill url address
          Change version checking to enable multi platform (mac, win and lin)
 2.0.25 : Add CallSign Color setting only on X-Plane.
+2.0.26 : Bug resolution for Default AI Replacement, AI Radius propagation when changed and Local IP when UPNP disable
+         New Feature : Button to reset AIDB in P2P dialog box
