@@ -1,3 +1,3 @@
 #! /bin/bash
-qmake CONFIG+=release
-make
+qmake ffs2play.pro CONFIG+=release
+make -j3

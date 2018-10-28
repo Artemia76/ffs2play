@@ -207,7 +207,18 @@ namespace ffs2play
         if (isConnected() && m_simManager->isConnected())
         {
             int Transponder = m_simManager->getAircraftState().Squawk;
-            if ((Transponder == 1200) || (Transponder == 7000) || (Transponder == 4700)) return;
+            int TransponderMode = m_simManager->getAircraftState().SquawkMode;
+            switch (m_simManager->getType())
+            {
+                case SIM_TYPE::FSX:
+                {
+                    if ((Transponder == 1200) || (Transponder == 7000) || (Transponder == 4700)) return;
+                }
+                case SIM_TYPE::XPLANE:
+                {
+                    if (TransponderMode<2) return;
+                }
+            }
             SendATCUpdate();
         }
     }

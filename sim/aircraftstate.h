@@ -82,6 +82,7 @@ namespace ffs2play
         quint32     AmbiantPrecipState;
         qint32      AltimeterSetting;
         qint32      NumEngine;
+        qint32      SquawkMode;
         int         Door1Pos;
         int         Door2Pos;
         int         Door3Pos;

@@ -96,6 +96,7 @@ namespace ffs2play
         NavLight=0;
         RecoLight=0;
         Smoke=0;
+        SquawkMode=0;
         //Etat
         OnGround = false;
         ParkingBrake = false;
@@ -165,6 +166,7 @@ namespace ffs2play
         data.set_tasspeed(TASSpeed);
         data.set_parkingbrake(ParkingBrake);
         data.set_vspeed(Vario);
+        data.set_squawkmode(SquawkMode);
     }
 
     ///
@@ -216,5 +218,6 @@ namespace ffs2play
         GroundSpeed = data.gndspeed();
         ParkingBrake = data.parkingbrake();
         Vario = data.vspeed();
+        SquawkMode = data.squawkmode();
     }
 }

@@ -88,7 +88,7 @@ namespace ffs2play
     #endif
         connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
 
-        m_ATCTimer.setInterval(1000);
+        m_ATCTimer.setInterval(5000);
         m_liveUpdateTimer.setInterval(30000);
         connect(&m_ATCTimer, SIGNAL(timeout()),this,SLOT(OnATCUpdate()));
         connect(&m_liveUpdateTimer, SIGNAL(timeout()),this,SLOT(OnLiveUpdate()));
@@ -289,7 +289,7 @@ namespace ffs2play
                 xmlAltitude.appendChild(pDoc.createTextNode(QString::number(State.Altitude,'f',0)));
                 xmlAtc.appendChild(xmlAltitude);
                 QDomElement xmlGroundSpeed = pDoc.createElement("groundSpeed");
-                xmlAtc.appendChild(pDoc.createTextNode(QString::number(State.GroundSpeed,'f',0)));
+                xmlGroundSpeed.appendChild(pDoc.createTextNode(QString::number(State.GroundSpeed,'f',0)));
                 xmlAtc.appendChild(xmlGroundSpeed);
                 QDomElement xmlIASpeed = pDoc.createElement("iaspeed");
                 xmlIASpeed.appendChild(pDoc.createTextNode(QString::number(State.IASSpeed,'f',0)));
