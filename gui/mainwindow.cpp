@@ -589,6 +589,21 @@ namespace ffs2play
                 case 49:
                 {
                     ui->twSIMData->item(i,0)->setText(QString::number(State.SquawkMode));
+                    break;
+                }
+                case 50:
+                {
+                    int Transponder;
+                    if (m_simManager->getType()==SIM_TYPE::FSX)
+                    {
+                        Transponder=ConvertToBinaryCodedDecimal(State.Squawk);
+                    }
+                    else
+                    {
+                        Transponder=State.Squawk;
+                    }
+                    ui->twSIMData->item(i,0)->setText(QString::number(Transponder));
+                    break;
                 }
             }
         }
