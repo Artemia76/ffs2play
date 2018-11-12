@@ -69,10 +69,11 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 			qmake CONFIG+=release
 			make -j3
 			./release/ffs2play
+
 	1. Update
 
 		repeat previous commands after git pull
-	
+
 1. WIN(Visual studio community edition)
 
 	coming ...

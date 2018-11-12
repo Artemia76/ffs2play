@@ -44,7 +44,7 @@
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_MACOS
-    KeepAlive kalive();
+    KeepAlive kalive;
 #endif
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QCoreApplication::setOrganizationName("FFS2P");
