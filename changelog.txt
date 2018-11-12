@@ -9,3 +9,5 @@ ChangeLog:
 2.0.26 : Bug resolution for Default AI Replacement, AI Radius propagation when changed and Local IP when UPNP disable
          New Feature : Button to reset AIDB in P2P dialog box
 2.0.27 : Disable ATC Update when X-Plane Squawk is off or stby
+
+2.0.28 : Prevent Sleep Mode on osx Mojave
