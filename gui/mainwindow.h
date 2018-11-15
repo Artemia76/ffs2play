@@ -95,6 +95,7 @@ namespace ffs2play
         void        openMappingBox();
         void        unblockData();
         void        blockData();
+        void        maskIA();
         void        clearLog();
         void        saveLog();
 

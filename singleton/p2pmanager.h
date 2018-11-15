@@ -70,6 +70,7 @@ namespace ffs2play
         IGDdatas            m_data;
         QVector<CPeer*>     m_peers;
         QTimer              m_checkAITimer;
+        QStringList         m_BlackList;
     public:
         ~CP2PManager();
         static CP2PManager*	instance();
@@ -80,6 +81,7 @@ namespace ffs2play
         QString             getCallsign();
         void                whazzup_Update(QVector<PeerData>& pWhazzup);
         bool                isDisabled(const QString& pCallsign);
+        void                setDisable(const QString& pCallsign, bool pFlag);
         void                clear();
         void                sendTChat(const QString& pMessage);
         int                 getTxRate();
@@ -98,6 +100,8 @@ namespace ffs2play
         void                setDropRateDisplay(bool pFlag);
         bool                getSendDropRate();
         void                setSendDropRate(bool pFlag);
+        bool                getMaskedIA(const QString &pPeerName);
+        void                setMaskedIA(const QString &pPeerName, bool pFlag);
 
     signals:
         void                firePeerAdd(QString);

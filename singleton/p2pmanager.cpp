@@ -168,6 +168,7 @@ namespace ffs2play
             m_P2PRate = m_settings.value("TxRate",200).toInt();
             m_DropRateDisplay = m_settings.value("DropRateDisplay",true).toBool();
             m_SendDropRate = m_settings.value("SendDropRate",false).toBool();
+            m_BlackList = m_settings.value("BlackList").toStringList();
             m_settings.endGroup();
         }
         else
@@ -479,10 +480,44 @@ namespace ffs2play
     ///
     bool CP2PManager::isDisabled(const QString &pCallsign)
     {
-        m_settings.beginGroup("P2P");
-        QStringList List = m_settings.value("BlackList").value<QStringList>();
-        m_settings.endGroup();
-        return List.contains(pCallsign);
+        return m_BlackList.contains(pCallsign);
+    }
+
+    void CP2PManager::setDisable(const QString &pCallsign, bool pFlag)
+    {
+        CPeer* Peer=nullptr;
+        for (CPeer* pPeer : m_peers)
+        {
+            if (pPeer!=nullptr)
+            {
+                if (pPeer->CallSign == pCallsign)
+                {
+                    Peer=pPeer;
+                }
+            }
+        }
+        if (Peer == nullptr) return;
+        bool Changed=false;
+        if ((!m_BlackList.contains(pCallsign)) && pFlag)
+        {
+            m_BlackList.append(pCallsign);
+            Changed=true;
+        }
+        if (m_BlackList.contains(pCallsign) && (!pFlag))
+        {
+            m_BlackList.removeOne(pCallsign);
+            Changed=true;
+        }
+        if (Changed)
+        {
+            m_settings.beginGroup("P2P");
+            m_settings.setValue("BlackList",m_BlackList);
+            m_settings.endGroup();
+            if (m_BlackList.contains(pCallsign))
+                Peer->Stop();
+            else
+                Peer->Start();
+        }
     }
 
     ///

@@ -11,3 +11,5 @@ ChangeLog:
 2.0.27 : Disable ATC Update when X-Plane Squawk is off or stby
 
 2.0.28 : Prevent Sleep Mode on osx Mojave
+
+2.0.29 : Add Mask Peer Feature

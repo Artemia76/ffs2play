@@ -185,15 +185,23 @@ namespace ffs2play
             }
     #ifdef FFS_DEBUG
             //Block data
+
             if (m_P2PManager->getBlockedData(temp->text()))
             {
-                myMenu.addAction("Unblock Data", this, SLOT(unblockData()));
+                QAction* BlockMenu;
+                BlockMenu = myMenu.addAction("Unblock Data", this, SLOT(unblockData()));
+                BlockMenu->setCheckable(true);
+                BlockMenu->setChecked(true);
             }
             else
             {
                 myMenu.addAction("Block Data", this, SLOT(blockData()));
             }
     #endif
+            // Mask IA
+            QAction* MaskMenu = myMenu.addAction("Mask", this, SLOT(maskIA()));
+            MaskMenu->setCheckable(true);
+            MaskMenu->setChecked(m_P2PManager->isDisabled(temp->text()));
             // Show context menu at handling position
             myMenu.exec(globalPos);
         }
@@ -230,6 +238,15 @@ namespace ffs2play
         if (item != nullptr)
         {
             m_P2PManager->setBlockedData(item->text(),true);
+        }
+    }
+
+    void MainWindow::maskIA()
+    {
+        QListWidgetItem* item = ui->lwPeer->currentItem();
+        if (item != nullptr)
+        {
+            m_P2PManager->setDisable(item->text(),!m_P2PManager->isDisabled(item->text()));
         }
     }
 
