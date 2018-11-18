@@ -246,6 +246,7 @@ win32 {
     DEPLOY_COMMAND = windeployqt --no-system-d3d-compiler --no-opengl --no-opengl-sw --no-angle --no-compiler-runtime
 }
 macx {
+    ICON = ffs2play.icns
     DEPLOY_COMMAND = macdeployqt
 }
 
