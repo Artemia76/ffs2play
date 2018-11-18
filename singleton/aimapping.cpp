@@ -45,7 +45,13 @@ namespace ffs2play
         m_simManager = simbasemanager::instance();
         connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
         connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
+        // AI Database initialisation
         initSQLite();
+#ifdef Q_OS_WIN
+        //if we are on windows platform, we are looking for FSX like base installation
+        // FSX,FSX Steam Edition, P3D v2, P3D v3, P3D v4
+        searchSimPath();
+#endif
     }
 
     ///
@@ -76,66 +82,96 @@ namespace ffs2play
         return Singleton<AIMapping>::instance(AIMapping::createInstance);
     }
 
-    /*QString AIMapping::findInstallationPath(const QString &pKey)
+#ifdef Q_OS_WIN
+
+    void AIMapping::searchSimPath()
     {
-        QString Response = "";
-#ifdef Q_OS_WIN32
-        QSettings localKey("HKEY_LOCAL_MACHINE\\Software\\",QSettings::NativeFormat);
-        QString registryKey;
-        if (localKey.childGroups().contains("Software\\" + pKey,Qt::CaseInsensitive))
+        if (!m_Initialized) return;
+        QString Path;
+        QSqlQuery query(m_DB);
+        QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
+        QHash<QString, QString> hash;
+        hash[version.valueToKey(SimConnector::SIM_VERSION::FSX)] = "Microsoft\\Microsoft Games\\Flight Simulator\\10.0";
+        hash[version.valueToKey(SimConnector::SIM_VERSION::FSX_STEAM)] = "DovetailGames\\FSX";
+        hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V2)] = "Lockheed Martin\\Prepar3D v2";
+        hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V3)] = "Lockheed Martin\\Prepar3D v3";
+        hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V4)] = "Lockheed Martin\\Prepar3D v4";
+
+        // Lets search path installation for each supported windows simulators
+        QHashIterator<QString, QString> it(hash);
+        while (it.hasNext())
         {
-            registryKey = "Software\\" + pKey;
-        }
-        else if (localKey.childGroups().contains("WOW6432Node\\" + pKey,Qt::CaseInsensitive))
-        {
-            registryKey = "WOW6432Node\\" + pKey;
-        }
-        else
-        {
-#ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : Simulator ") + pKey + " not found", Qt::darkYellow,LEVEL_NORMAL);
-#endif
-            return "";
-        }
-        localKey.beginGroup(registryKey);
-        // First we search key "Install_Path"
-        if (localKey.childKeys().contains("Install_Path"),Qt::CaseInsensitive)
-        {
-            registryKey = "Install_Path";
-        }
-        else
-        {
-#ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : Key Install_Path was not found in ") + pKey, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-            // 2nd we search with key "SetupPath"
-            if (localKey.childKeys().contains("SetupPath"),Qt::CaseInsensitive)
+            it.next();
+            query.prepare("SELECT Path FROM SimPaths WHERE Sim = :Sim;");
+            query.bindValue(":Sim",it.key());
+            if (query.exec())
             {
-                registryKey = "SetupPath";
-            }
-            else
-            {
-#ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : Key SetupPath was not found in ") + pKey, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-                // 3rd we search with key "AppPath"
-                if (localKey.childKeys().contains("AppPath"),Qt::CaseInsensitive)
+                if (!query.next()) // If path installation is empty
                 {
-                    registryKey = "AppPath";
+#ifdef FFS_DEBUG
+                    m_log->log(tr("AIMapping : ") + it.key() + tr(" Path list is empty, let try to find path installation..."), Qt::darkYellow,LEVEL_NORMAL);
+#endif
+                    Path = findInstallationPath(it.value());
+                    //If Path is empty let try to search in 64Bit registry
+                    if (Path.isEmpty())  Path = findInstallationPath(it.value(),QSettings::Registry64Format);
+                    if (!Path.isEmpty())
+                    {
+#ifdef FFS_DEBUG
+                        m_log->log(tr("AIMapping : Path found for ") + it.key() + tr(" = ") + Path, Qt::darkYellow,LEVEL_NORMAL);
+#endif
+                        addPath(QDir::fromNativeSeparators(Path + "SimObjects\\Airplanes"), it.key());
+                        addPath(QDir::fromNativeSeparators(Path + "SimObjects\\Rotorcraft"), it.key());
+                    }
+                    else
+                    {
+#ifdef FFS_DEBUG
+                        m_log->log(tr("AIMapping : No path found for ") + it.key(), Qt::darkYellow,LEVEL_NORMAL);
+#endif
+                    }
                 }
                 else
                 {
 #ifdef FFS_DEBUG
-                    m_log->log(tr("AIMapping : Key AppPath was not found in ") + pKey, Qt::darkYellow,LEVEL_NORMAL);
+                    m_log->log(tr("AIMapping : ") + it.key() + tr(" Path list already contains some path"), Qt::darkYellow,LEVEL_NORMAL);
 #endif
-                    return "";
                 }
             }
-        }
-        Response = localKey.value(registryKey,"").toString();
+            else
+            {
+#ifdef FFS_DEBUG
+                m_log->log(tr("AIMapping : Fail to query path list for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
+            }
+        }
+    }
+
+    ///
+    /// \brief AIMapping::findInstallationPath
+    /// \param pKey
+    /// \return
+    ///
+    QString AIMapping::findInstallationPath(const QString &pKey,QSettings::Format pFormat)
+    {
+        QString Response = "";
+        QSettings localKey32("HKEY_LOCAL_MACHINE\\Software\\" + pKey ,pFormat);
+        QSettings localKey64("HKEY_LOCAL_MACHINE\\WOW6432Node\\" + pKey ,pFormat);
+        QString registryKey;
+        Response = localKey32.value("Install_Path","").toString();
+        if (Response.isEmpty())
+        {
+            Response = localKey32.value("SetupPath","").toString();
+        }
+        if (Response.isEmpty())
+        {
+            Response = localKey64.value("Install_Path","").toString();
+        }
+        if (Response.isEmpty())
+        {
+            Response = localKey64.value("SetupPath","").toString();
+        }
         return Response;
-    }*/
+    }
+#endif
 
     ///
     /// \brief AIMapping::onSimReceiveOpen
@@ -301,7 +337,7 @@ namespace ffs2play
         m_NbDeleted=0;
         m_log->log(tr("Start updating aircraft database..."));
         //Since QT5.11, create new connexion for thread
-        const QString thread_address = QLatin1String("0x") + QString::number((quintptr)QThread::currentThreadId(), 16);
+        const QString thread_address = QLatin1String("0x") + QString::number(reinterpret_cast<quintptr>(QThread::currentThreadId()), 16);
         QSqlDatabase Thread_DB=QSqlDatabase::database(thread_address);
         Thread_DB.setDatabaseName(m_BaseFile);
         if ((!Thread_DB.isOpen()) || (!Thread_DB.isValid()))
@@ -918,12 +954,15 @@ namespace ffs2play
     /// \param pPath
     /// \return
     ///
-    bool AIMapping::addPath(const QString& pPath)
+    bool AIMapping::addPath(const QString& pPath,const QString& pSim)
     {
-        if ((!m_Initialized) || (m_Table.isEmpty())) return false;
+        QString Sim;
+        if (pSim.isEmpty()) Sim = m_Table;
+        else Sim=pSim;
+        if ((!m_Initialized) || (Sim.isEmpty())) return false;
         QSqlQuery query(m_DB);
         query.prepare("INSERT INTO SimPaths (Sim , Path) VALUES (:Sim , :Path);");
-        query.bindValue(":Sim",m_Table);
+        query.bindValue(":Sim",Sim);
         query.bindValue(":Path",pPath);
         if (!query.exec())
         {

@@ -13,3 +13,5 @@ ChangeLog:
 2.0.28 : Prevent Sleep Mode on osx Mojave
 
 2.0.29 : Add Mask Peer Feature
+
+2.0.30 : Auto path finder for windows simulators (FSX,P3D)
