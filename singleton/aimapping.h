@@ -50,7 +50,10 @@ namespace ffs2play
     private:
         explicit                AIMapping(QObject *parent = nullptr);
         static  AIMapping*      createInstance();
-        //QString               findInstallationPath (const QString& pKey);
+#ifdef Q_OS_WIN
+        void                    searchSimPath();
+        QString                 findInstallationPath (const QString& pKey,QSettings::Format pFormat = QSettings::NativeFormat);
+#endif
         void                    initSQLite();
         void                    DBFileUpdate(const QString& pKey,const QString& pPath);
         void                    DBFilePurge ();
@@ -88,7 +91,7 @@ namespace ffs2play
         QString                 getAircraftPath(const QString& pTitle);
         QString                 getFileData(const QString& pKey);
         QStringList             getPathList();
-        bool                    addPath(const QString& pPath);
+        bool                    addPath(const QString& pPath, const QString& pSim="");
         bool                    delPath(const QString& pPath);
 
     signals:
