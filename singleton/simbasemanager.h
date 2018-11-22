@@ -50,7 +50,9 @@ namespace ffs2play
     {
         FSX,
         XPLANE,
+#ifdef FFS_DEBUG
         FLIGHTGEAR
+#endif
     };
 
     class simbasemanager : public QObject

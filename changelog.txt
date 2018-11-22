@@ -15,3 +15,5 @@ ChangeLog:
 2.0.29 : Add Mask Peer Feature
 
 2.0.30 : Auto path finder for windows simulators (FSX,P3D)
+
+2.0.31 : Bug engine stopped on simconnect

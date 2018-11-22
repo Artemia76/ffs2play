@@ -526,6 +526,10 @@ namespace ffs2play
                 m_state.RudderPos = Data->RudderPos;
                 m_state.SeaLevelPressure = Data->SeaLevelPressure;
                 m_state.TASSpeed = Data->TASSpeed;
+                m_state.StateEng1 = Data->StateEng1;
+                m_state.StateEng2 = Data->StateEng2;
+                m_state.StateEng3 = Data->StateEng3;
+                m_state.StateEng4 = Data->StateEng4;
                 m_state.ThrottleEng1 = Data->ThrottleEng1;
                 m_state.ThrottleEng2 = Data->ThrottleEng2;
                 m_state.ThrottleEng3 = Data->ThrottleEng3;

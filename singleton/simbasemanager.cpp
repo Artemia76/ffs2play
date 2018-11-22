@@ -50,7 +50,9 @@ namespace ffs2play
         m_simAvailable.append(SIM_TYPE::FSX);
 #endif
         m_simAvailable.append(SIM_TYPE::XPLANE);
+#ifdef FFS_DEBUG
         m_simAvailable.append(SIM_TYPE::FLIGHTGEAR);
+#endif
         m_settings.beginGroup("Sim");
         m_simType = static_cast<SIM_TYPE>(m_settings.value("DefaultSim",static_cast<int>(m_simAvailable.first())).toInt());
         m_settings.endGroup();
@@ -112,12 +114,13 @@ namespace ffs2play
                 m_connector = new CXPManager(this);
                 break;
             }
-
+#ifdef FFS_DEBUG
             case SIM_TYPE::FLIGHTGEAR:
             {
                 m_connector = new CFGManager(this);
                 break;
             }
+#endif
         }
         m_initialized=true;
         connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));

@@ -220,7 +220,7 @@ namespace ffs2play
         qint32  StateEng1;
         qint32  StateEng2;
         qint32  StateEng3;
-        qint32  tateEng4;
+        qint32  StateEng4;
         qint32  ThrottleEng1;
         qint32  ThrottleEng2;
         qint32  ThrottleEng3;
