@@ -106,7 +106,7 @@ namespace ffs2play
         for (int i=0; i<m_peers.count(); i++)
         {
             TeamMemberShip = false;
-            if ((m_peers[i]->m_team == m_Team) ||
+            if (((!m_Team.isEmpty()) && (m_peers[i]->m_team == m_Team)) ||
                 ((!m_peers[i]->m_team.isEmpty()) && (m_peers[i]->m_team != m_peers[i]->m_callSign)))
             {
                     TeamMemberShip =true;
