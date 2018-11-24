@@ -77,6 +77,7 @@ namespace ffs2play
         QHostAddress externalIP;
         QVector<QHostAddress> localIPs;
         quint16 Port;
+        QString Team;
     };
 
     typedef unsigned char byte;
@@ -108,7 +109,8 @@ namespace ffs2play
                                     const QVector<QHostAddress>* pInternalIP=NULL,
                                     QObject *pParent = nullptr,
                                     int pP2PRate = 200,
-                                    int pP2PRadius = 10
+                                    int pP2PRadius = 10,
+                                    QString pTeam=""
                                 );
                                 ~CPeer ();
         void                    Start();
@@ -182,6 +184,7 @@ namespace ffs2play
         bool                    m_blockData;
         double                  m_old_fps;
         double                  m_old_GND_AI;
+        QString                 m_team;
 
         ///
         /// \brief send

@@ -101,8 +101,17 @@ namespace ffs2play
         double ScoreLointain = -1;
         int PosPret = 0;
         double ScorePret=DBL_MAX;
+        bool TeamMemberShip;
+
         for (int i=0; i<m_peers.count(); i++)
         {
+            TeamMemberShip = false;
+            if ((m_peers[i]->m_team == m_Team) ||
+                ((!m_peers[i]->m_team.isEmpty()) && (m_peers[i]->m_team != m_peers[i]->m_callSign)))
+            {
+                    TeamMemberShip =true;
+                    m_peers[i]->m_visible = false;
+            }
             if (m_peers[i]->m_spawnable)
             {
                 if (m_peers[i]->m_visible)
@@ -114,7 +123,7 @@ namespace ffs2play
                         PosLointain = i;
                     }
                 }
-                else
+                else if (!TeamMemberShip)
                 {
                     NbInvisible++;
                     if (m_peers[i]->m_distance < ScorePret)
@@ -343,6 +352,7 @@ namespace ffs2play
         QString UserName = m_CallSign.replace('[','_');
         UserName = UserName.replace(']','_');
         UserName = UserName.toLower();
+        m_Team="";
         for (PeerData data : pWhazzup)
         {
             bool Shadow = false;
@@ -350,6 +360,7 @@ namespace ffs2play
             // Shadow Detection
             if (UserName == data.CallSign.toLower())
             {
+                m_Team=data.Team;
 #ifdef FFS_DEBUG
                 if (m_Shadow) Shadow = true;
                 else
@@ -382,7 +393,7 @@ namespace ffs2play
                 }
                 if ((!IP.isNull()) && (data.Port>0))
                 {
-                    m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs,this,m_P2PRate,m_AIRadius));
+                    m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs,this,m_P2PRate,m_AIRadius,data.Team));
                     connect(this, SIGNAL(fireSendTChat(QString)),m_peers.last(),SLOT(OnSendTChat(QString)));
                     connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
                     emit(firePeerAdd(data.CallSign));
@@ -420,9 +431,16 @@ namespace ffs2play
                 if (Peer->m_port != data.Port)
                 {
 #ifdef FFS_DEBUG
-                    m_log->log("P2PManager : " + tr("Change port for user ") + Peer->CallSign + ", Port=" + QString::number(Peer->m_port) ,Qt::blue, LEVEL_NORMAL);
+                    m_log->log("P2PManager : " + tr("Change port for user ") + Peer->CallSign + ", Port=" + QString::number(data.Port) ,Qt::blue, LEVEL_NORMAL);
 #endif
                     user_change=true;
+                }
+                if (Peer->m_team != data.Team)
+                {
+                    Peer->m_team = data.Team;
+#ifdef FFS_DEBUG
+                    m_log->log("P2PManager : " + tr("Change team for user ") + Peer->CallSign + ", Team=" + data.Team ,Qt::blue, LEVEL_NORMAL);
+#endif
                 }
                 if (user_change) deleteUser(Peer->CallSign);
             }

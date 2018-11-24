@@ -135,6 +135,8 @@ namespace ffs2play
                         m_log->log("WEBManager : " + tr(" Local IP = ") + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                     }
+                    //Check for team membership
+                    item.Team = Player.attribute("team");
                     whazzup.append(item);
                 }
             }

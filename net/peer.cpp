@@ -53,7 +53,8 @@ namespace ffs2play
             const QVector<QHostAddress>* pInternalIP,
             QObject *pParent,
             int pP2PRate,
-            int pP2PRadius) : QObject(pParent),
+            int pP2PRadius,
+            QString pTeam) : QObject(pParent),
                 CallSign(m_callSign),
                 Disabled(m_disabled)
     {
@@ -78,6 +79,7 @@ namespace ffs2play
         m_visible = false;
         m_spawnable = false;
         m_blockData = false;
+        m_team = pTeam;
         P2PRadius = pP2PRadius;
         P2PRate = pP2PRate;
         if (m_simManager->getType()!=SIM_TYPE::FSX) m_disableCalculation = true;

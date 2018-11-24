@@ -71,6 +71,7 @@ namespace ffs2play
         QVector<CPeer*>     m_peers;
         QTimer              m_checkAITimer;
         QStringList         m_BlackList;
+        QString             m_Team;
     public:
         ~CP2PManager();
         static CP2PManager*	instance();
