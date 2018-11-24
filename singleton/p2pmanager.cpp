@@ -258,7 +258,7 @@ namespace ffs2play
                             QString::number(m_port).toStdString().c_str(),
                             QString::number(m_port).toStdString().c_str(),
                             lanaddr,
-                            "FFS2Play",
+                            QString(QString("FFS2Play_")+QString::number(m_port)).toStdString().c_str(),
                             "UDP",
                             nullptr,
                             "0"
