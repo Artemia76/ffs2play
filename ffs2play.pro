@@ -228,7 +228,8 @@ DISTFILES += \
     README.md \
     ffs2play.iss \
     style/ffs2play.qss \
-    changelog.txt
+    changelog.txt \
+    build-deb.sh
 
 
 isEmpty(TARGET_EXT) {

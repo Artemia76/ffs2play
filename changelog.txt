@@ -19,3 +19,4 @@ ChangeLog:
 2.0.31 : Bug engine stopped on simconnect
 
 2.0.32 : Team support implementation
+         Improve uPNP rule name by adding port as suffix
