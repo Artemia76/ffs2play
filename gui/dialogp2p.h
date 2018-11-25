@@ -105,6 +105,7 @@ namespace ffs2play
         void                on_cbSendDropRate_stateChanged(int arg1);
         void                on_pbTextColor_released();
         void on_pushButton_released();
+        void on_cbDisableAltCorr_stateChanged(int arg1);
     };
 }
 #endif // DIALOGP2P_H

@@ -118,9 +118,23 @@ namespace ffs2play
     ///
     /// \brief CXPManager::sendScrollingText
     ///
-    void CXPManager::sendScrollingText(const QString& /*pMessage*/)
+    void CXPManager::sendScrollingText(const QString& pMessage)
     {
-
+        if (m_connected)
+        {
+#ifdef FFS_DEBUG
+            m_log->log("XPManager : " + tr("Send scrolling text : ") + pMessage, Qt::darkBlue,LEVEL_NORMAL);
+#endif
+            QByteArray Data;
+            QDataStream stream(&Data,QIODevice::WriteOnly);
+            stream << (quint8)TCHAT;
+            StringToStream(stream,pMessage);
+            QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+#ifdef FFS_DEBUG
+            m_log->log("XPManager : " + tr("Hexa : ") + QString(Data.toHex()), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+            m_Server->send(Output);
+        }
     }
 
     ///
@@ -268,9 +282,9 @@ namespace ffs2play
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream << (quint8)CALLSIGN_COLOR;
-        stream << static_cast<quint8>(m_CallSignColor.red());
-        stream << static_cast<quint8>(m_CallSignColor.green());
-        stream << static_cast<quint8>(m_CallSignColor.blue());
+        stream << (quint8)m_CallSignColor.red();
+        stream << (quint8)m_CallSignColor.green();
+        stream << (quint8)m_CallSignColor.blue();
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
         m_Server->send(Output);
     }

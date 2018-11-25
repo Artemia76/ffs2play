@@ -78,6 +78,7 @@ namespace ffs2play
         ui->cbBeta->setChecked(m_settings.value("Beta",true).toBool());
         m_settings.endGroup();
         ui->cbEnableCallsign->setChecked(m_SimManager->getOption(DisplayCallSign));
+        ui->cbDisableAltCorr->setChecked(m_SimManager->getOption(DisableAltCorr));
         ui->numAIRadius->setValue(m_P2PManager->getAIRadius());
         ui->numAILimit->setValue(m_P2PManager->getAILimit());
         ui->numP2PTx->setValue(m_P2PManager->getTxRate());
@@ -182,6 +183,10 @@ namespace ffs2play
         {
             m_SimManager->setOptionChange(DisplayCallSign, ui->cbEnableCallsign->isChecked());
         }
+        if (ui->cbDisableAltCorr->isChecked() != m_SimManager->getOption(DisableAltCorr))
+        {
+            m_SimManager->setOptionChange(DisableAltCorr, ui->cbDisableAltCorr->isChecked());
+        }
         if (ui->cbDropRateDisp->isChecked() != m_P2PManager->getDropRateDisplay())
         {
             m_P2PManager->setDropRateDisplay(ui->cbDropRateDisp->isChecked());
@@ -271,6 +276,10 @@ namespace ffs2play
             m_changed = true;
         }
         if (ui->cbEnableCallsign->isChecked() != m_SimManager->getOption(DisplayCallSign))
+        {
+            m_changed = true;
+        }
+        if (ui->cbDisableAltCorr->isChecked() != m_SimManager->getOption(DisableAltCorr))
         {
             m_changed = true;
         }
@@ -442,5 +451,13 @@ namespace ffs2play
         {
             m_AIMapping->cleanAIDB();
         }
+    }
+
+    ///
+    /// \brief DialogP2P::on_cbDisableAltCorr_stateChanged
+    ///
+    void DialogP2P::on_cbDisableAltCorr_stateChanged(int)
+    {
+        checkIfChanged();
     }
 }

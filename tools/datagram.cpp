@@ -55,8 +55,8 @@ namespace ffs2play
     ///
     void StringToStream(QDataStream& pStream,const QString& pString)
     {
-        pStream << static_cast<quint8>(pString.toStdString().length());
-        pStream.writeRawData(pString.toStdString().c_str(),static_cast<int>(pString.toStdString().length()));
+        pStream << (quint8)pString.toStdString().length();
+        pStream.writeRawData(pString.toStdString().c_str(),(int)pString.toStdString().length());
     }
 
     ///

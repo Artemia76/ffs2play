@@ -91,7 +91,8 @@ namespace ffs2play
 
     enum SimOption : unsigned int
     {
-        DisplayCallSign = 0x01
+        DisplayCallSign = 0x01,
+        DisableAltCorr = 0x02
     };
 
     class SimConnector : public QObject
@@ -133,15 +134,15 @@ friend  class           simbasemanager;
         CAircraftState  getState();
 
 virtual void            sendOptions()=0;
-virtual	void            open()=0;
+virtual void            open()=0;
 virtual void            close()=0;
-virtual	void            main_loop()=0;
-virtual	SIM_VERSION     getVersion()=0;
-virtual	void            sendScrollingText(const QString& pMessage)=0;
-virtual	bool            createAI(AIResol& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject)=0;
-virtual	bool            removeAI(uint& pObjectID)=0;
+virtual void            main_loop()=0;
+virtual SIM_VERSION     getVersion()=0;
+virtual void            sendScrollingText(const QString& pMessage)=0;
+virtual bool            createAI(AIResol& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject)=0;
+virtual bool            removeAI(uint& pObjectID)=0;
 virtual bool            updateAI(uint pObjectID, const CAircraftState& data)=0;
-virtual	void            freezeAI(uint pObjectID, bool pState)=0;
+virtual void            freezeAI(uint pObjectID, bool pState)=0;
 virtual void            sendCallSignColor()=0;
 
 

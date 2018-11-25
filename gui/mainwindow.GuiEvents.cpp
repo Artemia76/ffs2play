@@ -160,8 +160,10 @@ namespace ffs2play
         ui->leTchatSend->clear();
         if(m_webManager->isConnected())
         {
-            ui->teTChatZone->append(m_P2PManager->getCallsign() + " : " + Message);
+            QString Tchat_line = m_P2PManager->getCallsign() + " : " + Message;
+            ui->teTChatZone->append(Tchat_line);
             m_P2PManager->sendTChat(Message);
+            m_simManager->sendScrollingText(Tchat_line);
         }
     }
 

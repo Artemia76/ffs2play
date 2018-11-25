@@ -397,14 +397,11 @@ namespace ffs2play
                     if (m_AIData.Bank < -180) m_AIData.Bank += 360;
                     if (m_AIData.Bank >= 180) m_AIData.Bank -= 360;
                 }
-                if (m_data.OnGround)
+                if (m_data.OnGround && (!m_simManager->getOption(DisableAltCorr)))
                 {
-                    if ((m_AIData.Altitude > 0) && (m_AISimData.GroundAltitude > 0))
-                    {
-                        // Mise à jour de l'altitude sol de référence
-                        m_old_GND_AI = m_AISimData.GroundAltitude;
-                        m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgheight();
-                    }
+                    // Mise à jour de l'altitude sol de référence
+                    m_old_GND_AI = m_AISimData.GroundAltitude;
+                    m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgheight();
                 }
                 if (m_spawned >= 7)
                 {

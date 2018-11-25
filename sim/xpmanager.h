@@ -50,7 +50,8 @@ namespace ffs2play
         DISC = 0x04, // Disconnect client
         ADD_PEER = 0x05, // Add peer
         DEL_PEER = 0x06, // Remove Peer
-        CALLSIGN_COLOR = 0x07 // Send Callsign color
+        CALLSIGN_COLOR = 0x07, // Send Callsign color
+        TCHAT = 0x08 //Send Chat Text
     };
 
     ///
@@ -61,7 +62,7 @@ namespace ffs2play
     {
         Q_OBJECT
     public:
-        explicit CXPManager(QObject *parent = 0);
+        explicit CXPManager(QObject *parent = nullptr);
         ~CXPManager();
     private:
         qint64          m_SimRate;

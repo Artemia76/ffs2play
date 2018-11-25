@@ -40,7 +40,11 @@ namespace ffs2play
         m_log=CLogger::instance();
         m_connected = false;
         m_settings.beginGroup("Sim");
-        m_options = m_settings.value("EnableDisplayCallSign",0x00000001).toUInt();
+        m_options = 0;
+        m_options =m_settings.value("Options", 0x00000001).toUInt();
+#ifdef FFS_DEBUG
+        m_log->log("SimConnector : " + tr("Option value = ") + QString::number(m_options),Qt::darkBlue,LEVEL_NORMAL);
+#endif
         m_CallSignColor = m_settings.value("CallSignColor", "#FF0000").toString();
         m_settings.endGroup();
         m_version.Build=0;
@@ -74,7 +78,7 @@ namespace ffs2play
     ///
     void SimConnector::setOptionChange(SimOption pOption,bool pFlag)
     {
-        quint32 mask = (quint32)pOption;
+        quint32 mask = static_cast<quint32>(pOption);
         if (!pFlag)
         {
             m_options = m_options & (~mask);
@@ -84,7 +88,7 @@ namespace ffs2play
             m_options = m_options | mask;
         }
         m_settings.beginGroup("Sim");
-        m_settings.setValue("EnableDisplayCallSign",m_options);
+        m_settings.setValue("Options",m_options);
         m_settings.endGroup();
         sendOptions();
     }
@@ -96,7 +100,7 @@ namespace ffs2play
     ///
     bool SimConnector::getOption(SimOption pOption)
     {
-        return (m_options & (quint32)pOption) > 0;
+        return (m_options & static_cast<quint32>(pOption)) > 0;
     }
 
     ///

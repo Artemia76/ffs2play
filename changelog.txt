@@ -20,3 +20,6 @@ ChangeLog:
 
 2.0.32 : Team support implementation
          Improve uPNP rule name by adding port as suffix
+
+2.0.33 : Add Option to disable altitude correction
+         Add Tchat box on X-plane

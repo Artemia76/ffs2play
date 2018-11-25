@@ -622,6 +622,16 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="cbDisableAltCorr">
+        <property name="toolTip">
+         <string extracomment="Disable auto mesh alignment for AI"/>
+        </property>
+        <property name="text">
+         <string>Disable Altitude Correction</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
