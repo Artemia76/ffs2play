@@ -348,15 +348,16 @@ namespace ffs2play
     void DialogP2P::on_btnAddItem_released()
     {
         QFileDialog FileDlg(this);
-        QString Path;
+        QDir Path;
         FileDlg.setFileMode(QFileDialog::Directory);
         if (FileDlg.exec())
         {
             Path = FileDlg.selectedFiles().first();
+            m_log->log(" Path = " + Path.canonicalPath() );
             if (!Path.isEmpty())
             {
-                m_AIMapping->addPath(Path);
-                ui->lvItems->addItem(Path);
+                m_AIMapping->addPath(Path.canonicalPath());
+                ui->lvItems->addItem(Path.canonicalPath());
                 m_AIMapping->startScanSimObject();
             }
         }

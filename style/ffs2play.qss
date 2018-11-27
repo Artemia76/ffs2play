@@ -64,3 +64,7 @@ QLabel{
 QComboBox{
     color: black;
 }
+
+QTextEdit{
+    color: black;
+}

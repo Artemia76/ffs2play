@@ -77,6 +77,7 @@ namespace ffs2play
 
         // Apply button is disabled at start
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+        ui->lineEdit_Login->setValidator(new QRegExpValidator(QRegExp("[A-Za-z0-9_\-\.éèà]{0,12}"), this ));
     }
 
     ///
