@@ -350,7 +350,7 @@ namespace ffs2play
         {
             for (QString Directory : m_AircraftPaths)
             {
-                QDirIterator it(Directory, QStringList() << "aircraft.cfg" << "sim.cfg" << "*.acf", QDir::Files, QDirIterator::Subdirectories);
+                QDirIterator it(QDir(Directory).canonicalPath(), QStringList() << "aircraft.cfg" << "sim.cfg" << "*.acf", QDir::Files, QDirIterator::Subdirectories);
                 while (it.hasNext())
                 {
                     QString FileName = it.next();

@@ -37,7 +37,7 @@
 #include "singleton/simbasemanager.h"
 #include "protobuf/ffs2play.pb.h"
 
-#define AIDB_AIRCRAFTS_VERSION 1
+#define AIDB_AIRCRAFTS_VERSION 2
 #define AIDB_SIMPATHS_VERSION 1
 #define AIDB_REPLACEMENT_VERSION 1
 
