@@ -68,3 +68,11 @@ QComboBox{
 QTextEdit{
     color: black;
 }
+
+QLineEdit{
+    color: black;
+}
+
+QListWidget{
+    color: black;
+}
