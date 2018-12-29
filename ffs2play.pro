@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 TARGET = ffs2play
 TEMPLATE = app
 
-DEFINES += QT_NO_CAST_FROM_BYTEARRAY
+#DEFINES += QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QT_NO_CAST_TO_ASCII
 
 CONFIG(release, debug|release) {
