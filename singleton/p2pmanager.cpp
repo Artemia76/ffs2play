@@ -138,7 +138,7 @@ namespace ffs2play
 
         }
         // Si on en a plus de visible que la limite alors on en choisi un pour le rendre invisible (les plus lointains)
-        if ((NbVisible > m_AILimit) && (m_AILimit>-1))
+        if ((NbVisible > m_AILimit) && (m_AILimit>0))
         {
             //On rend le plus lointain invisible
             m_peers[PosLointain]->m_visible = false;
@@ -148,7 +148,7 @@ namespace ffs2play
         }
         //Sinon , si on a des invisibles et que le nombre de visibles est inférieur à la limite
         //cela signifie qu'on a des invisibles qu'on peut afficher (les plus prêt)
-        else if ((NbInvisible > 0) && ((NbVisible < m_AILimit)||(m_AILimit<0)))
+        else if ((NbInvisible > 0) && ((NbVisible < m_AILimit)||(m_AILimit<1)))
         {
             m_peers[PosPret]->m_visible = true;
 #ifdef FFS_DEBUG
@@ -172,7 +172,7 @@ namespace ffs2play
             if (m_settings.value("UPNPEnable", true).toBool())
                 initUPNP(true);
             m_Shadow = m_settings.value("ShadowEnable", false).toBool();
-            m_AILimit = m_settings.value("AILimit",-1).toInt();
+            m_AILimit = m_settings.value("AILimit",0).toInt();
             m_AIRadius = m_settings.value("AIRadius",10).toInt();
             m_P2PRate = m_settings.value("TxRate",200).toInt();
             m_DropRateDisplay = m_settings.value("DropRateDisplay",true).toBool();
@@ -606,7 +606,7 @@ namespace ffs2play
     ///
     void CP2PManager::setAILimit(int pAILimit)
     {
-        if ((pAILimit<-1) || (pAILimit>30)) return;
+        if ((pAILimit<0) || (pAILimit>30)) return;
         m_settings.setValue("P2P/AILimit",pAILimit);
         m_AILimit=pAILimit;
     }

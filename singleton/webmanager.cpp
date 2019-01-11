@@ -44,9 +44,10 @@ namespace ffs2play
     {
         m_bConnected=false;
         m_AIManagement=false;
-        m_metaXmlCode = QMetaEnum::fromType<XmlCode>();
+        m_metaXmlCode = QMetaEnum::fromType<CWebManager::XmlCode>();
         qRegisterMetaTypeStreamOperators<QVector<SUser> >("QVector<SUser>");
         m_log = CLogger::instance();
+        //m_log->log("QMetaEnum name " + QString(m_metaXmlCode.enumName()));
         m_P2P = CP2PManager::instance();
         m_simManager = simbasemanager::instance();
         m_Analyzer = Analyzer::instance();

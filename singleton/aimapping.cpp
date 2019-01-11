@@ -117,7 +117,7 @@ namespace ffs2play
                     if (!Path.isEmpty())
                     {
 #ifdef FFS_DEBUG
-                        m_log->log(tr("AIMapping : Path found for ") + it.key() + tr(" = ") + Path, Qt::darkYellow,LEVEL_NORMAL);
+                        m_log->log(tr("AIMapping : Path found for ") + it.key() + " = " + Path, Qt::darkYellow,LEVEL_NORMAL);
 #endif
                         addPath(QDir::fromNativeSeparators(Path + "SimObjects\\Airplanes"), it.key());
                         addPath(QDir::fromNativeSeparators(Path + "SimObjects\\Rotorcraft"), it.key());
@@ -916,7 +916,7 @@ namespace ffs2play
             }
         }
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : End of automatic cleaning. ") + QString::number(m_NbDeleted)  + tr("  over ") + QString::number(total) + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log(tr("AIMapping : End of automatic cleaning.: ") + QString::number(m_NbDeleted)  + tr(" over ") + QString::number(total) + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
 #endif
     }
 

@@ -394,12 +394,12 @@
        </column>
        <item row="0" column="0">
         <property name="text">
-         <string>None</string>
+         <string notr="true">None</string>
         </property>
        </item>
        <item row="1" column="0">
         <property name="text">
-         <string>None</string>
+         <string notr="true">None</string>
         </property>
        </item>
        <item row="2" column="0">
@@ -409,242 +409,242 @@
        </item>
        <item row="3" column="0">
         <property name="text">
-         <string>None</string>
+         <string notr="true">None</string>
         </property>
        </item>
        <item row="4" column="0">
         <property name="text">
-         <string>IDLE</string>
+         <string notr="true">IDLE</string>
         </property>
        </item>
        <item row="5" column="0">
         <property name="text">
-         <string>0 ft</string>
+         <string notr="true">0 ft</string>
         </property>
        </item>
        <item row="6" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="7" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="8" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="9" column="0">
         <property name="text">
-         <string>0°</string>
+         <string notr="true">0°</string>
         </property>
        </item>
        <item row="10" column="0">
         <property name="text">
-         <string>0°</string>
+         <string notr="true">0°</string>
         </property>
        </item>
        <item row="11" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="12" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="13" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="14" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="15" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="16" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="17" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="18" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="19" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="20" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="21" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="22" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="23" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="24" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="25" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="26" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="27" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="28" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="29" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="30" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="31" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="32" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="33" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="34" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="35" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="36" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="37" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="38" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="39" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="40" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="41" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="42" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="43" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="44" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="45" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="46" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="47" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="48" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="49" column="0">
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </item>
        <item row="50" column="0">
         <property name="text">
-         <string>1200</string>
+         <string notr="true">1200</string>
         </property>
        </item>
       </widget>

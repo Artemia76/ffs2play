@@ -11,9 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 TARGET = ffs2play
 TEMPLATE = app
 
-#DEFINES += QT_NO_CAST_FROM_BYTEARRAY
-DEFINES += QT_NO_CAST_TO_ASCII
-
 CONFIG(release, debug|release) {
     DESTDIR = release
     OBJECTS_DIR = release/.obj
@@ -284,8 +281,8 @@ QMAKE_EXTRA_TARGETS += first copydata
 
 # Application Version
 VERSION_MAJOR = 2
-VERSION_MINOR = 0
-VERSION_BUILD = 34
+VERSION_MINOR = 1
+VERSION_BUILD = 1
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR

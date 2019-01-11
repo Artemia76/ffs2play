@@ -124,12 +124,12 @@ namespace ffs2play
                 }
                 else
                 {
-                    throw(std::logic_error("Invalid Xml Response"));
+                    throw(std::runtime_error("Invalid Xml Response"));
                 }
             }
             else
             {
-                throw(std::logic_error("TimeOut"));
+                throw(std::runtime_error("TimeOut"));
             }
         }
         catch (std::exception& /*e*/)
@@ -222,7 +222,6 @@ namespace ffs2play
                 default:
                 {
                     return;
-                    break;
                 }
             }
             SendATCUpdate();
