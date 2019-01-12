@@ -92,7 +92,8 @@ namespace ffs2play
     enum SimOption : unsigned int
     {
         DisplayCallSign = 0x01,
-        DisableAltCorr = 0x02
+        DisableAltCorr = 0x02,
+        DisableTChat = 0x04
     };
 
     class SimConnector : public QObject

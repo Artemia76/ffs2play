@@ -109,7 +109,7 @@ namespace ffs2play
     {
         // Get the default profil selected in configuration file
         QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=ffs2play";
-        if (m_settings.value("Main/Beta",true).toBool())
+        if (m_settings.value("Main/Beta",false).toBool())
         {
             CheckVersionURL +="&beta=1";
         }
