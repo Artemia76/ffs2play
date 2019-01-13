@@ -25,3 +25,5 @@ ChangeLog:
          Add Tchat box on X-plane
 
 2.1.1  : First Release. Change AI Number unlimited from -1 to 0 value to avoid no visible AI
+
+2.1.2 : Change login limit to 32 char maximum
