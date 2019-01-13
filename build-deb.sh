@@ -1,6 +1,7 @@
 #! /bin/bash
-qmake config+=release
-make && sudo checkinstall \
+qmake CONFIG+=release
+make
+sudo checkinstall \
     --pkgsource="http://ffs2play.fr/" \
     --pkglicense="GPL3" \
     --pkggroup="games" \
