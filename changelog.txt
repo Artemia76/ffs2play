@@ -1,26 +1,5 @@
 ChangeLog:
 
-2.0.21 : Add xff2play version update available for x-plane
-         Solve bug for change port or IP
-2.0.22 : P2P Dialog : disable add and del button when not connected to sim
-         Profil Dialog : Auto fill url address
-         Change version checking to enable multi platform (mac, win and lin)
-2.0.25 : Add CallSign Color setting only on X-Plane.
-2.0.26 : Bug resolution for Default AI Replacement, AI Radius propagation when changed and Local IP when UPNP disable
-         New Feature : Button to reset AIDB in P2P dialog box
-2.0.27 : Disable ATC Update when X-Plane Squawk is off or stby
-
-2.0.28 : Prevent Sleep Mode on osx Mojave
-
-2.0.29 : Add Mask Peer Feature
-
-2.0.30 : Auto path finder for windows simulators (FSX,P3D)
-
-2.0.31 : Bug engine stopped on simconnect
-
-2.0.32 : Team support implementation
-         Improve uPNP rule name by adding port as suffix
-
 2.0.33 : Add Option to disable altitude correction
          Add Tchat box on X-plane
 
