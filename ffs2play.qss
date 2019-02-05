@@ -77,3 +77,8 @@ QSpinBox{
 QListWidget{
     color: black;
 }
+
+QTableWidget{
+    color: black;
+    Background-color : #BDE3F8;
+}
