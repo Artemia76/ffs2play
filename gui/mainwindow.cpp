@@ -118,10 +118,10 @@ namespace ffs2play
 #ifdef FFS_DEBUG
         ui->dwDebugOpt->setEnabled(true);
         setWindowTitle("FFS2Play(debug)");
+#else
         //Start timer to updating GUI
         connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
         m_updateTimer.start(500);
-#else
         delete ui->dwDebugOpt;
         delete ui->dwSimVariable;
 #endif

@@ -108,9 +108,7 @@ namespace ffs2play
         AIMapping*      m_AIMapping;
         Analyzer*       m_Analyzer;
         QSettings       m_settings;
-#ifdef FFS_DEBUG
         QTimer          m_updateTimer;
-#endif
         int             m_maxLine;
         QString         m_windowStyle;
         QString         m_dialogStyle;
