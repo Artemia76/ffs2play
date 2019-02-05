@@ -775,4 +775,40 @@ namespace ffs2play
             m_LastDropRate = Now();
         }
     }
+
+    ///
+    /// \brief CP2PManager::getPeerData
+    /// \param pPeerName
+    /// \return The current peer State datas
+    ///
+    CAircraftState CP2PManager::getPeerData (const QString &pPeerName)
+    {
+        CAircraftState State;
+        for (CPeer* Peer : m_peers)
+        {
+            if (Peer->CallSign == pPeerName)
+            {
+                State = Peer->m_data;
+            }
+        }
+        return State;
+    }
+
+    ///
+    /// \brief CP2PManager::getPeerDistance
+    /// \param pPeerName
+    /// \return The peer distance
+    ///
+    double CP2PManager::getPeerDistance (const QString &pPeerName)
+    {
+        double Distance = 0.0;
+        for (CPeer* Peer : m_peers)
+        {
+            if (Peer->CallSign == pPeerName)
+            {
+                Distance = Peer->m_distance;
+            }
+        }
+        return Distance;
+    }
 }

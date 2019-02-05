@@ -274,6 +274,7 @@ namespace ffs2play
     ///
     void MainWindow::onPeerChange(QString pCallSign, int pSignal)
     {
+        // Update Peer List
         QList<QListWidgetItem*> item_list = ui->lwPeer->findItems(pCallSign,Qt::MatchExactly);
         if (item_list.count()>0)
         {
@@ -333,12 +334,12 @@ namespace ffs2play
         ui->teTChatZone->append(pCallSign + " : " + pMessage);
     }
 
-#ifdef FFS_DEBUG
     ///
     /// \brief MainWindow::onUpdate
     ///
     void MainWindow::onUpdate()
     {
+#ifdef FFS_DEBUG
         CAircraftState State = m_simManager->getAircraftState();
         for (int i = 0; i < ui->twSIMData->rowCount(); i++)
         {
@@ -610,6 +611,52 @@ namespace ffs2play
                 }
             }
         }
-    }
 #endif
+        // Update Peer detail if it available
+        QListWidgetItem* Peer = ui->lwPeer->currentItem();
+        CAircraftState PeerState;
+        double distance = 0.0;
+        if (Peer != nullptr)
+        {
+            PeerState = m_P2PManager->getPeerData(Peer->text());
+            distance = m_P2PManager->getPeerDistance(Peer->text());
+        }
+        QString Value;
+        for (int i = 0; i < ui->twPeerDetail->rowCount(); i++)
+        {
+            switch (i)
+            {
+                case 0:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(PeerState.Title);
+                    break;
+                }
+                case 1:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f ft", PeerState.Altitude));
+                    break;
+                }
+                case 2:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f °", PeerState.Heading));
+                    break;
+                }
+                case 3:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", distance));
+                    break;
+                }
+                case 4:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts", PeerState.IASSpeed));
+                    break;
+                }
+                case 5:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts",PeerState.GroundSpeed));
+                    break;
+                }
+            }
+        }
+    }
 }

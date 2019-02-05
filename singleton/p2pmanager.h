@@ -103,6 +103,8 @@ namespace ffs2play
         void                setSendDropRate(bool pFlag);
         bool                getMaskedIA(const QString &pPeerName);
         void                setMaskedIA(const QString &pPeerName, bool pFlag);
+        CAircraftState      getPeerData (const QString &pPeerName);
+        double              getPeerDistance (const QString &pPeerName);
 
     signals:
         void                firePeerAdd(QString);
