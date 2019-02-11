@@ -119,12 +119,12 @@ namespace ffs2play
         ui->dwDebugOpt->setEnabled(true);
         setWindowTitle("FFS2Play(debug)");
 #else
-        //Start timer to updating GUI
-        connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
-        m_updateTimer.start(500);
         delete ui->dwDebugOpt;
         delete ui->dwSimVariable;
 #endif
+        //Start timer to updating GUI
+        connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
+        m_updateTimer.start(500);
         m_simManager->open_close();
         m_webManager->CheckNewVersion();
         m_webManager->Connect();
@@ -615,11 +615,14 @@ namespace ffs2play
         // Update Peer detail if it available
         QListWidgetItem* Peer = ui->lwPeer->currentItem();
         CAircraftState PeerState;
-        double distance = 0.0;
+        QString PeerMaskedIP;
+        double Distance=0;
+        PeerConnexionState PeerConnexionStatus;
         if (Peer != nullptr)
         {
             PeerState = m_P2PManager->getPeerData(Peer->text());
-            distance = m_P2PManager->getPeerDistance(Peer->text());
+            Distance = m_P2PManager->getPeerDistance(Peer->text());
+            PeerConnexionStatus = m_P2PManager->getPeerConnexionState(Peer->text());
         }
         QString Value;
         for (int i = 0; i < ui->twPeerDetail->rowCount(); i++)
@@ -643,7 +646,7 @@ namespace ffs2play
                 }
                 case 3:
                 {
-                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", distance));
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", Distance));
                     break;
                 }
                 case 4:
@@ -656,6 +659,31 @@ namespace ffs2play
                     ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts",PeerState.GroundSpeed));
                     break;
                 }
+                case 6:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(QString::number((PeerConnexionStatus.IP.toIPv4Address() & 0xFF000000)>>24) + ".X.X." + QString::number(PeerConnexionStatus.IP.toIPv4Address() & 0xFF));
+                    break;
+                }
+                case 7:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.Port));
+                    break;
+                }
+                case 8:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f mSec",PeerConnexionStatus.Ping));
+                    break;
+                }
+                case 9:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.RcvCnt));
+                    break;
+                }
+                case 10:
+                {
+                    ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.SndCnt));
+                    break;
+            }
             }
         }
     }

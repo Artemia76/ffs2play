@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>832</width>
-    <height>971</height>
+    <height>990</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -96,6 +96,36 @@
            <string>Ground Speed(GS)</string>
           </property>
          </row>
+         <row>
+          <property name="text">
+           <string>Peer IP</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>Peer Port</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>Ping</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>RcvCnt</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>SndCnt</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string/>
+          </property>
+         </row>
          <column>
           <property name="text">
            <string>Value</string>
@@ -129,6 +159,31 @@
          <item row="5" column="0">
           <property name="text">
            <string>0 Kts</string>
+          </property>
+         </item>
+         <item row="6" column="0">
+          <property name="text">
+           <string>255.X.X.255</string>
+          </property>
+         </item>
+         <item row="7" column="0">
+          <property name="text">
+           <string>57435</string>
+          </property>
+         </item>
+         <item row="8" column="0">
+          <property name="text">
+           <string>50 msec</string>
+          </property>
+         </item>
+         <item row="9" column="0">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </item>
+         <item row="10" column="0">
+          <property name="text">
+           <string>0</string>
           </property>
          </item>
         </widget>
@@ -169,7 +224,7 @@
   </widget>
   <widget class="QDockWidget" name="dwTchatZone">
    <property name="windowTitle">
-    <string>Tchat Zone</string>
+    <string>&amp;Tchat Zone</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -207,7 +262,7 @@
   </widget>
   <widget class="QDockWidget" name="dwSimVariable">
    <property name="windowTitle">
-    <string>SIM Variables</string>
+    <string>SIM &amp;Variables</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -856,7 +911,7 @@
     <bool>false</bool>
    </property>
    <property name="windowTitle">
-    <string>Log</string>
+    <string>&amp;Log</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -1008,7 +1063,7 @@
     <bool>false</bool>
    </property>
    <property name="windowTitle">
-    <string>Debug Options</string>
+    <string>De&amp;bug Options</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>

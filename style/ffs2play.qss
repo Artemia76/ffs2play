@@ -63,16 +63,25 @@ QLabel{
 
 QComboBox{
     color: black;
+    background-color: white;
 }
 
 QTextEdit{
     color: black;
+    background-color: white;
 }
 
 QLineEdit{
     color: black;
+    background-color: white;
 }
 
 QListWidget{
     color: black;
+    background-color: white;
+}
+
+QTableWidget{
+    color: black;
+    background-color: white;
 }

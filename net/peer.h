@@ -80,6 +80,23 @@ namespace ffs2play
         QString Team;
     };
 
+    class PeerConnexionState
+    {
+    public:
+        PeerConnexionState()
+        {
+            Port=0;
+            Ping=0;
+            RcvCnt=0;
+            SndCnt=0;
+        }
+        QHostAddress IP;
+        quint32 Port;
+        double  Ping;
+        quint8  RcvCnt;
+        quint8  SndCnt;
+    };
+
     typedef unsigned char byte;
 
     const quint8 PROTO_VERSION = 14;
@@ -119,6 +136,7 @@ namespace ffs2play
         int                     GetSignal();
         void                    SetTxRate(int pTxRate);
         void                    SetAIRadius(int pAIRadius);
+        PeerConnexionState      GetConnexionState ();
 
     private:
         QSettings               m_settings;

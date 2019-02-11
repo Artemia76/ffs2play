@@ -449,4 +449,15 @@ namespace ffs2play
     {
         P2PRadius = pAIRadius;
     }
+
+    PeerConnexionState CPeer::GetConnexionState ()
+    {
+        PeerConnexionState State;
+        State.IP = m_EP;
+        State.Port = m_port;
+        State.Ping = m_latence.count();
+        State.RcvCnt = m_counter_In;
+        State.SndCnt = m_counter_Out;
+        return State;
+    }
 }

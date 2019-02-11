@@ -811,4 +811,17 @@ namespace ffs2play
         }
         return Distance;
     }
+
+    PeerConnexionState CP2PManager::getPeerConnexionState(const QString &pPeerName)
+    {
+        PeerConnexionState State;
+        for (CPeer* Peer : m_peers)
+        {
+            if (Peer->CallSign == pPeerName)
+            {
+                State = Peer->GetConnexionState();
+            }
+        }
+        return State;
+    }
 }

@@ -42,6 +42,7 @@
 
 namespace ffs2play
 {
+
     class CP2PManager : public QObject
     {
         Q_OBJECT
@@ -50,6 +51,7 @@ namespace ffs2play
         static CP2PManager* createInstance();
         void                initUPNP(bool flag);
         void                deleteUser(const QString pCallsign);
+
         CLogger*            m_log;
         Analyzer*           m_analyser;
         UDPServer*          m_server;
@@ -105,6 +107,7 @@ namespace ffs2play
         void                setMaskedIA(const QString &pPeerName, bool pFlag);
         CAircraftState      getPeerData (const QString &pPeerName);
         double              getPeerDistance (const QString &pPeerName);
+        PeerConnexionState  getPeerConnexionState (const QString &pPeerName);
 
     signals:
         void                firePeerAdd(QString);
