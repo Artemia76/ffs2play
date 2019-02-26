@@ -107,47 +107,35 @@ namespace ffs2play
                     m_mutex.lock();
                     quint8 CounterIn;
                     stream >> CounterIn;
-                    // If counter received is greater we have fresh data
-                    if (((CounterIn - m_counter_In) > 0) || (m_counter_In == 255))
+                    m_oldData=m_data;
+                    data.remove(0,2);
+                    AirData ReceivedData;
+                    std::istringstream in(data.toStdString());
+                    ReceivedData.ParseFromIstream(&in);
+                    m_data.fromAirData(ReceivedData);
+                    m_data.TimeStamp += m_decalage;
+                    if (m_data.TimeStamp<= m_oldData.TimeStamp)
                     {
-                        m_oldData=m_data;
-                        //quint32 Len;
-                        //stream >> Len;
-                        data.remove(0,2);
-                        AirData ReceivedData;
-                        std::istringstream in(data.toStdString());
-                        ReceivedData.ParseFromIstream(&in);
-                        m_data.fromAirData(ReceivedData);
-                        m_data.TimeStamp += m_decalage;
-                        if (m_data.TimeStamp<= m_oldData.TimeStamp)
-                        {
 #ifdef FFS_DEBUG
-                            m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram dropped : too late") +
-                                        " Shift mSec=" + QString::number(m_decalage.count()) +
-                                       " OldTime = " + QString::number(toTimeStamp(m_oldData.TimeStamp)) +
-                                       " NewTime = " + QString::number(toTimeStamp(m_data.TimeStamp))
-                                       ,Qt::darkBlue,LEVEL_NORMAL);
+                        m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram dropped : too late") +
+                                    " Shift mSec=" + QString::number(m_decalage.count()) +
+                                   " OldTime = " + QString::number(toTimeStamp(m_oldData.TimeStamp)) +
+                                   " NewTime = " + QString::number(toTimeStamp(m_data.TimeStamp))
+                                   ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
-                        }
-                        else
-                        {
-                            if (m_spawned==4) m_spawned++;
-                            m_refreshRate = curr_time - m_lastData;
-                            m_lastData = curr_time;
-                            m_remoteRefreshRate = m_data.TimeStamp - m_oldData.TimeStamp;
-                            m_distance = distance(m_data.Latitude,m_data.Longitude,m_sendData.latitude(),m_sendData.longitude(), 'N');
-#ifdef FFS_DEBUG
-                            if ((CounterIn - m_counter_In) > 1) m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram missing quantity = ") + QString::number(CounterIn - m_counter_In - 1),Qt::darkBlue,LEVEL_NORMAL);
-#endif
-                            m_counter = 0;
-                            if (m_spawned >=5) refreshData();
-                        }
                     }
                     else
                     {
+                        if (m_spawned==4) m_spawned++;
+                        m_refreshRate = curr_time - m_lastData;
+                        m_lastData = curr_time;
+                        m_remoteRefreshRate = m_data.TimeStamp - m_oldData.TimeStamp;
+                        m_distance = distance(m_data.Latitude,m_data.Longitude,m_sendData.latitude(),m_sendData.longitude(), 'N');
 #ifdef FFS_DEBUG
-                        m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram dropped : too late since ") + QString::number(m_counter_In - CounterIn),Qt::darkBlue,LEVEL_NORMAL);
+                        if ((CounterIn - m_counter_In) > 1) m_log->log("Peer [" + m_callSign + "] " + tr(" UDP Datagram missing quantity = ") + QString::number(CounterIn - m_counter_In - 1),Qt::darkBlue,LEVEL_NORMAL);
 #endif
+                        m_counter = 0;
+                        if (m_spawned >=5) refreshData();
                     }
                     m_counter_In = CounterIn;
                     m_mutex.unlock();
