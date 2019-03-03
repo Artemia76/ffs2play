@@ -56,6 +56,7 @@ message AirData {
 message AIResol {
         string		Title = 1;
         string		Path = 2;
+        string      Model = 5;
         double		CGHeight = 3;
         double		Pitch = 4;
 }

@@ -228,7 +228,9 @@ namespace ffs2play
             if (m_data.Category == "Helicopter") m_trySimpleAI = true;
             m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] " + tr(" Requesting creation of aircraft with Title = ") + QString::fromStdString(m_AIResolution.title()), Qt::darkBlue,LEVEL_NORMAL);
+            m_log->log("Peer [" + m_callSign + "] " + tr(" Requesting creation of aircraft with Title = ") + QString::fromStdString(m_AIResolution.title())
+                + tr(" Model = ") + QString::fromStdString(m_AIResolution.model())
+                , Qt::darkBlue,LEVEL_NORMAL);
 #endif
             m_simManager->createAI(m_AIResolution, m_tail,m_data, m_trySimpleAI);
         }

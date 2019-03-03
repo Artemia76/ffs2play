@@ -562,7 +562,7 @@ namespace ffs2play
         }
         // Check if Title exist in database
         QSqlQuery query(m_DB);
-        query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
+        query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
         query.bindValue(":Sim",m_Table);
         query.bindValue(":Title",Title);
 
@@ -574,13 +574,14 @@ namespace ffs2play
                 Resol.set_cgheight(query.value(1).toDouble());
                 Resol.set_pitch(query.value(2).toDouble());
                 Resol.set_path(query.value(3).toString().toStdString());
+                Resol.set_model(query.value(4).toString().toStdString());
 #ifdef FFS_DEBUG
                 m_log->log(tr("AIMapping : Title Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
             }
             else if (Model.count()>0)
             {
-                query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
+                query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
                 query.bindValue(":Sim",m_Table);
                 query.bindValue(":Model",Model);
                 if (query.exec())
@@ -591,6 +592,7 @@ namespace ffs2play
                         Resol.set_cgheight(query.value(1).toDouble());
                         Resol.set_pitch(query.value(2).toDouble());
                         Resol.set_path(query.value(3).toString().toStdString());
+                        Resol.set_model(query.value(4).toString().toStdString());
         #ifdef FFS_DEBUG
                         m_log->log(tr("AIMapping : ATC Model")+ Model+ tr(" Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
         #endif
@@ -606,7 +608,7 @@ namespace ffs2play
             else
             {
                 Title = QString::fromStdString(Resol.title());
-                query.prepare( "SELECT Title,CGHeight,Pitch,Path FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
+                query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
                 query.bindValue(":Sim",m_Table);
                 query.bindValue(":Title",Title);
                 if (query.exec())
@@ -617,6 +619,7 @@ namespace ffs2play
                         Resol.set_cgheight(query.value(1).toDouble());
                         Resol.set_pitch(query.value(2).toDouble());
                         Resol.set_path(query.value(3).toString().toStdString());
+                        Resol.set_model(query.value(4).toString().toStdString());
                     }
                 }
                 else
