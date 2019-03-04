@@ -44,10 +44,13 @@ namespace ffs2play
     {
         m_bConnected=false;
         m_AIManagement=false;
-        m_metaXmlCode = QMetaEnum::fromType<CWebManager::XmlCode>();
+        m_code = XmlCode::hello;
+        const QMetaObject* mo = this->metaObject();
+        int index = mo->indexOfEnumerator("XmlCode");
+        m_metaXmlCode = mo->enumerator(index);
+
         qRegisterMetaTypeStreamOperators<QVector<SUser> >("QVector<SUser>");
         m_log = CLogger::instance();
-        //m_log->log("QMetaEnum name " + QString(m_metaXmlCode.enumName()));
         m_P2P = CP2PManager::instance();
         m_simManager = simbasemanager::instance();
         m_Analyzer = Analyzer::instance();
@@ -188,7 +191,7 @@ namespace ffs2play
 
         //Création du data
         QDomElement xmlData = pDoc.createElement("data");
-        xmlData.appendChild(pDoc.createTextNode(m_metaXmlCode.valueToKey(pCode)));
+        xmlData.appendChild(pDoc.createTextNode(m_metaXmlCode.valueToKey(static_cast<int>(pCode))));
         xmlSwitch.appendChild(xmlData);
 
         //Création du key
@@ -198,7 +201,7 @@ namespace ffs2play
 
         switch (pCode)
         {
-            case hello:
+            case XmlCode::hello:
             {
                 QDomElement xmlHello = pDoc.createElement("hello");
                 xmlRoot.appendChild(xmlHello);
@@ -207,7 +210,7 @@ namespace ffs2play
                 xmlHello.appendChild(xmlLogin);
                 break;
             }
-            case verify:
+            case XmlCode::verify:
             {
                 QDomElement xmlVerify = pDoc.createElement("verify");
                 xmlRoot.appendChild(xmlVerify);
@@ -228,7 +231,7 @@ namespace ffs2play
                 xmlVerify.appendChild(xmlLocalIP);
                 break;
             }
-            case liveupdate:
+            case XmlCode::liveupdate:
             {
                 CAircraftState State = m_simManager->getAircraftState();
                 QDomElement xmlLiveUpdate = pDoc.createElement("liveupdate");
@@ -272,7 +275,7 @@ namespace ffs2play
                 xmlLiveUpdate.appendChild(xmlSim);
                 break;
             }
-            case atc:
+            case XmlCode::atc:
             {
                 CAircraftState State = m_simManager->getAircraftState();
                 QDomElement xmlAtc = pDoc.createElement("atc");

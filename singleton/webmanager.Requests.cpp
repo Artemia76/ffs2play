@@ -39,7 +39,7 @@ namespace ffs2play
         if (m_bConnected) return;
         if (m_currentUser == 0) return;
         QDomDocument SendHello;
-        XmlBuild(SendHello, hello);
+        XmlBuild(SendHello, XmlCode::hello);
         CHttpRequest* Request = new CHttpRequest(this);
         m_log->log(tr("Connecting to server ..."));
         connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
@@ -55,7 +55,7 @@ namespace ffs2play
         m_ATCTimer.stop();
         OnLiveUpdate();
         QDomDocument SendLogout;
-        XmlBuild(SendLogout, logout);
+        XmlBuild(SendLogout, XmlCode::logout);
         CHttpRequest* Request = new CHttpRequest(this);
         m_log->log(tr("Disconnecting from server ..."));
         connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
@@ -72,7 +72,7 @@ namespace ffs2play
     void CWebManager::SendVerify()
     {
         QDomDocument SendVerify;
-        XmlBuild(SendVerify, verify);
+        XmlBuild(SendVerify, XmlCode::verify);
         CHttpRequest* Request = new CHttpRequest(this);
         connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)));
         Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendVerify);
@@ -84,7 +84,7 @@ namespace ffs2play
     void CWebManager::SendLiveUpdate()
     {
         QDomDocument SendLiveUpdate;
-        XmlBuild(SendLiveUpdate, liveupdate);
+        XmlBuild(SendLiveUpdate, XmlCode::liveupdate);
         CHttpRequest* Request = new CHttpRequest(this);
         connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
         Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLiveUpdate);
@@ -96,7 +96,7 @@ namespace ffs2play
     void CWebManager::SendATCUpdate()
     {
         QDomDocument SendAtcUpdate;
-        XmlBuild(SendAtcUpdate, atc);
+        XmlBuild(SendAtcUpdate, XmlCode::atc);
         CHttpRequest* Request = new CHttpRequest(this);
         connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ATCCallback (CHttpRequest*)));
         Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendAtcUpdate);

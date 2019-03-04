@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
+QT       += core gui sql widgets network xml
 
 TARGET = ffs2play
 TEMPLATE = app
@@ -19,7 +17,7 @@ CONFIG(release, debug|release) {
     UI_DIR = release/.ui
 #   If debug info is needed for windows release to avoid
 #   Install VS Studio Debug Env, just uncomment the line below
-    DEFINES += FFS_DEBUG
+#    DEFINES += FFS_DEBUG
 } else {
     DESTDIR = debug
     OBJECTS_DIR = debug/.obj
@@ -46,8 +44,8 @@ CONFIG( debug, debug|release ) {
     PROTOBUF_LIB_PATH = "D:\Program Files (x86)\protobuf\lib"
     PROTOBUF_INCLUDE_PATH = "D:\Program Files (x86)\protobuf\include"
 
-    EIGEN3_LIB_PATH = "D:\Program Files (x86)\protobuf\eigen3\lib"
-    EIGEN3_INCLUDE_PATH = "D:\Program Files (x86)\eigen3\include"
+#    EIGEN3_LIB_PATH = "D:\Program Files (x86)\protobuf\eigen3\lib"
+#    EIGEN3_INCLUDE_PATH = "D:\Program Files (x86)\eigen3\include"
 
     INCLUDEPATH +=	\
                 "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\inc" \
@@ -163,7 +161,7 @@ INSTALLS += trans
 
 win32 {
     #Libs path
-    LIBS += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17134.0\um\x86"
+    LIBS += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x86"
     LIBS += -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
     #LIBS += -L"D:\Program Files (x86)\Lockheed Martin\Prepar3D v3 SDK 3.4.9.18400\Utilities\SimConnect SDK\lib"
     LIBS += -L$${OPENSSL_LIB_PATH}

@@ -37,6 +37,7 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QMetaEnum>
+#include <QMetaObject>
 #include <QNetworkAccessManager>
 
 #include "singleton/clogger.h"
@@ -71,7 +72,7 @@ namespace ffs2play
         Q_OBJECT
         friend class        DialogProfils;
     public:
-        enum XmlCode
+        enum class XmlCode
         {
             hello,
             verify,
@@ -92,6 +93,7 @@ namespace ffs2play
         CLogger*            m_log;
         Analyzer*           m_Analyzer;
         QMetaEnum           m_metaXmlCode;
+        XmlCode             m_code;
 
         // Etat de la connexion
         bool                m_bConnected;

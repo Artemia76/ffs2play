@@ -58,7 +58,7 @@ namespace ffs2play
         /// \brief MainWindow Constructor
         /// \param pParent
         ///
-        explicit    MainWindow(QWidget *pParent = 0);
+        explicit    MainWindow(QWidget *pParent = nullptr);
 
         ///
         /// \brief MainWindow Destructor

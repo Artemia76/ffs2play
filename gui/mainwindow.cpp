@@ -28,6 +28,8 @@
 
 #include <QMessageBox>
 #include <QByteArray>
+#include <QDebug>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -44,7 +46,6 @@ namespace ffs2play
         ui->setupUi(this);
         // Specify custom handler for contextual menu
         ui->pteLogger->setContextMenuPolicy(Qt::CustomContextMenu);
-
         // Init window position and size
         m_settings.beginGroup("MainWindow");
         restoreGeometry(m_settings.value("Geometry").toByteArray());
@@ -56,6 +57,7 @@ namespace ffs2play
         QPalette p = ui->pteLogger->palette();
         p.setColor(QPalette::Text,Qt::darkBlue);
         m_log = CLogger::instance();
+
         switch (m_log->DebugLevel)
         {
             case LEVEL_NONE:
