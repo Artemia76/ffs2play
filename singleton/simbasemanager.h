@@ -70,6 +70,7 @@ namespace ffs2play
         bool                        m_bEnaDispCallSign;
         SIM_TYPE                    m_simType;
         QList<SIM_TYPE>             m_simAvailable;
+        QTimer                      m_RetryTimer;
 
     public:
     static simbasemanager*          instance();
@@ -108,6 +109,7 @@ namespace ffs2play
         void                        OnSimConnected();
         void                        OnSimDisconnected();
         void                        OnSimTimedOut();
+        void                        OnRetryTimer();
 
     public slots:
         void                        open_close();
