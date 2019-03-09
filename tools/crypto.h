@@ -61,7 +61,7 @@ namespace ffs2play
         CLogger*            m_log;
         Q_OBJECT
     public:
-        explicit            CCrypto(QObject *pParent = 0);
+        explicit            CCrypto(QObject *pParent = nullptr);
         const QByteArray&   EncryptionKey();
         QString             EncryptionKeyString();
         QString             EncryptToBase64(const QString& pData);

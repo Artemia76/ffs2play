@@ -29,8 +29,10 @@ CONFIG(release, debug|release) {
 
 win32 {
     MINIUPNPC_PATH = "E:\devel\git\miniupnp\miniupnpc"
-    OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
-    OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
+#    OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.0.2l\inc32"
+    OPENSSL_INCLUDE_PATH = "E:\devel\openssl-1.1.1\include"
+#    OPENSSL_LIB_PATH = "E:\devel\openssl-1.0.2l\out32dll"
+    OPENSSL_LIB_PATH = "E:\devel\openssl-1.1.1"
     CRYPTOPP_INCLUDE_PATH = "E:\devel\git\cryptopp"
     DEFINES += _WINSOCKAPI_
     DEFINES += MINIUPNP_STATICLIB
@@ -175,7 +177,9 @@ win32 {
     LIBS += -liphlpapi
     LIBS += -lminiupnpc
     LIBS += -lcryptlib
-    LIBS += -llibeay32
+#    LIBS += -llibeay32
+    LIBS += -llibcrypto
+    LIBS += -llibssl
 CONFIG( debug, debug|release ) {
     LIBS += -llibprotobufd
     } else {
