@@ -61,9 +61,13 @@ namespace ffs2play
             m_simType=m_simAvailable.first();
         }
         m_thread = new QThread();
+        // Retry Connexion in case of lost connexion from simulator
+        m_RetryTimer.setSingleShot(true);
+        m_RetryTimer.setInterval(5000);
         //this->moveToThread(m_thread);
         connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()),Qt::DirectConnection);
         connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
+        connect(&m_RetryTimer, SIGNAL(timeout()),this,SLOT(OnRetryTimer()));
         load(m_simType);
     }
 
@@ -431,6 +435,7 @@ namespace ffs2play
     void simbasemanager::OnSimDisconnected()
     {
         close();
+        m_RetryTimer.start();
     }
 
     ///
@@ -495,5 +500,10 @@ namespace ffs2play
         {
             m_connector->setCallSignColor(pColor);
         }
+    }
+
+    void simbasemanager::OnRetryTimer()
+    {
+        open();
     }
 }
