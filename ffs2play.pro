@@ -67,10 +67,12 @@ macx: {
     INCLUDEPATH += /usr/local/include/miniupnpc
     INCLUDEPATH += /usr/local/include/cryptopp
     INCLUDEPATH += /usr/local/include
+    PROTOC = /usr/local/bin/protoc
 }
 
 #Protobuf generation
 
+PROTO_DIR = ./protobuf
 PROTOS = $$files(protobuf/*.proto)
 include(protobuf.pri)
 
@@ -155,13 +157,12 @@ FORMS +=        gui/aireplace.ui \
                 gui/dialogprofils.ui \
                 gui/mainwindow.ui
 
-TRANSLATIONS += intl/ffs2play_fr_FR.ts
-
-trans.path = $${DESTDIR}/translations
-trans.files = intl/*.qm
-INSTALLS += trans
-
 win32 {
+    TRANSLATIONS += intl/ffs2play_fr_FR.ts
+
+    trans.path = $${DESTDIR}/translations
+    trans.files = intl/*.qm
+    INSTALLS += trans
     #Libs path
     LIBS += -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x86"
     LIBS += -L"D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK\lib"
@@ -247,6 +248,10 @@ win32 {
     DEPLOY_COMMAND = windeployqt --no-system-d3d-compiler --no-opengl --no-opengl-sw --no-angle --no-compiler-runtime
 }
 macx {
+    APP_RES_FILES.files = style/ffs2play.qss intl/ffs2play_fr_FR.qm
+    APP_RES_FILES.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += APP_RES_FILES
+
     ICON = ffs2play.icns
     DEPLOY_COMMAND = macdeployqt
 }
