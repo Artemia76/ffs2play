@@ -58,8 +58,13 @@ int main(int argc, char *argv[])
     FFS2PlayTS.load("/usr/share/ffs2play/translations/ffs2play_" + locale +".qm");
     QFile styleFile ("/usr/share/ffs2play/ffs2play.qss");
 #else
+#ifdef Q_OS_MACOS
+    FFS2PlayTS.load("../Resources/ffs2play_"+ locale +".qm");
+    QFile styleFile ("../Resources/ffs2play.qss");
+#else
     FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
     QFile styleFile ( "ffs2play.qss");
+#endif
 #endif
     app.installTranslator(&FFS2PlayTS);
     //Load Style Sheet

@@ -115,10 +115,12 @@ namespace ffs2play
         }
 #ifdef Q_OS_MAC
         CheckVersionURL +="&os=mac";
-#elif defined Q_OS_LINUX
+#else
+#ifdef Q_OS_LINUX
         CheckVersionURL +="&os=lin";
-#elif defined Q_OS_WIN32
+#else
         CheckVersionURL +="&os=win";
+#endif
 #endif
         CHttpRequest* Request =new CHttpRequest(this);
         connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckNewVersionCallback (CHttpRequest*)));
