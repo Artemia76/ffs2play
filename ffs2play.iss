@@ -49,8 +49,8 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "{#ApplicationFullPath}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseDir}libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Microsoft.FlightSimulator.SimConnect.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseDir}libcrypto-1_1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
