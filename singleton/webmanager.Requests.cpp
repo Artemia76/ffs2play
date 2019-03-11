@@ -132,7 +132,11 @@ namespace ffs2play
     ///
     void CWebManager::CheckXPPluginVersion()
     {
-        QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=xffs2play&beta=1";
+        QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=xffs2play";
+        if (m_settings.value("Main/Beta",false).toBool())
+        {
+            CheckVersionURL +="&beta=1";
+        }
         CHttpRequest* Request =new CHttpRequest(this);
         connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckXPPluginVersionCallback (CHttpRequest*)));
         Request->execute(CheckVersionURL);
