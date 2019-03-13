@@ -11,6 +11,7 @@ message AirData {
         string		Title = 2;
         string		Model = 3;
         string		Type = 4;
+        string          AirLine = 46;
         string		Category = 5;
         double		Altitude = 6;
         double		GroundAltitude = 7;
@@ -24,6 +25,7 @@ message AirData {
         double		ElevatorPos = 15;
         double		AileronPos = 16;
         double		RudderPos = 17;
+        double          SpoilerPos = 47;
         int32		Door1Pos = 18;
         int32		Door2Pos = 19;
         int32		Door3Pos = 20;
@@ -41,6 +43,7 @@ message AirData {
         bool		StrobeLight = 32;
         bool		NavLight = 33;
         bool		RecoLight = 34;
+        bool            TaxiLight = 45;
         bool		StateEng1 = 35;
         bool		StateEng2 = 36;
         bool		StateEng3 = 37;
@@ -56,7 +59,8 @@ message AirData {
 message AIResol {
         string		Title = 1;
         string		Path = 2;
-        string      Model = 5;
+        string          Model = 5;
+        string          AirLine = 6;
         double		CGHeight = 3;
         double		Pitch = 4;
 }
