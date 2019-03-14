@@ -17,7 +17,7 @@ CONFIG(release, debug|release) {
     UI_DIR = release/.ui
 #   If debug info is needed for windows release to avoid
 #   Install VS Studio Debug Env, just uncomment the line below
-#    DEFINES += FFS_DEBUG
+    DEFINES += FFS_DEBUG
 } else {
     DESTDIR = debug
     OBJECTS_DIR = debug/.obj
