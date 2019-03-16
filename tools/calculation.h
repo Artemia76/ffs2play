@@ -21,10 +21,10 @@
 ****************************************************************************/
 
 /****************************************************************************
- * calculation.h is part of FF2Play project
- *
- * These functions provide mathematicals and binary tools for convertions
- * **************************************************************************/
+** calculation.h is part of FF2Play project
+**
+** These functions provide mathematicals and binary tools for convertions
+****************************************************************************/
 
 #ifndef CALCULATION_H
 #define CALCULATION_H
@@ -93,16 +93,17 @@ const double e4 = E2*E2;
 #undef E2
 
 
-namespace ffs2play
-{
-    double distance(double lat1, double lon1, double lat2, double lon2, char unit);
-    double deg2rad(double deg);
-    double rad2deg(double rad);
-    double Average(QVector<double>& Array);
-    int ConvertToBinaryCodedDecimal(int Code);
-    void CartToGeod(const double pX, const double pY, const double pZ, double& pLon, double& pLat, double& pAlt);
-    void GeodToCart(const double pLon, const double pLat, const double pAlt, double& pX, double& pY, double& pZ);
-    void EulerToAngle(const float pX,  const float pY, const float pZ, float& pYaw, float& pPitch, float& pRoll );
-}
+namespace ffs2play { namespace tools {
+
+double distance(double lat1, double lon1, double lat2, double lon2, char unit);
+double deg2rad(double deg);
+double rad2deg(double rad);
+double Average(QVector<double>& Array);
+int ConvertToBinaryCodedDecimal(int Code);
+void CartToGeod(const double pX, const double pY, const double pZ, double& pLon, double& pLat, double& pAlt);
+void GeodToCart(const double pLon, const double pLat, const double pAlt, double& pX, double& pY, double& pZ);
+void EulerToAngle(const float pX,  const float pY, const float pZ, float& pYaw, float& pPitch, float& pRoll );
+
+}} //namespace ffs2play::tools
 
 #endif

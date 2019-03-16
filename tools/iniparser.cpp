@@ -21,144 +21,145 @@
 ****************************************************************************/
 
 /****************************************************************************
- * iniparser.cpp is part of FF2Play project
- *
- * This clas provide ini based configuration file parser
- * **************************************************************************/
+** iniparser.cpp is part of FF2Play project
+**
+** This clas provide ini based configuration file parser
+****************************************************************************/
 
-#include "iniparser.h"
+#include "tools/iniparser.h"
 
-namespace ffs2play
+namespace ffs2play { namespace tools {
+
+///
+/// \brief IniParser::IniParser
+/// \param pFilename
+/// \param pSimType
+///
+IniParser::IniParser(const QString& pFilename, const SIM_TYPE pSimType)
 {
-    ///
-    /// \brief IniParser::IniParser
-    /// \param pFilename
-    /// \param pSimType
-    ///
-    IniParser::IniParser(const QString& pFilename, const SIM_TYPE pSimType)
+    m_simType = pSimType;
+    QFile m_inputFile(pFilename);
+    if (m_inputFile.open(QIODevice::ReadOnly))
     {
-        m_simType = pSimType;
-        QFile m_inputFile(pFilename);
-        if (m_inputFile.open(QIODevice::ReadOnly))
+        QTextStream in(&m_inputFile);
+        QString Group;
+        QStringList Keys;
+        while (!in.atEnd())
         {
-            QTextStream in(&m_inputFile);
-            QString Group;
-            QStringList Keys;
-            while (!in.atEnd())
-            {
-                QString NewGroup;
-                QString Line = in.readLine();
-                bool is_group=false;
-                if (m_simType==SIM_TYPE::FSX)
-                {
-                    QRegExp rx("\\[(.*)\\]");
-                    rx.setMinimal(true);
-                    if (rx.indexIn(Line)>=0)
-                    {
-                        is_group = true;
-                        NewGroup=rx.cap(1).toLower();
-                    }
-                }
-                else if (m_simType==SIM_TYPE::XPLANE)
-                {
-                    if (Line.toLower().contains("_begin"))
-                    {
-                        is_group = true;
-                        NewGroup=Line.toLower().remove("_begin");
-                    }
-                }
-                if (is_group)
-                {
-                    if ((!Group.isEmpty())&&(Keys.count()>0))
-                    {
-                        m_GroupMap.insert(Group,Keys);
-                    }
-                    Keys.clear();
-                    Group=NewGroup;
-                }
-                if ((!is_group) && (!Group.isEmpty()))
-                {
-                    if (Line.startsWith("//") || Line.startsWith(";"))
-                    {
-
-                    }
-                    else
-                    {
-                        //Clean space, tabs char
-                        //Line.remove(" ");
-                        Line.remove("\t");
-                        Keys.append(Line);
-                    }
-                }
-            }
-        }
-        else
-        {
-            IniParserException ex;
-            ex.Message=tr("Unable to open ") + pFilename;
-            throw ex;
-        }
-    }
-
-    ///
-    /// \brief IniParser::~IniParser
-    ///
-    IniParser::~IniParser()
-    {
-    }
-
-    ///
-    /// \brief IniParser::value
-    /// \param pGroup
-    /// \param pParameter
-    /// \param pDefaultValue
-    /// \return
-    ///
-    QVariant IniParser::value(const QString& pGroup, const QString& pParameter, const QVariant& /*pDefaultValue*/) const
-    {
-        QVariant Result;
-        Result.setValue(QString(""));
-        QString Parameter = pParameter.toLower();
-        QString Group = pGroup.toLower();
-        QStringList Keys = m_GroupMap[Group];
-        for (QString Key : Keys)
-        {
+            QString NewGroup;
+            QString Line = in.readLine();
+            bool is_group=false;
             if (m_simType==SIM_TYPE::FSX)
             {
-                QStringList parser = Key.split('=');
-
-                if (parser.count()>1)
+                QRegExp rx("\\[(.*)\\]");
+                rx.setMinimal(true);
+                if (rx.indexIn(Line)>=0)
                 {
-                    parser[0].remove(" ");
-                    parser[0].remove("\t");
-                    if (parser[0].compare(Parameter,Qt::CaseInsensitive)==0)
-                    {
-                        QString Value = parser[1];
-                        if (Value.contains("//"))
-                        {
-                            Value = Value.left(Value.indexOf("//"));
-                        }
-                        Result.setValue(Value.remove("//(.*?)\r?\n"));
-                        break;
-                    }
+                    is_group = true;
+                    NewGroup=rx.cap(1).toLower();
                 }
             }
             else if (m_simType==SIM_TYPE::XPLANE)
             {
-                QStringList parser = Key.split(' ');
-                if (parser.count()>2)
+                if (Line.toLower().contains("_begin"))
                 {
-                    if (parser[0] == 'P')
+                    is_group = true;
+                    NewGroup=Line.toLower().remove("_begin");
+                }
+            }
+            if (is_group)
+            {
+                if ((!Group.isEmpty())&&(Keys.count()>0))
+                {
+                    m_GroupMap.insert(Group,Keys);
+                }
+                Keys.clear();
+                Group=NewGroup;
+            }
+            if ((!is_group) && (!Group.isEmpty()))
+            {
+                if (Line.startsWith("//") || Line.startsWith(";"))
+                {
+
+                }
+                else
+                {
+                    //Clean space, tabs char
+                    //Line.remove(" ");
+                    Line.remove("\t");
+                    Keys.append(Line);
+                }
+            }
+        }
+    }
+    else
+    {
+        IniParserException ex;
+        ex.Message=tr("Unable to open ") + pFilename;
+        throw ex;
+    }
+}
+
+///
+/// \brief IniParser::~IniParser
+///
+IniParser::~IniParser()
+{
+}
+
+///
+/// \brief IniParser::value
+/// \param pGroup
+/// \param pParameter
+/// \param pDefaultValue
+/// \return
+///
+QVariant IniParser::value(const QString& pGroup, const QString& pParameter, const QVariant& /*pDefaultValue*/) const
+{
+    QVariant Result;
+    Result.setValue(QString(""));
+    QString Parameter = pParameter.toLower();
+    QString Group = pGroup.toLower();
+    QStringList Keys = m_GroupMap[Group];
+    for (QString Key : Keys)
+    {
+        if (m_simType==SIM_TYPE::FSX)
+        {
+            QStringList parser = Key.split('=');
+
+            if (parser.count()>1)
+            {
+                parser[0].remove(" ");
+                parser[0].remove("\t");
+                if (parser[0].compare(Parameter,Qt::CaseInsensitive)==0)
+                {
+                    QString Value = parser[1];
+                    if (Value.contains("//"))
                     {
-                        if (parser[1].compare(Parameter,Qt::CaseInsensitive)==0)
-                        {
-                            Result.setValue(Key.mid(parser[1].length()+3));
-                            break;
-                        }
+                        Value = Value.left(Value.indexOf("//"));
+                    }
+                    Result.setValue(Value.remove("//(.*?)\r?\n"));
+                    break;
+                }
+            }
+        }
+        else if (m_simType==SIM_TYPE::XPLANE)
+        {
+            QStringList parser = Key.split(' ');
+            if (parser.count()>2)
+            {
+                if (parser[0] == 'P')
+                {
+                    if (parser[1].compare(Parameter,Qt::CaseInsensitive)==0)
+                    {
+                        Result.setValue(Key.mid(parser[1].length()+3));
+                        break;
                     }
                 }
             }
         }
-        return Result;
     }
+    return Result;
 }
+
+}} //namespace ffs2play::tools

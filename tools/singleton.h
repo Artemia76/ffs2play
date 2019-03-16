@@ -21,16 +21,18 @@
 ****************************************************************************/
 
 /****************************************************************************
- * singleton.h is part of FF2Play project
- *
- * This provide template for singleton instanciation
- * **************************************************************************/
+** singleton.h is part of FF2Play project
+**
+** This provide template for singleton instanciation
+****************************************************************************/
 
 #ifndef SINGLETON_H
 #define SINGLETON_H
 #include <QtGlobal>
 #include <QScopedPointer>
 #include "call_once.h"
+
+namespace ffs2play { namespace tools {
 
 template <class T>
 class Singleton
@@ -90,5 +92,7 @@ Singleton<T>::~Singleton()
 template<class T> QBasicAtomicPointer<void> Singleton<T>::create = Q_BASIC_ATOMIC_INITIALIZER(nullptr);
 template<class T> QBasicAtomicInt Singleton<T>::flag = Q_BASIC_ATOMIC_INITIALIZER(CallOnce::CO_Request);
 template<class T> QBasicAtomicPointer<void> Singleton<T>::tptr = Q_BASIC_ATOMIC_INITIALIZER(nullptr);
+
+}} // namespace ffs2play::tools
 
 #endif // SINGLETON_H

@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * simconnector.h is part of FF2Play project
- *
- * This is the simulator abstractive class use to define a standard base for
- * all simulators
- * **************************************************************************/
+** simconnector.h is part of FF2Play project
+**
+** This is the simulator abstractive class use to define a standard base for
+** all simulators
+****************************************************************************/
 
 #ifndef SIMCONNECTOR_H
 #define SIMCONNECTOR_H
@@ -34,105 +34,108 @@
 #include <QMutex>
 #include <QSettings>
 #include "sim/aircraftstate.h"
-#include "singleton/clogger.h"
+#include "tools/clogger.h"
 #include "tools/datetime.h"
 #include "tools/getappversion.h"
 
-namespace ffs2play
+namespace ffs2play { namespace sim {
+
+using namespace tools;
+
+/// <summary>
+/// Enumération des évenements du simulateur à traiter
+/// </summary>
+enum class SIM_EVENT_ID
 {
-    /// <summary>
-    /// Enumération des évenements du simulateur à traiter
-    /// </summary>
-    enum class SIM_EVENT_ID
+    PAUSE,
+    PARKING_BRAKE,
+    SIMSTART,
+    SIMSTOP,
+    OVERSPEED,
+    STALLING,
+    CRASH,
+    SLEW,
+    PUSHBACK,
+    ON_GROUND,
+    GEAR_HANDLE_POSITION,
+    FLAPS_HANDLE_PERCENT,
+    FLAPS_HANDLE_INDEX,
+    ALTIMETER_SETTING,
+    LANDING_LIGHT,
+    BEACON_LIGHT,
+    STROBE_LIGHT,
+    NAV_LIGHT,
+    RECOGNITION_LIGHT,
+    SMOKE_ENABLE,
+    SLEW_ON,
+    UNUSED = 0xFFFFFFF,
+};
+
+class SimEvent
+{
+public:
+    SimEvent()
     {
-        PAUSE,
-        PARKING_BRAKE,
-        SIMSTART,
-        SIMSTOP,
-        OVERSPEED,
-        STALLING,
-        CRASH,
-        SLEW,
-        PUSHBACK,
-        ON_GROUND,
-        GEAR_HANDLE_POSITION,
-        FLAPS_HANDLE_PERCENT,
-        FLAPS_HANDLE_INDEX,
-        ALTIMETER_SETTING,
-        LANDING_LIGHT,
-        BEACON_LIGHT,
-        STROBE_LIGHT,
-        NAV_LIGHT,
-        RECOGNITION_LIGHT,
-        SMOKE_ENABLE,
-        SLEW_ON,
-        UNUSED = 0xFFFFFFF,
+        Time = Now();
+    }
+
+    SimEvent(SIM_EVENT_ID pEvt_ID, int pData )
+    {
+        Time = Now();
+        Data = pData;
+        Evt_Id = pEvt_ID;
+    }
+
+    SIM_EVENT_ID Evt_Id;
+    int Data;
+    datetime Time;
+};
+
+enum SimOption : unsigned int
+{
+    DisplayCallSign = 0x01,
+    DisableAltCorr = 0x02,
+    DisableTChat = 0x04
+};
+
+class SimConnector : public QObject
+{
+    Q_OBJECT
+friend  class simbasemanager;
+public:
+    explicit        SimConnector(QObject *parent = nullptr);
+    virtual         ~SimConnector();
+
+    enum SIM_VERSION
+    {
+        FSX,
+        FSX_STEAM,
+        P3D_V2,
+        P3D_V3,
+        P3D_V4,
+        XPLANE,
+        XPLANE_CSL,
+        FLIGHTGEAR,
+        UNKNOWN
     };
+    Q_ENUM(SIM_VERSION)
 
-    class SimEvent
-    {
-    public:
-        SimEvent()
-        {
-            Time = Now();
-        }
+    bool            isConnected();
+protected:
+    CLogger*        m_log;
+    bool            m_connected;
+    CAircraftState  m_state;
+    QMutex          m_Mutex;
+    QSettings       m_settings;
+    quint32         m_options;
+    sVersion        m_version;
+    QColor          m_CallSignColor;
 
-        SimEvent(SIM_EVENT_ID pEvt_ID, int pData )
-        {
-            Time = Now();
-            Data = pData;
-            Evt_Id = pEvt_ID;
-        }
-
-        SIM_EVENT_ID Evt_Id;
-        int Data;
-        datetime Time;
-    };
-
-    enum SimOption : unsigned int
-    {
-        DisplayCallSign = 0x01,
-        DisableAltCorr = 0x02,
-        DisableTChat = 0x04
-    };
-
-    class SimConnector : public QObject
-    {
-        Q_OBJECT
-friend  class           simbasemanager;
-    public:
-        explicit        SimConnector(QObject *parent = nullptr);
-        virtual         ~SimConnector();
-
-        enum SIM_VERSION
-        {
-            FSX,
-            FSX_STEAM,
-            P3D_V2,
-            P3D_V3,
-            P3D_V4,
-            XPLANE,
-            FLIGHTGEAR,
-            UNKNOWN
-        };
-        Q_ENUM(SIM_VERSION)
-
-        bool            isConnected();
-    protected:
-        CLogger*        m_log;
-        bool            m_connected;
-        CAircraftState  m_state;
-        QMutex          m_Mutex;
-        QSettings       m_settings;
-        quint32         m_options;
-        sVersion        m_version;
-        QColor          m_CallSignColor;
-
-        void            setOptionChange(SimOption pOption,bool pFlag);
-        bool            getOption(SimOption pOption);
-        void            setCallSignColor(const QColor& pColor);
-        QColor          getCallSignColor();
-        CAircraftState  getState();
+    void            setOptionChange(SimOption pOption,bool pFlag);
+    bool            getOption(SimOption pOption);
+    void            setCallSignColor(const QColor& pColor);
+    QColor          getCallSignColor();
+    CAircraftState  getState();
 
 virtual void            sendOptions()=0;
 virtual void            open()=0;
@@ -147,19 +150,21 @@ virtual void            freezeAI(uint pObjectID, bool pState)=0;
 virtual void            sendCallSignColor()=0;
 
 
-    signals:
-        void            finished();
-        void            fireSimVariableEvent(CAircraftState);
-        void            fireSimEvent(SimEvent);
-        void            fireSimAICreated(QString,uint);
-        void            fireSimAIUpdated(CAircraftState, uint);
-        void            fireSimAIRemoved(uint);
-        void            fireSimEventFrame(float,float);
-        void            fireSimConnected();
-        void            fireSimDisconnected();
-        void            fireSimTimedOut();
+signals:
+    void            finished();
+    void            fireSimVariableEvent(CAircraftState);
+    void            fireSimEvent(SimEvent);
+    void            fireSimAICreated(QString,uint);
+    void            fireSimAIUpdated(CAircraftState, uint);
+    void            fireSimAIRemoved(uint);
+    void            fireSimEventFrame(float,float);
+    void            fireSimConnected();
+    void            fireSimDisconnected();
+    void            fireSimTimedOut();
 
-    public slots:
-    };
-}
+public slots:
+};
+
+}} // namespace ffs2play::sim
+
 #endif // SIMCONNECTOR_H

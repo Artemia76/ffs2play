@@ -21,112 +21,113 @@
 ****************************************************************************/
 
 /****************************************************************************
- * simconnector.cpp is part of FF2Play project
- *
- * This is the simulator abstractive class use to define a standard base for
- * all simulators
- * **************************************************************************/
+** simconnector.cpp is part of FF2Play project
+**
+** This is the simulator abstractive class use to define a standard base for
+** all simulators
+****************************************************************************/
 
 #include "simconnector.h"
 
-namespace ffs2play
+namespace ffs2play { namespace sim {
+
+///
+/// \brief SimConnector::SimConnector
+/// \param parent
+///
+SimConnector::SimConnector(QObject *parent) : QObject(parent)
 {
-    ///
-    /// \brief SimConnector::SimConnector
-    /// \param parent
-    ///
-    SimConnector::SimConnector(QObject *parent) : QObject(parent)
-    {
-        m_log=CLogger::instance();
-        m_connected = false;
-        m_settings.beginGroup("Sim");
-        m_options = 0;
-        m_options =m_settings.value("Options", 0x00000001).toUInt();
+    m_log=CLogger::instance();
+    m_connected = false;
+    m_settings.beginGroup("Sim");
+    m_options = 0;
+    m_options =m_settings.value("Options", 0x00000001).toUInt();
 #ifdef FFS_DEBUG
-        m_log->log("SimConnector : " + tr("Option value = ") + QString::number(m_options),Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("SimConnector : " + tr("Option value = ") + QString::number(m_options),Qt::darkBlue,LEVEL_NORMAL);
 #endif
-        m_CallSignColor = m_settings.value("CallSignColor", "#FF0000").toString();
-        m_settings.endGroup();
-        m_version.Build=0;
-        m_version.FullVersion="none";
-        m_version.Major=0;
-        m_version.Minor=0;
-        m_version.Name="none";
-    }
-
-    ///
-    /// \brief SimConnector::~SimConnector
-    ///
-    SimConnector::~SimConnector()
-    {
-
-    }
-
-    ///
-    /// \brief SimConnector::isConnected
-    /// \return
-    ///
-    bool SimConnector::isConnected()
-    {
-        return m_connected;
-    }
-
-    ///
-    /// \brief SimConnector::setOptionChange
-    /// \param pOption
-    /// \param pFlag
-    ///
-    void SimConnector::setOptionChange(SimOption pOption,bool pFlag)
-    {
-        quint32 mask = static_cast<quint32>(pOption);
-        if (!pFlag)
-        {
-            m_options = m_options & (~mask);
-        }
-        else
-        {
-            m_options = m_options | mask;
-        }
-        m_settings.beginGroup("Sim");
-        m_settings.setValue("Options",m_options);
-        m_settings.endGroup();
-        sendOptions();
-    }
-
-    ///
-    /// \brief SimConnector::getOption
-    /// \param pOption
-    /// \return
-    ///
-    bool SimConnector::getOption(SimOption pOption)
-    {
-        return (m_options & static_cast<quint32>(pOption)) > 0;
-    }
-
-    ///
-    /// \brief SimConnector::getState
-    /// \return
-    ///
-    CAircraftState SimConnector::getState()
-    {
-        CAircraftState state;
-        m_Mutex.lock();
-        state=m_state;
-        m_Mutex.unlock();
-        return state;
-    }
-
-    void SimConnector::setCallSignColor(const QColor& pColor)
-    {
-        m_settings.beginGroup("Sim");
-        m_settings.setValue("CallSignColor",pColor.name());
-        m_settings.endGroup();
-        m_CallSignColor = pColor;
-        sendCallSignColor();
-    }
-
-    QColor SimConnector::getCallSignColor()
-    {
-        return m_CallSignColor;
-    }
+    m_CallSignColor = m_settings.value("CallSignColor", "#FF0000").toString();
+    m_settings.endGroup();
+    m_version.Build=0;
+    m_version.FullVersion="none";
+    m_version.Major=0;
+    m_version.Minor=0;
+    m_version.Name="none";
 }
+
+///
+/// \brief SimConnector::~SimConnector
+///
+SimConnector::~SimConnector()
+{
+
+}
+
+///
+/// \brief SimConnector::isConnected
+/// \return
+///
+bool SimConnector::isConnected()
+{
+    return m_connected;
+}
+
+///
+/// \brief SimConnector::setOptionChange
+/// \param pOption
+/// \param pFlag
+///
+void SimConnector::setOptionChange(SimOption pOption,bool pFlag)
+{
+    quint32 mask = static_cast<quint32>(pOption);
+    if (!pFlag)
+    {
+        m_options = m_options & (~mask);
+    }
+    else
+    {
+        m_options = m_options | mask;
+    }
+    m_settings.beginGroup("Sim");
+    m_settings.setValue("Options",m_options);
+    m_settings.endGroup();
+    sendOptions();
+}
+
+///
+/// \brief SimConnector::getOption
+/// \param pOption
+/// \return
+///
+bool SimConnector::getOption(SimOption pOption)
+{
+    return (m_options & static_cast<quint32>(pOption)) > 0;
+}
+
+///
+/// \brief SimConnector::getState
+/// \return
+///
+CAircraftState SimConnector::getState()
+{
+    CAircraftState state;
+    m_Mutex.lock();
+    state=m_state;
+    m_Mutex.unlock();
+    return state;
+}
+
+void SimConnector::setCallSignColor(const QColor& pColor)
+{
+    m_settings.beginGroup("Sim");
+    m_settings.setValue("CallSignColor",pColor.name());
+    m_settings.endGroup();
+    m_CallSignColor = pColor;
+    sendCallSignColor();
+}
+
+QColor SimConnector::getCallSignColor()
+{
+    return m_CallSignColor;
+}
+
+}} // namespace ffs2play::sim

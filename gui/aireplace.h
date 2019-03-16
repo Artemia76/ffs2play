@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * aireplace.h is part of FF2Play project
- *
- * This class purpose a dialog interface to manage account profils
- * to connect severals FFS2Play networks servers
- * **************************************************************************/
+** aireplace.h is part of FF2Play project
+**
+** This class purpose a dialog interface to manage account profils
+** to connect severals FFS2Play networks servers
+****************************************************************************/
 
 #ifndef AIREPLACE_H
 #define AIREPLACE_H
@@ -34,52 +34,55 @@
 #include <QSettings>
 #include <QPushButton>
 
-#include "singleton/clogger.h"
-#include "singleton/p2pmanager.h"
-#include "singleton/simbasemanager.h"
+#include "ui_aireplace.h"
+#include "tools/clogger.h"
+#include "net/p2pmanager.h"
+#include "sim/simbasemanager.h"
 
-namespace Ui {
-class AIReplace;
-}
+namespace ffs2play { namespace gui {
 
-namespace ffs2play
+using namespace sim;
+using namespace net;
+using namespace tools;
+
+class AIReplace : public QDialog
 {
-    class AIReplace : public QDialog
-    {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        // Constructor whith QT Widget inherit
-        explicit            AIReplace(const QString& pPeer, QWidget *parent = 0);
+public:
+    // Constructor whith QT Widget inherit
+    explicit            AIReplace(const QString& pPeer, QWidget *parent = 0);
 
-        // Destructor
-        ~AIReplace();
+    // Destructor
+    ~AIReplace();
 
-    private:
-        // UI Designer GUI
-        Ui::AIReplace*      m_UI;
+private:
+    // UI Designer GUI
+    Ui::AIReplace*      m_UI;
 
-        // Logger singleton instance
-        CLogger*            m_Log;
+    // Logger singleton instance
+    CLogger*            m_Log;
 
-        // Web Manager singleton instance
-        CP2PManager*        m_P2PManager;
+    // Web Manager singleton instance
+    CP2PManager*        m_P2PManager;
 
-        // Simulator Manager singleton instance
-        simbasemanager*     m_SimManager;
+    // Simulator Manager singleton instance
+    simbasemanager*     m_SimManager;
 
-        // Configuration file Access
-        QSettings           m_Settings;
+    // Configuration file Access
+    QSettings           m_Settings;
 
-        AIMapping*          m_AIMapping;
+    AIMapping*          m_AIMapping;
 
-        QString             m_Peer;
-        QString             m_ExistingRule;
+    QString             m_Peer;
+    QString             m_ExistingRule;
 
-    private slots:
-        void                on_btnDeleteRule_clicked();
-        void                on_btnBox_accepted();
-        void on_btnBox_rejected();
-    };
-}
+private slots:
+    void                on_btnDeleteRule_clicked();
+    void                on_btnBox_accepted();
+    void on_btnBox_rejected();
+};
+
+}} // namespace ffs2play::gui
+
 #endif // DIALOGP2P_H

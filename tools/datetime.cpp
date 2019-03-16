@@ -21,45 +21,46 @@
 ****************************************************************************/
 
 /****************************************************************************
- * datetime.cpp is part of FF2Play project
- *
- * These types and function provide time convertion between timestamp format
- * and std::chrono tools
- * **************************************************************************/
+** datetime.cpp is part of FF2Play project
+**
+** These types and function provide time convertion between timestamp format
+** and std::chrono tools
+****************************************************************************/
 
 #include "tools/datetime.h"
 
-namespace ffs2play
+namespace ffs2play { namespace tools {
+
+///
+/// \brief Now
+/// \return
+///
+datetime Now()
 {
-    ///
-    /// \brief Now
-    /// \return
-    ///
-    datetime Now()
-    {
-        return time_point_cast<milliseconds>(system_clock::now());
-    }
-
-    ///
-    /// \brief fromTimeStamp
-    /// \param pTS
-    /// \return
-    ///
-    datetime fromTimeStamp(uint64_t pTS)
-    {
-        auto epoch = time_point<system_clock>();
-        auto since_epoch = milliseconds(pTS);
-        return time_point_cast<std::chrono::milliseconds>(epoch + since_epoch);
-    }
-
-    ///
-    /// \brief toTimeStamp
-    /// \param pTime
-    /// \return
-    ///
-    uint64_t toTimeStamp(datetime pTime)
-    {
-        auto epoch = time_point<system_clock>();
-        return static_cast<uint64_t>(duration_cast<milliseconds>(pTime-epoch).count());
-    }
+    return time_point_cast<milliseconds>(system_clock::now());
 }
+
+///
+/// \brief fromTimeStamp
+/// \param pTS
+/// \return
+///
+datetime fromTimeStamp(uint64_t pTS)
+{
+    auto epoch = time_point<system_clock>();
+    auto since_epoch = milliseconds(pTS);
+    return time_point_cast<std::chrono::milliseconds>(epoch + since_epoch);
+}
+
+///
+/// \brief toTimeStamp
+/// \param pTime
+/// \return
+///
+uint64_t toTimeStamp(datetime pTime)
+{
+    auto epoch = time_point<system_clock>();
+    return static_cast<uint64_t>(duration_cast<milliseconds>(pTime-epoch).count());
+}
+
+}} // namespace ffs2play::tools

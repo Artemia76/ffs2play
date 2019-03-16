@@ -21,10 +21,10 @@
 ****************************************************************************/
 
 /****************************************************************************
- * udpserver.h is part of FF2Play project
- *
- * This class provide an udp server to receive and send data over networks
- * **************************************************************************/
+** udpserver.h is part of FF2Play project
+**
+** This class provide an udp server to receive and send data over networks
+****************************************************************************/
 
 #ifndef UDPSERVER_H
 #define UDPSERVER_H
@@ -34,30 +34,33 @@
 #include <QSettings>
 #include <QNetworkDatagram>
 
-#include "singleton/clogger.h"
+#include "tools/clogger.h"
 
-namespace ffs2play
+namespace ffs2play { namespace net {
+
+using namespace tools;
+
+class UDPServer : public QObject
 {
-    class UDPServer : public QObject
-    {
-        Q_OBJECT
-    private:
-        QUdpSocket* m_pListenner;
-        CLogger*    m_log;
-        bool        m_running;
-        quint16     m_port;
-    public:
-                    UDPServer(QObject *pParent = 0);
-                    ~UDPServer();
-        bool        start();
-        void        stop();
-        void        setPort(quint16 pPort);
-        void        send(const QNetworkDatagram& pData);
-    signals:
-        void        fireIncomingData (QNetworkDatagram);
-    private slots:
-        void        incomingData () ;
-    };
-}
+    Q_OBJECT
+private:
+    QUdpSocket* m_pListenner;
+    CLogger*    m_log;
+    bool        m_running;
+    quint16     m_port;
+public:
+                UDPServer(QObject *pParent = 0);
+                ~UDPServer();
+    bool        start();
+    void        stop();
+    void        setPort(quint16 pPort);
+    void        send(const QNetworkDatagram& pData);
+signals:
+    void        fireIncomingData (QNetworkDatagram);
+private slots:
+    void        incomingData () ;
+};
+
+}} // namespace ffs2play::net
 
 #endif // UDPSERVER_H

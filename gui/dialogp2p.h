@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * dialogp2p.h is part of FF2Play project
- *
- * This class purpose a dialog interface to manage account profils
- * to connect severals FFS2Play networks servers
- * **************************************************************************/
+** dialogp2p.h is part of FF2Play project
+**
+** This class purpose a dialog interface to manage account profils
+** to connect severals FFS2Play networks servers
+****************************************************************************/
 
 #ifndef DIALOGP2P_H
 #define DIALOGP2P_H
@@ -34,78 +34,81 @@
 #include <QSettings>
 #include <QPushButton>
 
-#include "singleton/clogger.h"
-#include "singleton/p2pmanager.h"
-#include "singleton/simbasemanager.h"
-#include "singleton/webmanager.h"
+#include "ui_dialogp2p.h"
+#include "tools/clogger.h"
+#include "net/p2pmanager.h"
+#include "sim/simbasemanager.h"
+#include "web/webmanager.h"
 
-namespace Ui {
-class DialogP2P;
-}
+namespace ffs2play { namespace gui {
 
-namespace ffs2play
+using namespace net;
+using namespace web;
+using namespace tools;
+
+class DialogP2P : public QDialog
 {
-    class DialogP2P : public QDialog
-    {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        // Constructor whith QT Widget inherit
-        explicit            DialogP2P(QWidget *parent = 0);
+public:
+    // Constructor whith QT Widget inherit
+    explicit            DialogP2P(QWidget *parent = 0);
 
-        // Destructor
-        ~DialogP2P();
+    // Destructor
+    ~DialogP2P();
 
-    private:
+private:
 
-        // UI Designer GUI
-        Ui::DialogP2P*      ui;
+    // UI Designer GUI
+    Ui::DialogP2P*      ui;
 
-        // Logger singleton instance
-        CLogger*            m_log;
+    // Logger singleton instance
+    CLogger*            m_log;
 
-        // Web Manager singleton instance
-        CP2PManager*        m_P2PManager;
+    // Web Manager singleton instance
+    CP2PManager*        m_P2PManager;
 
-        // Simulator Manager singleton instance
-        simbasemanager*     m_SimManager;
+    // Simulator Manager singleton instance
+    simbasemanager*     m_SimManager;
 
-        // Web manager singleton instance
-        CWebManager*        m_WebManager;
+    // Web manager singleton instance
+    CWebManager*        m_WebManager;
 
-        // Configuration file Access
-        QSettings           m_settings;
+    // Configuration file Access
+    QSettings           m_settings;
 
-        AIMapping*          m_AIMapping;
+    AIMapping*          m_AIMapping;
 
-        // Flag to memorize if something is changed on current profil edition
-        bool                m_changed;
-        bool                m_needP2PRestart;
-        bool                m_needDBReload;
+    // Flag to memorize if something is changed on current profil edition
+    bool                m_changed;
+    bool                m_needP2PRestart;
+    bool                m_needDBReload;
 
-        QColor              m_textColor;
+    QColor              m_textColor;
 
-        void                checkIfChanged();
-        void                applyChangedItem();
+    void                checkIfChanged();
+    void                applyChangedItem();
 
-    private slots:
-        void                on_buttonBox_clicked(QAbstractButton* button);
-        void                on_cbShadow_stateChanged(int);
-        void                on_cbInfoSim_stateChanged(int);
-        void                on_numP2PTx_valueChanged(int);
-        void                on_cbUPNP_stateChanged(int);
-        void                on_cbBeta_stateChanged(int);
-        void                on_btnAddItem_released();
-        void                on_btnDelItem_released();
-        void                on_numPort_valueChanged(int);
-        void                on_numAIRadius_valueChanged(int);
-        void                on_numAILimit_valueChanged(int);
-        void                on_cbEnableCallsign_stateChanged(int arg1);
-        void                on_cbDropRateDisp_stateChanged(int arg1);
-        void                on_cbSendDropRate_stateChanged(int arg1);
-        void                on_pbTextColor_released();
-        void on_pushButton_released();
-        void on_cbDisableAltCorr_stateChanged(int arg1);
-    };
-}
+private slots:
+    void                on_buttonBox_clicked(QAbstractButton* button);
+    void                on_cbShadow_stateChanged(int);
+    void                on_cbInfoSim_stateChanged(int);
+    void                on_numP2PTx_valueChanged(int);
+    void                on_cbUPNP_stateChanged(int);
+    void                on_cbBeta_stateChanged(int);
+    void                on_btnAddItem_released();
+    void                on_btnDelItem_released();
+    void                on_numPort_valueChanged(int);
+    void                on_numAIRadius_valueChanged(int);
+    void                on_numAILimit_valueChanged(int);
+    void                on_cbEnableCallsign_stateChanged(int arg1);
+    void                on_cbDropRateDisp_stateChanged(int arg1);
+    void                on_cbSendDropRate_stateChanged(int arg1);
+    void                on_pbTextColor_released();
+    void on_pushButton_released();
+    void on_cbDisableAltCorr_stateChanged(int arg1);
+};
+
+}} // namespace ffs2play::gui
+
 #endif // DIALOGP2P_H

@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * chttprequest.h is part of FF2Play project
- *
- * This class is used to send web request in POST or GET mode
- * It also provide a programmed callback is case of response needs
- * **************************************************************************/
+** chttprequest.h is part of FF2Play project
+**
+** This class is used to send web request in POST or GET mode
+** It also provide a programmed callback is case of response needs
+****************************************************************************/
 
 #ifndef CHTTPREQUEST_H
 #define CHTTPREQUEST_H
@@ -38,31 +38,35 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#include "singleton/clogger.h"
+#include "tools/clogger.h"
 
-namespace ffs2play
+namespace ffs2play { namespace web {
+
+using namespace tools;
+
+class CHttpRequest : public QObject
 {
-    class CHttpRequest : public QObject
-    {
-        Q_OBJECT
-    public:
-        explicit                    CHttpRequest(QObject *pParent = 0);
-                                    ~CHttpRequest();
-        void                        execute(const QString& pURL, QDomDocument& pDoc);
-        void                        execute(const QString& pURL);
-        QString                     getAsString();
-        bool                        getAsXml(QDomDocument& pDoc);
-    private:
-        QString                     m_response;
-        CLogger*                    m_log;
-        QNetworkRequest             m_request;
-        QNetworkReply*              m_reply;
-    static  QNetworkAccessManager*  m_ptNetworkManager;
-    static  int                     m_nbInstance;
-    private slots:
-        void                        callback();
-    signals:
-        void                        finished(CHttpRequest*);
-    };
-}
+    Q_OBJECT
+public:
+    explicit                    CHttpRequest(QObject *pParent = 0);
+                                ~CHttpRequest();
+    void                        execute(const QString& pURL, QDomDocument& pDoc);
+    void                        execute(const QString& pURL);
+    QString                     getAsString();
+    bool                        getAsXml(QDomDocument& pDoc);
+private:
+    QString                     m_response;
+    CLogger*                    m_log;
+    QNetworkRequest             m_request;
+    QNetworkReply*              m_reply;
+static  QNetworkAccessManager*  m_ptNetworkManager;
+static  int                     m_nbInstance;
+private slots:
+    void                        callback();
+signals:
+    void                        finished(CHttpRequest*);
+};
+
+}} // namespace ffs2play::web
+
 #endif // CHTTPREQUEST_H

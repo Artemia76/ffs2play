@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * datagram.h is part of FF2Play project
- *
- * These functions provide standard stream conversion to work with QTStream
- * properly
- * **************************************************************************/
+** datagram.h is part of FF2Play project
+**
+** These functions provide standard stream conversion to work with QTStream
+** properly
+****************************************************************************/
 
 #ifndef DATAGRAM_H
 #define DATAGRAM_H
@@ -34,12 +34,13 @@
 #include <QDataStream>
 #include <google/protobuf/message.h>
 
-namespace ffs2play
-{
-    QString StringFromStream(QDataStream& pStream);
-    void StringToStream(QDataStream& pStream,const QString& pString);
-    void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage);
-    QString CStringFromStream(QDataStream& pStream, size_t pLen);
-}
+namespace ffs2play { namespace tools {
+
+QString StringFromStream(QDataStream& pStream);
+void StringToStream(QDataStream& pStream,const QString& pString);
+void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage);
+QString CStringFromStream(QDataStream& pStream, size_t pLen);
+
+}} //namespace ffs2play::tools
 
 #endif // DATAGRAM_H

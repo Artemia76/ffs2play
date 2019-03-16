@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         app.setStyleSheet(styleFile.readAll());
         styleFile.close();
     }
-    ffs2play::MainWindow mainWindow;
+    ffs2play::gui::MainWindow mainWindow;
     mainWindow.show();
     return app.exec();
 }

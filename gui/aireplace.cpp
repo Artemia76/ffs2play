@@ -21,107 +21,107 @@
 ****************************************************************************/
 
 /****************************************************************************
- * aireplace.cpp is part of FF2Play project
- *
- * This class purpose a dialog interface to manage account profils
- * to connect severals FFS2Play networks servers
- * **************************************************************************/
+** aireplace.cpp is part of FF2Play project
+**
+** This class purpose a dialog interface to manage account profils
+** to connect severals FFS2Play networks servers
+****************************************************************************/
 
 #include "aireplace.h"
-#include "ui_aireplace.h"
-#include "singleton/webmanager.h"
-#include "singleton/simbasemanager.h"
+#include "web/webmanager.h"
+#include "sim/simbasemanager.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
 
-namespace ffs2play
+namespace ffs2play { namespace gui {
+
+///
+/// \brief DialogBox constructor
+/// \param parent
+///
+/// Constructor read users list previously loaded by webmanager constructor
+/// Then it sync the List Widget with profil name as key
+///
+AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
+    QDialog(parent),
+    m_UI(new Ui::AIReplace)
 {
-    ///
-    /// \brief DialogBox constructor
-    /// \param parent
-    ///
-    /// Constructor read users list previously loaded by webmanager constructor
-    /// Then it sync the List Widget with profil name as key
-    ///
-    AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
-        QDialog(parent),
-        m_UI(new Ui::AIReplace)
+    // Init GUI Part
+    m_UI->setupUi(this);
+
+    // Get Logger instance
+    m_Log = CLogger::instance();
+
+    // Get P2PManager instance
+    m_P2PManager = CP2PManager::instance();
+
+    // Get AIMapping instance
+    m_AIMapping = AIMapping::instance();
+
+    // Get SimManager instance
+    m_SimManager = simbasemanager::instance();
+
+    m_Peer = pPeer;
+    QString RemoteAI = m_P2PManager->getTitle(m_Peer);
+    m_UI->leOriginal->setText(RemoteAI);
+    m_UI->cbReplacement->addItems(m_AIMapping->getAITitreDispo("*","*","*","*"));
+    m_ExistingRule = m_AIMapping->getRule(RemoteAI);
+    if (m_ExistingRule != "")
     {
-        // Init GUI Part
-        m_UI->setupUi(this);
-
-        // Get Logger instance
-        m_Log = CLogger::instance();
-
-        // Get P2PManager instance
-        m_P2PManager = CP2PManager::instance();
-
-        // Get AIMapping instance
-        m_AIMapping = AIMapping::instance();
-
-        // Get SimManager instance
-        m_SimManager = simbasemanager::instance();
-
-        m_Peer = pPeer;
-        QString RemoteAI = m_P2PManager->getTitle(m_Peer);
-        m_UI->leOriginal->setText(RemoteAI);
-        m_UI->cbReplacement->addItems(m_AIMapping->getAITitreDispo("*","*","*","*"));
-        m_ExistingRule = m_AIMapping->getRule(RemoteAI);
-        if (m_ExistingRule != "")
-        {
-            m_UI->cbReplacement->setCurrentIndex(m_UI->cbReplacement->findText(m_ExistingRule));
-            m_UI->btnDeleteRule->setVisible(true);
-        }
-        else
-        {
-            int index =m_UI->cbReplacement->findText(RemoteAI);
-            if (index>-1)
-            {
-                m_UI->cbReplacement->setCurrentIndex(index);
-            }
-            m_UI->btnDeleteRule->setVisible(false);
-        }
+        m_UI->cbReplacement->setCurrentIndex(m_UI->cbReplacement->findText(m_ExistingRule));
+        m_UI->btnDeleteRule->setVisible(true);
     }
-
-    ///
-    /// \brief AIReplace::~AIReplace
-    ///
-    /// Destructor
-    ///
-    AIReplace::~AIReplace()
+    else
     {
-        delete m_UI;
-    }
-
-    ///
-    /// \brief AIReplace::on_btnDeleteRule_clicked
-    ///
-    void AIReplace::on_btnDeleteRule_clicked()
-    {
-        m_AIMapping->delRule(m_UI->leOriginal->text());
+        int index =m_UI->cbReplacement->findText(RemoteAI);
+        if (index>-1)
+        {
+            m_UI->cbReplacement->setCurrentIndex(index);
+        }
         m_UI->btnDeleteRule->setVisible(false);
-        m_P2PManager->ResetAI(m_Peer);
-    }
-
-    ///
-    /// \brief AIReplace::on_btnBox_accepted
-    ///
-    void AIReplace::on_btnBox_accepted()
-    {
-        if (m_ExistingRule != m_UI->cbReplacement->currentText())
-        {
-            m_AIMapping->addRule(m_UI->leOriginal->text(),m_UI->cbReplacement->currentText());
-            m_P2PManager->ResetAI(m_Peer);
-        }
-        close();
-    }
-
-    ///
-    /// \brief AIReplace::on_btnBox_rejected
-    ///
-    void AIReplace::on_btnBox_rejected()
-    {
-        close();
     }
 }
+
+///
+/// \brief AIReplace::~AIReplace
+///
+/// Destructor
+///
+AIReplace::~AIReplace()
+{
+    delete m_UI;
+}
+
+///
+/// \brief AIReplace::on_btnDeleteRule_clicked
+///
+void AIReplace::on_btnDeleteRule_clicked()
+{
+    m_AIMapping->delRule(m_UI->leOriginal->text());
+    m_UI->btnDeleteRule->setVisible(false);
+    m_P2PManager->ResetAI(m_Peer);
+}
+
+///
+/// \brief AIReplace::on_btnBox_accepted
+///
+void AIReplace::on_btnBox_accepted()
+{
+    if (m_ExistingRule != m_UI->cbReplacement->currentText())
+    {
+        m_AIMapping->addRule(m_UI->leOriginal->text(),m_UI->cbReplacement->currentText());
+        m_P2PManager->ResetAI(m_Peer);
+    }
+    close();
+}
+
+///
+/// \brief AIReplace::on_btnBox_rejected
+///
+void AIReplace::on_btnBox_rejected()
+{
+    close();
+}
+
+}} // namespace ffs2play::gui

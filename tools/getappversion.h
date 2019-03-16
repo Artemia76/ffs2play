@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * getappversion.h is part of FF2Play project
- *
- * This function return current version of ffs2play application with string
- * and numeric structure
- * **************************************************************************/
+** getappversion.h is part of FF2Play project
+**
+** This function return current version of ffs2play application with string
+** and numeric structure
+****************************************************************************/
 
 #ifndef GETAPPVERSION_H
 #define GETAPPVERSION_H
@@ -33,17 +33,19 @@
 #include <QString>
 #include <QTextStream>
 
-namespace ffs2play
-{
-    struct sVersion
-    {
-        QString Name;
-        QString FullVersion;
-        int Major;
-        int Minor;
-        int Build;
-    };
+namespace ffs2play { namespace tools {
 
-    sVersion GetAppVersion();
-}
-#endif
+struct sVersion
+{
+    QString Name;
+    QString FullVersion;
+    int Major;
+    int Minor;
+    int Build;
+};
+
+sVersion GetAppVersion();
+
+}} // namespace ffs2play::tools
+
+#endif //GETAPPVERSION_H

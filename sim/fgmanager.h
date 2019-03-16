@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * fgmanager.h is part of FF2Play project
- *
- * This is the Flight Gear Connector
- * It use the abastractive SimConnector
- * **************************************************************************/
+* fgmanager.h is part of FF2Play project
+*
+* This is the Flight Gear Connector
+* It use the abastractive SimConnector
+* **************************************************************************/
 
 #ifndef FGMANAGER_H
 #define FGMANAGER_H
@@ -40,46 +40,49 @@
 #include "sim/aircraftstate.h"
 #include "net/udpserver.h"
 
-namespace ffs2play
+namespace ffs2play { namespace sim {
+
+using namespace net;
+
+///
+/// \brief The CFGManager class
+///
+class CFGManager : public SimConnector
 {
-    ///
-    /// \brief The CFGManager class
-    ///
+    Q_OBJECT
+public:
+    explicit CFGManager(QObject *parent = 0);
+    ~CFGManager();
+private:
+    QTimer          m_PingTimer;
+    datetime        m_LastPong;
+    QHostAddress    m_FGAddress;
+    quint16         m_FGPort;
+    quint16         m_LocalPort;
+    UDPServer*      m_Server;
 
-    class CFGManager : public SimConnector
-    {
-        Q_OBJECT
-    public:
-        explicit CFGManager(QObject *parent = 0);
-        ~CFGManager();
-    private:
-        QTimer          m_PingTimer;
-        datetime        m_LastPong;
-        QHostAddress    m_FGAddress;
-        quint16         m_FGPort;
-        quint16         m_LocalPort;
-        UDPServer*      m_Server;
+protected:
+    void            open();
+    void            close();
+    void            main_loop();
+    SIM_VERSION     getVersion();
+    void            sendScrollingText(const QString&);
+    bool            createAI(AIResol&, const QString&, const CAircraftState&, bool);
+    bool            removeAI(uint&);
+    bool            updateAI(uint, const CAircraftState&);
+    void            freezeAI(uint, bool);
+    void            sendOptions(){}
+    void            sendCallSignColor(){}
 
-    protected:
-        void            open();
-        void            close();
-        void            main_loop();
-        SIM_VERSION     getVersion();
-        void            sendScrollingText(const QString&);
-        bool            createAI(AIResol&, const QString&, const CAircraftState&, bool);
-        bool            removeAI(uint&);
-        bool            updateAI(uint, const CAircraftState&);
-        void            freezeAI(uint, bool);
-        void            sendOptions(){}
-        void            sendCallSignColor(){}
+    void            sendPing();
+    void            sendData();
+    void            sendDisc();
 
-        void            sendPing();
-        void            sendData();
-        void            sendDisc();
+private slots:
+    void            OnReceiveDatagram(QNetworkDatagram datagram);
+    void            OnPingTimer();
+};
 
-    private slots:
-        void            OnReceiveDatagram(QNetworkDatagram datagram);
-        void            OnPingTimer();
-    };
-}
+}} // namespace ffs2play::sim
+
 #endif // FGMANAGER_H

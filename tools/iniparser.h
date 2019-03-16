@@ -21,37 +21,42 @@
 ****************************************************************************/
 
 /****************************************************************************
- * iniparser.h is part of FF2Play project
- *
- * This clas provide ini based configuration file parser
- * **************************************************************************/
+** iniparser.h is part of FF2Play project
+**
+** This clas provide ini based configuration file parser
+****************************************************************************/
 
 #ifndef INIPARSER_H
 #define INIPARSER_H
 
 #include <QObject>
 #include <QFile>
-#include "singleton/simbasemanager.h"
+#include "sim/simbasemanager.h"
 
-namespace ffs2play
+namespace ffs2play { namespace  tools {
+
+using namespace std;
+using namespace sim;
+
+class IniParserException : public exception
 {
-    class IniParserException : public std::exception
-    {
-    public:
-        QString Message;
-    };
+public:
+    QString Message;
+};
 
-    class IniParser : public QObject
-    {
-        Q_OBJECT
-    public:
-                                    IniParser(const QString& pFilename, const SIM_TYPE pSimType = SIM_TYPE::FSX);
-    virtual                         ~IniParser();
-        QVariant                    value(const QString& pGroup, const QString& pParameter, const QVariant& pDefaultValue = QVariant()) const;
-    private:
-        SIM_TYPE                    m_simType;
-        QString                     m_Selected_Group;
-        QMap<QString,QStringList>   m_GroupMap;
-    };
-}
+class IniParser : public QObject
+{
+    Q_OBJECT
+public:
+                                IniParser(const QString& pFilename, const SIM_TYPE pSimType = SIM_TYPE::FSX);
+virtual                         ~IniParser();
+    QVariant                    value(const QString& pGroup, const QString& pParameter, const QVariant& pDefaultValue = QVariant()) const;
+private:
+    SIM_TYPE                    m_simType;
+    QString                     m_Selected_Group;
+    QMap<QString,QStringList>   m_GroupMap;
+};
+
+}} //namespace ffs2play
+
 #endif // INIPARSER_H

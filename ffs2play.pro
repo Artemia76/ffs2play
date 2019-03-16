@@ -79,36 +79,39 @@ include(protobuf.pri)
 UI_DIR = gui
 
 SOURCES +=      main.cpp \
+                disk/aibaseparser.cpp \
+                disk/aimapping.cpp \
+                disk/xpcslparser.cpp \
+                gui/aireplace.cpp \
+                gui/dialogp2p.cpp \
                 gui/dialogprofils.cpp \
                 gui/mainwindow.cpp \
                 gui/mainwindow.GuiEvents.cpp \
-                gui/dialogp2p.cpp \
-                gui/aireplace.cpp \
-                net/chttprequest.cpp \
+                net/p2pmanager.cpp \
                 net/peer.cpp \
                 net/peer.Requests.cpp \
                 net/peer.Event.cpp \
                 net/udpserver.cpp \
                 sim/aircraftstate.cpp \
+                sim/analyzer.cpp \
+                sim/fgdatagram.cpp \
+                sim/fgmanager.cpp \
+                sim/simbasemanager.cpp \
                 sim/simconnector.cpp \
                 sim/xpmanager.cpp \
-                sim/fgmanager.cpp \
-                singleton/aimapping.cpp \
-                singleton/analyzer.cpp \
-                singleton/clogger.cpp \
-                singleton/p2pmanager.cpp \
-                singleton/simbasemanager.cpp \
-                singleton/webmanager.Callback.cpp \
-                singleton/webmanager.cpp \
-                singleton/webmanager.Requests.cpp \
-                singleton/webmanager.Utils.cpp \
                 tools/calculation.cpp \
+                tools/clogger.cpp \
                 tools/crypto.cpp \
                 tools/datagram.cpp \
                 tools/datetime.cpp \
                 tools/getappversion.cpp \
                 tools/iniparser.cpp \
-                sim/fgdatagram.cpp
+                tools/simple_file_parser.cpp \
+                web/chttprequest.cpp \
+                web/webmanager.cpp \
+                web/webmanager.Callback.cpp \
+                web/webmanager.Requests.cpp \
+                web/webmanager.Utils.cpp
 win32 {
 SOURCES +=      sim/scmanager.cpp
 }
@@ -117,33 +120,36 @@ macx {
 SOURCES +=      tools/keepalive.mm
 }
 
-HEADERS  +=     gui/dialogprofils.h \
-                gui/mainwindow.h \
-                gui/dialogp2p.h \
+HEADERS  +=     disk/aibaseparser.h \
+                disk/aimapping.h \
+                disk/xpcslparser.h \
                 gui/aireplace.h \
-                net/chttprequest.h \
+                gui/dialogp2p.h \
+                gui/dialogprofils.h \
+                gui/mainwindow.h \
+                net/p2pmanager.h \
                 net/peer.h \
                 net/udpserver.h \
                 sim/aircraftstate.h \
+                sim/analyzer.h \
+                sim/fgdatagram.h \
+                sim/fgmanager.h \
+                sim/simbasemanager.h \
                 sim/simconnector.h \
                 sim/xpmanager.h \
-                sim/fgmanager.h \
-                singleton/aimapping.h \
-                singleton/analyzer.h \
-                singleton/call_once.h \
-                singleton/clogger.h \
-                singleton/p2pmanager.h \
-                singleton/simbasemanager.h \
-                singleton/singleton.h \
-                singleton/webmanager.h \
                 tools/calculation.h \
+                tools/call_once.h \
+                tools/clogger.h \
                 tools/crypto.h \
                 tools/datagram.h \
                 tools/datetime.h \
                 tools/getappversion.h \
                 tools/iniparser.h \
+                tools/simple_file_parser.h \
+                tools/singleton.h \
                 tools/version.h \
-                sim/fgdatagram.h
+                web/chttprequest.h \
+                web/webmanager.h
 win32 {
 HEADERS +=      sim/scmanager.h
 }

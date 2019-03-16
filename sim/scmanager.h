@@ -292,7 +292,6 @@ namespace ffs2play
         qint64                  m_VariableRate;
         QDateTime               m_LastVariable;
         QDateTime               m_LastSim;
-        int                     m_appVersionMajor;
         QStringList             m_messageBuffer;
         const float             m_timeToScroll=10.0;
         QHash<uint, QString>    m_AIProcess;

@@ -21,56 +21,53 @@
 ****************************************************************************/
 
 /****************************************************************************
- * crypto.h is part of FF2Play project
- *
- * This class provide tools for encryption needs
- * It use AES cipher for xml texte based protocol
- * it provide RSA encryption for AES key exchange
- * **************************************************************************/
+** crypto.h is part of FF2Play project
+**
+** This class provide tools for encryption needs
+** It use AES cipher for xml texte based protocol
+** it provide RSA encryption for AES key exchange
+****************************************************************************/
 
 #ifndef CRYPTO_H
 #define CRYPTO_H
 
 #include <QObject>
-#include <singleton/clogger.h>
+#include <tools/clogger.h>
 #include <filters.h>
+#include <aes.h>
+#include <modes.h>
+#include <osrng.h>
+#include <openssl/pem.h>
+#include <openssl/x509.h>
+#include <openssl/x509v3.h>
+
+namespace ffs2play { namespace tools {
 
 using CryptoPP::StringSink;
 using CryptoPP::ArraySink;
 using CryptoPP::StringSource;
 using CryptoPP::StreamTransformationFilter;
-
-#include <aes.h>
 using CryptoPP::AES;
-
-#include <modes.h>
 using CryptoPP::CFB_Mode;
-
-#include <osrng.h>
 using CryptoPP::AutoSeededRandomPool;
 
-#include <openssl/pem.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
-
-namespace ffs2play
+class CCrypto : public QObject
 {
-    class CCrypto : public QObject
-    {
-        QByteArray          m_key;
-        CLogger*            m_log;
-        Q_OBJECT
-    public:
-        explicit            CCrypto(QObject *pParent = nullptr);
-        const QByteArray&   EncryptionKey();
-        QString             EncryptionKeyString();
-        QString             EncryptToBase64(const QString& pData);
-        QString             DecryptFromBase64(const QString& pData);
-        QString             RSA_EncryptToBase64(const QString& pCert, const QByteArray& pData);
-    signals:
+    QByteArray          m_key;
+    CLogger*            m_log;
+    Q_OBJECT
+public:
+    explicit            CCrypto(QObject *pParent = nullptr);
+    const QByteArray&   EncryptionKey();
+    QString             EncryptionKeyString();
+    QString             EncryptToBase64(const QString& pData);
+    QString             DecryptFromBase64(const QString& pData);
+    QString             RSA_EncryptToBase64(const QString& pCert, const QByteArray& pData);
+signals:
 
-    public slots:
-    };
-}
+public slots:
+};
+
+}} //namespace ffs2play::tools
 
 #endif // CRYPTO_H

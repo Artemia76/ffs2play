@@ -21,11 +21,11 @@
 ****************************************************************************/
 
 /****************************************************************************
- * fgmanager.cpp is part of FF2Play project
- *
- * This is the Flight Gear Connector
- * It use the abastractive SimConnector
- * **************************************************************************/
+** fgmanager.cpp is part of FF2Play project
+**
+** This is the Flight Gear Connector
+** It use the abastractive SimConnector
+****************************************************************************/
 
 #include <QDataStream>
 #include <QNetworkDatagram>
@@ -34,229 +34,230 @@
 
 #include "tools/datagram.h"
 
-namespace ffs2play
+namespace ffs2play { namespace sim {
+
+///
+/// \brief FlightGear Manager Constructor
+/// \param parent
+///
+CFGManager::CFGManager(QObject* parent):
+    SimConnector(parent)
 {
-    ///
-    /// \brief FlightGear Manager Constructor
-    /// \param parent
-    ///
-    CFGManager::CFGManager(QObject* parent):
-        SimConnector(parent)
-    {
-        m_LocalPort=5000;
-        m_FGPort=0;
-        m_Server = new UDPServer(this);
-        connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
-        connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
-        m_log->log("FGManager : " + tr("FlightGear Module loaded"));
-    }
+    m_LocalPort=5000;
+    m_FGPort=0;
+    m_Server = new UDPServer(this);
+    connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
+    connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
+    m_log->log("FGManager : " + tr("FlightGear Module loaded"));
+}
 
-    ///
-    /// \brief CFGManager::~CFGManager
-    ///
-    CFGManager::~CFGManager()
-    {
-        close();
-        m_Server->stop();
-        m_log->log("FGManager : " + tr("FlightGear Module unloaded"));
-    }
+///
+/// \brief CFGManager::~CFGManager
+///
+CFGManager::~CFGManager()
+{
+    close();
+    m_Server->stop();
+    m_log->log("FGManager : " + tr("FlightGear Module unloaded"));
+}
 
-    ///
-    /// \brief CFGManager::open
-    ///
-    void CFGManager::open ()
+///
+/// \brief CFGManager::open
+///
+void CFGManager::open ()
+{
+    if (!m_connected)
     {
-        if (!m_connected)
+        m_log->log(tr("Connecting to FlightGear ..."));
+        m_Server->setPort(m_LocalPort);
+        m_PingTimer.start(500);
+        if (m_Server->start())
         {
-            m_log->log(tr("Connecting to FlightGear ..."));
-            m_Server->setPort(m_LocalPort);
-            m_PingTimer.start(500);
-            if (m_Server->start())
-            {
-                m_connected=true;
-                m_log->log(tr("Connected to FlightGear."));
-                emit(fireSimConnected());
-            }
-        }
-    }
-
-    ///
-    /// \brief CFGManager::close
-    ///
-    void CFGManager::close ()
-    {
-        if (m_connected)
-        {
-            m_PingTimer.stop();
-            sendDisc();
-            m_Server->stop();
-            m_connected=false;
-            m_log->log(tr("Disconnected from FlightGear."));
-        }
-    }
-
-
-    ///
-    /// \brief CFGManager::main_loop()
-    ///
-    void CFGManager::main_loop()
-    {
-
-    }
-
-    ///
-    /// \brief CFGManager::getVersion
-    /// \return
-    ///
-    SimConnector::SIM_VERSION CFGManager::getVersion()
-    {
-        return SIM_VERSION::FLIGHTGEAR;
-    }
-
-    ///
-    /// \brief CFGManager::sendScrollingText
-    ///
-    void CFGManager::sendScrollingText(const QString& /*pMessage*/)
-    {
-
-    }
-
-    ///
-    /// \brief CFGManager::createAI
-    /// \return
-    ///
-    bool CFGManager::createAI(AIResol& /*pAircraft*/,const QString& /*pTail*/,const CAircraftState& /*pData*/,bool /*pNonAIObject*/)
-    {
-        return false;
-    }
-
-    ///
-    /// \brief CFGManager::removeAI
-    /// \return
-    ///
-    bool CFGManager::removeAI(uint& /*pObjectID*/)
-    {
-        return false;
-    }
-
-    ///
-    /// \brief CFGManager::updateAI
-    /// \param pObjectID
-    /// \param pData
-    /// \return
-    ///
-    bool CFGManager::updateAI(uint /*pObjectID*/, const CAircraftState& /*pData*/)
-    {
-        return false;
-    }
-
-    ///
-    /// \brief CFGManager::freezeAI
-    ///
-    void CFGManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
-    {
-        if (m_connected)
-        {
-#ifdef FFS_DEBUG
-            m_log->log("FGManager : " + tr("Send freezeAI"), Qt::darkBlue,LEVEL_NORMAL);
-#endif
-        }
-    }
-
-    ///
-    /// \brief CFGManager::sendPing
-    ///
-    void CFGManager::sendPing()
-    {
-#ifdef FFS_DEBUG
-        m_log->log("FGManager : " + tr("Send PING"), Qt::darkBlue,LEVEL_NORMAL);
-#endif
-        /*QByteArray Data;
-        QDataStream stream(&Data,QIODevice::WriteOnly);
-        stream.setByteOrder(QDataStream::LittleEndian);
-        stream << (quint8)PING;
-        stream << (quint32)m_options;
-        QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        m_Server->send(Output);*/
-    }
-
-    ///
-    /// \brief CFGManager::sendData
-    ///
-    void CFGManager::sendData()
-    {
-        if (m_connected)
-        {
-#ifdef FFS_DEBUG
-            m_log->log("FGManager : " + tr("Send DATA"), Qt::darkBlue,LEVEL_NORMAL);
-#endif
-            /*QByteArray Data;
-            QDataStream stream(&Data,QIODevice::WriteOnly);
-            stream << (quint8)DATA;
-            stream << (quint8)pFlag;
-            QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-            m_Server->send(Output);*/
-        }
-    }
-
-    ///
-    /// \brief CFGManager::sendDisc
-    ///
-    void CFGManager::sendDisc()
-    {
-        /*QByteArray Data;
-        QDataStream stream(&Data,QIODevice::WriteOnly);
-        stream << (quint8)DISC;
-        QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        m_Server->send(Output);*/
-    }
-
-    ///
-    /// \brief CXPManager::OnReceiveDatagram
-    ///
-    void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
-    {
-        m_FGAddress = datagram.senderAddress();
-        m_FGPort = datagram.senderPort();
-        QByteArray data(datagram.data());
-        QDataStream stream(&data,QIODevice::ReadOnly);
-        // Reading Header
-        FGDatagram FGData;
-        FGData.Read(stream);
-        if (!FGData.IsSane()) return;
-        if (FGData.GetAirData(m_state))
-        {
-#ifdef FFS_DEBUG
-            m_log->log("FGManager : " + tr("Received Data from FG : Model = ") +
-                m_state.Title +
-                " , Latitude = " + QString::number(m_state.Latitude) +
-                " , Longitude = " + QString::number(m_state.Longitude) +
-                " , Altitude = " + QString::number(m_state.Altitude)
-                , Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-            emit(fireSimVariableEvent(m_state));
-            emit(fireSimEventFrame(20,50));
-        }
-    }
-
-    ///
-    /// \brief CFGManager::OnPingTimer
-    ///
-    void CFGManager::OnPingTimer()
-    {
-        if (m_connected)
-        {
-            /*if(timespan(Now() - m_LastPong).count()>10000)
-            {
-                close();
-                emit(fireSimTimedOut());
-            }*/
-            //else sendPing();
-        }
-        else
-        {
-            m_PingTimer.stop();
-            emit(fireSimTimedOut());
+            m_connected=true;
+            m_log->log(tr("Connected to FlightGear."));
+            emit(fireSimConnected());
         }
     }
 }
+
+///
+/// \brief CFGManager::close
+///
+void CFGManager::close ()
+{
+    if (m_connected)
+    {
+        m_PingTimer.stop();
+        sendDisc();
+        m_Server->stop();
+        m_connected=false;
+        m_log->log(tr("Disconnected from FlightGear."));
+    }
+}
+
+
+///
+/// \brief CFGManager::main_loop()
+///
+void CFGManager::main_loop()
+{
+
+}
+
+///
+/// \brief CFGManager::getVersion
+/// \return
+///
+SimConnector::SIM_VERSION CFGManager::getVersion()
+{
+    return SIM_VERSION::FLIGHTGEAR;
+}
+
+///
+/// \brief CFGManager::sendScrollingText
+///
+void CFGManager::sendScrollingText(const QString& /*pMessage*/)
+{
+
+}
+
+///
+/// \brief CFGManager::createAI
+/// \return
+///
+bool CFGManager::createAI(AIResol& /*pAircraft*/,const QString& /*pTail*/,const CAircraftState& /*pData*/,bool /*pNonAIObject*/)
+{
+    return false;
+}
+
+///
+/// \brief CFGManager::removeAI
+/// \return
+///
+bool CFGManager::removeAI(uint& /*pObjectID*/)
+{
+    return false;
+}
+
+///
+/// \brief CFGManager::updateAI
+/// \param pObjectID
+/// \param pData
+/// \return
+///
+bool CFGManager::updateAI(uint /*pObjectID*/, const CAircraftState& /*pData*/)
+{
+    return false;
+}
+
+///
+/// \brief CFGManager::freezeAI
+///
+void CFGManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
+{
+    if (m_connected)
+    {
+#ifdef FFS_DEBUG
+        m_log->log("FGManager : " + tr("Send freezeAI"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+    }
+}
+
+///
+/// \brief CFGManager::sendPing
+///
+void CFGManager::sendPing()
+{
+#ifdef FFS_DEBUG
+    m_log->log("FGManager : " + tr("Send PING"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+    /*QByteArray Data;
+    QDataStream stream(&Data,QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream << (quint8)PING;
+    stream << (quint32)m_options;
+    QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+    m_Server->send(Output);*/
+}
+
+///
+/// \brief CFGManager::sendData
+///
+void CFGManager::sendData()
+{
+    if (m_connected)
+    {
+#ifdef FFS_DEBUG
+        m_log->log("FGManager : " + tr("Send DATA"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+        /*QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream << (quint8)DATA;
+        stream << (quint8)pFlag;
+        QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+        m_Server->send(Output);*/
+    }
+}
+
+///
+/// \brief CFGManager::sendDisc
+///
+void CFGManager::sendDisc()
+{
+    /*QByteArray Data;
+    QDataStream stream(&Data,QIODevice::WriteOnly);
+    stream << (quint8)DISC;
+    QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+    m_Server->send(Output);*/
+}
+
+///
+/// \brief CXPManager::OnReceiveDatagram
+///
+void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
+{
+    m_FGAddress = datagram.senderAddress();
+    m_FGPort = datagram.senderPort();
+    QByteArray data(datagram.data());
+    QDataStream stream(&data,QIODevice::ReadOnly);
+    // Reading Header
+    FGDatagram FGData;
+    FGData.Read(stream);
+    if (!FGData.IsSane()) return;
+    if (FGData.GetAirData(m_state))
+    {
+#ifdef FFS_DEBUG
+        m_log->log("FGManager : " + tr("Received Data from FG : Model = ") +
+            m_state.Title +
+            " , Latitude = " + QString::number(m_state.Latitude) +
+            " , Longitude = " + QString::number(m_state.Longitude) +
+            " , Altitude = " + QString::number(m_state.Altitude)
+            , Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+        emit(fireSimVariableEvent(m_state));
+        emit(fireSimEventFrame(20,50));
+    }
+}
+
+///
+/// \brief CFGManager::OnPingTimer
+///
+void CFGManager::OnPingTimer()
+{
+    if (m_connected)
+    {
+        /*if(timespan(Now() - m_LastPong).count()>10000)
+        {
+            close();
+            emit(fireSimTimedOut());
+        }*/
+        //else sendPing();
+    }
+    else
+    {
+        m_PingTimer.stop();
+        emit(fireSimTimedOut());
+    }
+}
+
+}} // namespace ffs2play::sim
