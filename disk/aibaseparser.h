@@ -31,22 +31,67 @@
 #define AIBASEPARSER_H
 
 #include <QObject>
+#include <QThread>
+#include <QtSql>
+#include "tools/clogger.h"
+#include "sim/simbasemanager.h"
+
+#define AIDB_AIRCRAFTS_VERSION 3
+#define AIDB_SIMPATHS_VERSION 1
+#define AIDB_REPLACEMENT_VERSION 1
 
 namespace ffs2play { namespace disk {
+
+using namespace tools;
+using namespace sim;
 
 class AIBaseParser : public QObject
 {
     Q_OBJECT
-    friend  class AIMapping;
+    friend  class   AIMapping;
 public:
     explicit        AIBaseParser(QObject *parent = nullptr);
     virtual         ~AIBaseParser();
 
 protected:
+    bool            m_Initialized;
+    QThread*        m_thread;
+    QSqlDatabase    m_Thread_DB; //Since QT5.11, we need to separate DB connexion between threads
+    QSqlDatabase    m_DB;
+    QString         m_Table;
+    QAtomicInt      m_NbAdded;
+    QAtomicInt      m_NbUpdated;
+    QAtomicInt      m_NbDeleted;
+    CLogger*        m_log;
+    QStringList     m_AircraftPaths;
+    QString         m_BaseFile;
+    simbasemanager* m_simManager;
+    QStringList     m_AIFileFilter;
+
+    void            startScanSimObject();
+    QString         getAircraftPath(const QString& pTitle);
+    AIResol         SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
+    QStringList     getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
+    QString         getRule(const QString& pTitre);
+    void            addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
+    void            delRule(const QString& pRemoteTitle);
+    void            cleanAIDB();
+    bool            addPath(const QString& pPath, const QString& pSim="");
+    bool            delPath(const QString& pPath);
+    virtual void    searchSimPath(){}
+    virtual QString findInstallationPath (const QString&,QSettings::Format){return "";}
+    QStringList     getPathList();
+    QString         MD5Hash(const QString& pFileName);
+    void            initSQLite();
+    void            DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);
+
+virtual void        DBFileUpdate(const QString& pKey,const QString& pPath)=0;
+    void            DBFilePurge ();
 
 signals:
-
-public slots:
+    void            fireScanFinished(int pAdded, int pUpdated, int pDeleted);
+private slots:
+    void            scanSimObject();
 };
 
 }} // namespace ffs2play::disk

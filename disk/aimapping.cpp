@@ -40,19 +40,11 @@ using namespace ffs2play;
 ///
 AIMapping::AIMapping(QObject *parent) : QObject(parent)
 {
-    m_Initialized =false;
-    m_thread = nullptr;
     m_log = CLogger::instance();
     m_simManager = simbasemanager::instance();
     connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
     connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
-    // AI Database initialisation
-    initSQLite();
-#ifdef Q_OS_WIN
-    //if we are on windows platform, we are looking for FSX like base installation
-    // FSX,FSX Steam Edition, P3D v2, P3D v3, P3D v4
-    searchSimPath();
-#endif
+    m_AIParser = nullptr;
 }
 
 ///
@@ -62,7 +54,6 @@ AIMapping::~AIMapping()
 {
     disconnect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
     disconnect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
-    m_DB.close();
 }
 
 ///
@@ -83,107 +74,37 @@ AIMapping* AIMapping::instance()
     return Singleton<AIMapping>::instance(AIMapping::createInstance);
 }
 
-#ifdef Q_OS_WIN
-
-void AIMapping::searchSimPath()
-{
-    if (!m_Initialized) return;
-    QString Path;
-    QSqlQuery query(m_DB);
-    QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
-    QHash<QString, QString> hash;
-    hash[version.valueToKey(SimConnector::SIM_VERSION::FSX)] = "Microsoft\\Microsoft Games\\Flight Simulator\\10.0";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::FSX_STEAM)] = "DovetailGames\\FSX";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V2)] = "Lockheed Martin\\Prepar3D v2";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V3)] = "Lockheed Martin\\Prepar3D v3";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V4)] = "Lockheed Martin\\Prepar3D v4";
-
-    // Lets search path installation for each supported windows simulators
-    QHashIterator<QString, QString> it(hash);
-    while (it.hasNext())
-    {
-        it.next();
-        query.prepare("SELECT Path FROM SimPaths WHERE Sim = :Sim;");
-        query.bindValue(":Sim",it.key());
-        if (query.exec())
-        {
-            if (!query.next()) // If path installation is empty
-            {
-#ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : ") + it.key() + tr(" Path list is empty, let try to find path installation..."), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-                Path = findInstallationPath(it.value());
-                //If Path is empty let try to search in 64Bit registry
-                if (Path.isEmpty())  Path = findInstallationPath(it.value(),QSettings::Registry64Format);
-                if (!Path.isEmpty())
-                {
-#ifdef FFS_DEBUG
-                    m_log->log(tr("AIMapping : Path found for ") + it.key() + " = " + Path, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-                    addPath(QDir::fromNativeSeparators(Path + "SimObjects\\Airplanes"), it.key());
-                    addPath(QDir::fromNativeSeparators(Path + "SimObjects\\Rotorcraft"), it.key());
-                }
-                else
-                {
-#ifdef FFS_DEBUG
-                    m_log->log(tr("AIMapping : No path found for ") + it.key(), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-                }
-            }
-            else
-            {
-#ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : ") + it.key() + tr(" Path list already contains some path"), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-            }
-        }
-        else
-        {
-#ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : Fail to query path list for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        }
-    }
-}
-
-///
-/// \brief AIMapping::findInstallationPath
-/// \param pKey
-/// \return
-///
-QString AIMapping::findInstallationPath(const QString &pKey,QSettings::Format pFormat)
-{
-    QString Response = "";
-    QSettings localKey32("HKEY_LOCAL_MACHINE\\Software\\" + pKey ,pFormat);
-    QSettings localKey64("HKEY_LOCAL_MACHINE\\WOW6432Node\\" + pKey ,pFormat);
-    QString registryKey;
-    Response = localKey32.value("Install_Path","").toString();
-    if (Response.isEmpty())
-    {
-        Response = localKey32.value("SetupPath","").toString();
-    }
-    if (Response.isEmpty())
-    {
-        Response = localKey64.value("Install_Path","").toString();
-    }
-    if (Response.isEmpty())
-    {
-        Response = localKey64.value("SetupPath","").toString();
-    }
-    return Response;
-}
-#endif
-
 ///
 /// \brief AIMapping::onSimReceiveOpen
 ///
 void AIMapping::onSimReceiveOpen()
 {
     if (m_simManager==nullptr) return;
-    m_AircraftPaths.clear();
-    QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
-    m_Table = version.valueToKey(m_simManager->getVersion());
-    startScanSimObject();
+    m_Version = m_simManager->getVersion();
+    switch (m_Version)
+    {
+#ifdef Q_OS_WIN
+        case SimConnector::SIM_VERSION::FSX:
+        case SimConnector::SIM_VERSION::FSX_STEAM:
+        case SimConnector::SIM_VERSION::P3D_V2:
+        case SimConnector::SIM_VERSION::P3D_V3:
+        case SimConnector::SIM_VERSION::P3D_V4:
+        m_AIParser = new SCAIParser(this);
+        break;
+#endif
+        case SimConnector::SIM_VERSION::XPLANE:
+        m_AIParser = new XPAIParser(this);
+        break;
+        case SimConnector::SIM_VERSION::XPLANE_CSL:
+        m_AIParser = new XPCSLParser(this);
+        break;
+        /*case SimConnector::SIM_VERSION::FLIGHTGEAR:
+        m_AIParser = new FGAIParser(this);
+        break;*/
+        default:
+        return;
+    }
+    m_AIParser->startScanSimObject();
 }
 
 ///
@@ -191,124 +112,8 @@ void AIMapping::onSimReceiveOpen()
 ///
 void AIMapping::onSimReceiveClose()
 {
-    m_AircraftPaths.clear();
-    m_Table.clear();
-}
-
-///
-/// \brief AIMapping::initSQLite
-///
-void AIMapping::initSQLite()
-{
-    if (m_Initialized) return;
-    m_DB=QSqlDatabase::addDatabase("QSQLITE");
-    QString PathDatabase = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    if (!QDir(PathDatabase).exists())
-    {
-        QDir().mkpath(PathDatabase);
-    }
-    m_BaseFile = PathDatabase + QString("/AIDB.sqlite");
-#ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : open database : ") + m_BaseFile, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-    m_DB.setDatabaseName(m_BaseFile);
-    m_DB.open();
-    QSqlQuery query(m_DB);
-
-    //create if not exist the Version Table
-    query.prepare("create table if not exists Version (TableName varchar(256) UNIQUE, Version int)");
-    if (!query.exec())
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create Version Table : ") + query.lastError().text(), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        return;
-    }
-
-    //Check if a new version is needed
-    DBTableVersionCheck("SimPaths",AIDB_SIMPATHS_VERSION);
-    // create if not exist the SimPath Table
-    query.prepare("create table if not exists SimPaths (Path varchar(256) UNIQUE, Sim varchar(16))");
-    if (!query.exec())
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create SimPath Table"), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        return;
-    }
-
-    //Check if a new version is needed
-    DBTableVersionCheck("Aircrafts",AIDB_AIRCRAFTS_VERSION,true);
-    // create if not exist Aircrafts Table
-    query.prepare("create table if not exists Aircrafts ( checksum varchar(32), Sim varchar(16) collate nocase, Title varchar(256) collate nocase, Editor varchar(100) collate nocase, Type varchar(30) collate nocase, Model varchar(10) collate nocase, AirLine varchar(10), Path varchar(256) collate nocase, Category varchar(20) collate nocase, NbEngine int, EngineType int, CGHeight real, Pitch real);");
-    if (!query.exec())
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create Aircrafts Table"), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        return;
-    }
-
-    //Check if a new version is needed
-    DBTableVersionCheck("Replacement",AIDB_REPLACEMENT_VERSION);
-    // create if not exist Replacement Table
-    query.prepare("create table if not exists Replacement (RemoteTitle varchar(256) UNIQUE, LocalTitle varchar(256), Sim varchar(16) collate nocase)");
-    if (!query.exec())
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create Replacement Table"), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        return;
-    }
-    m_Initialized =true;
-}
-
-///
-/// \brief AIMapping::DBTableVersionCheck
-/// \param pTable
-/// \param pVersion
-/// \param pForceClean
-///
-void AIMapping::DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean)
-{
-    if (!m_DB.isOpen()) return;
-    QSqlQuery query(m_DB);
-    bool NeedUpdate = false;
-    query.prepare("SELECT Version FROM Version WHERE TableName = :TableName");
-    query.bindValue(":TableName", pTable);
-    if (query.exec())
-    {
-        if (query.next())
-        {
-            if (query.value(0).toInt()<pVersion)
-            {
-                NeedUpdate=true;
-                query.prepare("UPDATE Version SET Version = :Version WHERE TableName = :TableName");
-                query.bindValue(":Version", pVersion);
-                query.bindValue(":TableName", pTable);
-                query.exec();
-            }
-        }
-        else
-        {
-            NeedUpdate=pForceClean;
-            query.prepare("INSERT INTO Version (TableName, Version) VALUES(:TableName , :Version)");
-            query.bindValue(":Version", pVersion);
-            query.bindValue(":TableName", pTable);
-            query.exec();
-        }
-    }
-    else
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to query Version Table : ") + query.lastError().text(), Qt::darkYellow,LEVEL_NORMAL);
-#endif
-    }
-    if (NeedUpdate)
-    {
-        query.prepare("DROP TABLE IF EXISTS " + pTable);
-        query.exec();
-    }
+    if (isInit()) delete m_AIParser;
+    m_AIParser = nullptr;
 }
 
 ///
@@ -316,215 +121,7 @@ void AIMapping::DBTableVersionCheck(const QString& pTable, int pVersion, bool pF
 ///
 void AIMapping::startScanSimObject()
 {
-    m_AircraftPaths = getPathList();
-    //if (m_AircraftPaths.count() == 0) return;
-    if (m_thread != nullptr)
-    {
-        if (m_thread->isRunning()) m_thread->exit();
-    }
-    m_thread = new QThread();
-    connect(m_thread, SIGNAL(started()), this, SLOT(scanSimObject()),Qt::DirectConnection);
-    m_thread->start();
-    m_thread->setPriority(QThread::IdlePriority);
-}
-
-///
-/// \brief AIMapping::scanSimObject
-///
-void AIMapping::scanSimObject()
-{
-    m_NbAdded=0;
-    m_NbUpdated=0;
-    m_NbDeleted=0;
-    m_log->log(tr("Start updating aircraft database..."));
-    //Since QT5.11, create new connexion for thread
-    const QString thread_address = QLatin1String("0x") + QString::number(reinterpret_cast<quintptr>(QThread::currentThreadId()), 16);
-    QSqlDatabase Thread_DB=QSqlDatabase::database(thread_address);
-    Thread_DB.setDatabaseName(m_BaseFile);
-    if ((!Thread_DB.isOpen()) || (!Thread_DB.isValid()))
-    {
-        Thread_DB = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), thread_address);
-    }
-    m_Thread_DB = Thread_DB;
-    m_Thread_DB.setDatabaseName(m_BaseFile);
-    if (m_Thread_DB.open())
-    {
-        for (QString Directory : m_AircraftPaths)
-        {
-            QDirIterator it(QDir(Directory).canonicalPath(), QStringList() << "aircraft.cfg" << "sim.cfg" << "*.acf", QDir::Files, QDirIterator::Subdirectories);
-            while (it.hasNext())
-            {
-                QString FileName = it.next();
-                QString Hash = MD5Hash(FileName);
-                DBFileUpdate(Hash,FileName);
-            }
-        }
-        DBFilePurge();
-    }
-    else
-    {
-#if FFS_DEBUG
-        m_log->log(tr("AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion"),Qt::darkMagenta);
-#endif
-    }
-    //Close DB Connexion
-    m_Thread_DB.close();
-    m_log->log(tr("End of update : ") + QString::number(m_NbAdded) +
-               tr(" aircrafts added, ") + QString::number(m_NbUpdated) +
-               tr(" updated and ") + QString::number(m_NbDeleted) + tr(" deleted."));
-    emit(fireScanFinished(m_NbAdded, m_NbUpdated, m_NbDeleted));
-}
-
-///
-/// \brief AIMapping::DBFileUpdate
-/// \param pKey
-/// \param pPath
-///
-void AIMapping::DBFileUpdate(const QString &pKey, const QString &pPath)
-{
-    if ((!m_Initialized) || m_Table.isEmpty()) return;
-    if (!m_Thread_DB.isOpen()) return;
-    QSqlQuery query(m_Thread_DB);
-    QString Path= pPath;
-    query.prepare( "SELECT checksum FROM Aircrafts WHERE (checksum = :checksum) and (Sim = :Sim)");
-    query.bindValue(":checksum",pKey);
-    query.bindValue(":Sim",m_Table);
-    if (query.exec())
-    {
-        if (!query.next())
-        {
-#ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : No record was found for ") + pKey, Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-            try
-            {
-                SIM_TYPE sim=m_simManager->getType();
-                IniParser s(Path,sim);
-#ifdef Q_OS_WIN
-                Path = Path.replace("/","\\");
-#endif
-                QString Editor,Atc_model, Atc_type, Category, Title;
-                int Engine_Type = 0;
-                double Static_CG_Height=0.0, Static_Pitch = 0.0;
-                if (sim==SIM_TYPE::FSX)
-                {
-                    Editor = s.value("fltsim.0", "ui_createdby").toString();
-                    Atc_model = s.value("General","atc_model").toString();
-                    Atc_type =  s.value("General","atc_type").toString();
-                    Category =  s.value("General","Category").toString();
-                    Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
-                    Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
-                    Static_Pitch =  s.value("contact_points","static_pitch").toDouble();
-                }
-                else if (sim==SIM_TYPE::XPLANE)
-                {
-                    Title = s.value("properties", "acf/_name").toString();
-                    if (Title=="")
-                    {
-                        QFileInfo File(Path);
-                        Title = File.baseName();
-                    }
-                    Editor = s.value("properties", "acf/_studio").toString();
-                    Atc_model = s.value("properties","acf/_ICAO").toString();
-                    Atc_type = s.value("properties","acf/_manufacturer").toString();
-                    //Category =  s.value("General","Category").toString();
-                    //Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
-                    Static_CG_Height =  s.value("properties","acf/_h_eqlbm").toDouble();
-                    Static_Pitch =  s.value("properties","acf/_the_eqlbm").toDouble();
-                }
-#if FFS_DEBUG
-                m_log->log(tr("AIMapping : Path = ") + Path,Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : Editor = ") + Editor,Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : ATCModel = ") + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : ATCType = ") + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : Category = ") + Category, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : EngineType = ") + QString::number(Engine_Type), Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : CG Height = ") +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : Pitch = ") +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-                int nb_moteur = 0;
-                while (true)
-                {
-                    QString Reponse = s.value("GeneralEngineData", QString("Engine.") + QString::number(nb_moteur)).toString();
-                    if (Reponse != "")
-                    {
-                        nb_moteur++;
-                    }
-                    else break;
-                }
-#if FFS_DEBUG
-                m_log->log(tr("AIMapping : Engine quantity = ") + QString::number(nb_moteur),Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-                int nb_title = 0;
-                while (true)
-                {
-                    if (sim==SIM_TYPE::FSX)
-                        Title = s.value(QString("fltsim.") + QString::number(nb_title), "title").toString();
-
-                    if (Title != "")
-                    {
-#if FFS_DEBUG
-                        m_log->log(tr("AIMapping : livery found Title = ") + Title,Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-                        nb_title++;
-                        query.prepare("SELECT * FROM Aircrafts WHERE (Title = :Title) AND (checksum = :checksum) AND (Sim = :Sim)" );
-                        query.bindValue(":Title",Title);
-                        query.bindValue(":checksum",pKey);
-                        query.bindValue(":Sim", m_Table);
-                        if (query.exec())
-                        {
-                            // If there is no result, we have a new aircraft to register
-                            if (!query.next())
-                            {
-                                query.prepare("INSERT INTO Aircrafts (checksum, Sim, Title, Editor, Type, Model, Path, Category, NbEngine, EngineType, CGHeight, Pitch)"
-                                              "VALUES (:checksum, :Sim, :Title, :Editor, :Type, :Model, :Path, :Category, :NBEngine, :EngineType, :CGHeight, :Pitch)");
-                                query.bindValue(":checksum", pKey);
-                                query.bindValue(":Sim",m_Table);
-                                query.bindValue(":Title", Title);
-                                query.bindValue(":Editor", Editor);
-                                query.bindValue(":Type", Atc_type);
-                                query.bindValue(":Model", Atc_model);
-                                query.bindValue(":Path", Path);
-                                query.bindValue(":Category", Category);
-                                query.bindValue(":NBEngine", nb_moteur);
-                                query.bindValue(":EngineType", Engine_Type);
-                                query.bindValue(":CGHeight", Static_CG_Height);
-                                query.bindValue(":Pitch", Static_Pitch);
-                                query.exec();
-                                m_NbAdded++;
-                            }
-                            else //Update Record
-                            {
-                                query.prepare("UPDATE Aircrafts SET checksum = :checksum, Editor = :Editor, Type = :Type, Model = :Model, Path = :Path, Category = :Category, NbEngine = :NbEngine, EngineType = :EngineType, CGHeight = :CHeight, Pitch = :Pitch WHERE (Title = :Title) and (Sim = :Sim)");
-                                query.bindValue(":checksum", pKey);
-                                query.bindValue(":Sim",m_Table);
-                                query.bindValue(":Title", Title);
-                                query.bindValue(":Editor", Editor);
-                                query.bindValue(":Type", Atc_type);
-                                query.bindValue(":Model", Atc_model);
-                                query.bindValue(":Path", Path);
-                                query.bindValue(":Category", Category);
-                                query.bindValue(":NBEngine", nb_moteur);
-                                query.bindValue(":EngineType", Engine_Type);
-                                query.bindValue(":CGHeight", Static_CG_Height);
-                                query.bindValue(":Pitch", Static_Pitch);
-                                query.exec();
-                                m_NbUpdated++;
-                            }
-                        }
-                    }
-                    else break;
-                    if(sim==SIM_TYPE::XPLANE) break;
-                }
-            }
-            catch (IniParserException& ex)
-            {
-                m_log->log(tr("AIMapping : IniParser error = ") + ex.Message,Qt::magenta,LEVEL_NORMAL);
-            }
-        }
-    }
-    else m_log->log(tr("AIMapping : Error = ") + query.lastError().text(), Qt::darkYellow,LEVEL_VERBOSE);
-
+    if (isInit()) m_AIParser->startScanSimObject();
 }
 
 ///
@@ -535,108 +132,9 @@ AIResol AIMapping::SolveTitle(const QString& pTitle, const QString& pModel, cons
 {
     //Default substitute airtcraft
     AIResol Resol;
-    QString Title = pTitle.toLower();
-    QString Model = pModel.toLower();
-    QString Type = pType.toLower();
-    SIM_TYPE sim=m_simManager->getType();
-    if (sim == SIM_TYPE::FSX)
+    if (isInit())
     {
-        Resol.set_title("Mooney Bravo");
-        Resol.set_cgheight(3.7);
-        Resol.set_pitch(2.9);
-    }
-    else if (sim == SIM_TYPE::XPLANE)
-    {
-        Resol.set_title("Beechcraft Baron 58");
-        Resol.set_cgheight(3.7);
-        Resol.set_pitch(2.9);
-    }
-    if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
-    // Check local rules
-    QString Rule = getRule(Title);
-    if (Rule != "")
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Local rule found in DB : ") +  Title + tr(" replaced by ") + Rule, Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-        Title = Rule;
-    }
-    // Check if Title exist in database
-    QSqlQuery query(m_DB);
-    query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
-    query.bindValue(":Sim",m_Table);
-    query.bindValue(":Title",Title);
-
-    if (query.exec())
-    {
-        if (query.next())
-        {
-            Resol.set_title(query.value(0).toString().toStdString());
-            Resol.set_cgheight(query.value(1).toDouble());
-            Resol.set_pitch(query.value(2).toDouble());
-            Resol.set_path(query.value(3).toString().toStdString());
-            Resol.set_model(query.value(4).toString().toStdString());
-#ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : Title Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-        }
-        else if (Model.count()>0)
-        {
-            query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
-            query.bindValue(":Sim",m_Table);
-            query.bindValue(":Model",Model);
-            if (query.exec())
-            {
-                if (query.next())
-                {
-                    Resol.set_title(query.value(0).toString().toStdString());
-                    Resol.set_cgheight(query.value(1).toDouble());
-                    Resol.set_pitch(query.value(2).toDouble());
-                    Resol.set_path(query.value(3).toString().toStdString());
-                    Resol.set_model(query.value(4).toString().toStdString());
-    #ifdef FFS_DEBUG
-                    m_log->log(tr("AIMapping : ATC Model")+ Model+ tr(" Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
-    #endif
-                }
-            }
-            else
-            {
-#ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-            }
-        }
-        else
-        {
-            Title = QString::fromStdString(Resol.title());
-            query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
-            query.bindValue(":Sim",m_Table);
-            query.bindValue(":Title",Title);
-            if (query.exec())
-            {
-                if (query.next())
-                {
-                    Resol.set_title(query.value(0).toString().toStdString());
-                    Resol.set_cgheight(query.value(1).toDouble());
-                    Resol.set_pitch(query.value(2).toDouble());
-                    Resol.set_path(query.value(3).toString().toStdString());
-                    Resol.set_model(query.value(4).toString().toStdString());
-                }
-            }
-            else
-            {
-#ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-            }
-        }
-
-    }
-    else
-    {
-#ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
-#endif
+        Resol = m_AIParser->SolveTitle(pTitle,pModel,pType);
     }
     return Resol;
 }
@@ -652,51 +150,9 @@ AIResol AIMapping::SolveTitle(const QString& pTitle, const QString& pModel, cons
 QStringList AIMapping::getAITitreDispo(QString pCategory, QString pEditor, QString pType, QString pModel)
 {
     QStringList List;
-    if (m_Initialized)
+    if (isInit())
     {
-        if (pCategory == "*") pCategory = "";
-        if (pEditor == "*") pEditor = "";
-        if (pType == "*") pType = "";
-        if (pModel == "*") pModel = "";
-        bool Category, Editor, Type, Model;
-        Category=Editor=Type=Model=false;
-        QSqlQuery query(m_DB);
-        QString command =  "SELECT Title FROM Aircrafts WHERE Sim = :Sim";
-        if (pCategory.length()>0)
-        {
-            command += " and Category like :Category";
-            Category =true;
-        }
-        if (pEditor.length()>0)
-        {
-            command += " and Editor like :Editor";
-            Editor = true;
-        }
-        if (pType.length()>0)
-        {
-            command += " and Type like :Type";
-            Type = true;
-        }
-        if (pModel.length()>0)
-        {
-            command += " and Model like :Model";
-            Model = true;
-        }
-        command += " order by Title;";
-        query.prepare(command);
-        query.bindValue(":Sim",m_Table);
-        if (Category) query.bindValue(":Category",pCategory);
-        if (Editor) query.bindValue(":Editor",pEditor);
-        if (Type) query.bindValue(":Type",pType);
-        if (Model) query.bindValue(":Model",pModel);
-
-        if (query.exec())
-        {
-            while (query.next())
-            {
-                List.append(query.value(0).toString());
-            }
-        }
+        List = m_AIParser->getAITitreDispo(pCategory,pEditor,pType,pModel);
     }
     return List;
 }
@@ -708,7 +164,7 @@ QStringList AIMapping::getAITitreDispo(QString pCategory, QString pEditor, QStri
 QStringList AIMapping::getCategoryList()
 {
     QStringList List;
-    if (m_Initialized)
+    if (isInit())
     {
 
     }
@@ -722,7 +178,7 @@ QStringList AIMapping::getCategoryList()
 QStringList AIMapping::getEditeurList()
 {
     QStringList List;
-    if (m_Initialized)
+    if (isInit())
     {
 
     }
@@ -736,7 +192,7 @@ QStringList AIMapping::getEditeurList()
 QStringList AIMapping::getATCTypeList()
 {
     QStringList List;
-    if (m_Initialized)
+    if (isInit())
     {
 
     }
@@ -750,7 +206,7 @@ QStringList AIMapping::getATCTypeList()
 QStringList AIMapping::getATCModelList()
 {
     QStringList List;
-    if (m_Initialized)
+    if (isInit())
     {
 
     }
@@ -765,20 +221,8 @@ QStringList AIMapping::getATCModelList()
 QString AIMapping::getRule(const QString &pTitre)
 {
     QString Response="";
-    if (m_Initialized)
-    {
-        QSqlQuery query(m_DB);
-        query.prepare("SELECT LocalTitle FROM Replacement WHERE (RemoteTitle like :RemoteTitle) and (Sim like :Sim)");
-        query.bindValue(":Sim",m_Table);
-        query.bindValue(":RemoteTitle",pTitre);
-        if (query.exec())
-        {
-            if (query.next())
-            {
-                Response=query.value(0).toString();
-            }
-        }
-    }
+    if (isInit())
+        Response = m_AIParser->getRule(pTitre);
     return Response;
 }
 
@@ -789,13 +233,7 @@ QString AIMapping::getRule(const QString &pTitre)
 ///
 void AIMapping::addRule(const QString &pRemoteTitle, const QString &pLocalTitle)
 {
-    if (!m_Initialized) return;
-    QSqlQuery query(m_DB);
-    query.prepare("INSERT OR REPLACE INTO Replacement (RemoteTitle, LocalTitle, Sim) VALUES ( :RemoteTitle , :LocalTitle , :Sim );");
-    query.bindValue(":Sim",m_Table);
-    query.bindValue(":RemoteTitle",pRemoteTitle);
-    query.bindValue(":LocalTitle",pLocalTitle);
-    query.exec();
+    if (isInit()) m_AIParser->addRule(pRemoteTitle,pLocalTitle);
 }
 
 ///
@@ -804,12 +242,7 @@ void AIMapping::addRule(const QString &pRemoteTitle, const QString &pLocalTitle)
 ///
 void AIMapping::delRule(const QString &pRemoteTitle)
 {
-    if (!m_Initialized) return;
-    QSqlQuery query(m_DB);
-    query.prepare("DELETE FROM Replacement WHERE ( RemoteTitle = :RemoteTitle ) and ( Sim =:Sim );");
-    query.bindValue(":Sim",m_Table);
-    query.bindValue(":RemoteTitle",pRemoteTitle);
-    query.exec();
+    if (isInit()) m_AIParser->delRule(pRemoteTitle);
 }
 
 ///
@@ -817,14 +250,7 @@ void AIMapping::delRule(const QString &pRemoteTitle)
 ///
 void AIMapping::cleanAIDB()
 {
-    if (!m_Initialized) return;
-    QSqlQuery query(m_DB);
-    query.prepare("DELETE FROM Replacement");
-    query.exec();
-    query.prepare("DELETE FROM Aircrafts");
-    query.exec();
-    query.prepare("DELETE FROM SimPaths");
-    query.exec();
+    if (isInit()) m_AIParser->cleanAIDB();
 }
 
 ///
@@ -834,7 +260,7 @@ void AIMapping::cleanAIDB()
 QMap<QString,QString> AIMapping::getList()
 {
     QMap<QString,QString> md5mlist;
-    if (m_Initialized)
+    if (isInit())
     {
 
     }
@@ -849,25 +275,8 @@ QMap<QString,QString> AIMapping::getList()
 QString AIMapping::getAircraftPath(const QString &pTitle)
 {
     QString Response;
-    if (m_Initialized)
-    {
-        QSqlQuery query(m_DB);
-        query.prepare("SELECT Path FROM Aircrafts WHERE Title = :Title;");
-        query.bindValue(":Title",pTitle);
-        if (query.exec())
-        {
-            while (query.next())
-            {
-                Response=query.value(0).toString();
-            }
-        }
-        else
-        {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to query path list for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        }
-    }
+    if (isInit())
+        Response  = m_AIParser->getAircraftPath(pTitle);
     return Response;
 }
 
@@ -879,49 +288,11 @@ QString AIMapping::getAircraftPath(const QString &pTitle)
 QString AIMapping::getFileData(const QString& /*&pKey*/)
 {
     QString Response;
-    if (m_Initialized)
+    if (isInit())
     {
 
     }
     return Response;
-}
-
-///
-/// \brief AIMapping::DBFilePurge
-///
-void AIMapping::DBFilePurge()
-{
-    if (!m_Initialized) return;
-    int m_NbDeleted=0;
-    int total =0;
-#ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : Start of automatic cleaning..."),Qt::darkYellow,LEVEL_NORMAL);
-#endif
-    QSqlQuery query(m_DB);
-    query.prepare("SELECT Path FROM Aircrafts WHERE Sim =:Sim");
-    query.bindValue(":Sim",m_Table);
-    if (query.exec())
-    {
-        while (query.next())
-        {
-            total++;
-            QFile Acft(query.value(0).toString());
-            if (!Acft.exists())
-            {
-#ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : deleting file ") + Acft.fileName() + tr(" from DB"),Qt::darkYellow,LEVEL_NORMAL);
-#endif
-                m_NbDeleted++;
-                query.prepare("DELETE FROM Aircrafts WHERE (Path =:Path) and (Sim =:Sim)");
-                query.bindValue(":Sim",m_Table);
-                query.bindValue(":Path",Acft.fileName());
-                query.exec();
-            }
-        }
-    }
-#ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : End of automatic cleaning.: ") + QString::number(m_NbDeleted)  + tr(" over ") + QString::number(total) + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
-#endif
 }
 
 ///
@@ -930,27 +301,10 @@ void AIMapping::DBFilePurge()
 ///
 QStringList AIMapping::getPathList()
 {
-    QStringList Result;
-    if (m_Initialized && (!m_Table.isEmpty()))
-    {
-        QSqlQuery query(m_DB);
-        query.prepare("SELECT Path FROM SimPaths WHERE Sim = :Sim;");
-        query.bindValue(":Sim",m_Table);
-        if (query.exec())
-        {
-            while (query.next())
-            {
-                Result.append(query.value(0).toString());
-            }
-        }
-        else
-        {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to query path list for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        }
-    }
-    return Result;
+    QStringList List;
+    if (isInit())
+        List = m_AIParser->getPathList();
+    return List;
 }
 
 ///
@@ -960,22 +314,9 @@ QStringList AIMapping::getPathList()
 ///
 bool AIMapping::addPath(const QString& pPath,const QString& pSim)
 {
-    QString Sim;
-    if (pSim.isEmpty()) Sim = m_Table;
-    else Sim=pSim;
-    if ((!m_Initialized) || (Sim.isEmpty())) return false;
-    QSqlQuery query(m_DB);
-    query.prepare("INSERT INTO SimPaths (Sim , Path) VALUES (:Sim , :Path);");
-    query.bindValue(":Sim",Sim);
-    query.bindValue(":Path",pPath);
-    if (!query.exec())
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to add path ") + pPath + tr(" for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        return false;
-    }
-    return true;
+    if (isInit())
+        return m_AIParser->addPath(pPath,pSim);
+    else return false;
 }
 
 ///
@@ -985,38 +326,23 @@ bool AIMapping::addPath(const QString& pPath,const QString& pSim)
 ///
 bool AIMapping::delPath(const QString& pPath)
 {
-    if ((!m_Initialized) || (m_Table.isEmpty())) return false;
-    QSqlQuery query(m_DB);
-    query.prepare("DELETE FROM SimPaths WHERE (Sim  = :Sim ) and (Path = :Path);");
-    query.bindValue(":Sim",m_Table);
-    query.bindValue(":Path",pPath);
-    if (!query.exec())
-    {
-#ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to remove path ") + pPath + tr(" for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        return false;
-    }
-    return true;
+    if (isInit())
+        return m_AIParser->delPath(pPath);
+    else return false;
 }
 
 ///
-/// \brief AIMapping::MD5Hash
-/// \param pFileName
+/// \brief AIMapping::isInit
 /// \return
 ///
-QString AIMapping::MD5Hash(const QString& pFileName)
+bool  AIMapping::isInit()
 {
-    QFile f(pFileName);
-    if (f.open(QFile::ReadOnly))
+    bool Result=false;
+    if (m_AIParser!=nullptr)
     {
-       QCryptographicHash hash(QCryptographicHash::Md5);
-       if (hash.addData(&f))
-       {
-           return QString(hash.result().toHex());
-       }
+        if ( m_AIParser->m_Initialized) Result=true;
     }
-    return "";
+    return Result;
 }
 
 }} // namespace ffs2play::disk

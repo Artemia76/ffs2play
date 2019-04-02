@@ -36,8 +36,10 @@ namespace ffs2play{ namespace disk {
 class XPCSLParser : public AIBaseParser
 {
 public:
-    XPCSLParser();
+    XPCSLParser(QObject *parent = nullptr);
     ~XPCSLParser();
+private:
+    void    DBFileUpdate(const QString& pKey,const QString& pPath);
 };
 
 }} // namespace ffs2play::disk

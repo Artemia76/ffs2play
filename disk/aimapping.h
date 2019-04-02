@@ -31,15 +31,15 @@
 #define AIMAPPING_H
 
 #include <QObject>
-#include <QThread>
 #include <QtSql>
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 #include "protobuf/ffs2play.pb.h"
-
-#define AIDB_AIRCRAFTS_VERSION 3
-#define AIDB_SIMPATHS_VERSION 1
-#define AIDB_REPLACEMENT_VERSION 1
+#ifdef Q_OS_WIN
+#include "scaiparser.h"
+#endif
+#include "xpaiparser.h"
+#include "xpcslparser.h"
 
 namespace ffs2play{ namespace disk {
 
@@ -53,32 +53,15 @@ class AIMapping : public QObject
 private:
     explicit                AIMapping(QObject *parent = nullptr);
     static  AIMapping*      createInstance();
-#ifdef Q_OS_WIN
-    void                    searchSimPath();
-    QString                 findInstallationPath (const QString& pKey,QSettings::Format pFormat = QSettings::NativeFormat);
-#endif
-    void                    initSQLite();
-    void                    DBFileUpdate(const QString& pKey,const QString& pPath);
-    void                    DBFilePurge ();
-    void                    DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);
-    QString                 MD5Hash(const QString& pFileName);
-
-    bool                    m_Initialized;
-    QString                 m_BaseFile;
     CLogger*                m_log;
-    QSqlDatabase            m_DB;
-    QSqlDatabase            m_Thread_DB; //Since QT5.11, we need to separate DB connexion between threads
-    QThread*                m_thread;
     simbasemanager*         m_simManager;
-    QString                 m_Table;
-    QStringList             m_AircraftPaths;
-    QAtomicInt              m_NbAdded;
-    QAtomicInt              m_NbUpdated;
-    QAtomicInt              m_NbDeleted;
+    SimConnector::SIM_VERSION m_Version;
+    AIBaseParser*           m_AIParser;
 
 public:
                             ~AIMapping();
     static	AIMapping*      instance();
+
     void                    startScanSimObject();
     AIResol                 SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
     QStringList             getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
@@ -86,6 +69,7 @@ public:
     QStringList             getEditeurList();
     QStringList             getATCTypeList();
     QStringList             getATCModelList();
+    QStringList             getPathList();
     QString                 getRule(const QString& pTitre);
     void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
     void                    delRule(const QString& pRemoteTitle);
@@ -93,16 +77,16 @@ public:
     QMap<QString,QString>   getList();
     QString                 getAircraftPath(const QString& pTitle);
     QString                 getFileData(const QString& pKey);
-    QStringList             getPathList();
+
     bool                    addPath(const QString& pPath, const QString& pSim="");
     bool                    delPath(const QString& pPath);
+    bool                    isInit();
 
 signals:
     void                    fireScanFinished(int pAdded, int pUpdated, int pDeleted);
 private slots:
     void                    onSimReceiveOpen();
     void                    onSimReceiveClose();
-    void                    scanSimObject();
 public slots:
 };
 

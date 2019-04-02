@@ -81,6 +81,7 @@ UI_DIR = gui
 SOURCES +=      main.cpp \
                 disk/aibaseparser.cpp \
                 disk/aimapping.cpp \
+                disk/xpaiparser.cpp \
                 disk/xpcslparser.cpp \
                 gui/aireplace.cpp \
                 gui/dialogp2p.cpp \
@@ -113,7 +114,8 @@ SOURCES +=      main.cpp \
                 web/webmanager.Requests.cpp \
                 web/webmanager.Utils.cpp
 win32 {
-SOURCES +=      sim/scmanager.cpp
+SOURCES +=      disk/scaiparser.cpp \
+                sim/scmanager.cpp
 }
 
 macx {
@@ -122,6 +124,7 @@ SOURCES +=      tools/keepalive.mm
 
 HEADERS  +=     disk/aibaseparser.h \
                 disk/aimapping.h \
+                disk/xpaiparser.h \
                 disk/xpcslparser.h \
                 gui/aireplace.h \
                 gui/dialogp2p.h \
@@ -151,7 +154,8 @@ HEADERS  +=     disk/aibaseparser.h \
                 web/chttprequest.h \
                 web/webmanager.h
 win32 {
-HEADERS +=      sim/scmanager.h
+HEADERS +=      disk/scaiparser.h \
+                sim/scmanager.h
 }
 
 macx {
