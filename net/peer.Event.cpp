@@ -335,11 +335,17 @@ void CPeer::OnTimerCreateAI()
                 m_AIResolution.set_cgheight(3.7);
                 m_AIResolution.set_pitch(2.9);
             }
-            else if (m_simManager->getType()==SIM_TYPE::XPLANE)
+            else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE)
             {
                 m_AIResolution.set_title("Beech Baron 58");
                 m_AIResolution.set_cgheight(0.9);
                 m_AIResolution.set_pitch(1.93);
+            }
+            else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE_CSL)
+            {
+                m_AIResolution.set_title("C172:C172:0");
+                m_AIResolution.set_cgheight(0.0);
+                m_AIResolution.set_pitch(0.0);
             }
 #ifdef FFS_DEBUG
             m_log->log("Peer [" + m_callSign + "] " + tr(" Simulator have not created the requested AI, we are trying with default simulator aircraft") ,Qt::darkBlue,LEVEL_NORMAL);

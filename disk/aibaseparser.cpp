@@ -361,18 +361,23 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     QString Title = pTitle.toLower();
     QString Model = pModel.toLower();
     QString Type = pType.toLower();
-    SIM_TYPE sim=m_simManager->getType();
-    if (sim == SIM_TYPE::FSX)
+    if (m_simManager->getType() == SIM_TYPE::FSX)
     {
         Resol.set_title("Mooney Bravo");
         Resol.set_cgheight(3.7);
         Resol.set_pitch(2.9);
     }
-    else if (sim == SIM_TYPE::XPLANE)
+    else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE)
     {
-        Resol.set_title("Beechcraft Baron 58");
-        Resol.set_cgheight(3.7);
-        Resol.set_pitch(2.9);
+        Resol.set_title("Beech Baron 58");
+        Resol.set_cgheight(0.9);
+        Resol.set_pitch(1.93);
+    }
+    else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE_CSL)
+    {
+        Resol.set_title("C172:C172:0");
+        Resol.set_cgheight(0.0);
+        Resol.set_pitch(0.0);
     }
     if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
     // Check local rules
@@ -386,7 +391,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     }
     // Check if Title exist in database
     QSqlQuery query(m_DB);
-    query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
+    query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model,AirLine FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
     query.bindValue(":Sim",m_Table);
     query.bindValue(":Title",Title);
 
@@ -399,13 +404,14 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             Resol.set_pitch(query.value(2).toDouble());
             Resol.set_path(query.value(3).toString().toStdString());
             Resol.set_model(query.value(4).toString().toStdString());
+            Resol.set_airline(query.value(5).toString().toStdString());
 #ifdef FFS_DEBUG
             m_log->log(tr("AIMapping : Title Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
         }
         else if (Model.count()>0)
         {
-            query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
+            query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model,AirLine FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
             query.bindValue(":Sim",m_Table);
             query.bindValue(":Model",Model);
             if (query.exec())
@@ -417,6 +423,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
                     Resol.set_pitch(query.value(2).toDouble());
                     Resol.set_path(query.value(3).toString().toStdString());
                     Resol.set_model(query.value(4).toString().toStdString());
+                    Resol.set_airline(query.value(5).toString().toStdString());
     #ifdef FFS_DEBUG
                     m_log->log(tr("AIMapping : ATC Model")+ Model+ tr(" Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
     #endif
@@ -432,7 +439,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
         else
         {
             Title = QString::fromStdString(Resol.title());
-            query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
+            query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model,AirLine FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
             query.bindValue(":Sim",m_Table);
             query.bindValue(":Title",Title);
             if (query.exec())
@@ -444,6 +451,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
                     Resol.set_pitch(query.value(2).toDouble());
                     Resol.set_path(query.value(3).toString().toStdString());
                     Resol.set_model(query.value(4).toString().toStdString());
+                    Resol.set_airline(query.value(5).toString().toStdString());
                 }
             }
             else

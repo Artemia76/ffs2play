@@ -72,32 +72,19 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 QString Editor,Atc_model, Atc_type, Category, Title;
                 int Engine_Type = 0;
                 double Static_CG_Height=0.0, Static_Pitch = 0.0;
-                if (sim==SIM_TYPE::FSX)
+                Title = s.value("properties", "acf/_name").toString();
+                if (Title=="")
                 {
-                    Editor = s.value("fltsim.0", "ui_createdby").toString();
-                    Atc_model = s.value("General","atc_model").toString();
-                    Atc_type =  s.value("General","atc_type").toString();
-                    Category =  s.value("General","Category").toString();
-                    Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
-                    Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
-                    Static_Pitch =  s.value("contact_points","static_pitch").toDouble();
+                    QFileInfo File(Path);
+                    Title = File.baseName();
                 }
-                else if (sim==SIM_TYPE::XPLANE)
-                {
-                    Title = s.value("properties", "acf/_name").toString();
-                    if (Title=="")
-                    {
-                        QFileInfo File(Path);
-                        Title = File.baseName();
-                    }
-                    Editor = s.value("properties", "acf/_studio").toString();
-                    Atc_model = s.value("properties","acf/_ICAO").toString();
-                    Atc_type = s.value("properties","acf/_manufacturer").toString();
-                    //Category =  s.value("General","Category").toString();
-                    //Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
-                    Static_CG_Height =  s.value("properties","acf/_h_eqlbm").toDouble();
-                    Static_Pitch =  s.value("properties","acf/_the_eqlbm").toDouble();
-                }
+                Editor = s.value("properties", "acf/_studio").toString();
+                Atc_model = s.value("properties","acf/_ICAO").toString();
+                Atc_type = s.value("properties","acf/_manufacturer").toString();
+                //Category =  s.value("General","Category").toString();
+                //Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
+                Static_CG_Height =  s.value("properties","acf/_h_eqlbm").toDouble();
+                Static_Pitch =  s.value("properties","acf/_the_eqlbm").toDouble();
 #if FFS_DEBUG
                 m_log->log(tr("AIMapping : Path = ") + Path,Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log(tr("AIMapping : Editor = ") + Editor,Qt::darkYellow,LEVEL_VERBOSE);
@@ -124,9 +111,6 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 int nb_title = 0;
                 while (true)
                 {
-                    if (sim==SIM_TYPE::FSX)
-                        Title = s.value(QString("fltsim.") + QString::number(nb_title), "title").toString();
-
                     if (Title != "")
                     {
 #if FFS_DEBUG
@@ -179,8 +163,7 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                             }
                         }
                     }
-                    else break;
-                    if(sim==SIM_TYPE::XPLANE) break;
+                    break;
                 }
             }
             catch (IniParserException& ex)

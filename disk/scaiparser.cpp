@@ -105,8 +105,7 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 int nb_title = 0;
                 while (true)
                 {
-                    if (sim==SIM_TYPE::FSX)
-                        Title = s.value(QString("fltsim.") + QString::number(nb_title), "title").toString();
+                    Title = s.value(QString("fltsim.") + QString::number(nb_title), "title").toString();
 
                     if (Title != "")
                     {
