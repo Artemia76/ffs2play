@@ -228,6 +228,7 @@ LIBS += -lssl
 LIBS += -lcryptopp
 LIBS += -lcrypto
 LIBS += -lminiupnpc
+LIBS += "-framework CoreFoundation"
 
 }
 
