@@ -190,9 +190,11 @@ void simbasemanager::open ()
 ///
 void simbasemanager::close ()
 {
-    if (!m_bRunning) return;
-    m_bRunning=false;
-    m_thread->wait(0);
+    if (m_bRunning)
+    {
+        m_bRunning=false;
+        m_thread->wait(0);
+    }
     if (m_connector->isConnected())
     {
         m_connector->close();
