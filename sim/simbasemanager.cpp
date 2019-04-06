@@ -437,7 +437,6 @@ void simbasemanager::OnSimConnected()
 void simbasemanager::OnSimDisconnected()
 {
     close();
-    m_RetryTimer.start();
 }
 
 ///
@@ -447,6 +446,7 @@ void simbasemanager::OnSimTimedOut()
 {
     m_log->log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
     close();
+    m_RetryTimer.start();
 }
 
 ///
