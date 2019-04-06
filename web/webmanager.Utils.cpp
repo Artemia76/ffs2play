@@ -126,11 +126,11 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                             + " IP = " + item.externalIP.toString()
                             + " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-                LocalIPList LocalIP;
+                StringArray LocalIP;
                 LocalIP.ParseFromString(QByteArray::fromBase64(Player.attribute("local_ip").toLatin1()).toStdString());
-                for (int j=0; j<LocalIP.ip_size();j++)
+                for (int j=0; j<LocalIP.string_size();j++)
                 {
-                    item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.ip(j))));
+                    item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.string(j))));
 #ifdef FFS_DEBUG
                     m_log->log("WEBManager : " + tr(" Local IP = ") + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
 #endif

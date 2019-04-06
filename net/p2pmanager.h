@@ -64,7 +64,7 @@ private:
     bool                m_DropRateDisplay;
     bool                m_SendDropRate;
     datetime            m_LastDropRate;
-    LocalIPList         m_InternalIP;
+    StringArray         m_InternalIP;
     QHostAddress        m_ExternalIP;
     QString             m_CallSign;
     UPNPUrls            m_urls;

@@ -53,7 +53,8 @@ enum FFS2Proto
     ADD_PEER = 0x05, // Add peer
     DEL_PEER = 0x06, // Remove Peer
     CALLSIGN_COLOR = 0x07, // Send Callsign color
-    TCHAT = 0x08 //Send Chat Text
+    TCHAT = 0x08, //Send Chat Text
+    CSL_PATH = 0x09 //Send CSL Package Paths
 };
 
 ///
@@ -90,6 +91,7 @@ protected:
     void            freezeAI(uint, bool);
     void            sendOptions(){}
     void            sendCallSignColor();
+    void            sendAIPaths();
 
     void            sendPing();
     void            sendData(bool pFlag);

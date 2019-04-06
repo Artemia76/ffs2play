@@ -289,10 +289,11 @@ void AIBaseParser::DBFilePurge()
                 m_log->log(tr("AIMapping : deleting file ") + Acft.fileName() + tr(" from DB"),Qt::darkYellow,LEVEL_NORMAL);
 #endif
                 m_NbDeleted++;
-                query.prepare("DELETE FROM Aircrafts WHERE (Path =:Path) and (Sim =:Sim)");
-                query.bindValue(":Sim",m_Table);
-                query.bindValue(":Path",Acft.fileName());
-                query.exec();
+                QSqlQuery query2(m_DB);
+                query2.prepare("DELETE FROM Aircrafts WHERE (Path =:Path) and (Sim =:Sim)");
+                query2.bindValue(":Sim",m_Table);
+                query2.bindValue(":Path",Acft.fileName());
+                query2.exec();
             }
         }
     }
@@ -636,6 +637,16 @@ bool AIBaseParser::delPath(const QString& pPath)
 {
     if ((!m_Initialized) || (m_Table.isEmpty())) return false;
     QSqlQuery query(m_DB);
+    // Remove All aircraft in the aircraft
+    query.prepare("DELETE FROM Aircrafts WHERE (Sim  = :Sim ) and (Path like :Path);");
+    query.bindValue(":Sim",m_Table);
+    query.bindValue(":Path","%" + pPath + "%");
+    if (query.exec())
+    {
+#ifdef FFS_DEBUG
+        m_log->log(tr("AIMapping : Remove ") + QString::number(query.numRowsAffected()) + tr(" AI for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+#endif
+    }
     query.prepare("DELETE FROM SimPaths WHERE (Sim  = :Sim ) and (Path = :Path);");
     query.bindValue(":Sim",m_Table);
     query.bindValue(":Path",pPath);

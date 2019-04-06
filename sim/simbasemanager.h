@@ -97,6 +97,7 @@ static simbasemanager*          instance();
     bool                        getOption(SimOption pOption);
     void                        setCallSignColor(const QColor& pColor);
     QColor                      getCallSignColor();
+    void                        setPathList(const QStringList& pPaths);
 
 private slots:
     void                        mainThread();

@@ -130,6 +130,7 @@ protected:
     quint32         m_options;
     sVersion        m_version;
     QColor          m_CallSignColor;
+    QStringList     m_AIPaths;
 
     void            setOptionChange(SimOption pOption,bool pFlag);
     bool            getOption(SimOption pOption);

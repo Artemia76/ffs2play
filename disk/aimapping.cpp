@@ -105,6 +105,7 @@ void AIMapping::onSimReceiveOpen()
         return;
     }
     m_AIParser->startScanSimObject();
+    m_simManager->setPathList(getPathList());
 }
 
 ///

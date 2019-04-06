@@ -53,13 +53,13 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     for (QHostAddress IP : InterfaceList)
     {
         if ((!IP.isLoopback())&&(IP.protocol()==QAbstractSocket::IPv4Protocol))
-            m_InternalIP.add_ip(IP.toString().toStdString());
+            m_InternalIP.add_string(IP.toString().toStdString());
     }
 #ifdef FFS_DEBUG
     m_log->log("P2PManager : " + tr("Local LAN IP address : "),Qt::darkBlue,LEVEL_NORMAL);
-    for (int i=0 ; i< m_InternalIP.ip_size(); ++i)
+    for (int i=0 ; i< m_InternalIP.string_size(); ++i)
     {
-        m_log->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.ip(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("P2PManager : " + tr("IP address : ") + QString(m_InternalIP.string(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
     }
 #endif
 }

@@ -299,6 +299,25 @@ void CXPManager::sendCallSignColor()
 }
 
 ///
+void CXPManager::sendAIPaths()
+{
+    if (m_connected)
+    {
+        StringArray Paths;
+        for (QString Path : m_AIPaths)
+        {
+            Paths.add_string(Path.toStdString());
+        }
+        QByteArray Data;
+        QDataStream stream(&Data,QIODevice::WriteOnly);
+        stream << static_cast<quint8>(CSL_PATH);
+        ProtobufToStream(stream,Paths);
+        QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
+        m_Server->send(Output);
+    }
+}
+
+///
 /// \brief CXPManager::OnReceiveDatagram
 ///
 void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
@@ -333,6 +352,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
                    ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
                 sendCallSignColor();
+                if (getVersion() == SIM_VERSION::XPLANE_CSL) sendAIPaths();
                 emit(fireSimConnected());
             }
             m_LastPong=Now();

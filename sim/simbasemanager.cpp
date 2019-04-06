@@ -507,4 +507,12 @@ void simbasemanager::OnRetryTimer()
     open();
 }
 
+void simbasemanager::setPathList(const QStringList &pPaths)
+{
+    if (m_initialized && (m_connector!=nullptr))
+    {
+        m_connector->m_AIPaths = pPaths;
+    }
+}
+
 }} // namespace ffs2play::sim

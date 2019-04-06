@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package ffs2play;
 
-message LocalIPList {
-        repeated string IP = 1;
+message StringArray {
+        repeated string String = 1;
 }
 
 message AirData {
