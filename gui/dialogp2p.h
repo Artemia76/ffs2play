@@ -34,17 +34,15 @@
 #include <QSettings>
 #include <QPushButton>
 
-#include "ui_dialogp2p.h"
 #include "tools/clogger.h"
 #include "net/p2pmanager.h"
 #include "sim/simbasemanager.h"
 #include "web/webmanager.h"
 
-namespace ffs2play { namespace gui {
+namespace Ui {
+class DialogP2P;
+}
 
-using namespace net;
-using namespace web;
-using namespace tools;
 
 class DialogP2P : public QDialog
 {
@@ -52,7 +50,7 @@ class DialogP2P : public QDialog
 
 public:
     // Constructor whith QT Widget inherit
-    explicit            DialogP2P(QWidget *parent = 0);
+    explicit            DialogP2P(QWidget *parent = nullptr);
 
     // Destructor
     ~DialogP2P();
@@ -108,7 +106,5 @@ private slots:
     void on_pushButton_released();
     void on_cbDisableAltCorr_stateChanged(int arg1);
 };
-
-}} // namespace ffs2play::gui
 
 #endif // DIALOGP2P_H

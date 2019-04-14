@@ -35,8 +35,6 @@
 #include <QRegExp>
 #include <QMutex>
 
-namespace ffs2play { namespace tools {
-
 enum CL_DEBUG_LEVEL
 {
     LEVEL_NONE,
@@ -71,7 +69,5 @@ public:
 signals:
     void                    fireLog (QString pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
 };
-
-}} // namespace ffs2play::tools
 
 #endif // CLOGGER_H

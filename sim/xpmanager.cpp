@@ -38,8 +38,6 @@
 
 #include "tools/datagram.h"
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief CXPManager::CXPManager
 /// \param parent
@@ -475,5 +473,3 @@ void CXPManager::OnPingTimer()
         emit(fireSimTimedOut());
     }
 }
-
-}} // namespace ffs2play::sim

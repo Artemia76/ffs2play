@@ -44,8 +44,6 @@
 #include "sim/fgmanager.h"
 #include "protobuf/ffs2play.pb.h"
 
-namespace ffs2play { namespace sim {
-
 enum class SIM_TYPE
 {
     FSX,
@@ -127,7 +125,5 @@ signals:
     void                        fireSimAIRemoved(uint);
     void                        fireSimEventFrame(float,float);
 };
-
-}} // namespace ffs2play::sim
 
 #endif // SIMBASEMANAGER_H

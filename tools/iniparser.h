@@ -31,14 +31,11 @@
 
 #include <QObject>
 #include <QFile>
+#include <QVariant>
+#include <QMap>
 #include "sim/simbasemanager.h"
 
-namespace ffs2play { namespace  tools {
-
-using namespace std;
-using namespace sim;
-
-class IniParserException : public exception
+class IniParserException : public std::exception
 {
 public:
     QString Message;
@@ -56,7 +53,5 @@ private:
     QString                     m_Selected_Group;
     QMap<QString,QStringList>   m_GroupMap;
 };
-
-}} //namespace ffs2play
 
 #endif // INIPARSER_H

@@ -34,8 +34,6 @@
 
 #include "tools/datagram.h"
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief FlightGear Manager Constructor
 /// \param parent
@@ -259,5 +257,3 @@ void CFGManager::OnPingTimer()
         emit(fireSimTimedOut());
     }
 }
-
-}} // namespace ffs2play::sim

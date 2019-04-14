@@ -11,7 +11,7 @@ QToolBar{
 
 QDialog {
     background-color: #687D87;
-    color: gray;
+    color: white;
 }
 
 QGroupBox {
@@ -36,13 +36,13 @@ QCheckBox{
 
 QPushButton
 {
+    color: black;
     border: 2px solid #8f8f91;
     border-radius: 6px;
 
     background-color:  qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                         stop: 0 #f6f7fa, stop: 1 #dadbde);
     min-width: 80px;
-    color: black;
 }
 
 QPushButton:pressed {
@@ -64,21 +64,30 @@ QLabel{
 
 QComboBox{
     color: black;
+    background-color: white;
+}
+
+QTextEdit{
+    color: black;
+    background-color: white;
 }
 
 QLineEdit{
     color: black;
-}
-
-QSpinBox{
-    color: black;
+    background-color: white;
 }
 
 QListWidget{
     color: black;
+    background-color: white;
 }
 
 QTableWidget{
     color: black;
-    Background-color : #BDE3F8;
+    background-color: white;
+}
+
+QSpinBox{
+    color: black;
+    background-color: white;
 }

@@ -29,8 +29,6 @@
 
 #include "aibaseparser.h"
 
-namespace ffs2play { namespace disk {
-
 AIBaseParser::AIBaseParser(QObject *parent) : QObject(parent)
 {
     m_Initialized =false;
@@ -659,5 +657,3 @@ bool AIBaseParser::delPath(const QString& pPath)
     }
     return true;
 }
-
-}} // namespace ffs2play::disk

@@ -35,7 +35,6 @@
 #include <QTimer>
 #include <QListWidget>
 
-#include "ui_mainwindow.h"
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 #include "net/p2pmanager.h"
@@ -43,11 +42,9 @@
 #include "disk/aimapping.h"
 #include "sim/analyzer.h"
 
-namespace ffs2play { namespace gui {
-
-using namespace tools;
-using namespace sim;
-using namespace web;
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -58,7 +55,7 @@ public:
     /// \brief MainWindow Constructor
     /// \param pParent
     ///
-    explicit    MainWindow(QWidget *pParent = nullptr);
+    explicit    MainWindow();
 
     ///
     /// \brief MainWindow Destructor
@@ -115,7 +112,5 @@ private:
     bool            m_P2PDialogVisible;
     void            closeEvent(QCloseEvent* pEvent);
 };
-
-}} // namespace ffs2play::gui
 
 #endif // MAINWINDOW_H

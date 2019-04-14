@@ -29,8 +29,6 @@
 
 #include "web/chttprequest.h"
 
-namespace ffs2play { namespace web {
-
 ///
 /// \brief CHttpRequest::m_ptNetworkManager
 ///
@@ -143,5 +141,3 @@ bool CHttpRequest::getAsXml(QDomDocument& pDoc)
     }
     return false;
 }
-
-}} // namespace ffs2play::web

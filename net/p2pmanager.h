@@ -40,8 +40,6 @@
 #include "net/peer.h"
 #include "tools/datetime.h"
 
-namespace ffs2play { namespace net {
-
 class CP2PManager : public QObject
 {
     Q_OBJECT
@@ -119,7 +117,5 @@ private slots:
     void                onReceiveTChat(QString,QString);
     void                onLanding(double pVSpeed);
 };
-
-}} // namespace ffs2play::net
 
 #endif // P2PMANAGER_H

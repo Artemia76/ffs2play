@@ -28,8 +28,6 @@
 
 #include "fgdatagram.h"
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief FGDataGram::FGDatagram
 ///
@@ -389,5 +387,3 @@ const IdPropertyList* FGDatagram::FindProperty(unsigned short pId)
     return result.first;
   }
 }
-
-}} // namespace ffs2play::sim

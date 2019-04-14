@@ -29,8 +29,6 @@
 
 #include "datagram.h"
 
-namespace ffs2play { namespace tools {
-
 ///
 /// \brief StringFromStream
 /// \param pStream
@@ -81,5 +79,3 @@ QString CStringFromStream(QDataStream& pStream, size_t pLen)
     delete[] str;
     return Response;
 }
-
-}} // namespace ffs2play::tools

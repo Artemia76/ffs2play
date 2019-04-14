@@ -32,8 +32,6 @@
 
 #include <QCoreApplication>
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief CSCManager::CSCManager
 /// \param parent
@@ -939,5 +937,3 @@ void CSCManager::trace(const QString &pMessage)
         m_record.erase(m_record.begin());
     }
 }
-
-}} // namespace ffs2play::sim

@@ -30,8 +30,6 @@
 #include "analyzer.h"
 #include "tools/singleton.h"
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief Analyzer::Analyzer
 /// \param parent
@@ -527,5 +525,3 @@ QString Analyzer::getPhaseName()
 {
     return m_metaPhases.valueToKey(m_phase);
 }
-
-}} // namespace ffs2play::sim

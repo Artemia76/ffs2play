@@ -42,7 +42,6 @@
 /// Imported from SimGear of FlightGear Project
 /// simgear/src/props/props.hxx
 ///
-namespace ffs2play { namespace sim {
 
 /**
  * The possible types of an SGPropertyNode. Types that appear after
@@ -689,7 +688,5 @@ private:
 const   IdPropertyList*         FindProperty(unsigned short pID);
 
 };
-
-}} // namespace ffs2play::sim
 
 #endif // FGDATAGRAM_H

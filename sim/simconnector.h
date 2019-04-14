@@ -38,10 +38,6 @@
 #include "tools/datetime.h"
 #include "tools/getappversion.h"
 
-namespace ffs2play { namespace sim {
-
-using namespace tools;
-
 /// <summary>
 /// Enumération des évenements du simulateur à traiter
 /// </summary>
@@ -165,7 +161,5 @@ signals:
 
 public slots:
 };
-
-}} // namespace ffs2play::sim
 
 #endif // SIMCONNECTOR_H

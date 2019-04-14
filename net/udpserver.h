@@ -36,10 +36,6 @@
 
 #include "tools/clogger.h"
 
-namespace ffs2play { namespace net {
-
-using namespace tools;
-
 class UDPServer : public QObject
 {
     Q_OBJECT
@@ -60,7 +56,5 @@ signals:
 private slots:
     void        incomingData () ;
 };
-
-}} // namespace ffs2play::net
 
 #endif // UDPSERVER_H

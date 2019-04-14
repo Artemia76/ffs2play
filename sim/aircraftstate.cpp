@@ -29,8 +29,6 @@
 
 #include "sim/aircraftstate.h"
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief CAircraftState::CAircraftState
 ///
@@ -219,5 +217,3 @@ void CAircraftState::fromAirData(const AirData &data)
     Vario = data.vspeed();
     SquawkMode = data.squawkmode();
 }
-
-}} // namespace ffs2play::sim

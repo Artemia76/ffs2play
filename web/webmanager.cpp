@@ -33,8 +33,6 @@
 
 #include "tools/getappversion.h"
 
-namespace ffs2play { namespace web {
-
 ///
 /// \brief CWebManager::CWebManager
 /// \param parent
@@ -308,5 +306,3 @@ void CWebManager::XmlBuild (QDomDocument& pDoc, XmlCode pCode)
         }
     }
 }
-
-}} // namespace ffs2play::web

@@ -31,8 +31,6 @@
 
 #include "disk/aibaseparser.h"
 
-namespace ffs2play{ namespace disk {
-
 class XPAIParser : public AIBaseParser
 {
 public:
@@ -41,7 +39,5 @@ public:
 private:
     void    DBFileUpdate(const QString& pKey,const QString& pPath);
 };
-
-}} // namespace ffs2play::disk
 
 #endif // XPAIPARSER_H

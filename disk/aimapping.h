@@ -41,11 +41,6 @@
 #include "xpaiparser.h"
 #include "xpcslparser.h"
 
-namespace ffs2play{ namespace disk {
-
-using namespace tools;
-using namespace sim;
-
 class AIMapping : public QObject
 {
     Q_OBJECT
@@ -89,7 +84,5 @@ private slots:
     void                    onSimReceiveClose();
 public slots:
 };
-
-}} // namespace ffs2play::disk
 
 #endif // AIMAPPING_H

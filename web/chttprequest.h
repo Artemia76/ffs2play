@@ -40,10 +40,6 @@
 
 #include "tools/clogger.h"
 
-namespace ffs2play { namespace web {
-
-using namespace tools;
-
 class CHttpRequest : public QObject
 {
     Q_OBJECT
@@ -66,7 +62,5 @@ private slots:
 signals:
     void                        finished(CHttpRequest*);
 };
-
-}} // namespace ffs2play::web
 
 #endif // CHTTPREQUEST_H

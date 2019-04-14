@@ -29,8 +29,6 @@
 #include "xpaiparser.h"
 #include "tools/iniparser.h"
 
-namespace ffs2play{ namespace disk {
-
 XPAIParser::XPAIParser(QObject *parent) : AIBaseParser(parent)
 {
     m_AIFileFilter << "*.acf";
@@ -175,6 +173,3 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
     else m_log->log(tr("AIMapping : Error = ") + query.lastError().text(), Qt::darkYellow,LEVEL_VERBOSE);
 
 }
-
-
-}} // namespace ffs2play::disk

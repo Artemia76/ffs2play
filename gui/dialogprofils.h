@@ -35,14 +35,13 @@
 #include <QSettings>
 #include <QAbstractButton>
 
-#include "ui_dialogprofils.h"
 #include "tools/clogger.h"
 #include "web/webmanager.h"
 
-namespace ffs2play { namespace gui {
+namespace Ui {
+class DialogProfils;
+}
 
-using namespace web;
-using namespace tools;
 
 class DialogProfils : public QDialog
 {
@@ -50,7 +49,7 @@ class DialogProfils : public QDialog
 
 public:
     // Constructor whith QT Widget inherit
-    explicit            DialogProfils(QWidget *parent = 0);
+    explicit            DialogProfils(QWidget *parent = nullptr);
 
     // Destructor
     ~DialogProfils();
@@ -100,7 +99,5 @@ private slots:
     void                on_lineEdit_Password_textChanged(const QString&);
     void                on_lineEdit_URL_textChanged(const QString&);
 };
-
-}} // namespace ffs2play::gui
 
 #endif // DIALOGPROFILS_H

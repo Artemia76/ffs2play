@@ -29,8 +29,6 @@
 
 #include "net/peer.h"
 
-namespace ffs2play { namespace net {
-
 ///
 /// \brief CPeer::CPeer
 /// \param pServer
@@ -462,5 +460,3 @@ PeerConnexionState CPeer::GetConnexionState ()
     State.SndCnt = m_counter_Out;
     return State;
 }
-
-}} // namespace ffs2play::net

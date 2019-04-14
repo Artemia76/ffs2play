@@ -34,8 +34,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-namespace ffs2play { namespace gui {
-
 ///
 /// \brief DialogBox constructor
 /// \param parent
@@ -124,4 +122,3 @@ void AIReplace::on_btnBox_rejected()
     close();
 }
 
-}} // namespace ffs2play::gui

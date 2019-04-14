@@ -26,21 +26,20 @@
 * This class define the main window of the application
 * **************************************************************************/
 
+#include "mainwindow.h"
+
 #include <QMessageBox>
 #include <QByteArray>
 #include <QDebug>
 
-#include "mainwindow.h"
+#include "ui_mainwindow.h"
 
-namespace ffs2play { namespace gui {
-using namespace ffs2play::tools;
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent
 ///
-MainWindow::MainWindow(QWidget *pParent) :
-    QMainWindow(pParent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow()
+    : QMainWindow(nullptr), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     // Specify custom handler for contextual menu
@@ -85,7 +84,7 @@ MainWindow::MainWindow(QWidget *pParent) :
         ui->cb_filter->addItem(m_log->getFilter());
         ui->cb_filter->setCurrentIndex(ui->cb_filter->findText(m_log->getFilter(),Qt::MatchExactly));
     }
-    connect(m_log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)));
+    connect(m_log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)),Qt::QueuedConnection);
     ui->pteLogger->setPalette(p);
     ui->pteLogger->setMaximumBlockCount(m_maxLine);
     m_log->log(tr("Welcome to FFS2Play"),Qt::blue);
@@ -688,5 +687,3 @@ void MainWindow::onUpdate()
         }
     }
 }
-
-}} // namespace ffs2play::gui

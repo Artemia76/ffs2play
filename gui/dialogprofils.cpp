@@ -31,7 +31,7 @@
 
 #include <QMessageBox>
 
-namespace ffs2play { namespace gui {
+#include "ui_dialogprofils.h"
 
 ///
 /// \brief DialogBox constructor
@@ -40,9 +40,8 @@ namespace ffs2play { namespace gui {
 /// Constructor read users list previously loaded by webmanager constructor
 /// Then it sync the List Widget with profil name as key
 ///
-DialogProfils::DialogProfils(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::DialogProfils)
+DialogProfils::DialogProfils(QWidget *parent)
+    : QDialog(parent), ui(new Ui::DialogProfils)
 {
     m_changed = false;
     // Init GUI Part
@@ -290,4 +289,3 @@ void DialogProfils::on_lineEdit_URL_textChanged(const QString&)
     checkIfChanged();
 }
 
-}} // namespace ffs2play::gui

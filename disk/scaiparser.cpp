@@ -29,8 +29,6 @@
 #include "scaiparser.h"
 #include "tools/iniparser.h"
 
-namespace ffs2play{ namespace disk {
-
 SCAIParser::SCAIParser(QObject *parent) : AIBaseParser(parent)
 {
     m_AIFileFilter << "aircraft.cfg" << "sim.cfg";
@@ -262,5 +260,3 @@ QString SCAIParser::findInstallationPath(const QString &pKey,QSettings::Format p
     }
     return Response;
 }
-
-}} // namespace ffs2play::disk

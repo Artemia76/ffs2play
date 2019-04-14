@@ -40,10 +40,6 @@
 #include "sim/aircraftstate.h"
 #include "net/udpserver.h"
 
-namespace ffs2play { namespace sim {
-
-using namespace net;
-
 ///
 /// \brief The CFGManager class
 ///
@@ -82,7 +78,5 @@ private slots:
     void            OnReceiveDatagram(QNetworkDatagram datagram);
     void            OnPingTimer();
 };
-
-}} // namespace ffs2play::sim
 
 #endif // FGMANAGER_H

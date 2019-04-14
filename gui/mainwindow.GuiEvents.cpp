@@ -26,18 +26,18 @@
 ** This class define the main window of the application
 ****************************************************************************/
 
+#include "mainwindow.h"
+
 #include <QMessageBox>
 #include <QMenu>
 #include <QFileDialog>
-
-#include "mainwindow.h"
 
 #include "dialogprofils.h"
 #include "aireplace.h"
 #include "tools/getappversion.h"
 #include "gui/dialogp2p.h"
 
-namespace ffs2play { namespace gui {
+#include "ui_mainwindow.h"
 
 ///
 /// \brief MainWindow::closeEvent
@@ -301,5 +301,3 @@ void MainWindow::saveLog()
         }
     }
 }
-
-}} // namespace ffs2play::gui

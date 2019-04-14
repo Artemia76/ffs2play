@@ -32,8 +32,6 @@
 
 #include <chrono>
 
-namespace ffs2play { namespace  tools {
-
 using namespace std::chrono;
 
 using datetime = time_point<system_clock,milliseconds>;
@@ -44,7 +42,5 @@ datetime Now();
 
 datetime fromTimeStamp(uint64_t pTS);
 uint64_t toTimeStamp(datetime pTime);
-
-}} //namespace ffs2play::tools
 
 #endif

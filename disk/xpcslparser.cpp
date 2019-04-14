@@ -1,8 +1,6 @@
 #include "xpcslparser.h"
 #include "tools/simple_file_parser.h"
 
-namespace ffs2play { namespace disk {
-
 XPCSLParser::XPCSLParser(QObject *parent) : AIBaseParser(parent)
 {
     m_AIFileFilter << "xsb_aircraft.txt";
@@ -177,5 +175,3 @@ void XPCSLParser::ReadCSL (const QString& pPath,  xsb_aircraft& pContent)
         m_log->log(tr("AIMapping : Fail to open file = ") + pPath ,Qt::magenta,LEVEL_NORMAL);
     }
 }
-
-}} // namespace ffs2play::disk

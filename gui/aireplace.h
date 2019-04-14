@@ -39,11 +39,9 @@
 #include "net/p2pmanager.h"
 #include "sim/simbasemanager.h"
 
-namespace ffs2play { namespace gui {
-
-using namespace sim;
-using namespace net;
-using namespace tools;
+namespace Ui {
+class AIReplace;
+}
 
 class AIReplace : public QDialog
 {
@@ -51,7 +49,7 @@ class AIReplace : public QDialog
 
 public:
     // Constructor whith QT Widget inherit
-    explicit            AIReplace(const QString& pPeer, QWidget *parent = 0);
+    explicit            AIReplace(const QString& pPeer, QWidget *parent = nullptr);
 
     // Destructor
     ~AIReplace();
@@ -82,7 +80,5 @@ private slots:
     void                on_btnBox_accepted();
     void on_btnBox_rejected();
 };
-
-}} // namespace ffs2play::gui
 
 #endif // DIALOGP2P_H

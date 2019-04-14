@@ -40,11 +40,6 @@
 #define AIDB_SIMPATHS_VERSION 1
 #define AIDB_REPLACEMENT_VERSION 1
 
-namespace ffs2play { namespace disk {
-
-using namespace tools;
-using namespace sim;
-
 class AIBaseParser : public QObject
 {
     Q_OBJECT
@@ -93,7 +88,5 @@ signals:
 private slots:
     void            scanSimObject();
 };
-
-}} // namespace ffs2play::disk
 
 #endif // AIBASEPARSER_H

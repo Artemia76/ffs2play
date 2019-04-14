@@ -47,12 +47,6 @@
 #include "sim/aircraftstate.h"
 #include "tools/datagram.h"
 
-namespace ffs2play{ namespace net {
-
-using namespace tools;
-using namespace sim;
-using namespace disk;
-
 enum class Protocol
 {
     PING,
@@ -270,7 +264,5 @@ private slots:
     void                    OnTimerCreateAI();
     void                    OnSimClosed();
 };
-
-}} // namespace ffs2play::net
 
 #endif // PEER_H

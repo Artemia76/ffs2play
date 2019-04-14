@@ -34,10 +34,6 @@
 #include "tools/datetime.h"
 #include "protobuf/ffs2play.pb.h"
 
-namespace ffs2play { namespace sim {
-
-using namespace tools;
-
 class CAircraftState
 {
 public:
@@ -116,7 +112,5 @@ public:
     bool        Slew;
     bool        Stalling;
 };
-
-}} // namespace ffs2play::sim
 
 #endif // AIRCRAFTSTATE_H

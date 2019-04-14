@@ -30,8 +30,6 @@
 #include "net/peer.h"
 #include <QBuffer>
 
-namespace ffs2play { namespace net {
-
 ///
 /// \brief CPeer::send
 /// \param pOutput
@@ -160,5 +158,3 @@ void CPeer::sendData()
     ProtobufToStream(stream,m_sendData);
     send(Data);
 }
-
-}} // namespace ffs2play::net

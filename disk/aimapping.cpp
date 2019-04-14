@@ -31,9 +31,6 @@
 #include "tools/singleton.h"
 #include "tools/iniparser.h"
 
-namespace ffs2play { namespace disk {
-using namespace ffs2play;
-
 ///
 /// \brief AIMapping::AIMapping
 /// \param parent
@@ -345,5 +342,3 @@ bool  AIMapping::isInit()
     }
     return Result;
 }
-
-}} // namespace ffs2play::disk

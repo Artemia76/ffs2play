@@ -28,8 +28,6 @@
 
 #include "tools/iniparser.h"
 
-namespace ffs2play { namespace tools {
-
 ///
 /// \brief IniParser::IniParser
 /// \param pFilename
@@ -161,5 +159,3 @@ QVariant IniParser::value(const QString& pGroup, const QString& pParameter, cons
     }
     return Result;
 }
-
-}} //namespace ffs2play::tools

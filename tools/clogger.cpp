@@ -29,8 +29,6 @@
 #include "tools/clogger.h"
 #include "tools/singleton.h"
 
-namespace ffs2play { namespace tools {
-
 ///
 /// \brief CLogger::CLogger
 /// \param parent
@@ -141,5 +139,3 @@ QString CLogger::getFilter()
 {
     return m_filtreLog;
 }
-
-}} //namespace ffs2play::tools

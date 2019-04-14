@@ -29,8 +29,6 @@
 
 #include "tools/datetime.h"
 
-namespace ffs2play { namespace tools {
-
 ///
 /// \brief Now
 /// \return
@@ -62,5 +60,3 @@ uint64_t toTimeStamp(datetime pTime)
     auto epoch = time_point<system_clock>();
     return static_cast<uint64_t>(duration_cast<milliseconds>(pTime-epoch).count());
 }
-
-}} // namespace ffs2play::tools

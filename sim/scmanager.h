@@ -40,8 +40,6 @@
 #include "SimConnect.h"
 #include "sim/simconnector.h"
 
-namespace ffs2play { namespace sim {
-
 //const HANDLE WM_USER_SIMCONNECT = static_cast<HANDLE>(0x402);
 
 #pragma pack(1)
@@ -326,5 +324,4 @@ protected:
     void                    sendCallSignColor(){}
 };
 
-}} // namespace ffs2play::sim
 #endif // SIMCONNECT_H

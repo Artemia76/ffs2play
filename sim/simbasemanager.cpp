@@ -30,8 +30,6 @@
 #include "simbasemanager.h"
 #include "tools/singleton.h"
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief CSCManager::CSCManager
 /// \param parent
@@ -516,5 +514,3 @@ void simbasemanager::setPathList(const QStringList &pPaths)
         m_connector->m_AIPaths = pPaths;
     }
 }
-
-}} // namespace ffs2play::sim

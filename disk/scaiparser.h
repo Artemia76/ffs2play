@@ -31,8 +31,6 @@
 
 #include "disk/aibaseparser.h"
 
-namespace ffs2play{ namespace disk {
-
 class SCAIParser : public AIBaseParser
 {
 public:
@@ -44,7 +42,5 @@ protected:
     QString findInstallationPath (const QString& pKey,QSettings::Format pFormat = QSettings::NativeFormat);
     void    DBFileUpdate(const QString& pKey,const QString& pPath);
 };
-
-}} // namespace ffs2play::disk
 
 #endif // SCAIPARSER_H

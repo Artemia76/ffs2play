@@ -37,8 +37,6 @@
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 
-namespace ffs2play { namespace sim {
-
 struct AircraftSituation
 {
     datetime TimeStamp;
@@ -130,7 +128,5 @@ signals:
     void                firePhaseChange(Phases pPhase);
     void                fireTouchSpeed(double pToucheSpeed);
 };
-
-}} // namespace ffs2play::sim
 
 #endif // ANALYZER_H

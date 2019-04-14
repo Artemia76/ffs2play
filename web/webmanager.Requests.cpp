@@ -29,8 +29,6 @@
 #include "web/webmanager.h"
 #include "tools/singleton.h"
 
-namespace ffs2play { namespace web {
-
 ///
 /// \brief CWebManager::Connect
 ///
@@ -42,7 +40,7 @@ void CWebManager::Connect()
     XmlBuild(SendHello, XmlCode::hello);
     CHttpRequest* Request = new CHttpRequest(this);
     m_log->log(tr("Connecting to server ..."));
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)));
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendHello);
 }
 
@@ -58,7 +56,7 @@ void CWebManager::Disconnect()
     XmlBuild(SendLogout, XmlCode::logout);
     CHttpRequest* Request = new CHttpRequest(this);
     m_log->log(tr("Disconnecting from server ..."));
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)));
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
     m_P2P->clear();
     m_bConnected = false;
@@ -74,7 +72,7 @@ void CWebManager::SendVerify()
     QDomDocument SendVerify;
     XmlBuild(SendVerify, XmlCode::verify);
     CHttpRequest* Request = new CHttpRequest(this);
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)));
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ConnectCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendVerify);
 }
 
@@ -86,7 +84,7 @@ void CWebManager::SendLiveUpdate()
     QDomDocument SendLiveUpdate;
     XmlBuild(SendLiveUpdate, XmlCode::liveupdate);
     CHttpRequest* Request = new CHttpRequest(this);
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)));
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LiveUpdateCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLiveUpdate);
 }
 
@@ -98,7 +96,7 @@ void CWebManager::SendATCUpdate()
     QDomDocument SendAtcUpdate;
     XmlBuild(SendAtcUpdate, XmlCode::atc);
     CHttpRequest* Request = new CHttpRequest(this);
-    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ATCCallback (CHttpRequest*)));
+    connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ATCCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendAtcUpdate);
 }
 
@@ -123,7 +121,7 @@ void CWebManager::CheckNewVersion()
 #endif
 #endif
     CHttpRequest* Request =new CHttpRequest(this);
-    connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckNewVersionCallback (CHttpRequest*)));
+    connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckNewVersionCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(CheckVersionURL);
 }
 
@@ -138,8 +136,6 @@ void CWebManager::CheckXPPluginVersion()
         CheckVersionURL +="&beta=1";
     }
     CHttpRequest* Request =new CHttpRequest(this);
-    connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckXPPluginVersionCallback (CHttpRequest*)));
+    connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckXPPluginVersionCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(CheckVersionURL);
 }
-
-}} // namespace ffs2play::web

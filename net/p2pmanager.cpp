@@ -33,8 +33,6 @@
 
 #include "tools/singleton.h"
 
-namespace ffs2play { namespace net {
-
 ///
 /// \brief CP2PManager::CP2PManager
 /// \param parent
@@ -824,5 +822,3 @@ PeerConnexionState CP2PManager::getPeerConnexionState(const QString &pPeerName)
     }
     return State;
 }
-
-}} // namespace ffs2play::net

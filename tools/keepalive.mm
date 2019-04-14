@@ -32,5 +32,5 @@ void KeepAlive::KeepAliveMM(){
 }
 
 void KeepAlive::KeepAliveDestructorMM(){
-    IOReturn success = IOPMAssertionRelease(assertionID);
+    IOPMAssertionRelease(assertionID);
 }

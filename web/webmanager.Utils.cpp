@@ -30,8 +30,6 @@
 #include "tools/singleton.h"
 #include <QXmlStreamWriter>
 
-namespace ffs2play { namespace web {
-
 /// Build Users Profils to Setting file
 /// \brief operator <<
 /// \param out
@@ -150,5 +148,3 @@ bool CWebManager::isConnected()
 {
     return m_bConnected;
 }
-
-}} // namespace ffs2play::web

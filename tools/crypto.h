@@ -41,8 +41,6 @@
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
-namespace ffs2play { namespace tools {
-
 using CryptoPP::StringSink;
 using CryptoPP::ArraySink;
 using CryptoPP::StringSource;
@@ -67,7 +65,5 @@ signals:
 
 public slots:
 };
-
-}} //namespace ffs2play::tools
 
 #endif // CRYPTO_H

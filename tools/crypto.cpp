@@ -30,8 +30,6 @@
 
 #include "tools/crypto.h"
 
-namespace ffs2play { namespace tools {
-
 #ifdef Q_OS_WIN32
     #define BYTE CryptoPP::byte
 #else
@@ -156,6 +154,3 @@ QString CCrypto::RSA_EncryptToBase64(const QString& Cert, const QByteArray& Data
     encrypt.resize(Taille);
     return QString(encrypt.toBase64());
 }
-
-}} //namespace ffs2play::tools
-

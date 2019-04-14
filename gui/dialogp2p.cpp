@@ -28,14 +28,14 @@
 ****************************************************************************/
 
 #include "dialogp2p.h"
-#include "web/webmanager.h"
-#include "sim/simbasemanager.h"
 
 #include <QColorDialog>
 #include <QFileDialog>
 #include <QMessageBox>
 
-namespace ffs2play { namespace gui {
+#include "ui_dialogp2p.h"
+#include "web/webmanager.h"
+#include "sim/simbasemanager.h"
 
 ///
 /// \brief DialogBox constructor
@@ -44,9 +44,8 @@ namespace ffs2play { namespace gui {
 /// Constructor read users list previously loaded by webmanager constructor
 /// Then it sync the List Widget with profil name as key
 ///
-DialogP2P::DialogP2P(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::DialogP2P)
+DialogP2P::DialogP2P(QWidget *parent)
+    : QDialog(parent), ui(new Ui::DialogP2P)
 {
     m_changed = false;
     // Init GUI Part
@@ -461,4 +460,3 @@ void DialogP2P::on_cbDisableAltCorr_stateChanged(int)
     checkIfChanged();
 }
 
-}} // namespace ffs2play::gui

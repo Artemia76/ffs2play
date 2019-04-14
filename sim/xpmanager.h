@@ -39,10 +39,6 @@
 #include "net/udpserver.h"
 #include "protobuf/ffs2play.pb.h"
 
-namespace ffs2play { namespace sim {
-
-using namespace net;
-
 enum FFS2Proto
 {
     PING = 0x00, // Ping receive
@@ -100,7 +96,5 @@ private slots:
     void            OnReceiveDatagram(QNetworkDatagram datagram);
     void            OnPingTimer();
 };
-
-}} // namespace ffs2play::sim
 
 #endif // XPMANAGER_H

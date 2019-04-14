@@ -1,6 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR" sourcelanguage="fr_FR">
+<TS version="2.1" language="fr_FR" sourcelanguage="en">
+<context>
+    <name>AIBaseParser</name>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="41"/>
+        <source>AIMapping : aibaseparser constructor : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="51"/>
+        <source>AIMapping : aibaseparser destructor : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="69"/>
+        <source>AIMapping : open database : </source>
+        <translation type="unfinished">AIMapping : ouverture de la base de donnée : </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="80"/>
+        <source>AIMapping : Fail to create Version Table : </source>
+        <translation type="unfinished">AIMapping : Echec de la création de la table Version : </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="92"/>
+        <source>AIMapping : Fail to create SimPath Table</source>
+        <translation type="unfinished">AIMapping : Impossible de créer la table SimPath</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="104"/>
+        <source>AIMapping : Fail to create Aircrafts Table</source>
+        <translation type="unfinished">AIMapping : Impossible de créer la table Aircrafts</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="116"/>
+        <source>AIMapping : Fail to create Replacement Table</source>
+        <translation type="unfinished">AIMapping : Impossible de créer la table Replacement</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="161"/>
+        <source>AIMapping : Fail to query Version Table : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="210"/>
+        <location filename="../disk/aibaseparser.cpp" line="345"/>
+        <source>AIMapping : Fail to query path list for simulator </source>
+        <translation type="unfinished">AIMapping : Echec de la requête de la liste des chemins pour les simulateurs </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="225"/>
+        <source>Start updating aircraft database...</source>
+        <translation type="unfinished">Début de la mise à jour de la base de donée des avions...</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="253"/>
+        <source>AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion</source>
+        <translation type="unfinished">AIMapping : Impossible de démarrer le thread de mise à jour des chemins objets à cause de la connexion SQLITE</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="258"/>
+        <source>End of update : </source>
+        <translation type="unfinished">Fin de la mise à jour : </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="259"/>
+        <source> aircrafts added, </source>
+        <translation type="unfinished"> appareil ajouté, </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="260"/>
+        <source> updated and </source>
+        <translation type="unfinished"> mis à jout et </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="260"/>
+        <source> deleted.</source>
+        <translation type="unfinished"> supprimés.</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="273"/>
+        <source>AIMapping : Start of automatic cleaning...</source>
+        <translation type="unfinished">AIMapping : Début du nettoyage automatique...</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="287"/>
+        <source>AIMapping : deleting file </source>
+        <translation type="unfinished">AIMapping : suppression du fichier </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="287"/>
+        <source> from DB</source>
+        <translation type="unfinished"> de la DB</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="299"/>
+        <source>AIMapping : End of automatic cleaning.: </source>
+        <translation type="unfinished">AIMapping : Fin du nettoyage automatique : </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="299"/>
+        <source> over </source>
+        <translation type="unfinished"> sur </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="299"/>
+        <source> entry(ies) removed</source>
+        <translation type="unfinished"> entrée(s) supprimée(s)</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="387"/>
+        <source>AIMapping : Local rule found in DB : </source>
+        <translation type="unfinished">AIMapping : Règle locale trouvée dans la DB : </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="387"/>
+        <source> replaced by </source>
+        <translation type="unfinished"> remplacé par </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="408"/>
+        <source>AIMapping : Title Match found in database : </source>
+        <translation type="unfinished">AIMapping : Correspondance de Titre trouvé dans la base de donnée : </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="427"/>
+        <source>AIMapping : ATC Model</source>
+        <translation type="unfinished">AIMapping : Modèle ATC</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="427"/>
+        <source> Match found in database : </source>
+        <translation type="unfinished"> Correspondance trouvée dans la base de donnée.: </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="434"/>
+        <location filename="../disk/aibaseparser.cpp" line="459"/>
+        <location filename="../disk/aibaseparser.cpp" line="468"/>
+        <source>AIMapping : Fail to query database.</source>
+        <translation type="unfinished">AIMapping : Echec de la requête sur la base de donnée.</translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="622"/>
+        <source>AIMapping : Fail to add path </source>
+        <translation type="unfinished">AIMapping : Impossible d&apos;ajouter le chemin du répertoire </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="622"/>
+        <location filename="../disk/aibaseparser.cpp" line="654"/>
+        <source> for simulator </source>
+        <translation type="unfinished"> pour le simulateur </translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="645"/>
+        <source>AIMapping : Remove </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="645"/>
+        <source> AI for simulator </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/aibaseparser.cpp" line="654"/>
+        <source>AIMapping : Fail to remove path </source>
+        <translation type="unfinished">AIMapping : Impossible de supprimer le répertoire </translation>
+    </message>
+</context>
 <context>
     <name>AIReplace</name>
     <message>
@@ -25,14 +192,70 @@
     </message>
 </context>
 <context>
+    <name>Analyzer</name>
+    <message>
+        <location filename="../sim/analyzer.cpp" line="515"/>
+        <source>Change Phase = </source>
+        <translation type="unfinished">Change de Phase = </translation>
+    </message>
+</context>
+<context>
+    <name>CFGManager</name>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="49"/>
+        <source>FlightGear Module loaded</source>
+        <translation type="unfinished">Module FlightGear chargé</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="59"/>
+        <source>FlightGear Module unloaded</source>
+        <translation type="unfinished">Module FlightGear déchargé</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="69"/>
+        <source>Connecting to FlightGear ...</source>
+        <translation type="unfinished">Connexion à FlightGear ...</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="75"/>
+        <source>Connected to FlightGear.</source>
+        <translation type="unfinished">Connecté à FlightGear.</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="92"/>
+        <source>Disconnected from FlightGear.</source>
+        <translation type="unfinished">Déconnecté de FlightGear.</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="159"/>
+        <source>Send freezeAI</source>
+        <translation type="unfinished">Envoi d&apos;un freezeAI</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="170"/>
+        <source>Send PING</source>
+        <translation type="unfinished">Envoi d&apos;un PING</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="189"/>
+        <source>Send DATA</source>
+        <translation type="unfinished">Envoi d&apos;un DATA</translation>
+    </message>
+    <message>
+        <location filename="../sim/fgmanager.cpp" line="228"/>
+        <source>Received Data from FG : Model = </source>
+        <translation type="unfinished">Reçu des données de FG : Model = </translation>
+    </message>
+</context>
+<context>
     <name>CP2PManager</name>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="146"/>
+        <location filename="../net/p2pmanager.cpp" line="144"/>
         <source> become unvisible</source>
         <translation> deviens invisible</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="155"/>
+        <location filename="../net/p2pmanager.cpp" line="153"/>
         <source> become visible</source>
         <translation> deviens visible</translation>
     </message>
@@ -41,52 +264,52 @@
         <translation type="vanished">Socket Windows UPNP a échoué.</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="220"/>
+        <location filename="../net/p2pmanager.cpp" line="218"/>
         <source>IGP Desc = </source>
         <translation>IGP Desc = </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="220"/>
+        <location filename="../net/p2pmanager.cpp" line="218"/>
         <source> st: </source>
         <translation> st: </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="230"/>
+        <location filename="../net/p2pmanager.cpp" line="228"/>
         <source>Found valid IGD : </source>
         <translation>Trouvé un IGD Valide : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="235"/>
+        <location filename="../net/p2pmanager.cpp" line="233"/>
         <source>Found a (not connected?) IGD : </source>
         <translation>Trouvé un IGD (non connecté?) : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="240"/>
+        <location filename="../net/p2pmanager.cpp" line="238"/>
         <source>UPnP device found. Is it an IGD ? : </source>
         <translation>Routeur UPnP trouvé. Est ce un IGD ? : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="245"/>
+        <location filename="../net/p2pmanager.cpp" line="243"/>
         <source>Found device (IGD ?) : </source>
         <translation>Trouvé un appareil (IGD ?) : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="59"/>
+        <location filename="../net/p2pmanager.cpp" line="57"/>
         <source>Local LAN IP address : </source>
         <translation>Adresse IP LAN Locale : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="62"/>
+        <location filename="../net/p2pmanager.cpp" line="60"/>
         <source>IP address : </source>
         <translation>Adresse IP : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="253"/>
+        <location filename="../net/p2pmanager.cpp" line="251"/>
         <source>Internet IP address : </source>
         <translation>Adresse IP Internet : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="267"/>
+        <location filename="../net/p2pmanager.cpp" line="265"/>
         <source>Adding port mappping failed with code </source>
         <translation>Création du mapping de port a échoué avec le code </translation>
     </message>
@@ -95,194 +318,599 @@
         <translation type="vanished">Aucune passerelle UPNP valide trouvée.</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="272"/>
+        <location filename="../net/p2pmanager.cpp" line="270"/>
         <source>No valid Internet Gateway Device found.</source>
         <translation>Aucune passerelle Internet valide trouvée.</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="278"/>
+        <location filename="../net/p2pmanager.cpp" line="276"/>
         <source>No IGD UPNP Device found on the network !</source>
         <translation>Aucun dispositif IGD UPNP trouvé sur le réseau !</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="293"/>
+        <location filename="../net/p2pmanager.cpp" line="291"/>
         <source>Delete port mapping failed with code </source>
         <translation>La suppression du mapping de port à échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="391"/>
-        <location filename="../singleton/p2pmanager.cpp" line="420"/>
+        <location filename="../net/p2pmanager.cpp" line="389"/>
+        <location filename="../net/p2pmanager.cpp" line="418"/>
         <source>Bad IP Address</source>
         <translation>Mauvaise adresse IP</translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="401"/>
+        <location filename="../net/p2pmanager.cpp" line="399"/>
         <source>Adding P2P user callsign = </source>
         <translation>Ajoût de l&apos;utilisateur P2P indicatif = </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="406"/>
+        <location filename="../net/p2pmanager.cpp" line="404"/>
         <source>User </source>
         <translation>Utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="427"/>
+        <location filename="../net/p2pmanager.cpp" line="425"/>
         <source>Change IP for user </source>
         <translation>Changement de l&apos;IP pour l&apos;utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="434"/>
+        <location filename="../net/p2pmanager.cpp" line="432"/>
         <source>Change port for user </source>
         <translation>Changement du port pour l&apos;utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="442"/>
+        <location filename="../net/p2pmanager.cpp" line="440"/>
         <source>Change team for user </source>
         <translation>Changement d&apos;équipe pour l&apos;utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="482"/>
-        <location filename="../singleton/p2pmanager.cpp" line="550"/>
+        <location filename="../net/p2pmanager.cpp" line="480"/>
+        <location filename="../net/p2pmanager.cpp" line="548"/>
         <source>Remove user </source>
         <translation>Suppression de l&apos;utilisateur </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="769"/>
+        <location filename="../net/p2pmanager.cpp" line="767"/>
         <source>Drop rate : </source>
         <translation>Taux de chute : </translation>
     </message>
     <message>
-        <location filename="../singleton/p2pmanager.cpp" line="769"/>
+        <location filename="../net/p2pmanager.cpp" line="767"/>
         <source> ft/min</source>
         <translation></translation>
     </message>
 </context>
 <context>
+    <name>CPeer</name>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="77"/>
+        <source> go online</source>
+        <translation type="unfinished"> est connecté</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="118"/>
+        <source> UDP Datagram dropped : too late</source>
+        <translation type="unfinished"> Datagramme UDP rejeté : trop tardif</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="133"/>
+        <source> UDP Datagram missing quantity = </source>
+        <translation type="unfinished"> Quantité de datagrammes UDP manquant = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="158"/>
+        <source> received version number = </source>
+        <translation type="unfinished"> reçu version numéro = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="211"/>
+        <source> Receive Object_ID = </source>
+        <translation type="unfinished"> Reçu Object_ID = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="217"/>
+        <source> Receive an unwanted object</source>
+        <translation type="unfinished"> Reçu un objet non désiré</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="234"/>
+        <source> Receive a removed Object from sim ID = </source>
+        <translation type="unfinished"> Reçu un objet supprimé du simulateur ID = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="252"/>
+        <source> Receive a SimClosed Event</source>
+        <translation type="unfinished"> Reçu un événement SimClosed</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="300"/>
+        <source> Build AI Object</source>
+        <translation type="unfinished"> Construction de l&apos;objet AI</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="307"/>
+        <source> Destruct AI Object Visible=</source>
+        <translation type="unfinished"> Destruction de l&apos;objet AI visible=</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="307"/>
+        <source> Spawnable = </source>
+        <translation type="unfinished"> Affichable = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="325"/>
+        <source> Simulator have not created the requested AI, Let&apos;s try with simple object</source>
+        <translation type="unfinished"> Le simulateur n&apos;a pas crée l&apos;AI demandé, essayons avec un objet simple</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="349"/>
+        <source> Simulator have not created the requested AI, we are trying with default simulator aircraft</source>
+        <translation type="unfinished"> Le simulateur n&apos;a pas crée l&apos;AI demandé, nous essayons avec un appareil par défaut</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Event.cpp" line="357"/>
+        <source> Simulator has been created the requested AI</source>
+        <translation type="unfinished"> Le simulateur a crée l&apos;AI demandé</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Requests.cpp" line="92"/>
+        <source> go offline = Timeout</source>
+        <translation type="unfinished"> passage hors ligne = Timeout</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.Requests.cpp" line="94"/>
+        <source> go offline = Diconnected</source>
+        <translation type="unfinished"> passage hors ligne = Déconnecté</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="142"/>
+        <source> is connected on P2P Network</source>
+        <translation type="unfinished"> est connecté sur le réseau P2P</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="171"/>
+        <source> leave from P2P Network</source>
+        <translation type="unfinished"> quitte le réseau P2P</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="188"/>
+        <source> Local request for Title solve = </source>
+        <translation type="unfinished"> Requête locale pour résoudre le Titre = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="189"/>
+        <source> , Model = </source>
+        <translation type="unfinished"> , Model = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="205"/>
+        <source> Remove aircraft</source>
+        <translation type="unfinished"> Supression de l&apos;avion</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="208"/>
+        <source> Error during removing of the aircraft</source>
+        <translation type="unfinished"> Erreur pendant la supression de l&apos;avion</translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="229"/>
+        <source> Requesting creation of aircraft with Title = </source>
+        <translation type="unfinished"> Demande de création d&apos;un avion avec le Titre = </translation>
+    </message>
+    <message>
+        <location filename="../net/peer.cpp" line="230"/>
+        <source> Model = </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CSCManager</name>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="44"/>
+        <source>FSX/Prepar3D Module loaded</source>
+        <translation type="unfinished">Module FSX/Prepar3D chargé</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="53"/>
+        <source>FSX/Prepar3D Module unloaded</source>
+        <translation type="unfinished">Module FSX/Prepar3D déchargé</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="66"/>
+        <source>Connexion to FS failed.</source>
+        <translation type="unfinished">La connexion au simulateur a échoué.</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="81"/>
+        <source>Disconnected from FS.</source>
+        <translation type="unfinished">Déconnecté du simulateur.</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="190"/>
+        <source>Get an unknown Event ID</source>
+        <translation type="unfinished">Reçu un code évènement inconnu</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="362"/>
+        <source>Connected to simulator.</source>
+        <translation type="unfinished">Connecté au simulateur.</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="368"/>
+        <source>Connected to FS.</source>
+        <translation type="unfinished">Connecté au simulateur.</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="379"/>
+        <source>Receive SIMCONNECT_RECV event</source>
+        <translation type="unfinished">Reçu un SIMCONNECT_RECV</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="392"/>
+        <source>Receive SIMCONNECT_RECV_SYSTEM_STATE event</source>
+        <translation type="unfinished">Reçu un événement SIMCONNECT_RECV_SYSTEM_STATE</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="430"/>
+        <source>Get a SimConnect exception = </source>
+        <translation type="unfinished">Reçu une exception SimConnect = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="431"/>
+        <source> Related method invoked = </source>
+        <translation type="unfinished"> Methode en relation appelée = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="442"/>
+        <source>Receive SIMCONNECT_RECV_EVENT event</source>
+        <translation type="unfinished">Reçu un événement SIMCONNECT_RECV_EVENT</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="495"/>
+        <source>OnRecvSimObjectData Periodic</source>
+        <translation type="unfinished">OnRecvSimObjectData Periodic</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="549"/>
+        <source>OnRecvSimObjectData AIUpdate ObjectID = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="687"/>
+        <source>Object as been created type = </source>
+        <translation type="unfinished">L&apos;objet a été créée type = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="688"/>
+        <location filename="../sim/scmanager.cpp" line="697"/>
+        <source> with n°</source>
+        <translation type="unfinished"> avec le n°</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="696"/>
+        <source>Object as been removed type = </source>
+        <translation type="unfinished">L&apos;objet a été supprimé avec le type = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="717"/>
+        <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID Request = </source>
+        <translation type="unfinished">Reçu une requête SIMCONNECT_RECV_ASSIGNED_OBJECT_ID = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="718"/>
+        <source> , Name = </source>
+        <translation type="unfinished"> , Nom = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="719"/>
+        <source> , Object_ID = </source>
+        <translation type="unfinished"> , Object_ID = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="737"/>
+        <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID with unknown request ID  = </source>
+        <translation type="unfinished">Reçu un SIMCONNECT_RECV_ASSIGNED_OBJECT_ID avec un request ID inconnu = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="768"/>
+        <source>Send Text Failed</source>
+        <translation type="unfinished">L&apos;envoi du text a échoué</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="786"/>
+        <source>Create_AI Title = </source>
+        <translation type="unfinished">Create_AI Titre = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="786"/>
+        <source> ; Tail = </source>
+        <translation type="unfinished"> ; Tail = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="786"/>
+        <source> ; NonAIObject=</source>
+        <translation type="unfinished"> ; NonAIObject=</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="830"/>
+        <source>removeAI called object ID = </source>
+        <translation type="unfinished">removeAI objectID appelé = </translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="839"/>
+        <source>Delete Aircrfaft failed</source>
+        <translation type="unfinished">Supression de l&apos;appareil a échouée</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="852"/>
+        <source>updateAI called</source>
+        <translation type="unfinished">updateAI appelé</translation>
+    </message>
+    <message>
+        <location filename="../sim/scmanager.cpp" line="904"/>
+        <source>freezeAI called</source>
+        <translation type="unfinished">freezeAI appelé</translation>
+    </message>
+</context>
+<context>
     <name>CWebManager</name>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="47"/>
+        <location filename="../web/webmanager.Callback.cpp" line="44"/>
         <source>Get HelloCallback</source>
         <translation>Reçu HelloCallback</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="70"/>
+        <location filename="../web/webmanager.Callback.cpp" line="67"/>
         <source>Get ConnectCallback</source>
         <translation>Reçu un ConnectCallback</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="84"/>
+        <location filename="../web/webmanager.Callback.cpp" line="81"/>
         <source>FFS2Play is connected on server</source>
         <translation>FFS2Play est connecté au serveur</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="92"/>
+        <location filename="../web/webmanager.Callback.cpp" line="89"/>
         <source>Get invalid external IP</source>
         <translation>Reçu une IP externe non valide</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="96"/>
+        <location filename="../web/webmanager.Callback.cpp" line="93"/>
         <source>Get external IP = </source>
         <translation>Reçu une IP externe = </translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="137"/>
+        <location filename="../web/webmanager.Callback.cpp" line="134"/>
         <source>Connexion to server failed.</source>
         <translation>La connexion au server a échouée.</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="149"/>
+        <location filename="../web/webmanager.Callback.cpp" line="146"/>
         <source>Get LiveUpdateCallback</source>
         <translation>Reçu un LiveUpdateCallback</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="182"/>
+        <location filename="../web/webmanager.Callback.cpp" line="179"/>
         <source>Get ATCCallback</source>
         <translation>Reçu un ATCCallback</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="194"/>
+        <location filename="../web/webmanager.Callback.cpp" line="191"/>
         <source>Get LogoutCallback</source>
         <translation>Reçu un LogoutCallback</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="205"/>
+        <location filename="../web/webmanager.Callback.cpp" line="202"/>
         <source>Get ATCUpdate</source>
         <translation>Reçu un  ATCUpdate</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="237"/>
+        <location filename="../web/webmanager.Callback.cpp" line="234"/>
         <source>Get OnLiveUpdate</source>
         <translation>Reçu un OnLiveUpdate</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="271"/>
+        <location filename="../web/webmanager.Callback.cpp" line="268"/>
         <source>This version of FFS2Play is legacy and does not suppported. Do you want update it ?</source>
         <translation>Cette version de FFS2Play est obsolète et n&apos;est plus supporté. Désirez vous la mettre à jour?</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="277"/>
+        <location filename="../web/webmanager.Callback.cpp" line="274"/>
         <source>This version of FFS2Play is not up to date. Do you want update it?</source>
         <translation>Cette version de FFS2Play n&apos;est pas à jour. Souhaitez vous la mettre à jour?</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="283"/>
+        <location filename="../web/webmanager.Callback.cpp" line="280"/>
         <source>FFS2Play Update</source>
         <translation>Mise jour FFS2Play</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="296"/>
+        <location filename="../web/webmanager.Callback.cpp" line="293"/>
         <source>Error on Version checking : </source>
         <translation>Erreur durant la vérification de version : </translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="327"/>
+        <location filename="../web/webmanager.Callback.cpp" line="324"/>
         <source>The X-Plane XFFS2Play plugin is not up to date. Do you want update it?</source>
         <translation>Le Plugin XFFS2Play est périmé. Souhaitez vous le mettre à jour?</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Callback.cpp" line="329"/>
+        <location filename="../web/webmanager.Callback.cpp" line="326"/>
         <source>XFFS2Play Plugin Update</source>
         <translation>Mise à jour du plugin XFFS2Play</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Utils.cpp" line="99"/>
+        <location filename="../web/webmanager.Utils.cpp" line="97"/>
         <source>Server : </source>
         <translation>Serveur : </translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Utils.cpp" line="125"/>
+        <location filename="../web/webmanager.Utils.cpp" line="123"/>
         <source> CallSign = </source>
         <translation> Indicatif = </translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Utils.cpp" line="135"/>
+        <location filename="../web/webmanager.Utils.cpp" line="133"/>
         <source> Local IP = </source>
         <translation> IP Locale = </translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.cpp" line="63"/>
+        <location filename="../web/webmanager.cpp" line="63"/>
         <source>Users Profils Settings is empty but default user is set. Reset of default user</source>
         <translation>La liste des profils utilisateur est vide pourtant un utilisateur par défaut est spécifié. Remise à zéro de l&apos;utilisateur par défaut</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.cpp" line="80"/>
+        <location filename="../web/webmanager.cpp" line="80"/>
         <source>Users Profils Settings checkum error, repair setting datas</source>
         <translation>La liste des profils d&apos;utilisateur présente une erreur de checksum, réparation des donnée</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.cpp" line="88"/>
+        <location filename="../web/webmanager.cpp" line="88"/>
         <source>AES Key generated = </source>
         <translation>Clé AES générée = </translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Requests.cpp" line="44"/>
+        <location filename="../web/webmanager.Requests.cpp" line="42"/>
         <source>Connecting to server ...</source>
         <translation>Connexion au serveur ...</translation>
     </message>
     <message>
-        <location filename="../singleton/webmanager.Requests.cpp" line="60"/>
+        <location filename="../web/webmanager.Requests.cpp" line="58"/>
         <source>Disconnecting from server ...</source>
         <translation>Déconnexion du serveur ...</translation>
+    </message>
+</context>
+<context>
+    <name>CXPManager</name>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="56"/>
+        <source>XPlane Module loaded</source>
+        <translation type="unfinished">Le module XPlane a été chargé</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="66"/>
+        <source>XPlane Module unloaded</source>
+        <translation type="unfinished">Le module XPlane a été déchargé</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="77"/>
+        <source>Connecting to XPlane ...</source>
+        <translation type="unfinished">Connexion à X-Plane ...</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="94"/>
+        <source>Disconnected from XPlane.</source>
+        <translation type="unfinished">Déconnexion de X-Plane.</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="133"/>
+        <source>Send scrolling text : </source>
+        <translation type="unfinished">Evoi du texte défilant : </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="141"/>
+        <source>Hexa : </source>
+        <translation type="unfinished">Hexa : </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="159"/>
+        <source>Send createAI</source>
+        <translation type="unfinished">Envoi d&apos;un createAI</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="183"/>
+        <source>Send removeAI</source>
+        <translation type="unfinished">Envoi d&apos;un removeAI</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="209"/>
+        <source>Send updateAI</source>
+        <translation type="unfinished">Envoi d&apos;un UpdateAI</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="233"/>
+        <source>Send freezeAI</source>
+        <translation type="unfinished">Envoi d&apos;un freezeAI</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="244"/>
+        <source>Send PING Option=</source>
+        <translation type="unfinished">Envoi PING avec Option=</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="264"/>
+        <source>Send DATA</source>
+        <translation type="unfinished">Envoi d&apos;un DATA</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="335"/>
+        <source>Connected to XPlane.</source>
+        <translation type="unfinished">Connecté à X-Plane.</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="347"/>
+        <source>Plugin Version Major = </source>
+        <translation type="unfinished">Version Plugin Majeur = </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="348"/>
+        <source> Minor = </source>
+        <translation type="unfinished"> Mineur = </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="349"/>
+        <source> Build = </source>
+        <translation type="unfinished"> Build = </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="368"/>
+        <source>Receive DATA_SEND event</source>
+        <translation type="unfinished">Reçu un événement DATA_SEND</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="375"/>
+        <source>DataSend Error : </source>
+        <translation type="unfinished">Erreur DataSend : </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="384"/>
+        <source>Receive ADD_PEER </source>
+        <translation type="unfinished">Reçu un ADD_PEER </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="397"/>
+        <source>Receive ADD_PEER event, failed to create object</source>
+        <translation type="unfinished">Réception d&apos; un événement ADD_PEER, impossible de créer l&apos;objet</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="402"/>
+        <source>Receive ADD_PEER event, object ID=</source>
+        <translation type="unfinished">Reçu un événement ADD_PEER, object ID =</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="403"/>
+        <source>callsign=</source>
+        <translation type="unfinished">pseudo=</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="412"/>
+        <source>ADD_PEER Error : </source>
+        <translation type="unfinished">Erreur ADD_PEER : </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="426"/>
+        <source>Receive DEL_PEER event, object ID=</source>
+        <translation type="unfinished">Reçu un événement DEL_PEER, object ID=</translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="434"/>
+        <source>DEL_PEER Error : </source>
+        <translation type="unfinished">Erreur DEL_PEER : </translation>
+    </message>
+    <message>
+        <location filename="../sim/xpmanager.cpp" line="448"/>
+        <source>unknown code = </source>
+        <translation type="unfinished">cod inconnu = </translation>
     </message>
 </context>
 <context>
@@ -478,6 +1106,16 @@
         <source>Add</source>
         <translation type="obsolete">Ajouter</translation>
     </message>
+    <message>
+        <location filename="../gui/dialogp2p.cpp" line="446"/>
+        <source>Warning</source>
+        <translation type="unfinished">Attention</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.cpp" line="447"/>
+        <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
+        <translation type="unfinished">Cette fonction efface toute la base de donnée des AI, êtes vous sûre de vouloir continuer?</translation>
+    </message>
 </context>
 <context>
     <name>DialogProfils</name>
@@ -527,12 +1165,22 @@
         <translation>Ajouter</translation>
     </message>
     <message>
+        <location filename="../gui/dialogprofils.cpp" line="145"/>
         <source>Warning</source>
-        <translation type="vanished">Attention</translation>
+        <translation>Attention</translation>
     </message>
     <message>
+        <location filename="../gui/dialogprofils.cpp" line="146"/>
         <source>There is some modifications on selected profil. Do you want apply them?</source>
-        <translation type="vanished">Il y a des modifications en cours dans le profil sélectionné. souhaitez vous les appliquer?</translation>
+        <translation>Il y a des modifications en cours dans le profil sélectionné. souhaitez vous les appliquer?</translation>
+    </message>
+</context>
+<context>
+    <name>IniParser</name>
+    <message>
+        <location filename="../tools/iniparser.cpp" line="96"/>
+        <source>Unable to open </source>
+        <translation type="unfinished">Impossible d&apos;ouvrir </translation>
     </message>
 </context>
 <context>
@@ -543,23 +1191,17 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="53"/>
+        <location filename="../gui/mainwindow.ui" line="201"/>
         <source>Tool Bar</source>
         <translation>Barre d&apos;outils</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="769"/>
-        <source>Log</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../gui/mainwindow.ui" line="921"/>
         <source>Debug Options</source>
-        <translation>Options Debug</translation>
+        <translation type="vanished">Options Debug</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="407"/>
-        <location filename="../gui/mainwindow.ui" line="937"/>
+        <location filename="../gui/mainwindow.ui" line="555"/>
+        <location filename="../gui/mainwindow.ui" line="1085"/>
         <source>None</source>
         <translation>Aucune</translation>
     </message>
@@ -569,57 +1211,67 @@
         <translation>Liste des joueurs</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="944"/>
+        <location filename="../gui/mainwindow.ui" line="917"/>
+        <source>&amp;Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="1069"/>
+        <source>De&amp;bug Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="1092"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="951"/>
+        <location filename="../gui/mainwindow.ui" line="1099"/>
         <source>Verbose</source>
         <translation>Bavard</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="962"/>
+        <location filename="../gui/mainwindow.ui" line="1110"/>
         <source>*</source>
         <translation>*</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="967"/>
+        <location filename="../gui/mainwindow.ui" line="1115"/>
         <source>AIMapping*</source>
         <translation>AIMapping*</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="977"/>
+        <location filename="../gui/mainwindow.ui" line="1125"/>
         <source>HttpRequest*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="982"/>
+        <location filename="../gui/mainwindow.ui" line="1130"/>
         <source>P2PManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="987"/>
+        <location filename="../gui/mainwindow.ui" line="1135"/>
         <source>Peer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="992"/>
+        <location filename="../gui/mainwindow.ui" line="1140"/>
         <source>UDPServer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="997"/>
+        <location filename="../gui/mainwindow.ui" line="1145"/>
         <source>SCManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1002"/>
+        <location filename="../gui/mainwindow.ui" line="1150"/>
         <source>XPManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1012"/>
+        <location filename="../gui/mainwindow.ui" line="1160"/>
         <source>WEBManager*</source>
         <translation></translation>
     </message>
@@ -628,272 +1280,379 @@
         <translation type="vanished">Réseau Multijoueur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="82"/>
         <source>Tchat Zone</source>
-        <translation>Zone de TChat</translation>
+        <translation type="vanished">Zone de TChat</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="120"/>
         <source>SIM Variables</source>
-        <translation>Variables du simulateur</translation>
+        <translation type="vanished">Variables du simulateur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="137"/>
+        <location filename="../gui/mainwindow.ui" line="285"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="142"/>
+        <location filename="../gui/mainwindow.ui" line="290"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="147"/>
+        <location filename="../gui/mainwindow.ui" line="295"/>
         <source>Model</source>
         <translation>Modèle</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="152"/>
+        <location filename="../gui/mainwindow.ui" line="300"/>
         <source>Category</source>
         <translation>Catégorie</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="157"/>
+        <location filename="../gui/mainwindow.ui" line="305"/>
         <source>Phase</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="162"/>
+        <location filename="../gui/mainwindow.ui" line="79"/>
+        <location filename="../gui/mainwindow.ui" line="310"/>
         <source>Altitude</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="167"/>
+        <location filename="../gui/mainwindow.ui" line="315"/>
         <source>Ground Altitude</source>
         <translation>Altitude du sol</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="172"/>
+        <location filename="../gui/mainwindow.ui" line="320"/>
         <source>Vertical Speed</source>
         <translation>Vitesse verticale</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="177"/>
+        <location filename="../gui/mainwindow.ui" line="84"/>
+        <location filename="../gui/mainwindow.ui" line="325"/>
         <source>Heading</source>
         <translation>Direction</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="182"/>
+        <location filename="../gui/mainwindow.ui" line="74"/>
+        <source>Remote Aircraft Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="89"/>
+        <source>Distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="94"/>
+        <source>Air Speed(IAS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="99"/>
+        <source>Ground Speed(GS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="104"/>
+        <source>Peer IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="109"/>
+        <source>Peer Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="114"/>
+        <source>Ping</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="119"/>
+        <source>RcvCnt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="124"/>
+        <source>SndCnt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="134"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="139"/>
+        <source>none</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="144"/>
+        <source>0 ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="149"/>
+        <source>0 °</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="154"/>
+        <source>0 NM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="159"/>
+        <location filename="../gui/mainwindow.ui" line="164"/>
+        <source>0 Kts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="169"/>
+        <source>255.X.X.255</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="174"/>
+        <source>57435</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="179"/>
+        <source>50 msec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="184"/>
+        <location filename="../gui/mainwindow.ui" line="189"/>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="230"/>
+        <source>&amp;Tchat Zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="268"/>
+        <source>SIM &amp;Variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="330"/>
         <source>Longitude</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="187"/>
+        <location filename="../gui/mainwindow.ui" line="335"/>
         <source>Latitude</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="192"/>
+        <location filename="../gui/mainwindow.ui" line="340"/>
         <source>Ground Speed</source>
         <translation>Vitesse Sol</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="197"/>
+        <location filename="../gui/mainwindow.ui" line="345"/>
         <source>TAS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="202"/>
+        <location filename="../gui/mainwindow.ui" line="350"/>
         <source>Total Fuel Qty</source>
         <translation>Quantité totale de carburant</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="207"/>
+        <location filename="../gui/mainwindow.ui" line="355"/>
         <source>Total Fuel Capacity</source>
         <translation>Capacité totale de carburant</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="212"/>
+        <location filename="../gui/mainwindow.ui" line="360"/>
         <source>Fuel Weight per Gallon</source>
         <translation>Poids du carburant au Gallon</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="217"/>
+        <location filename="../gui/mainwindow.ui" line="365"/>
         <source>Pitch</source>
         <translation>Tangage</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="222"/>
+        <location filename="../gui/mainwindow.ui" line="370"/>
         <source>Bank</source>
         <translation>Roulis</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="227"/>
+        <location filename="../gui/mainwindow.ui" line="375"/>
         <source>G Force</source>
         <translation>Force G</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="232"/>
+        <location filename="../gui/mainwindow.ui" line="380"/>
         <source>Total Weight</source>
         <translation>Poids Total</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="237"/>
+        <location filename="../gui/mainwindow.ui" line="385"/>
         <source>Realism</source>
         <translation>Réalisme</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="242"/>
+        <location filename="../gui/mainwindow.ui" line="390"/>
         <source>Ambient Wind Velocity</source>
         <translation>Vitesse du vent ambient</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="247"/>
+        <location filename="../gui/mainwindow.ui" line="395"/>
         <source>Ambient Wind Direction</source>
         <translation>Direction du vent ambiant</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="252"/>
+        <location filename="../gui/mainwindow.ui" line="400"/>
         <source>Ambiant Precipitation State</source>
         <translation>Etat de la précipitation ambiante</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="257"/>
+        <location filename="../gui/mainwindow.ui" line="405"/>
         <source>Sea level Pressure</source>
         <translation>Pression au niveau de la mer</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="262"/>
+        <location filename="../gui/mainwindow.ui" line="410"/>
         <source>IAS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="267"/>
+        <location filename="../gui/mainwindow.ui" line="415"/>
         <source>Elevator Position</source>
         <translation>Position profondeur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="272"/>
+        <location filename="../gui/mainwindow.ui" line="420"/>
         <source>Aileron Position</source>
         <translation>Position des ailerons</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="277"/>
+        <location filename="../gui/mainwindow.ui" line="425"/>
         <source>Rudder Position</source>
         <translation>Position de la dérive</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="282"/>
+        <location filename="../gui/mainwindow.ui" line="430"/>
         <source>Simulation Rate</source>
         <translation>Vitesse de simulation</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="287"/>
+        <location filename="../gui/mainwindow.ui" line="435"/>
         <source>Exit 0</source>
         <translation>Sortie 0</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="292"/>
+        <location filename="../gui/mainwindow.ui" line="440"/>
         <source>Exit 1</source>
         <translation>Sortie 1</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="297"/>
+        <location filename="../gui/mainwindow.ui" line="445"/>
         <source>Exit 2</source>
         <translation>Sortie 2</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="302"/>
+        <location filename="../gui/mainwindow.ui" line="450"/>
         <source>Exit 3</source>
         <translation>Sortie 3</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="307"/>
+        <location filename="../gui/mainwindow.ui" line="455"/>
         <source>Parking Brake</source>
         <translation>Frein de parking</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="312"/>
+        <location filename="../gui/mainwindow.ui" line="460"/>
         <source>Throttle 0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="317"/>
+        <location filename="../gui/mainwindow.ui" line="465"/>
         <source>Throttle 1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="322"/>
+        <location filename="../gui/mainwindow.ui" line="470"/>
         <source>Throttle 2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="327"/>
+        <location filename="../gui/mainwindow.ui" line="475"/>
         <source>Throttle 3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="332"/>
+        <location filename="../gui/mainwindow.ui" line="480"/>
         <source>Beacon Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="337"/>
+        <location filename="../gui/mainwindow.ui" line="485"/>
         <source>Landing Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="342"/>
+        <location filename="../gui/mainwindow.ui" line="490"/>
         <source>Strobe Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="347"/>
+        <location filename="../gui/mainwindow.ui" line="495"/>
         <source>Nav Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="352"/>
+        <location filename="../gui/mainwindow.ui" line="500"/>
         <source>Reco Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="357"/>
+        <location filename="../gui/mainwindow.ui" line="505"/>
         <source>State Engine 1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="362"/>
+        <location filename="../gui/mainwindow.ui" line="510"/>
         <source>State Engine 2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="367"/>
+        <location filename="../gui/mainwindow.ui" line="515"/>
         <source>State Engine 3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="372"/>
+        <location filename="../gui/mainwindow.ui" line="520"/>
         <source>State Engine 4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="377"/>
+        <location filename="../gui/mainwindow.ui" line="525"/>
         <source>Flaps Index</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="382"/>
+        <location filename="../gui/mainwindow.ui" line="530"/>
         <source>Squawk Mode</source>
         <translation>Mode Transpondeur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="387"/>
+        <location filename="../gui/mainwindow.ui" line="535"/>
         <source>Squawk Code</source>
         <translation>Code Transpondeur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="392"/>
+        <location filename="../gui/mainwindow.ui" line="540"/>
         <source>Data</source>
         <translation>Données</translation>
     </message>
@@ -902,30 +1661,30 @@
         <translation type="vanished">IDLE</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="972"/>
+        <location filename="../gui/mainwindow.ui" line="1120"/>
         <source>Analyzer*</source>
         <translation>Analyzer*</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1007"/>
+        <location filename="../gui/mainwindow.ui" line="1155"/>
         <source>FGManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1027"/>
-        <location filename="../gui/mainwindow.ui" line="1030"/>
+        <location filename="../gui/mainwindow.ui" line="1175"/>
+        <location filename="../gui/mainwindow.ui" line="1178"/>
         <source>Connect to Sim</source>
         <translation>Connection au Simulateur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1040"/>
-        <location filename="../gui/mainwindow.ui" line="1043"/>
+        <location filename="../gui/mainwindow.ui" line="1188"/>
+        <location filename="../gui/mainwindow.ui" line="1191"/>
         <source>Connect to web server</source>
         <extracomment>Connexion au serveur</extracomment>
         <translation>Connection au serveur Web</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1052"/>
+        <location filename="../gui/mainwindow.ui" line="1200"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
@@ -934,61 +1693,340 @@
         <translation type="vanished">Options de Log</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1070"/>
-        <location filename="../gui/mainwindow.ui" line="1073"/>
+        <location filename="../gui/mainwindow.ui" line="1218"/>
+        <location filename="../gui/mainwindow.ui" line="1221"/>
         <source>P2P Settings</source>
         <translation>Paramètres P2P</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1082"/>
+        <location filename="../gui/mainwindow.ui" line="1230"/>
         <source>Sim Type</source>
         <translation>Type de simulateur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1085"/>
+        <location filename="../gui/mainwindow.ui" line="1233"/>
         <source>Choose Sim to use</source>
         <translation>Choisissez le type de simulateur à utiliser</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1061"/>
+        <location filename="../gui/mainwindow.ui" line="1209"/>
         <source>Profil</source>
         <translation>Profil</translation>
     </message>
     <message>
+        <location filename="../gui/mainwindow.cpp" line="90"/>
         <source>Welcome to FFS2Play</source>
-        <translation type="vanished">Bienvenue sur FFS2Play</translation>
+        <translation>Bienvenue sur FFS2Play</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="237"/>
+        <source>Simulator Aircraft Folder</source>
+        <translation type="unfinished">Dossier des appareils du Simulateur</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="237"/>
+        <source>at least one folder is not configured for your simulator. Do you want add the path location now?</source>
+        <translation type="unfinished">au moins un dossier n&apos;est pas configuré pour votre simulateur. Voulez vous en ajouter un maintenant?</translation>
     </message>
     <message>
         <source>FFS2Play Version : </source>
         <translation type="vanished">Version de FFS2Play : </translation>
     </message>
+    <message>
+        <location filename="../gui/mainwindow.GuiEvents.cpp" line="82"/>
+        <source>About</source>
+        <translation type="unfinished">A Propos</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.GuiEvents.cpp" line="263"/>
+        <source>Clear</source>
+        <translation type="unfinished">Vider</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.GuiEvents.cpp" line="264"/>
+        <source>Save</source>
+        <translation type="unfinished">Sauvegarder</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.GuiEvents.cpp" line="286"/>
+        <source>Web File (*.htm *.html)</source>
+        <translation type="unfinished">Fichier Web (*.htm *.html)</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.GuiEvents.cpp" line="296"/>
+        <source>An Error occur while opening </source>
+        <translation type="unfinished">Une erreur est survenue lors de l&apos;ouverture de </translation>
+    </message>
+</context>
+<context>
+    <name>SCAIParser</name>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="63"/>
+        <source>AIMapping : No record was found for </source>
+        <translation type="unfinished">AIMapping : Aucun enregistrement trouvé pour </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="81"/>
+        <source>AIMapping : Path = </source>
+        <translation type="unfinished">AIMapping : Chemin = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="82"/>
+        <source>AIMapping : Editor = </source>
+        <translation type="unfinished">AIMapping : Editeur = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="83"/>
+        <source>AIMapping : ATCModel = </source>
+        <translation type="unfinished">AIMapping : Model ATC = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="84"/>
+        <source>AIMapping : ATCType = </source>
+        <translation type="unfinished">AIMapping : Type ATC = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="85"/>
+        <source>AIMapping : Category = </source>
+        <translation type="unfinished">AIMapping : Categorie = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="86"/>
+        <source>AIMapping : EngineType = </source>
+        <translation type="unfinished">AIMapping : Type de moteurr = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="87"/>
+        <source>AIMapping : CG Height = </source>
+        <translation type="unfinished">AIMapping : Hauteur CG = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="88"/>
+        <source>AIMapping : Pitch = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="101"/>
+        <source>AIMapping : Engine quantity = </source>
+        <translation type="unfinished">AIMapping : Nombre de moteursr = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="111"/>
+        <source>AIMapping : livery found Title = </source>
+        <translation type="unfinished">AIMapping : Variante trouvée Titre = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="165"/>
+        <source>AIMapping : IniParser error = </source>
+        <translation type="unfinished">AIMapping : erreur du IniParser = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="169"/>
+        <source>AIMapping : Error = </source>
+        <translation type="unfinished">AIMapping : Erreur = </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="201"/>
+        <location filename="../disk/scaiparser.cpp" line="224"/>
+        <source>AIMapping : </source>
+        <translation type="unfinished">AIMapping : </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="201"/>
+        <source> Path list is empty, let try to find path installation...</source>
+        <translation type="unfinished"> liste de chemin est vide, essayons de trouver le chemin d&apos;installation...</translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="209"/>
+        <source>AIMapping : Path found for </source>
+        <translation type="unfinished">AIMapping : Chemin trouvé pour </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="217"/>
+        <source>AIMapping : No path found for </source>
+        <translation type="unfinished">AIMapping : Pas de chemin trouvé pour </translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="224"/>
+        <source> Path list already contains some path</source>
+        <translation type="unfinished"> La liste de chemin contient déjà quelques chemins</translation>
+    </message>
+    <message>
+        <location filename="../disk/scaiparser.cpp" line="231"/>
+        <source>AIMapping : Fail to query path list for simulator </source>
+        <translation type="unfinished">AIMapping : Echec de la requête de la liste des chemins pour les simulateurs </translation>
+    </message>
+</context>
+<context>
+    <name>SimConnector</name>
+    <message>
+        <location filename="../sim/simconnector.cpp" line="44"/>
+        <source>Option value = </source>
+        <translation type="unfinished">Valeur d&apos;option = </translation>
+    </message>
 </context>
 <context>
     <name>UDPServer</name>
     <message>
-        <location filename="../net/udpserver.cpp" line="45"/>
+        <location filename="../net/udpserver.cpp" line="43"/>
         <source>constructor</source>
         <translation>Constructeur</translation>
     </message>
     <message>
-        <location filename="../net/udpserver.cpp" line="75"/>
+        <location filename="../net/udpserver.cpp" line="73"/>
         <source>listenning on port </source>
         <translation>écoute sur le port </translation>
     </message>
     <message>
-        <location filename="../net/udpserver.cpp" line="80"/>
+        <location filename="../net/udpserver.cpp" line="78"/>
         <source>Failed to open UDP port </source>
         <translation>Impossible d&apos;ouvrir le port UDP </translation>
     </message>
     <message>
-        <location filename="../net/udpserver.cpp" line="115"/>
+        <location filename="../net/udpserver.cpp" line="113"/>
         <source>receive data from </source>
         <translation>reçu des données de </translation>
     </message>
     <message>
-        <location filename="../net/udpserver.cpp" line="133"/>
+        <location filename="../net/udpserver.cpp" line="131"/>
         <source>send data to </source>
         <translation>envoi de données vers </translation>
+    </message>
+</context>
+<context>
+    <name>XPAIParser</name>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="61"/>
+        <source>AIMapping : No record was found for </source>
+        <translation type="unfinished">AIMapping : Aucun enregistrement trouvé pour </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="87"/>
+        <source>AIMapping : Path = </source>
+        <translation type="unfinished">AIMapping : Chemin = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="88"/>
+        <source>AIMapping : Editor = </source>
+        <translation type="unfinished">AIMapping : Editeur = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="89"/>
+        <source>AIMapping : ATCModel = </source>
+        <translation type="unfinished">AIMapping : Model ATC = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="90"/>
+        <source>AIMapping : ATCType = </source>
+        <translation type="unfinished">AIMapping : Type ATC = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="91"/>
+        <source>AIMapping : Category = </source>
+        <translation type="unfinished">AIMapping : Categorie = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="92"/>
+        <source>AIMapping : EngineType = </source>
+        <translation type="unfinished">AIMapping : Type de moteurr = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="93"/>
+        <source>AIMapping : CG Height = </source>
+        <translation type="unfinished">AIMapping : Hauteur CG = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="94"/>
+        <source>AIMapping : Pitch = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="107"/>
+        <source>AIMapping : Engine quantity = </source>
+        <translation type="unfinished">AIMapping : Nombre de moteursr = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="115"/>
+        <source>AIMapping : livery found Title = </source>
+        <translation type="unfinished">AIMapping : Variante trouvée Titre = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="169"/>
+        <source>AIMapping : IniParser error = </source>
+        <translation type="unfinished">AIMapping : erreur du IniParser = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpaiparser.cpp" line="173"/>
+        <source>AIMapping : Error = </source>
+        <translation type="unfinished">AIMapping : Erreur = </translation>
+    </message>
+</context>
+<context>
+    <name>XPCSLParser</name>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="35"/>
+        <source>AIMapping : No record was found for </source>
+        <translation type="unfinished">AIMapping : Aucun enregistrement trouvé pour </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="57"/>
+        <source>AIMapping : Path = </source>
+        <translation type="unfinished">AIMapping : Chemin = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="58"/>
+        <source>AIMapping : Editor = </source>
+        <translation type="unfinished">AIMapping : Editeur = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="59"/>
+        <source>AIMapping : ATCModel = </source>
+        <translation type="unfinished">AIMapping : Model ATC = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="60"/>
+        <source>AIMapping : ATCType = </source>
+        <translation type="unfinished">AIMapping : Type ATC = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="61"/>
+        <source>AIMapping : ATCAirline = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="62"/>
+        <source>AIMapping : Category = </source>
+        <translation type="unfinished">AIMapping : Categorie = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="63"/>
+        <source>AIMapping : EngineType = </source>
+        <translation type="unfinished">AIMapping : Type de moteurr = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="64"/>
+        <source>AIMapping : CG Height = </source>
+        <translation type="unfinished">AIMapping : Hauteur CG = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="65"/>
+        <source>AIMapping : Pitch = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="70"/>
+        <source>AIMapping : livery found Title = </source>
+        <translation type="unfinished">AIMapping : Variante trouvée Titre = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="123"/>
+        <source>AIMapping : Error = </source>
+        <translation type="unfinished">AIMapping : Erreur = </translation>
+    </message>
+    <message>
+        <location filename="../disk/xpcslparser.cpp" line="175"/>
+        <source>AIMapping : Fail to open file = </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -998,45 +2036,32 @@
         <translation type="vanished">AIMapping : Impossible de créer la table Version</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="222"/>
         <source>AIMapping : Fail to create Version Table : </source>
-        <translation>AIMapping : Echec de la création de la table Version : </translation>
+        <translation type="vanished">AIMapping : Echec de la création de la table Version : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="234"/>
         <source>AIMapping : Fail to create SimPath Table</source>
-        <translation>AIMapping : Impossible de créer la table SimPath</translation>
+        <translation type="vanished">AIMapping : Impossible de créer la table SimPath</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="246"/>
         <source>AIMapping : Fail to create Aircrafts Table</source>
-        <translation>AIMapping : Impossible de créer la table Aircrafts</translation>
+        <translation type="vanished">AIMapping : Impossible de créer la table Aircrafts</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="258"/>
         <source>AIMapping : Fail to create Replacement Table</source>
-        <translation>AIMapping : Impossible de créer la table Replacement</translation>
+        <translation type="vanished">AIMapping : Impossible de créer la table Replacement</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="303"/>
-        <source>AIMapping : Fail to query Version Table : </source>
-        <translatorcomment>AIMapping : Echec de la requête sur la table Version.</translatorcomment>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../singleton/aimapping.cpp" line="338"/>
         <source>Start updating aircraft database...</source>
-        <translation>Début de la mise à jour de la base de donée des avions...</translation>
+        <translation type="vanished">Début de la mise à jour de la base de donée des avions...</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="366"/>
         <source>AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion</source>
-        <translation>AIMapping : Impossible de démarrer le thread de mise à jour des chemins objets à cause de la connexion SQLITE</translation>
+        <translation type="vanished">AIMapping : Impossible de démarrer le thread de mise à jour des chemins objets à cause de la connexion SQLITE</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="371"/>
         <source>End of update : </source>
-        <translation>Fin de la mise à jour : </translation>
+        <translation type="vanished">Fin de la mise à jour : </translation>
     </message>
     <message>
         <source> aircrafts added and </source>
@@ -1047,173 +2072,132 @@
         <translation type="vanished"> mis à jour.</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="211"/>
         <source>AIMapping : open database : </source>
-        <translation>AIMapping : ouverture de la base de donnée : </translation>
+        <translation type="vanished">AIMapping : ouverture de la base de donnée : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="372"/>
         <source> aircrafts added, </source>
-        <translation> appareil ajouté, </translation>
+        <translation type="vanished"> appareil ajouté, </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="373"/>
         <source> updated and </source>
-        <translation> mis à jout et </translation>
+        <translation type="vanished"> mis à jout et </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="373"/>
         <source> deleted.</source>
-        <translation> supprimés.</translation>
+        <translation type="vanished"> supprimés.</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="396"/>
         <source>AIMapping : No record was found for </source>
-        <translation>AIMapping : Aucun enregistrement trouvé pour </translation>
+        <translation type="vanished">AIMapping : Aucun enregistrement trouvé pour </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="435"/>
         <source>AIMapping : Path = </source>
-        <translation>AIMapping : Chemin = </translation>
+        <translation type="vanished">AIMapping : Chemin = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="436"/>
         <source>AIMapping : Editor = </source>
-        <translation>AIMapping : Editeur = </translation>
+        <translation type="vanished">AIMapping : Editeur = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="437"/>
         <source>AIMapping : ATCModel = </source>
-        <translation>AIMapping : Model ATC = </translation>
+        <translation type="vanished">AIMapping : Model ATC = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="438"/>
         <source>AIMapping : ATCType = </source>
-        <translation>AIMapping : Type ATC = </translation>
+        <translation type="vanished">AIMapping : Type ATC = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="439"/>
         <source>AIMapping : Category = </source>
-        <translation>AIMapping : Categorie = </translation>
+        <translation type="vanished">AIMapping : Categorie = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="440"/>
         <source>AIMapping : EngineType = </source>
-        <translation>AIMapping : Type de moteurr = </translation>
+        <translation type="vanished">AIMapping : Type de moteurr = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="441"/>
         <source>AIMapping : CG Height = </source>
-        <translation>AIMapping : Hauteur CG = </translation>
+        <translation type="vanished">AIMapping : Hauteur CG = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="442"/>
-        <source>AIMapping : Pitch = </source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../singleton/aimapping.cpp" line="455"/>
         <source>AIMapping : Engine quantity = </source>
-        <translation>AIMapping : Nombre de moteursr = </translation>
+        <translation type="vanished">AIMapping : Nombre de moteursr = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="466"/>
         <source>AIMapping : livery found Title = </source>
-        <translation>AIMapping : Variante trouvée Titre = </translation>
+        <translation type="vanished">AIMapping : Variante trouvée Titre = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="521"/>
         <source>AIMapping : IniParser error = </source>
-        <translation>AIMapping : erreur du IniParser = </translation>
+        <translation type="vanished">AIMapping : erreur du IniParser = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="525"/>
         <source>AIMapping : Error = </source>
-        <translation>AIMapping : Erreur = </translation>
+        <translation type="vanished">AIMapping : Erreur = </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="559"/>
         <source>AIMapping : Local rule found in DB : </source>
-        <translation>AIMapping : Règle locale trouvée dans la DB : </translation>
+        <translation type="vanished">AIMapping : Règle locale trouvée dans la DB : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="559"/>
         <source> replaced by </source>
-        <translation> remplacé par </translation>
+        <translation type="vanished"> remplacé par </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="578"/>
         <source>AIMapping : Title Match found in database : </source>
-        <translation>AIMapping : Correspondance de Titre trouvé dans la base de donnée : </translation>
+        <translation type="vanished">AIMapping : Correspondance de Titre trouvé dans la base de donnée : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="595"/>
         <source>AIMapping : ATC Model</source>
-        <translation>AIMapping : Modèle ATC</translation>
+        <translation type="vanished">AIMapping : Modèle ATC</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="595"/>
         <source> Match found in database : </source>
-        <translation> Correspondance trouvée dans la base de donnée.: </translation>
+        <translation type="vanished"> Correspondance trouvée dans la base de donnée.: </translation>
     </message>
     <message>
         <source>AIMapping : ATC Model Match found in database : </source>
         <translation type="vanished">AIMapping : Correspondance du Model ATC trouvé dans la base de donnée : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="602"/>
-        <location filename="../singleton/aimapping.cpp" line="625"/>
-        <location filename="../singleton/aimapping.cpp" line="634"/>
         <source>AIMapping : Fail to query database.</source>
-        <translation>AIMapping : Echec de la requête sur la base de donnée.</translation>
+        <translation type="vanished">AIMapping : Echec de la requête sur la base de donnée.</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="142"/>
-        <location filename="../singleton/aimapping.cpp" line="863"/>
-        <location filename="../singleton/aimapping.cpp" line="945"/>
         <source>AIMapping : Fail to query path list for simulator </source>
-        <translation>AIMapping : Echec de la requête de la liste des chemins pour les simulateurs </translation>
+        <translation type="vanished">AIMapping : Echec de la requête de la liste des chemins pour les simulateurs </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="112"/>
-        <location filename="../singleton/aimapping.cpp" line="135"/>
         <source>AIMapping : </source>
-        <translation>AIMapping : </translation>
+        <translation type="vanished">AIMapping : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="112"/>
         <source> Path list is empty, let try to find path installation...</source>
-        <translation> liste de chemin est vide, essayons de trouver le chemin d&apos;installation...</translation>
+        <translation type="vanished"> liste de chemin est vide, essayons de trouver le chemin d&apos;installation...</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="120"/>
         <source>AIMapping : Path found for </source>
-        <translation>AIMapping : Chemin trouvé pour </translation>
+        <translation type="vanished">AIMapping : Chemin trouvé pour </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="128"/>
         <source>AIMapping : No path found for </source>
-        <translation>AIMapping : Pas de chemin trouvé pour </translation>
+        <translation type="vanished">AIMapping : Pas de chemin trouvé pour </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="135"/>
         <source> Path list already contains some path</source>
-        <translation> La liste de chemin contient déjà quelques chemins</translation>
+        <translation type="vanished"> La liste de chemin contient déjà quelques chemins</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="894"/>
         <source>AIMapping : Start of automatic cleaning...</source>
-        <translation>AIMapping : Début du nettoyage automatique...</translation>
+        <translation type="vanished">AIMapping : Début du nettoyage automatique...</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="908"/>
         <source>AIMapping : deleting file </source>
-        <translation>AIMapping : suppression du fichier </translation>
+        <translation type="vanished">AIMapping : suppression du fichier </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="908"/>
         <source> from DB</source>
-        <translation> de la DB</translation>
+        <translation type="vanished"> de la DB</translation>
     </message>
     <message>
         <source>AIMapping : End of automatic cleaning. </source>
@@ -1224,517 +2208,414 @@
         <translation type="vanished"> sur </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="919"/>
         <source> entry(ies) removed</source>
-        <translation> entrée(s) supprimée(s)</translation>
+        <translation type="vanished"> entrée(s) supprimée(s)</translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="919"/>
         <source>AIMapping : End of automatic cleaning.: </source>
-        <translation>AIMapping : Fin du nettoyage automatique : </translation>
+        <translation type="vanished">AIMapping : Fin du nettoyage automatique : </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="919"/>
         <source> over </source>
-        <translation> sur </translation>
+        <translation type="vanished"> sur </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="970"/>
         <source>AIMapping : Fail to add path </source>
-        <translation>AIMapping : Impossible d&apos;ajouter le chemin du répertoire </translation>
+        <translation type="vanished">AIMapping : Impossible d&apos;ajouter le chemin du répertoire </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="970"/>
-        <location filename="../singleton/aimapping.cpp" line="992"/>
         <source> for simulator </source>
-        <translation> pour le simulateur </translation>
+        <translation type="vanished"> pour le simulateur </translation>
     </message>
     <message>
-        <location filename="../singleton/aimapping.cpp" line="992"/>
         <source>AIMapping : Fail to remove path </source>
-        <translation>AIMapping : Impossible de supprimer le répertoire </translation>
+        <translation type="vanished">AIMapping : Impossible de supprimer le répertoire </translation>
     </message>
 </context>
 <context>
     <name>ffs2play::Analyzer</name>
     <message>
-        <location filename="../singleton/analyzer.cpp" line="517"/>
         <source>Change Phase = </source>
-        <translation>Change de Phase = </translation>
+        <translation type="vanished">Change de Phase = </translation>
     </message>
 </context>
 <context>
     <name>ffs2play::CFGManager</name>
     <message>
-        <location filename="../sim/fgmanager.cpp" line="51"/>
         <source>FlightGear Module loaded</source>
-        <translation>Module FlightGear chargé</translation>
+        <translation type="vanished">Module FlightGear chargé</translation>
     </message>
     <message>
-        <location filename="../sim/fgmanager.cpp" line="61"/>
         <source>FlightGear Module unloaded</source>
-        <translation>Module FlightGear déchargé</translation>
+        <translation type="vanished">Module FlightGear déchargé</translation>
     </message>
     <message>
-        <location filename="../sim/fgmanager.cpp" line="71"/>
         <source>Connecting to FlightGear ...</source>
-        <translation>Connexion à FlightGear ...</translation>
+        <translation type="vanished">Connexion à FlightGear ...</translation>
     </message>
     <message>
-        <location filename="../sim/fgmanager.cpp" line="77"/>
         <source>Connected to FlightGear.</source>
-        <translation>Connecté à FlightGear.</translation>
+        <translation type="vanished">Connecté à FlightGear.</translation>
     </message>
     <message>
-        <location filename="../sim/fgmanager.cpp" line="94"/>
         <source>Disconnected from FlightGear.</source>
-        <translation>Déconnecté de FlightGear.</translation>
+        <translation type="vanished">Déconnecté de FlightGear.</translation>
     </message>
     <message>
-        <location filename="../sim/fgmanager.cpp" line="161"/>
         <source>Send freezeAI</source>
-        <translation>Envoi d&apos;un freezeAI</translation>
-    </message>
-    <message>
-        <location filename="../sim/fgmanager.cpp" line="172"/>
-        <source>Send PING</source>
-        <translation>Envoi d&apos;un PING</translation>
-    </message>
-    <message>
-        <location filename="../sim/fgmanager.cpp" line="191"/>
-        <source>Send DATA</source>
-        <translation>Envoi d&apos;un DATA</translation>
-    </message>
-    <message>
-        <location filename="../sim/fgmanager.cpp" line="230"/>
-        <source>Received Data from FG : Model = </source>
-        <translation>Reçu des données de FG : Model = </translation>
-    </message>
-</context>
-<context>
-    <name>ffs2play::CPeer</name>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="79"/>
-        <source> go online</source>
-        <translation> est connecté</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="125"/>
-        <source> UDP Datagram dropped : too late</source>
-        <translation> Datagramme UDP rejeté : trop tardif</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="140"/>
-        <source> UDP Datagram missing quantity = </source>
-        <translation> Quantité de datagrammes UDP manquant = </translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="149"/>
-        <source> UDP Datagram dropped : too late since </source>
-        <translation> Datagramme UDP rejeté : en retard de </translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="172"/>
-        <source> received version number = </source>
-        <translation> reçu version numéro = </translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="225"/>
-        <source> Receive Object_ID = </source>
-        <translation> Reçu Object_ID = </translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="231"/>
-        <source> Receive an unwanted object</source>
-        <translation> Reçu un objet non désiré</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="248"/>
-        <source> Receive a removed Object from sim ID = </source>
-        <translation> Reçu un objet supprimé du simulateur ID = </translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="266"/>
-        <source> Receive a SimClosed Event</source>
-        <translation> Reçu un événement SimClosed</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="314"/>
-        <source> Build AI Object</source>
-        <translation> Construction de l&apos;objet AI</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="321"/>
-        <source> Destruct AI Object Visible=</source>
-        <translation> Destruction de l&apos;objet AI visible=</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="321"/>
-        <source> Spawnable = </source>
-        <translation> Affichable = </translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="339"/>
-        <source> Simulator have not created the requested AI, Let&apos;s try with simple object</source>
-        <translation> Le simulateur n&apos;a pas crée l&apos;AI demandé, essayons avec un objet simple</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="357"/>
-        <source> Simulator have not created the requested AI, we are trying with default simulator aircraft</source>
-        <translation> Le simulateur n&apos;a pas crée l&apos;AI demandé, nous essayons avec un appareil par défaut</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Event.cpp" line="365"/>
-        <source> Simulator has been created the requested AI</source>
-        <translation> Le simulateur a crée l&apos;AI demandé</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Requests.cpp" line="94"/>
-        <source> go offline = Timeout</source>
-        <translation> passage hors ligne = Timeout</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.Requests.cpp" line="96"/>
-        <source> go offline = Diconnected</source>
-        <translation> passage hors ligne = Déconnecté</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.cpp" line="144"/>
-        <source> is connected on P2P Network</source>
-        <translation> est connecté sur le réseau P2P</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.cpp" line="173"/>
-        <source> leave from P2P Network</source>
-        <translation> quitte le réseau P2P</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.cpp" line="190"/>
-        <source> Local request for Title solve = </source>
-        <translation> Requête locale pour résoudre le Titre = </translation>
-    </message>
-    <message>
-        <location filename="../net/peer.cpp" line="191"/>
-        <source> , Model = </source>
-        <translation> , Model = </translation>
-    </message>
-    <message>
-        <source> the local request has find a solution</source>
-        <translation type="vanished"> la requête locale a trouvé une solution</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.cpp" line="207"/>
-        <source> Remove aircraft</source>
-        <translation> Supression de l&apos;avion</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.cpp" line="210"/>
-        <source> Error during removing of the aircraft</source>
-        <translation> Erreur pendant la supression de l&apos;avion</translation>
-    </message>
-    <message>
-        <location filename="../net/peer.cpp" line="231"/>
-        <source> Requesting creation of aircraft with Title = </source>
-        <translation> Demande de création d&apos;un avion avec le Titre = </translation>
-    </message>
-</context>
-<context>
-    <name>ffs2play::CSCManager</name>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="47"/>
-        <source>FSX/Prepar3D Module loaded</source>
-        <translation>Module FSX/Prepar3D chargé</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="56"/>
-        <source>FSX/Prepar3D Module unloaded</source>
-        <translation>Module FSX/Prepar3D déchargé</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="370"/>
-        <source>Connected to FS.</source>
-        <translation>Connecté au simulateur.</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="69"/>
-        <source>Connexion to FS failed.</source>
-        <translation>La connexion au simulateur a échoué.</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="84"/>
-        <source>Disconnected from FS.</source>
-        <translation>Déconnecté du simulateur.</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="193"/>
-        <source>Get an unknown Event ID</source>
-        <translation>Reçu un code évènement inconnu</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="365"/>
-        <source>Connected to simulator.</source>
-        <translation>Connecté au simulateur.</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="381"/>
-        <source>Receive SIMCONNECT_RECV event</source>
-        <translation>Reçu un SIMCONNECT_RECV</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="394"/>
-        <source>Receive SIMCONNECT_RECV_SYSTEM_STATE event</source>
-        <translation>Reçu un événement SIMCONNECT_RECV_SYSTEM_STATE</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="432"/>
-        <source>Get a SimConnect exception = </source>
-        <translation>Reçu une exception SimConnect = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="433"/>
-        <source> Related method invoked = </source>
-        <translation> Methode en relation appelée = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="444"/>
-        <source>Receive SIMCONNECT_RECV_EVENT event</source>
-        <translation>Reçu un événement SIMCONNECT_RECV_EVENT</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="497"/>
-        <source>OnRecvSimObjectData Periodic</source>
-        <translation>OnRecvSimObjectData Periodic</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="551"/>
-        <source>OnRecvSimObjectData AIUpdate ObjectID = </source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="689"/>
-        <source>Object as been created type = </source>
-        <translation>L&apos;objet a été créée type = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="690"/>
-        <location filename="../sim/scmanager.cpp" line="699"/>
-        <source> with n°</source>
-        <translation> avec le n°</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="698"/>
-        <source>Object as been removed type = </source>
-        <translation>L&apos;objet a été supprimé avec le type = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="719"/>
-        <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID Request = </source>
-        <translation>Reçu une requête SIMCONNECT_RECV_ASSIGNED_OBJECT_ID = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="720"/>
-        <source> , Name = </source>
-        <translation> , Nom = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="721"/>
-        <source> , Object_ID = </source>
-        <translation> , Object_ID = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="739"/>
-        <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID with unknown request ID  = </source>
-        <translation>Reçu un SIMCONNECT_RECV_ASSIGNED_OBJECT_ID avec un request ID inconnu = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="770"/>
-        <source>Send Text Failed</source>
-        <translation>L&apos;envoi du text a échoué</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="788"/>
-        <source>Create_AI Title = </source>
-        <translation>Create_AI Titre = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="788"/>
-        <source> ; Tail = </source>
-        <translation> ; Tail = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="788"/>
-        <source> ; NonAIObject=</source>
-        <translation> ; NonAIObject=</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="832"/>
-        <source>removeAI called object ID = </source>
-        <translation>removeAI objectID appelé = </translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="841"/>
-        <source>Delete Aircrfaft failed</source>
-        <translation>Supression de l&apos;appareil a échouée</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="854"/>
-        <source>updateAI called</source>
-        <translation>updateAI appelé</translation>
-    </message>
-    <message>
-        <location filename="../sim/scmanager.cpp" line="906"/>
-        <source>freezeAI called</source>
-        <translation>freezeAI appelé</translation>
-    </message>
-</context>
-<context>
-    <name>ffs2play::CXPManager</name>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="58"/>
-        <source>XPlane Module loaded</source>
-        <translation>Le module XPlane a été chargé</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="68"/>
-        <source>XPlane Module unloaded</source>
-        <translation>Le module XPlane a été déchargé</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="79"/>
-        <source>Connecting to XPlane ...</source>
-        <translation>Connexion à X-Plane ...</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="96"/>
-        <source>Disconnected from XPlane.</source>
-        <translation>Déconnexion de X-Plane.</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="126"/>
-        <source>Send scrolling text : </source>
-        <translation>Evoi du texte défilant : </translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="134"/>
-        <source>Hexa : </source>
-        <translation>Hexa : </translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="152"/>
-        <source>Send createAI</source>
-        <translation>Envoi d&apos;un createAI</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="176"/>
-        <source>Send removeAI</source>
-        <translation>Envoi d&apos;un removeAI</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="202"/>
-        <source>Send updateAI</source>
-        <translation>Envoi d&apos;un UpdateAI</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="226"/>
-        <source>Send freezeAI</source>
-        <translation>Envoi d&apos;un freezeAI</translation>
+        <translation type="vanished">Envoi d&apos;un freezeAI</translation>
     </message>
     <message>
         <source>Send PING</source>
         <translation type="vanished">Envoi d&apos;un PING</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="237"/>
-        <source>Send PING Option=</source>
-        <translation>Envoi PING avec Option=</translation>
-    </message>
-    <message>
-        <location filename="../sim/xpmanager.cpp" line="257"/>
         <source>Send DATA</source>
-        <translation>Envoi d&apos;un DATA</translation>
+        <translation type="vanished">Envoi d&apos;un DATA</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="309"/>
+        <source>Received Data from FG : Model = </source>
+        <translation type="vanished">Reçu des données de FG : Model = </translation>
+    </message>
+</context>
+<context>
+    <name>ffs2play::CPeer</name>
+    <message>
+        <source> go online</source>
+        <translation type="vanished"> est connecté</translation>
+    </message>
+    <message>
+        <source> UDP Datagram dropped : too late</source>
+        <translation type="vanished"> Datagramme UDP rejeté : trop tardif</translation>
+    </message>
+    <message>
+        <source> UDP Datagram missing quantity = </source>
+        <translation type="vanished"> Quantité de datagrammes UDP manquant = </translation>
+    </message>
+    <message>
+        <source> UDP Datagram dropped : too late since </source>
+        <translation type="vanished"> Datagramme UDP rejeté : en retard de </translation>
+    </message>
+    <message>
+        <source> received version number = </source>
+        <translation type="vanished"> reçu version numéro = </translation>
+    </message>
+    <message>
+        <source> Receive Object_ID = </source>
+        <translation type="vanished"> Reçu Object_ID = </translation>
+    </message>
+    <message>
+        <source> Receive an unwanted object</source>
+        <translation type="vanished"> Reçu un objet non désiré</translation>
+    </message>
+    <message>
+        <source> Receive a removed Object from sim ID = </source>
+        <translation type="vanished"> Reçu un objet supprimé du simulateur ID = </translation>
+    </message>
+    <message>
+        <source> Receive a SimClosed Event</source>
+        <translation type="vanished"> Reçu un événement SimClosed</translation>
+    </message>
+    <message>
+        <source> Build AI Object</source>
+        <translation type="vanished"> Construction de l&apos;objet AI</translation>
+    </message>
+    <message>
+        <source> Destruct AI Object Visible=</source>
+        <translation type="vanished"> Destruction de l&apos;objet AI visible=</translation>
+    </message>
+    <message>
+        <source> Spawnable = </source>
+        <translation type="vanished"> Affichable = </translation>
+    </message>
+    <message>
+        <source> Simulator have not created the requested AI, Let&apos;s try with simple object</source>
+        <translation type="vanished"> Le simulateur n&apos;a pas crée l&apos;AI demandé, essayons avec un objet simple</translation>
+    </message>
+    <message>
+        <source> Simulator have not created the requested AI, we are trying with default simulator aircraft</source>
+        <translation type="vanished"> Le simulateur n&apos;a pas crée l&apos;AI demandé, nous essayons avec un appareil par défaut</translation>
+    </message>
+    <message>
+        <source> Simulator has been created the requested AI</source>
+        <translation type="vanished"> Le simulateur a crée l&apos;AI demandé</translation>
+    </message>
+    <message>
+        <source> go offline = Timeout</source>
+        <translation type="vanished"> passage hors ligne = Timeout</translation>
+    </message>
+    <message>
+        <source> go offline = Diconnected</source>
+        <translation type="vanished"> passage hors ligne = Déconnecté</translation>
+    </message>
+    <message>
+        <source> is connected on P2P Network</source>
+        <translation type="vanished"> est connecté sur le réseau P2P</translation>
+    </message>
+    <message>
+        <source> leave from P2P Network</source>
+        <translation type="vanished"> quitte le réseau P2P</translation>
+    </message>
+    <message>
+        <source> Local request for Title solve = </source>
+        <translation type="vanished"> Requête locale pour résoudre le Titre = </translation>
+    </message>
+    <message>
+        <source> , Model = </source>
+        <translation type="vanished"> , Model = </translation>
+    </message>
+    <message>
+        <source> the local request has find a solution</source>
+        <translation type="vanished"> la requête locale a trouvé une solution</translation>
+    </message>
+    <message>
+        <source> Remove aircraft</source>
+        <translation type="vanished"> Supression de l&apos;avion</translation>
+    </message>
+    <message>
+        <source> Error during removing of the aircraft</source>
+        <translation type="vanished"> Erreur pendant la supression de l&apos;avion</translation>
+    </message>
+    <message>
+        <source> Requesting creation of aircraft with Title = </source>
+        <translation type="vanished"> Demande de création d&apos;un avion avec le Titre = </translation>
+    </message>
+</context>
+<context>
+    <name>ffs2play::CSCManager</name>
+    <message>
+        <source>FSX/Prepar3D Module loaded</source>
+        <translation type="vanished">Module FSX/Prepar3D chargé</translation>
+    </message>
+    <message>
+        <source>FSX/Prepar3D Module unloaded</source>
+        <translation type="vanished">Module FSX/Prepar3D déchargé</translation>
+    </message>
+    <message>
+        <source>Connected to FS.</source>
+        <translation type="vanished">Connecté au simulateur.</translation>
+    </message>
+    <message>
+        <source>Connexion to FS failed.</source>
+        <translation type="vanished">La connexion au simulateur a échoué.</translation>
+    </message>
+    <message>
+        <source>Disconnected from FS.</source>
+        <translation type="vanished">Déconnecté du simulateur.</translation>
+    </message>
+    <message>
+        <source>Get an unknown Event ID</source>
+        <translation type="vanished">Reçu un code évènement inconnu</translation>
+    </message>
+    <message>
+        <source>Connected to simulator.</source>
+        <translation type="vanished">Connecté au simulateur.</translation>
+    </message>
+    <message>
+        <source>Receive SIMCONNECT_RECV event</source>
+        <translation type="vanished">Reçu un SIMCONNECT_RECV</translation>
+    </message>
+    <message>
+        <source>Receive SIMCONNECT_RECV_SYSTEM_STATE event</source>
+        <translation type="vanished">Reçu un événement SIMCONNECT_RECV_SYSTEM_STATE</translation>
+    </message>
+    <message>
+        <source>Get a SimConnect exception = </source>
+        <translation type="vanished">Reçu une exception SimConnect = </translation>
+    </message>
+    <message>
+        <source> Related method invoked = </source>
+        <translation type="vanished"> Methode en relation appelée = </translation>
+    </message>
+    <message>
+        <source>Receive SIMCONNECT_RECV_EVENT event</source>
+        <translation type="vanished">Reçu un événement SIMCONNECT_RECV_EVENT</translation>
+    </message>
+    <message>
+        <source>OnRecvSimObjectData Periodic</source>
+        <translation type="vanished">OnRecvSimObjectData Periodic</translation>
+    </message>
+    <message>
+        <source>Object as been created type = </source>
+        <translation type="vanished">L&apos;objet a été créée type = </translation>
+    </message>
+    <message>
+        <source> with n°</source>
+        <translation type="vanished"> avec le n°</translation>
+    </message>
+    <message>
+        <source>Object as been removed type = </source>
+        <translation type="vanished">L&apos;objet a été supprimé avec le type = </translation>
+    </message>
+    <message>
+        <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID Request = </source>
+        <translation type="vanished">Reçu une requête SIMCONNECT_RECV_ASSIGNED_OBJECT_ID = </translation>
+    </message>
+    <message>
+        <source> , Name = </source>
+        <translation type="vanished"> , Nom = </translation>
+    </message>
+    <message>
+        <source> , Object_ID = </source>
+        <translation type="vanished"> , Object_ID = </translation>
+    </message>
+    <message>
+        <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID with unknown request ID  = </source>
+        <translation type="vanished">Reçu un SIMCONNECT_RECV_ASSIGNED_OBJECT_ID avec un request ID inconnu = </translation>
+    </message>
+    <message>
+        <source>Send Text Failed</source>
+        <translation type="vanished">L&apos;envoi du text a échoué</translation>
+    </message>
+    <message>
+        <source>Create_AI Title = </source>
+        <translation type="vanished">Create_AI Titre = </translation>
+    </message>
+    <message>
+        <source> ; Tail = </source>
+        <translation type="vanished"> ; Tail = </translation>
+    </message>
+    <message>
+        <source> ; NonAIObject=</source>
+        <translation type="vanished"> ; NonAIObject=</translation>
+    </message>
+    <message>
+        <source>removeAI called object ID = </source>
+        <translation type="vanished">removeAI objectID appelé = </translation>
+    </message>
+    <message>
+        <source>Delete Aircrfaft failed</source>
+        <translation type="vanished">Supression de l&apos;appareil a échouée</translation>
+    </message>
+    <message>
+        <source>updateAI called</source>
+        <translation type="vanished">updateAI appelé</translation>
+    </message>
+    <message>
+        <source>freezeAI called</source>
+        <translation type="vanished">freezeAI appelé</translation>
+    </message>
+</context>
+<context>
+    <name>ffs2play::CXPManager</name>
+    <message>
+        <source>XPlane Module loaded</source>
+        <translation type="vanished">Le module XPlane a été chargé</translation>
+    </message>
+    <message>
+        <source>XPlane Module unloaded</source>
+        <translation type="vanished">Le module XPlane a été déchargé</translation>
+    </message>
+    <message>
+        <source>Connecting to XPlane ...</source>
+        <translation type="vanished">Connexion à X-Plane ...</translation>
+    </message>
+    <message>
+        <source>Disconnected from XPlane.</source>
+        <translation type="vanished">Déconnexion de X-Plane.</translation>
+    </message>
+    <message>
+        <source>Send scrolling text : </source>
+        <translation type="vanished">Evoi du texte défilant : </translation>
+    </message>
+    <message>
+        <source>Hexa : </source>
+        <translation type="vanished">Hexa : </translation>
+    </message>
+    <message>
+        <source>Send createAI</source>
+        <translation type="vanished">Envoi d&apos;un createAI</translation>
+    </message>
+    <message>
+        <source>Send removeAI</source>
+        <translation type="vanished">Envoi d&apos;un removeAI</translation>
+    </message>
+    <message>
+        <source>Send updateAI</source>
+        <translation type="vanished">Envoi d&apos;un UpdateAI</translation>
+    </message>
+    <message>
+        <source>Send freezeAI</source>
+        <translation type="vanished">Envoi d&apos;un freezeAI</translation>
+    </message>
+    <message>
+        <source>Send PING</source>
+        <translation type="vanished">Envoi d&apos;un PING</translation>
+    </message>
+    <message>
+        <source>Send PING Option=</source>
+        <translation type="vanished">Envoi PING avec Option=</translation>
+    </message>
+    <message>
+        <source>Send DATA</source>
+        <translation type="vanished">Envoi d&apos;un DATA</translation>
+    </message>
+    <message>
         <source>Connected to XPlane.</source>
-        <translation>Connecté à X-Plane.</translation>
+        <translation type="vanished">Connecté à X-Plane.</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="321"/>
         <source>Plugin Version Major = </source>
-        <translation>Version Plugin Majeur = </translation>
+        <translation type="vanished">Version Plugin Majeur = </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="322"/>
         <source> Minor = </source>
-        <translation> Mineur = </translation>
+        <translation type="vanished"> Mineur = </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="323"/>
         <source> Build = </source>
-        <translation> Build = </translation>
+        <translation type="vanished"> Build = </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="341"/>
         <source>Receive DATA_SEND event</source>
-        <translation>Reçu un événement DATA_SEND</translation>
+        <translation type="vanished">Reçu un événement DATA_SEND</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="348"/>
         <source>DataSend Error : </source>
-        <translation>Erreur DataSend : </translation>
+        <translation type="vanished">Erreur DataSend : </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="357"/>
         <source>Receive ADD_PEER </source>
-        <translation>Reçu un ADD_PEER </translation>
+        <translation type="vanished">Reçu un ADD_PEER </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="370"/>
         <source>Receive ADD_PEER event, failed to create object</source>
-        <translation>Réception d&apos; un événement ADD_PEER, impossible de créer l&apos;objet</translation>
+        <translation type="vanished">Réception d&apos; un événement ADD_PEER, impossible de créer l&apos;objet</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="375"/>
         <source>Receive ADD_PEER event, object ID=</source>
-        <translation>Reçu un événement ADD_PEER, object ID =</translation>
+        <translation type="vanished">Reçu un événement ADD_PEER, object ID =</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="376"/>
         <source>callsign=</source>
-        <translation>pseudo=</translation>
+        <translation type="vanished">pseudo=</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="385"/>
         <source>ADD_PEER Error : </source>
-        <translation>Erreur ADD_PEER : </translation>
+        <translation type="vanished">Erreur ADD_PEER : </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="399"/>
         <source>Receive DEL_PEER event, object ID=</source>
-        <translation>Reçu un événement DEL_PEER, object ID=</translation>
+        <translation type="vanished">Reçu un événement DEL_PEER, object ID=</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="407"/>
         <source>DEL_PEER Error : </source>
-        <translation>Erreur DEL_PEER : </translation>
+        <translation type="vanished">Erreur DEL_PEER : </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="421"/>
         <source>unknown code = </source>
-        <translation>cod inconnu = </translation>
+        <translation type="vanished">cod inconnu = </translation>
     </message>
 </context>
 <context>
     <name>ffs2play::DialogP2P</name>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="448"/>
         <source>Warning</source>
-        <translation>Attention</translation>
+        <translation type="vanished">Attention</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="449"/>
         <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
-        <translation>Cette fonction efface toute la base de donnée des AI, êtes vous sûre de vouloir continuer?</translation>
+        <translation type="vanished">Cette fonction efface toute la base de donnée des AI, êtes vous sûre de vouloir continuer?</translation>
     </message>
     <message>
         <source>There is some modifications on selected profil. Do you want apply them?</source>
@@ -1744,60 +2625,50 @@
 <context>
     <name>ffs2play::DialogProfils</name>
     <message>
-        <location filename="../gui/dialogprofils.cpp" line="148"/>
         <source>Warning</source>
-        <translation>Attention</translation>
+        <translation type="vanished">Attention</translation>
     </message>
     <message>
-        <location filename="../gui/dialogprofils.cpp" line="149"/>
         <source>There is some modifications on selected profil. Do you want apply them?</source>
-        <translation>Il y a des modifications en cours dans le profil sélectionné. souhaitez vous les appliquer?</translation>
+        <translation type="vanished">Il y a des modifications en cours dans le profil sélectionné. souhaitez vous les appliquer?</translation>
     </message>
 </context>
 <context>
     <name>ffs2play::IniParser</name>
     <message>
-        <location filename="../tools/iniparser.cpp" line="98"/>
         <source>Unable to open </source>
-        <translation>Impossible d&apos;ouvrir </translation>
+        <translation type="vanished">Impossible d&apos;ouvrir </translation>
     </message>
 </context>
 <context>
     <name>ffs2play::MainWindow</name>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="90"/>
         <source>Welcome to FFS2Play</source>
-        <translation>Bienvenue sur FFS2Play</translation>
+        <translation type="vanished">Bienvenue sur FFS2Play</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="237"/>
         <source>Simulator Aircraft Folder</source>
-        <translation>Dossier des appareils du Simulateur</translation>
+        <translation type="vanished">Dossier des appareils du Simulateur</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="237"/>
         <source>at least one folder is not configured for your simulator. Do you want add the path location now?</source>
-        <translation>au moins un dossier n&apos;est pas configuré pour votre simulateur. Voulez vous en ajouter un maintenant?</translation>
+        <translation type="vanished">au moins un dossier n&apos;est pas configuré pour votre simulateur. Voulez vous en ajouter un maintenant?</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.GuiEvents.cpp" line="83"/>
         <source>About</source>
-        <translation>A Propos</translation>
+        <translation type="vanished">A Propos</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.GuiEvents.cpp" line="264"/>
         <source>Clear</source>
-        <translation>Vider</translation>
+        <translation type="vanished">Vider</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.GuiEvents.cpp" line="265"/>
         <source>Save</source>
-        <translation>Sauvegarder</translation>
+        <translation type="vanished">Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.GuiEvents.cpp" line="287"/>
         <source>Web File (*.htm *.html)</source>
-        <translation>Fichier Web (*.htm *.html)</translation>
+        <translation type="vanished">Fichier Web (*.htm *.html)</translation>
     </message>
     <message>
         <source>Touch Speed = </source>
@@ -1808,25 +2679,30 @@
         <translation type="vanished">Fichier Web (*.htm *.html)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.GuiEvents.cpp" line="297"/>
         <source>An Error occur while opening </source>
-        <translation>Une erreur est survenue lors de l&apos;ouverture de </translation>
+        <translation type="vanished">Une erreur est survenue lors de l&apos;ouverture de </translation>
     </message>
 </context>
 <context>
     <name>ffs2play::SimConnector</name>
     <message>
-        <location filename="../sim/simconnector.cpp" line="46"/>
         <source>Option value = </source>
-        <translation>Valeur d&apos;option = </translation>
+        <translation type="vanished">Valeur d&apos;option = </translation>
     </message>
 </context>
 <context>
     <name>ffs2play::simbasemanager</name>
     <message>
-        <location filename="../singleton/simbasemanager.cpp" line="441"/>
         <source>Connexion to simulator timed out.</source>
-        <translation>Connexion au simulateur expiré.</translation>
+        <translation type="vanished">Connexion au simulateur expiré.</translation>
+    </message>
+</context>
+<context>
+    <name>simbasemanager</name>
+    <message>
+        <location filename="../sim/simbasemanager.cpp" line="445"/>
+        <source>Connexion to simulator timed out.</source>
+        <translation type="unfinished">Connexion au simulateur expiré.</translation>
     </message>
 </context>
 </TS>

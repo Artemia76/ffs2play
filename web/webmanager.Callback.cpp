@@ -34,8 +34,6 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 
-namespace ffs2play { namespace web {
-
 ///
 /// \brief CWebManager::HelloCallback
 /// \param Request
@@ -335,5 +333,3 @@ void CWebManager::CheckXPPluginVersionCallback(CHttpRequest* pRequest)
     }
     pRequest->deleteLater();
 }
-
-}} // namespace ffs2play::web

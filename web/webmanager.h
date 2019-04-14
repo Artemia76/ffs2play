@@ -48,16 +48,7 @@
 #include "tools/crypto.h"
 #include "sim/aircraftstate.h"
 
-namespace ffs2play {
-
-namespace gui {
 class DialogProfils;
-}
-
-namespace web {
-
-using namespace sim;
-using namespace net;
 
 struct SUser
 {
@@ -73,7 +64,7 @@ QDataStream& operator>>(QDataStream& in, QVector<SUser>& v);
 class CWebManager : public QObject
 {
     Q_OBJECT
-    friend class        ffs2play::gui::DialogProfils;
+    friend class        DialogProfils;
 public:
     enum class XmlCode
     {
@@ -148,8 +139,6 @@ private slots:
     void                OnLiveUpdate();
 };
 
-}} // namespace ffs2play::web
-
-Q_DECLARE_METATYPE(QVector<ffs2play::web::SUser>)
+Q_DECLARE_METATYPE(QVector<SUser>)
 
 #endif // WEBMANAGER_H

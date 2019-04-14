@@ -31,8 +31,6 @@
 #include <QTextCodec>
 #include <QNetworkDatagram>
 
-namespace ffs2play { namespace net {
-
 ///
 /// \brief UDPServer::UDPServer
 /// \param parent
@@ -138,5 +136,3 @@ void UDPServer::send(const QNetworkDatagram& pData)
         m_pListenner->writeDatagram(pData);
     }
 }
-
-}} // namespace ffs2play::net

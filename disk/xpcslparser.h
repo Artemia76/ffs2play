@@ -33,8 +33,6 @@
 #include <QMap>
 #include <QVector>
 
-namespace ffs2play{ namespace disk {
-
 struct CSL
 {
     QString AirLine;
@@ -59,7 +57,5 @@ private:
     void    DBFileUpdate(const QString& pKey,const QString& pPath);
     void    ReadCSL (const QString& pPath,  xsb_aircraft& pContent);
 };
-
-}} // namespace ffs2play::disk
 
 #endif // XPCSLPARSER_H

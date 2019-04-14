@@ -29,8 +29,6 @@
 
 #include "simconnector.h"
 
-namespace ffs2play { namespace sim {
-
 ///
 /// \brief SimConnector::SimConnector
 /// \param parent
@@ -129,5 +127,3 @@ QColor SimConnector::getCallSignColor()
 {
     return m_CallSignColor;
 }
-
-}} // namespace ffs2play::sim

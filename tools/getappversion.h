@@ -33,8 +33,6 @@
 #include <QString>
 #include <QTextStream>
 
-namespace ffs2play { namespace tools {
-
 struct sVersion
 {
     QString Name;
@@ -45,7 +43,5 @@ struct sVersion
 };
 
 sVersion GetAppVersion();
-
-}} // namespace ffs2play::tools
 
 #endif //GETAPPVERSION_H

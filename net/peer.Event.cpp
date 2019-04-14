@@ -30,8 +30,6 @@
 #include "net/peer.h"
 #include "tools/calculation.h"
 
-namespace ffs2play { namespace net {
-
 ///
 /// \brief CPeer::OnReceiveMessage
 /// \param pDatagram
@@ -372,5 +370,3 @@ void CPeer::OnSendTChat(QString pMessage)
         sendChat(pMessage);
     }
 }
-
-}} // namespace ffs2play::net

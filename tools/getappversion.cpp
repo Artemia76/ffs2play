@@ -30,8 +30,6 @@
 #include "tools/version.h"
 #include "tools/getappversion.h"
 
-namespace ffs2play { namespace tools {
-
 ///
 /// \brief GetAppVersion
 /// \return
@@ -53,5 +51,3 @@ sVersion GetAppVersion()
        << Version.Build;
     return Version;
 }
-
-}} // namespace ffs2play::tools

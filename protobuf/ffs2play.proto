@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package ffs2play;
-
 message StringArray {
         repeated string String = 1;
 }

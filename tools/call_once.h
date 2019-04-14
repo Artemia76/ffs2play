@@ -36,8 +36,6 @@
 #include <QThreadStorage>
 #include <QThread>
 
-namespace ffs2play { namespace tools {
-
 namespace CallOnce {
     enum ECallOnce
     {
@@ -84,7 +82,5 @@ inline static void qCallOncePerThread(Function func)
         qCallOnce(func, *CallOnce::once_flag()->localData());
     }
 }
-
-}} // namespace ffs2play::tools
 
 #endif // CALL_ONCE_H
