@@ -69,6 +69,7 @@ static	simbasemanager*         createInstance();
     SIM_TYPE                    m_simType;
     QList<SIM_TYPE>             m_simAvailable;
     QTimer                      m_RetryTimer;
+    int                         m_RetryCounter;
 
 public:
 static simbasemanager*          instance();

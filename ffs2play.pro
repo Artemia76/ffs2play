@@ -65,9 +65,10 @@ unix:!macx {
     isEmpty(GIT_PATH) : GIT_PATH=git
 
     # Find Miniupnpc location
-    !isEmpty(MINIUPNPC_INC_PATH) {
-        INCLUDEPATH += $$MINIUPNPC_INC_PATH
+    isEmpty(MINIUPNPC_PATH) {
+        MINIUPNPC_PATH=/usr/include
     }
+    INCLUDEPATH += $$MINIUPNPC_PATH/miniupnpc
     LIBS	+= -lminiupnpc
 
     # Find OpenSSL location

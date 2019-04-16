@@ -62,6 +62,7 @@ simbasemanager::simbasemanager(QObject* parent):
     // Retry Connexion in case of lost connexion from simulator
     m_RetryTimer.setSingleShot(true);
     m_RetryTimer.setInterval(5000);
+    m_RetryCounter = 0;
     //this->moveToThread(m_thread);
     connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()),Qt::DirectConnection);
     connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
@@ -178,6 +179,7 @@ void simbasemanager::open ()
     if (!m_connector->isConnected())
     {
         m_connector->open();
+        if (m_RetryCounter>2) m_RetryCounter=0;
         // Thread starting
         m_thread->start();
     }
@@ -434,6 +436,7 @@ void simbasemanager::OnSimConnected()
 ///
 void simbasemanager::OnSimDisconnected()
 {
+    m_log->log(tr("Disconnected from simulator."),Qt::darkMagenta);
     close();
 }
 
@@ -444,7 +447,10 @@ void simbasemanager::OnSimTimedOut()
 {
     m_log->log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
     close();
-    m_RetryTimer.start();
+    if (++m_RetryCounter<3)
+    {
+        m_RetryTimer.start();
+    }
 }
 
 ///
