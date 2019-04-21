@@ -34,6 +34,8 @@
 
 #include "tools/datagram.h"
 
+using namespace simgear;
+
 ///
 /// \brief FlightGear Manager Constructor
 /// \param parent

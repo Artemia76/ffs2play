@@ -42,6 +42,53 @@
 /// Imported from SimGear of FlightGear Project
 /// simgear/src/props/props.hxx
 ///
+namespace simgear
+{
+
+#ifdef NONE
+#pragma warn A sloppy coder has defined NONE as a macro!
+#undef NONE
+#endif
+
+#ifdef ALIAS
+#pragma warn A sloppy coder has defined ALIAS as a macro!
+#undef ALIAS
+#endif
+
+#ifdef UNSPECIFIED
+#pragma warn A sloppy coder has defined UNSPECIFIED as a macro!
+#undef UNSPECIFIED
+#endif
+
+#ifdef BOOL
+#pragma warn A sloppy coder has defined BOOL as a macro!
+#undef BOOL
+#endif
+
+#ifdef INT
+#pragma warn A sloppy coder has defined INT as a macro!
+#undef INT
+#endif
+
+#ifdef LONG
+#pragma warn A sloppy coder has defined LONG as a macro!
+#undef LONG
+#endif
+
+#ifdef FLOAT
+#pragma warn A sloppy coder has defined FLOAT as a macro!
+#undef FLOAT
+#endif
+
+#ifdef DOUBLE
+#pragma warn A sloppy coder has defined DOUBLE as a macro!
+#undef DOUBLE
+#endif
+
+#ifdef STRING
+#pragma warn A sloppy coder has defined STRING as a macro!
+#undef STRING
+#endif
 
 /**
  * The possible types of an SGPropertyNode. Types that appear after
@@ -688,5 +735,5 @@ private:
 const   IdPropertyList*         FindProperty(unsigned short pID);
 
 };
-
+} //Namespace SimGear
 #endif // FGDATAGRAM_H

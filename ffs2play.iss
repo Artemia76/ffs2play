@@ -6,7 +6,7 @@
 #define Build
 #define Dummy
 #define ApplicationName "FFS2Play2"
-#define BaseDir  ".\release\"
+#define BaseDir  ".\"
 #define ApplicationExeName "ffs2play.exe"
 #define ApplicationFullPath BaseDir + ApplicationExeName
 #expr ParseVersion(ApplicationFullPath, Major, Minor,Build,Dummy)
@@ -31,11 +31,11 @@ AppSupportURL={#ApplicationURL}
 AppUpdatesURL={#ApplicationURL}
 DefaultDirName={pf}\{#ApplicationName}
 DisableProgramGroupPage=yes
-LicenseFile=E:\devel\git\ffs2play\LICENSE.GPLv3
-InfoBeforeFile=E:\devel\git\ffs2play\changelog.txt
-OutputDir=E:\devel\git\ffs2play\package
+LicenseFile=LICENSE.GPLv3
+InfoBeforeFile=changelog.txt
+OutputDir=.\
 OutputBaseFilename= {#InstallFileName}
-SetupIconFile=E:\devel\git\ffs2play\ffs2play_48x48.ico
+SetupIconFile=ffs2play_48x48.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -48,8 +48,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
+source: "{#BaseDir}vc_redist.x86.exe"; DestDir: "{tmp}"; Flags: nocompression createallsubdirs recursesubdirs deleteafterinstall
+source: "{#BaseDir}SimConnect.msi"; DestDir: "{tmp}"; Flags: nocompression createallsubdirs recursesubdirs deleteafterinstall
 Source: "{#ApplicationFullPath}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseDir}Microsoft.FlightSimulator.SimConnect.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}libcrypto-1_1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -58,7 +59,6 @@ Source: "{#BaseDir}Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Svg.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Xml.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseDir}SimConnect.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}ffs2play.qss"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}translations\*"; DestDir: "{app}\translations"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#BaseDir}platforms\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -77,4 +77,6 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ApplicationName}
 
 [Run]
 Filename: "{app}\{#ApplicationExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ApplicationName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/Q"; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Visual C++ 2010 (x86) installation. Please Wait..."
+Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\SimConnect.msi"""; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Flight Simulator SDK installation. Please Wait..."
 

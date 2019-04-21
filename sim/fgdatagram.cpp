@@ -28,6 +28,7 @@
 
 #include "fgdatagram.h"
 
+using namespace simgear;
 ///
 /// \brief FGDataGram::FGDatagram
 ///

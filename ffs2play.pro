@@ -92,6 +92,7 @@ unix:!macx {
 
 win32 {
     WINDEPLOY_FLAGS = --compiler-runtime --no-system-d3d-compiler --no-opengl --no-opengl-sw --no-angle
+
     CONFIG(debug, debug|release) : WINDEPLOY_FLAGS += --debug
     CONFIG(release, debug|release) : WINDEPLOY_FLAGS += --release
 
@@ -99,6 +100,7 @@ win32 {
     isEmpty(WINDOWS_SDK_LIB_PATH) {
         WINDOWS_SDK_LIB_PATH = "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x86"
     }
+
     DEFINES += _WINSOCKAPI_
     LIBS += -L$$WINDOWS_SDK_LIB_PATH
     LIBS += -lWs2_32
@@ -115,7 +117,7 @@ win32 {
 
     # Find Miniupnpc location
     isEmpty(MINIUPNPC_PATH) {
-        MINIUPNPC_PATH=..\miniupnp\
+        MINIUPNPC_PATH=..\miniupnp\miniupnpc
         MINIUPNPC_LIB_PATH = $$MINIUPNPC_PATH"\build"
     }
     DEFINES += MINIUPNP_STATICLIB
@@ -154,10 +156,11 @@ win32 {
         PROTOBUF_LIB_PATH=$$PROTOBUF_PATH"\lib"
     }
     INCLUDEPATH += $$PROTOBUF_PATH"\include"
+    LIBS += -L$$PROTOBUF_LIB_PATH
     CONFIG(release, debug|release ) {
-        LIBS += -llibprotobufd
-    } else {
         LIBS += -llibprotobuf
+    } else {
+        LIBS += -llibprotobufd
     }
 }
 
@@ -215,7 +218,7 @@ include(protobuf.pri)
 # Application Version
 VERSION_MAJOR = 2
 VERSION_MINOR = 1
-VERSION_BUILD = 7
+VERSION_BUILD = 8
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
@@ -233,6 +236,7 @@ message(-----------------------------------)
 message(GIT_PATH: $$GIT_PATH)
 message(GIT_REVISION: $$GIT_REVISION)
 message(OPENSSL_PATH: $$OPENSSL_PATH)
+message(MINIUPNPC_PATH: $$MINIUPNPC_PATH)
 
 win32 : message(SIMCONNECT_PATH: $$SIMCONNECT_PATH)
 message(DEPLOY_BASE: $$DEPLOY_BASE)
@@ -356,7 +360,7 @@ RESOURCES += \
 
 ICON = ffs2play.icns
 
-win : DISTFILES += ffs2play.rc
+win32 : RC_FILE = ffs2play.rc
 
 OTHER_FILES += \
     README.md \
@@ -377,6 +381,13 @@ unix:!macx {
 macx {
     copydata.commands += cp -vf $$PWD/intl/*.qm $$OUT_PWD/ffs2play.app/Contents/Resources &&
     copydata.commands += cp -vf $$PWD/*.qss $$OUT_PWD/ffs2play.app/Contents/Resources
+}
+
+#Windows - Copy Qt Style and translation
+win32 {
+    defineReplace(p){return ($$shell_quote($$shell_path($$1)))}
+    copydata.commands = xcopy /Y $$p($$PWD/intl/*.qm) $$p($$OUT_PWD/translations/) &&
+    copydata.commands += xcopy /Y $$p($$PWD/*.qss) $$p($$OUT_PWD/)
 }
 
 # =====================================================================
@@ -480,14 +491,19 @@ win32 {
     RC_ICONS = ffs2play_48x48.ico
     CONFIG(debug, debug|release) : DLL_SUFFIX=d
     CONFIG(release, debug|release) : DLL_SUFFIX=
-    deploy.commands = rmdir /s /q $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += mkdir $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
-    deploy.commands += xcopy $$p($$OUT_PWD/ffs2play.exe) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += xcopy $$p($$PWD/changelog.txt) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += xcopy $$p($$PWD/README.md) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += xcopy $$p($$PWD/LICENSE.GPLv3) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += xcopy $$p($$PWD/*.qm) $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
-    deploy.commands += $$p($$[QT_INSTALL_BINS]/windeployqt) $$WINDEPLOY_FLAGS $$p($$DEPLOY_BASE/$$TARGET_NAME)
+    deploy.commands = mkdir $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
+    deploy.commands += xcopy /Y $$p($$OUT_PWD/ffs2play.exe) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$PWD/README.md) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$PWD/intl/*.qm) $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
+    deploy.commands += xcopy /Y $$p($$PWD/*.qss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$PWD/*.txt) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$PWD/LICENSE.GPLv3) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$PWD/*.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$SIMCONNECT_PATH/lib/SimConnect.msi) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$OPENSSL_PATH/libcrypto-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$PWD/ffs2play_48x48.ico) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += $$p($$[QT_INSTALL_BINS]/windeployqt) $$WINDEPLOY_FLAGS $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += compil32 /cc $$p($$DEPLOY_BASE/$$TARGET_NAME/ffs2play.iss)
 }
 
 # =====================================================================

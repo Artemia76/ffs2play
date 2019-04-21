@@ -86,6 +86,7 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
         }
         case Protocol::CHAT:
         {
+            if(m_blockData) return;
             QString Message;
             quint8 Len;
             stream >> Len;
