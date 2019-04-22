@@ -1144,6 +1144,16 @@
        </item>
        <item>
         <property name="text">
+         <string>TCPServer*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>TCPClient*</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>SCManager*</string>
         </property>
        </item>

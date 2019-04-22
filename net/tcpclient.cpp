@@ -33,6 +33,7 @@ TCPClient::TCPClient(QObject *parent) :
 {
     qRegisterMetaType<QNetworkDatagram>("QNetworkDatagram");
     qRegisterMetaType<TCPClient*>("TCPClient*");
+    qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
     m_Socket = nullptr;
     m_log = CLogger::instance();
 }
@@ -41,7 +42,7 @@ TCPClient::~TCPClient()
 {
     close();
 #ifdef FFS_DEBUG
-    m_log->log("TCPSocket : " + tr("Destructor"), Qt::cyan,LEVEL_NORMAL);
+    m_log->log("TCPClient : " + tr("Destructor"), Qt::cyan,LEVEL_NORMAL);
 #endif
 }
 
@@ -57,10 +58,12 @@ void TCPClient::handle(QTcpSocket* pSocket)
         close();
     }
     m_Socket=pSocket;
+    m_Socket->setParent(this);
     m_PeerIP = m_Socket->peerAddress();
     m_Port = m_Socket->peerPort();
     connect(m_Socket, SIGNAL(readyRead()), this, SLOT(OnIncomingData()));
     connect(m_Socket, SIGNAL(disconnected()), this, SLOT(OnDisconnected()));
+    connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(OnError(QAbstractSocket::SocketError)));
 }
 
 void TCPClient::connectToHost(QHostAddress pHost, quint16 pPort)
@@ -75,6 +78,7 @@ void TCPClient::connectToHost(QHostAddress pHost, quint16 pPort)
    connect(m_Socket, SIGNAL(connected()), this, SLOT(OnConnected()));
    connect(m_Socket, SIGNAL(readyRead()), this, SLOT(OnIncomingData()));
    connect(m_Socket, SIGNAL(disconnected()), this, SLOT(OnDisconnected()));
+   connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(OnError(QAbstractSocket::SocketError)));
    m_Socket->connectToHost(m_PeerIP,m_Port);
 
 }
@@ -84,15 +88,15 @@ void TCPClient::close()
     if (m_Socket!=nullptr)
     {
 #ifdef FFS_DEBUG
-        m_log->log("TCPSocket : " + tr("Close socket IP= ") + m_PeerIP.toString(), Qt::cyan,LEVEL_NORMAL);
+        m_log->log("TCPClient : " + tr("Close socket IP= ") + m_PeerIP.toString(), Qt::cyan,LEVEL_NORMAL);
 #endif
         if(m_Socket->isOpen())
         {
             m_Socket->close();
         }
-        delete m_Socket;
-        m_Socket=nullptr;
     }
+    m_Port=0;
+    m_PeerIP.clear();
 }
 
 void TCPClient::send(const QNetworkDatagram& pData)
@@ -102,7 +106,7 @@ void TCPClient::send(const QNetworkDatagram& pData)
         if (m_Socket->isOpen())
         {
 #ifdef FFS_DEBUG
-            m_log->log("TCPSocket : " + tr("send data to ") +
+            m_log->log("TCPClient : " + tr("send data to ") +
                 m_Socket->peerAddress().toString() +
                 " port = " + QString::number(m_Socket->peerPort()) +
                 " datagram = " + pData.data().toHex(), Qt::cyan,LEVEL_VERBOSE);
@@ -130,7 +134,7 @@ void TCPClient::OnIncomingData()
     datagram.setData(m_Socket->readAll());
     datagram.setSender(m_PeerIP,m_Port);
 #ifdef FFS_DEBUG
-    m_log->log("TCPSocket : " + tr("receive data from ") +
+    m_log->log("TCPClient : " + tr("receive data from ") +
         m_Socket->peerAddress().toString() +
         " port = " + QString::number(m_Socket->peerPort()) +
         " datagram = " + datagram.data().toHex(), Qt::cyan,LEVEL_VERBOSE);
@@ -144,7 +148,7 @@ void TCPClient::OnConnected()
     if(m_Socket->isOpen())
     {
 #ifdef FFS_DEBUG
-        m_log->log("TCPSocket : " + tr("new socket connection Peer IP= ") +
+        m_log->log("TCPClient : " + tr("new socket connection Peer IP= ") +
             m_Socket->peerAddress().toString() +
             " port = " + QString::number(m_Socket->peerPort())
             , Qt::cyan,LEVEL_NORMAL);
@@ -157,13 +161,19 @@ void TCPClient::OnConnected()
 
 void TCPClient::OnDisconnected()
 {
+    emit(fireDisconnected(this));
 #ifdef FFS_DEBUG
-    m_log->log("TCPSocket : " + tr("Peer disconnected IP = ") +
+    m_log->log("TCPClient : " + tr("Peer disconnected IP = ") +
                m_PeerIP.toString(), Qt::cyan,LEVEL_NORMAL);
 #endif
-    m_Port=0;
-    m_PeerIP.clear();
-   if (m_Socket==nullptr) return;
-    close();
+    this->deleteLater();
+}
+
+void TCPClient::OnError(QAbstractSocket::SocketError pError)
+{
+#ifdef FFS_DEBUG
+    m_log->log("TCPClient : " + tr("Socket error = ") + m_Socket->errorString(), Qt::cyan,LEVEL_NORMAL);
+#endif
     emit(fireDisconnected(this));
+    this->deleteLater();
 }

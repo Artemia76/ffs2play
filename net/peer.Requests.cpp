@@ -101,7 +101,7 @@ void CPeer::sendPing()
         m_miniPing = milliseconds(1000);
         spawnAI(false);
     }
-    if ((m_counter > 5) && (!m_onLine) && (m_PeerMode==UDP) && (m_TCPClient==nullptr) && (!m_EP.isNull()))
+    if ((m_counter > 7) && (!m_onLine) && (m_PeerMode==UDP) && (m_TCPClient==nullptr) && (!m_EP.isNull()))
     {
 #ifdef FFS_DEBUG
         m_log->log("Peer [" + m_callSign + "] " + tr(" 5 retry occured, switch to TCPClient mode"),Qt::darkBlue,LEVEL_NORMAL);

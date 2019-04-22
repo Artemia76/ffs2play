@@ -35,7 +35,6 @@ public:
     quint16     getPeerPort();
 
 signals:
-    void        error(QTcpSocket::SocketError socketError);
     void        fireIncomingData (QNetworkDatagram);
     void        fireDisconnected (TCPClient*);
 
@@ -43,6 +42,7 @@ private slots:
     void        OnIncomingData () ;
     void        OnConnected();
     void        OnDisconnected();
+    void        OnError(QAbstractSocket::SocketError pError);
 };
 
 #endif // TCPCLIENT_H
