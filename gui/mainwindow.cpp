@@ -631,59 +631,88 @@ void MainWindow::onUpdate()
         {
             case 0:
             {
-                ui->twPeerDetail->item(i,0)->setText(PeerState.Title);
+                QString Mode="None";
+                switch (PeerConnexionStatus.Mode)
+                {
+                    case NONE:
+                    {
+                        Mode="None";
+                        break;
+                    }
+                    case UDP:
+                    {
+                        Mode="UDP";
+                        break;
+                    }
+                    case TCP_CLIENT:
+                    {
+                        Mode="TCP Client";
+                        break;
+                    }
+                    case TCP_SERVER:
+                    {
+                        Mode="TCP Server";
+                        break;
+                    }
+                }
+                ui->twPeerDetail->item(i,0)->setText(Mode);
                 break;
             }
             case 1:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f ft", PeerState.Altitude));
+                ui->twPeerDetail->item(i,0)->setText(PeerState.Title);
                 break;
             }
             case 2:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f °", PeerState.Heading));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f ft", PeerState.Altitude));
                 break;
             }
             case 3:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", Distance));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f °", PeerState.Heading));
                 break;
             }
             case 4:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts", PeerState.IASSpeed));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", Distance));
                 break;
             }
             case 5:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts",PeerState.GroundSpeed));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts", PeerState.IASSpeed));
                 break;
             }
             case 6:
             {
-                ui->twPeerDetail->item(i,0)->setText(QString::number((PeerConnexionStatus.IP.toIPv4Address() & 0xFF000000)>>24) + ".X.X." + QString::number(PeerConnexionStatus.IP.toIPv4Address() & 0xFF));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts",PeerState.GroundSpeed));
                 break;
             }
             case 7:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.Port));
+                ui->twPeerDetail->item(i,0)->setText(QString::number((PeerConnexionStatus.IP.toIPv4Address() & 0xFF000000)>>24) + ".X.X." + QString::number(PeerConnexionStatus.IP.toIPv4Address() & 0xFF));
                 break;
             }
             case 8:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f mSec",PeerConnexionStatus.Ping));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.Port));
                 break;
             }
             case 9:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.RcvCnt));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f mSec",PeerConnexionStatus.Ping));
                 break;
             }
             case 10:
             {
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.RcvCnt));
+                break;
+            }
+            case 11:
+            {
                 ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.SndCnt));
                 break;
-        }
+            }
         }
     }
 }

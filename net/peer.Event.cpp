@@ -30,6 +30,39 @@
 #include "net/peer.h"
 #include "tools/calculation.h"
 
+void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
+{
+    if (pTCPClient!=nullptr)
+    {
+        if(!m_EP.isNull() && (m_EP.isEqual(pTCPClient->GetPeerAddress())) && (m_port == pTCPClient->GetPeerPort()))
+        {
+            if (m_TCPClient!=nullptr)
+            {
+                delete(m_TCPClient);
+            }
+            m_TCPClient = pTCPClient;
+            m_TCPServer->Accept(m_TCPClient);
+            m_PeerMode=TCP_SERVER;
+#ifdef FFS_DEBUG
+            m_log->log("Peer [" + m_callSign + "] " + tr(" received incoming TCP connection, switch to TCPServer mode"),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+        }
+        else if((!m_EP.isEqual(pTCPClient->GetPeerAddress())) || (m_port != pTCPClient->GetPeerPort())) return;
+    }
+}
+
+void CPeer::OnTCPClientDisconnected(TCPClient* pTCPClient)
+{
+    if (pTCPClient!=nullptr)
+    {
+        if (m_TCPClient == pTCPClient)
+        {
+            m_TCPClient=nullptr;
+        }
+    }
+    m_PeerMode=UDP;
+}
+
 ///
 /// \brief CPeer::OnReceiveMessage
 /// \param pDatagram

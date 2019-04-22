@@ -34,6 +34,7 @@
 #include "tools/clogger.h"
 #include "sim/analyzer.h"
 #include "net/udpserver.h"
+#include "net/tcpserver.h"
 #include "miniupnpc.h"
 #include "upnpcommands.h"
 #include "protobuf/ffs2play.pb.h"
@@ -51,7 +52,8 @@ private:
 
     CLogger*            m_log;
     Analyzer*           m_analyser;
-    UDPServer*          m_server;
+    UDPServer*          m_UDPServer;
+    TCPServer*          m_TCPServer;
     QSettings           m_settings;
     quint16             m_port;
     int                 m_AILimit;

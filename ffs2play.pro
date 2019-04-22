@@ -291,7 +291,9 @@ SOURCES += \
     web/webmanager.cpp \
     web/webmanager.Callback.cpp \
     web/webmanager.Requests.cpp \
-    web/webmanager.Utils.cpp
+    web/webmanager.Utils.cpp \
+    net/tcpserver.cpp \
+    net/tcpclient.cpp
 
 win32 {
 SOURCES += \
@@ -335,7 +337,9 @@ HEADERS  +=  \
     tools/singleton.h \
     tools/version.h \
     web/chttprequest.h \
-    web/webmanager.h
+    web/webmanager.h \
+    net/tcpserver.h \
+    net/tcpclient.h
 
 win32 {
 HEADERS += \
@@ -393,6 +397,22 @@ win32 {
 # =====================================================================
 # Deployment commands
 
+#linux make install
+unix:!macx {
+    PREFIX = /usr
+    Binary.path = $${PREFIX}/bin
+    Binary.files = $$OUT_PWD/$${TARGET}
+    INSTALLS += Binary
+
+    Translation.path = $${PREFIX}/share/$${TARGET}/translations
+    Translation.files = $$PWD/translations/*.qm
+    INSTALLS += Translation
+
+    Theme.path = $${PREFIX}/share/$${TARGET}
+    Theme.files = $$PWD/*.qss
+    INSTALLS += Theme
+}
+
 # Linux specific deploy target
 unix:!macx {
     DEPLOY_DIR=\"$$DEPLOY_BASE/$$TARGET_NAME\"
@@ -449,21 +469,6 @@ unix:!macx {
     deploy.commands += cp -vfa $$[QT_INSTALL_LIBS]/libQt5X11Extras.so*  $$DEPLOY_DIR_LIB &&
     deploy.commands += cp -vfa $$[QT_INSTALL_LIBS]/libQt5XcbQpa.so*  $$DEPLOY_DIR_LIB &&
     deploy.commands += cp -vfa $$[QT_INSTALL_LIBS]/libQt5Xml.so* $$DEPLOY_DIR_LIB
-
-    # Linux make install specific
-    PREFIX = /usr
-
-    Binary.path = $${PREFIX}/bin
-    Binary.files = $${DESTDIR}/$${TARGET}
-    INSTALLS += Binary
-
-    Translation.path = $${PREFIX}/share/$${TARGET}/translations
-    Translation.files = $${DESTDIR}/translations/*.qm
-    INSTALLS += Translation
-
-    Theme.path = $${PREFIX}/share/$${TARGET}
-    Theme.files = $${DESTDIR}/*.qss
-    INSTALLS += Theme
 }
 
 # Mac specific deploy target

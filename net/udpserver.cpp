@@ -29,7 +29,6 @@
 #include "net/udpserver.h"
 
 #include <QTextCodec>
-#include <QNetworkDatagram>
 
 ///
 /// \brief UDPServer::UDPServer
@@ -50,10 +49,18 @@ UDPServer::UDPServer(QObject *pParent) : QObject(pParent)
 }
 
 ///
+/// \brief UDPServer::~UDPServer
+///
+UDPServer::~UDPServer()
+{
+    Stop();
+}
+
+///
 /// \brief UDPServer::setPort
 /// \param pPort
 ///
-void UDPServer::setPort(quint16 pPort)
+void UDPServer::SetPort(quint16 pPort)
 {
     if (!m_running) m_port = pPort;
 }
@@ -61,11 +68,11 @@ void UDPServer::setPort(quint16 pPort)
 ///
 /// \brief UDPServer::start
 ///
-bool UDPServer::start ()
+bool UDPServer::Start ()
 {
     if ((!m_running) && (m_pListenner!=nullptr))
     {
-        if (m_pListenner->isOpen()) stop();
+        if (m_pListenner->isOpen()) Stop();
         m_running = m_pListenner->bind (QHostAddress::AnyIPv4, m_port);
         if (m_running)
         {
@@ -84,21 +91,13 @@ bool UDPServer::start ()
 ///
 /// \brief UDPServer::stop
 ///
-void UDPServer::stop ()
+void UDPServer::Stop ()
 {
     if ((m_running) && (m_pListenner !=nullptr))
     {
         m_pListenner->close();
         m_running = false;
     }
-}
-
-///
-/// \brief UDPServer::~UDPServer
-///
-UDPServer::~UDPServer()
-{
-    stop();
 }
 
 ///
@@ -123,7 +122,7 @@ void UDPServer::incomingData()
 /// \brief UDPServer::send
 /// \param pData
 ///
-void UDPServer::send(const QNetworkDatagram& pData)
+void UDPServer::Send(const QNetworkDatagram& pData)
 {
     if ((m_running) && (m_pListenner !=nullptr))
     {

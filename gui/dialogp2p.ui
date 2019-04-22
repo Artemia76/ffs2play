@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>792</width>
-    <height>560</height>
+    <height>562</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -132,7 +132,7 @@
       <item row="1" column="0">
        <widget class="QCheckBox" name="cbInfoSim">
         <property name="text">
-         <string>Enable ScrollText info on sim</string>
+         <string>Enable TChat activity</string>
         </property>
        </widget>
       </item>
@@ -235,6 +235,9 @@
          </property>
          <item>
           <widget class="QCheckBox" name="cbEnableCallsign">
+           <property name="toolTip">
+            <string>Enable displaying Callsign over aircrafts</string>
+           </property>
            <property name="text">
             <string>Enable Display CallSign</string>
            </property>

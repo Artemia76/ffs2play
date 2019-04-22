@@ -44,6 +44,7 @@
 #include "protobuf/ffs2play.pb.h"
 #include "tools/clogger.h"
 #include "net/udpserver.h"
+#include "net/tcpserver.h"
 #include "sim/aircraftstate.h"
 #include "tools/datagram.h"
 
@@ -77,6 +78,15 @@ struct PeerData
     QString Team;
 };
 
+// This enum is used to find the best way to connect peer
+enum PeerMode
+{
+    NONE,
+    UDP,
+    TCP_SERVER,
+    TCP_CLIENT
+};
+
 class PeerConnexionState
 {
 public:
@@ -86,12 +96,14 @@ public:
         Ping=0;
         RcvCnt=0;
         SndCnt=0;
+        Mode=NONE;
     }
     QHostAddress IP;
     quint32 Port;
     double  Ping;
     quint8  RcvCnt;
     quint8  SndCnt;
+    PeerMode Mode;
 };
 
 typedef unsigned char byte;
@@ -114,7 +126,8 @@ public:
     int                     P2PRate;
 protected:
                             CPeer(
-                                UDPServer*pServer,
+                                UDPServer* pUDPServer,
+                                TCPServer* pTCPServer,
                                 QHostAddress pExternalIP,
                                 quint16 pPort,
                                 QString pCallSign,
@@ -136,6 +149,7 @@ protected:
     PeerConnexionState      GetConnexionState ();
 
 private:
+    PeerMode                m_PeerMode;
     QSettings               m_settings;
     QTimer                  m_heartBeat;
     int                     m_counter;
@@ -161,7 +175,9 @@ private:
     datetime                m_lastData;
     timespan                m_sendInterval;
     datetime                m_lastStateEvent;
-    UDPServer*              m_server;
+    UDPServer*              m_UDPServer;
+    TCPServer*              m_TCPServer;
+    TCPClient*              m_TCPClient;
     CLogger*                m_log;
     timespan                m_latence;
     double                  m_distance;
@@ -254,6 +270,8 @@ protected slots:
     void                    OnSendTChat(QString);
 private slots:
     void                    OnReceiveMessage(QNetworkDatagram pDatagram);
+    void                    OnNewTCPConnection(TCPClient* pTCPClient);
+    void                    OnTCPClientDisconnected(TCPClient* pTCPClient);
     void                    OnSimStateChange(CAircraftState pState);
     void                    OnSimEvent(SimEvent);
     void                    OnSimEventFrame(float,float);

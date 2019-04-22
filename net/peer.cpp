@@ -42,7 +42,8 @@
 /// \param pP2PRate
 /// \param pP2PRadius
 ///
-CPeer::CPeer(UDPServer* pServer,
+CPeer::CPeer(UDPServer* pUDPServer,
+        TCPServer* pTCPServer,
         QHostAddress pExternalIP,
         quint16 pPort,
         QString pCallSign,
@@ -60,7 +61,8 @@ CPeer::CPeer(UDPServer* pServer,
     m_AIMapping = AIMapping::instance();
     m_simManager = simbasemanager::instance();
     m_callSign = pCallSign;
-    m_server = pServer;
+    m_UDPServer = pUDPServer;
+    m_TCPServer = pTCPServer;
     m_externalIP = pExternalIP;
     if (pInternalIP != nullptr)
     {
@@ -80,6 +82,7 @@ CPeer::CPeer(UDPServer* pServer,
     m_team = pTeam;
     P2PRadius = pP2PRadius;
     P2PRate = pP2PRate;
+    m_PeerMode = UDP;
     if (m_simManager->getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
     else m_disableCalculation = false;
     connect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
@@ -111,7 +114,7 @@ void CPeer::Disable(bool pFlag)
 void CPeer::Start()
 {
     if (!m_disabled) return;
-    connect(m_server, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
+    connect(m_UDPServer, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
     connect(m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
     connect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)), this, SLOT(OnSimStateChange(CAircraftState)));
     connect(m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
@@ -144,6 +147,7 @@ void CPeer::Start()
     m_settings.endGroup();
     m_disabled = false;
     m_old_fps = std::numeric_limits<double>::quiet_NaN();
+    m_PeerMode = UDP;
 }
 
 ///
@@ -154,7 +158,7 @@ void CPeer::Stop()
     if (m_disabled) return;
     spawnAI(false);
     m_heartBeat.stop();
-    disconnect(m_server, SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveMessage(QNetworkDatagram)));
+    disconnect(m_UDPServer, SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveMessage(QNetworkDatagram)));
     disconnect(m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
     disconnect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)),this, SLOT(OnSimStateChange(CAircraftState)));
     disconnect(m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
@@ -173,6 +177,7 @@ void CPeer::Stop()
     m_settings.endGroup();
     m_disabled = true;
     m_spawned = 0;
+    m_PeerMode = UDP;
 }
 
 ///
@@ -458,5 +463,6 @@ PeerConnexionState CPeer::GetConnexionState ()
     State.Ping = m_latence.count();
     State.RcvCnt = m_counter_In;
     State.SndCnt = m_counter_Out;
+    State.Mode = m_PeerMode;
     return State;
 }

@@ -45,12 +45,12 @@ private:
     bool        m_running;
     quint16     m_port;
 public:
-                UDPServer(QObject *pParent = 0);
+                UDPServer(QObject *pParent = nullptr);
                 ~UDPServer();
-    bool        start();
-    void        stop();
-    void        setPort(quint16 pPort);
-    void        send(const QNetworkDatagram& pData);
+    bool        Start();
+    void        Stop();
+    void        SetPort(quint16 pPort);
+    void        Send(const QNetworkDatagram& pData);
 signals:
     void        fireIncomingData (QNetworkDatagram);
 private slots:

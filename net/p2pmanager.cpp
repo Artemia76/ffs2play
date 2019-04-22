@@ -43,7 +43,8 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     m_analyser = Analyzer::instance();
     m_bUPNP=false;
     connect (m_analyser, SIGNAL(fireTouchSpeed(double)),this,SLOT(onLanding(double)));
-    m_server = new UDPServer(this);
+    m_UDPServer = new UDPServer(this);
+    m_TCPServer = new TCPServer(this);
     connect (&m_checkAITimer,SIGNAL(timeout()),this,SLOT(onCheckAI()));
     m_checkAITimer.start(5000);
     m_LastDropRate = Now();
@@ -165,8 +166,10 @@ void CP2PManager::init(bool flag)
     {
         m_settings.beginGroup("P2P");
         m_port = static_cast<quint16>(m_settings.value("Port",54857).toInt());
-        m_server->setPort(m_port);
-        m_server->start();
+        m_UDPServer->SetPort(m_port);
+        m_TCPServer->SetPort(m_port);
+        m_UDPServer->Start();
+        m_TCPServer->Start();
         if (m_settings.value("UPNPEnable", true).toBool())
             initUPNP(true);
         m_Shadow = m_settings.value("ShadowEnable", false).toBool();
@@ -180,7 +183,8 @@ void CP2PManager::init(bool flag)
     }
     else
     {
-        m_server->stop();
+        m_UDPServer->Stop();
+        m_TCPServer->Stop();
         initUPNP(false);
     }
 }
@@ -256,14 +260,30 @@ void CP2PManager::initUPNP(bool flag)
                         QString::number(m_port).toStdString().c_str(),
                         QString::number(m_port).toStdString().c_str(),
                         lanaddr,
-                        QString(QString("FFS2Play_")+QString::number(m_port)).toStdString().c_str(),
+                        QString(QString("FFS2P_UDP_")+QString::number(m_port)).toStdString().c_str(),
                         "UDP",
                         nullptr,
                         "0"
                 );
+
                 if (error != UPNPCOMMAND_SUCCESS)
-                    m_log->log("P2PManager : " + tr("Adding port mappping failed with code ") + QString::number(error),Qt::magenta);
-                    else m_bUPNP=true;
+                    m_log->log("P2PManager : " + tr("Adding UDP port mappping failed with code ") + QString::number(error),Qt::magenta);
+                else m_bUPNP=true;
+
+                error = UPNP_AddPortMapping(
+                        m_urls.controlURL,
+                        m_data.first.servicetype,
+                        QString::number(m_port).toStdString().c_str(),
+                        QString::number(m_port).toStdString().c_str(),
+                        lanaddr,
+                        QString(QString("FFS2P_TCP_")+QString::number(m_port)).toStdString().c_str(),
+                        "TCP",
+                        nullptr,
+                        "0"
+                );
+                if (error != UPNPCOMMAND_SUCCESS)
+                    m_log->log("P2PManager : " + tr("Adding TCP port mappping failed with code ") + QString::number(error),Qt::magenta);
+                else m_bUPNP=true;
             }
             else
             {
@@ -288,7 +308,17 @@ void CP2PManager::initUPNP(bool flag)
                     nullptr
         );
         if (error != UPNPCOMMAND_SUCCESS)
-            m_log->log("P2PManager : " + tr("Delete port mapping failed with code ") + QString::number(error),Qt::magenta);
+            m_log->log("P2PManager : " + tr("Delete UDP port mapping failed with code ") + QString::number(error),Qt::magenta);
+
+        error = UPNP_DeletePortMapping(
+                    m_urls.controlURL,
+                    m_data.first.servicetype,
+                    QString::number(m_port).toStdString().c_str(),
+                    "TCP",
+                    nullptr
+        );
+        if (error != UPNPCOMMAND_SUCCESS)
+            m_log->log("P2PManager : " + tr("Delete TCP port mapping failed with code ") + QString::number(error),Qt::magenta);
         m_bUPNP = false;
     }
 }
@@ -391,7 +421,7 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
             }
             if ((!IP.isNull()) && (data.Port>0))
             {
-                m_peers.push_back(new CPeer(m_server, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs,this,m_P2PRate,m_AIRadius,data.Team));
+                m_peers.push_back(new CPeer(m_UDPServer, m_TCPServer, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs,this,m_P2PRate,m_AIRadius,data.Team));
                 connect(this, SIGNAL(fireSendTChat(QString)),m_peers.last(),SLOT(OnSendTChat(QString)));
                 connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
                 emit(firePeerAdd(data.CallSign));

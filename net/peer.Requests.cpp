@@ -39,7 +39,10 @@ void CPeer::send(const QByteArray &pOutput)
     if (!m_EP.isNull())
     {
         QNetworkDatagram Output(pOutput,m_EP, m_port);
-        m_server->send(Output);
+        if (m_PeerMode==UDP)
+            m_UDPServer->Send(Output);
+        else if ((m_PeerMode==TCP_CLIENT) || (m_PeerMode==TCP_SERVER))
+            m_TCPClient->Send(Output);
     }
     else
     {
@@ -47,7 +50,7 @@ void CPeer::send(const QByteArray &pOutput)
         {
             if (m_sel_iplocal >= m_internalIP.count()) m_sel_iplocal = 0;
             QNetworkDatagram Output(pOutput,m_internalIP[m_sel_iplocal], m_port);
-            m_server->send(Output);
+            m_UDPServer->Send(Output);
             m_sel_iplocal++;
         }
     }
@@ -97,6 +100,14 @@ void CPeer::sendPing()
         m_version = 0;
         m_miniPing = milliseconds(1000);
         spawnAI(false);
+    }
+    if ((m_counter > 5) && (!m_onLine) && (m_PeerMode==UDP) && (m_TCPClient==nullptr) && (!m_EP.isNull()))
+    {
+        m_TCPClient = new TCPClient(this);
+        m_TCPClient->Connect(m_EP, m_port);
+        connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
+        connect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+        m_PeerMode=TCP_CLIENT;
     }
 }
 

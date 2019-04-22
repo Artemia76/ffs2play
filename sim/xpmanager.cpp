@@ -51,8 +51,8 @@ CXPManager::CXPManager(QObject* parent):
     m_Server = new UDPServer(this);
     connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
     connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
-    m_Server->setPort(m_LocalPort);
-    m_Server->start();
+    m_Server->SetPort(m_LocalPort);
+    m_Server->Start();
     m_log->log("XPManager : " + tr("XPlane Module loaded"));
 }
 
@@ -62,7 +62,7 @@ CXPManager::CXPManager(QObject* parent):
 CXPManager::~CXPManager()
 {
     close();
-    m_Server->stop();
+    m_Server->Stop();
     m_log->log("XPManager : " + tr("XPlane Module unloaded"));
     //delete Server;
 }
@@ -140,7 +140,7 @@ void CXPManager::sendScrollingText(const QString& pMessage)
 #ifdef FFS_DEBUG
         m_log->log("XPManager : " + tr("Hexa : ") + QString(Data.toHex()), Qt::darkBlue,LEVEL_NORMAL);
 #endif
-        m_Server->send(Output);
+        m_Server->Send(Output);
     }
 }
 
@@ -165,7 +165,7 @@ bool CXPManager::createAI(AIResol& pAircraft, const QString& pTail,const CAircra
         StringToStream(stream,pTail);
         ProtobufToStream(stream,pAircraft);
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        m_Server->send(Output);
+        m_Server->Send(Output);
         return true;
     }
     return false;
@@ -188,7 +188,7 @@ bool CXPManager::removeAI(uint& pObjectID)
         stream << (quint8)DEL_PEER;
         stream << pObjectID;
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        m_Server->send(Output);
+        m_Server->Send(Output);
         pObjectID = 0;
         return true;
     }
@@ -216,7 +216,7 @@ bool CXPManager::updateAI(uint pObjectID, const CAircraftState& pData)
         pData.toAirData(m_SendData);
         ProtobufToStream(stream,m_SendData);
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        m_Server->send(Output);
+        m_Server->Send(Output);
         return true;
     }
     return false;
@@ -249,7 +249,7 @@ void CXPManager::sendPing()
     stream << (quint8)PING;
     stream << (quint32)m_options;
     QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-    m_Server->send(Output);
+    m_Server->Send(Output);
 }
 
 ///
@@ -268,7 +268,7 @@ void CXPManager::sendData(bool pFlag)
         stream << (quint8)DATA;
         stream << (quint8)pFlag;
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        m_Server->send(Output);
+        m_Server->Send(Output);
     }
 }
 
@@ -281,7 +281,7 @@ void CXPManager::sendDisc()
     QDataStream stream(&Data,QIODevice::WriteOnly);
     stream << (quint8)DISC;
     QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-    m_Server->send(Output);
+    m_Server->Send(Output);
 }
 
 void CXPManager::sendCallSignColor()
@@ -293,7 +293,7 @@ void CXPManager::sendCallSignColor()
     stream << (quint8)m_CallSignColor.green();
     stream << (quint8)m_CallSignColor.blue();
     QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-    m_Server->send(Output);
+    m_Server->Send(Output);
 }
 
 ///
@@ -311,7 +311,7 @@ void CXPManager::sendAIPaths()
         stream << static_cast<quint8>(CSL_PATH);
         ProtobufToStream(stream,Paths);
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
-        m_Server->send(Output);
+        m_Server->Send(Output);
     }
 }
 

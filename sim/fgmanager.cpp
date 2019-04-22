@@ -57,7 +57,7 @@ CFGManager::CFGManager(QObject* parent):
 CFGManager::~CFGManager()
 {
     close();
-    m_Server->stop();
+    m_Server->Stop();
     m_log->log("FGManager : " + tr("FlightGear Module unloaded"));
 }
 
@@ -69,9 +69,9 @@ void CFGManager::open ()
     if (!m_connected)
     {
         m_log->log(tr("Connecting to FlightGear ..."));
-        m_Server->setPort(m_LocalPort);
+        m_Server->SetPort(m_LocalPort);
         m_PingTimer.start(500);
-        if (m_Server->start())
+        if (m_Server->Start())
         {
             m_connected=true;
             m_log->log(tr("Connected to FlightGear."));
@@ -89,7 +89,7 @@ void CFGManager::close ()
     {
         m_PingTimer.stop();
         sendDisc();
-        m_Server->stop();
+        m_Server->Stop();
         m_connected=false;
         m_log->log(tr("Disconnected from FlightGear."));
     }
