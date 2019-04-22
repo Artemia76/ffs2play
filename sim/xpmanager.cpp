@@ -241,7 +241,7 @@ void CXPManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
 void CXPManager::sendPing()
 {
 #ifdef FFS_DEBUG
-    m_log->log("XPManager : " + tr("Send PING Option=") + QString::number(m_options), Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("XPManager : " + tr("Send PING Option=") + QString::number(m_options), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QByteArray Data;
     QDataStream stream(&Data,QIODevice::WriteOnly);

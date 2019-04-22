@@ -47,9 +47,6 @@ private:
     bool        m_running;
     quint16     m_port;
 
-protected:
-    void        incomingConnection(qintptr socketDescriptor);
-
 public:
     explicit    TCPServer(QObject *parent = nullptr);
                 ~TCPServer();
@@ -63,6 +60,7 @@ signals:
 
 private slots:
     void        OnCloseClient(TCPClient*);
+    void        OnNewConnection();
 signals:
 
 public slots:

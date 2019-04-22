@@ -25,7 +25,7 @@ private:
 protected:
     QTcpSocket* m_Socket;
     void        run() override;
-    void        handle(qintptr ID);
+    void        handle(QTcpSocket* pSocket);
 
 public:
     explicit    TCPClient(QObject *parent = nullptr);

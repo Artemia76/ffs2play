@@ -83,10 +83,12 @@ CPeer::CPeer(UDPServer* pUDPServer,
     P2PRadius = pP2PRadius;
     P2PRate = pP2PRate;
     m_PeerMode = UDP;
+    m_TCPClient=nullptr;
     if (m_simManager->getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
     else m_disableCalculation = false;
     connect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
     connect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
+    connect(m_TCPServer, SIGNAL(fireNewConnexion(TCPClient*)),this,SLOT(OnNewTCPConnection(TCPClient*)));
 }
 
 ///
@@ -147,7 +149,6 @@ void CPeer::Start()
     m_settings.endGroup();
     m_disabled = false;
     m_old_fps = std::numeric_limits<double>::quiet_NaN();
-    m_PeerMode = UDP;
 }
 
 ///

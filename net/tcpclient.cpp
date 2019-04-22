@@ -37,22 +37,30 @@ TCPClient::TCPClient(QObject *parent) :
     m_socketDescriptor = 0;
     m_running=false;
     m_log = CLogger::instance();
+    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
 TCPClient::~TCPClient()
 {
     close();
+#ifdef FFS_DEBUG
+    m_log->log("TCPSocket : " + tr("Destructor"), Qt::cyan,LEVEL_NORMAL);
+#endif
 }
 
 ///
 /// \brief Handle existing socket from server side
 /// \param ID
 ///
-void TCPClient::handle(qintptr ID)
+void TCPClient::handle(QTcpSocket* pSocket)
 {
-    m_socketDescriptor = ID;
+    if (pSocket==nullptr) return;
+    m_Socket=pSocket;
+    m_PeerIP = m_Socket->peerAddress();
+    m_Port = m_Socket->peerPort();
+    m_Socket->moveToThread(this);
+    m_socketDescriptor = m_Socket->socketDescriptor();
     start();
-    m_running=true;
 }
 
 void TCPClient::connectToHost(QHostAddress pHost, quint16 pPort)
@@ -66,39 +74,21 @@ void TCPClient::connectToHost(QHostAddress pHost, quint16 pPort)
 
 void TCPClient::run()
 {
-    if (m_Socket!=nullptr)
-    {
-        if (m_Socket->isOpen()) close();
-    }
-    m_Socket = new QTcpSocket(this);
     if (m_socketDescriptor==0)
     {
+        if (m_Socket!=nullptr)
+        {
+            if (m_Socket->isOpen()) close();
+        }
+        m_Socket = new QTcpSocket(this);
         m_Socket->connectToHost(m_PeerIP,m_Port);
-        connect(m_Socket, SIGNAL(connected()), this, SLOT(Connected()));
+        connect(m_Socket, SIGNAL(connected()), this, SLOT(OnConnected()));
     }
-    else if (!m_Socket->setSocketDescriptor(this->m_socketDescriptor))
-    {
-        emit error(m_Socket->error());
-        return;
-    }
-    else
-    {
-        m_PeerIP=m_Socket->peerAddress();
-        m_Port =m_Socket->peerPort();
-    }
-#ifdef FFS_DEBUG
-    m_log->log("TCPSocket : " + tr("new socket Peer IP= ") +
-        m_Socket->peerAddress().toString() +
-        " port = " + QString::number(m_Socket->peerPort())
-        , Qt::cyan,LEVEL_NORMAL);
-#endif
-    connect(m_Socket, SIGNAL(readyRead()), this, SLOT(ReadyRead()), Qt::DirectConnection);
-    connect(m_Socket, SIGNAL(disconnected()), this, SLOT(Disconnected()));
+    connect(m_Socket, SIGNAL(readyRead()), this, SLOT(OnIncomingData()), Qt::DirectConnection);
+    connect(m_Socket, SIGNAL(disconnected()), this, SLOT(OnDisconnected()));
     m_running=true;
-    while (m_running)
-    {
-        msleep(100);
-    }
+    exec();
+    m_running=false;
 }
 
 void TCPClient::close()
@@ -113,8 +103,11 @@ void TCPClient::close()
             }
             m_Socket->deleteLater();
         }
-        m_running=false;
+        exit(0);
         wait();
+#ifdef FFS_DEBUG
+    m_log->log("TCPSocket : " + tr("Close socket IP= ") + m_PeerIP.toString(), Qt::cyan,LEVEL_NORMAL);
+#endif
     }
 }
 
@@ -125,6 +118,7 @@ void TCPClient::send(const QNetworkDatagram& pData)
         if (m_Socket->isOpen())
         {
             m_Socket->write(pData.data());
+            m_Socket->flush();
         }
     }
 }
@@ -143,12 +137,12 @@ void TCPClient::OnIncomingData()
 {
     QNetworkDatagram datagram;
     datagram.setData(m_Socket->readAll());
-    datagram.setDestination(m_PeerIP,m_Port);
+    datagram.setSender(m_PeerIP,m_Port);
 #ifdef FFS_DEBUG
     m_log->log("TCPSocket : " + tr("receive data from ") +
         m_Socket->peerAddress().toString() +
         " port = " + QString::number(m_Socket->peerPort()) +
-        " datagram = " + datagram.data().toHex(), Qt::cyan,LEVEL_VERBOSE);
+        " datagram = " + datagram.data().toHex(), Qt::cyan,LEVEL_NORMAL);
 #endif
     emit(fireIncomingData(datagram));
 }
@@ -159,6 +153,12 @@ void TCPClient::OnConnected()
     {
         if(m_Socket->isOpen())
         {
+#ifdef FFS_DEBUG
+    m_log->log("TCPSocket : " + tr("new socket connection Peer IP= ") +
+        m_Socket->peerAddress().toString() +
+        " port = " + QString::number(m_Socket->peerPort())
+        , Qt::cyan,LEVEL_NORMAL);
+#endif
             m_PeerIP = m_Socket->peerAddress();
             m_Port = m_Socket->peerPort();
         }

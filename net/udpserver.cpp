@@ -44,7 +44,7 @@ UDPServer::UDPServer(QObject *pParent) : QObject(pParent)
     m_running = false;
     m_pListenner = new QUdpSocket(this);
     m_pListenner->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-    connect(m_pListenner, SIGNAL(readyRead()),this, SLOT(incomingData()));
+    connect(m_pListenner, SIGNAL(readyRead()),this, SLOT(OnIncomingData()));
     m_port = 0;
 }
 

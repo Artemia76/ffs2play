@@ -32,9 +32,12 @@
 
 void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
 {
+#ifdef FFS_DEBUG
+    m_log->log("Peer [" + m_callSign + "] " + tr(" OnNewTCPCOnnection"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
     if (pTCPClient!=nullptr)
     {
-        if(!m_EP.isNull() && (m_EP.isEqual(pTCPClient->getPeerAddress())) && (m_port == pTCPClient->getPeerPort()))
+        if(!m_EP.isNull() && (m_EP.isEqual(pTCPClient->getPeerAddress())))
         {
             if (m_TCPClient!=nullptr)
             {
@@ -42,6 +45,8 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
             }
             m_TCPClient = pTCPClient;
             m_TCPServer->accept(m_TCPClient);
+            connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
+            connect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
             m_PeerMode=TCP_SERVER;
 #ifdef FFS_DEBUG
             m_log->log("Peer [" + m_callSign + "] " + tr(" received incoming TCP connection, switch to TCPServer mode"),Qt::darkBlue,LEVEL_NORMAL);
@@ -53,14 +58,19 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
 
 void CPeer::OnTCPClientDisconnected(TCPClient* pTCPClient)
 {
+#ifdef FFS_DEBUG
+    m_log->log("Peer [" + m_callSign + "] " + tr(" OnTCPClientDisconnected"), Qt::darkBlue,LEVEL_NORMAL);
+#endif
     if (pTCPClient!=nullptr)
     {
         if (m_TCPClient == pTCPClient)
         {
+            disconnect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
+            disconnect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
             m_TCPClient=nullptr;
+            m_PeerMode=UDP;
         }
     }
-    m_PeerMode=UDP;
 }
 
 ///
@@ -69,15 +79,25 @@ void CPeer::OnTCPClientDisconnected(TCPClient* pTCPClient)
 ///
 void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
 {
-    if(m_EP.isNull())
+    if (m_PeerMode==UDP)
     {
-      if(m_internalIP.contains(pDatagram.senderAddress()))
-      {
-          m_EP=pDatagram.senderAddress();
-      }
-      else return;
+        if(m_EP.isNull())
+        {
+          if(m_internalIP.contains(pDatagram.senderAddress()))
+          {
+              m_EP=pDatagram.senderAddress();
+          }
+          else return;
+        }
+        else if((!m_EP.isEqual(pDatagram.senderAddress())) || (m_port != pDatagram.senderPort())) return;
     }
-    else if((!m_EP.isEqual(pDatagram.senderAddress())) || (m_port != pDatagram.senderPort())) return;
+    else
+    {
+        if (m_TCPClient != nullptr)
+        {
+            if ((!m_EP.isEqual(pDatagram.senderAddress())) || (m_TCPClient->getPeerPort() != pDatagram.senderPort())) return;
+        }
+    }
 
     datetime curr_time=Now();
     QByteArray data(pDatagram.data());
