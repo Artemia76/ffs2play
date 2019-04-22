@@ -166,10 +166,10 @@ void CP2PManager::init(bool flag)
     {
         m_settings.beginGroup("P2P");
         m_port = static_cast<quint16>(m_settings.value("Port",54857).toInt());
-        m_UDPServer->SetPort(m_port);
-        m_TCPServer->SetPort(m_port);
-        m_UDPServer->Start();
-        m_TCPServer->Start();
+        m_UDPServer->setPort(m_port);
+        m_TCPServer->setPort(m_port);
+        m_UDPServer->start();
+        m_TCPServer->start();
         if (m_settings.value("UPNPEnable", true).toBool())
             initUPNP(true);
         m_Shadow = m_settings.value("ShadowEnable", false).toBool();
@@ -183,8 +183,8 @@ void CP2PManager::init(bool flag)
     }
     else
     {
-        m_UDPServer->Stop();
-        m_TCPServer->Stop();
+        m_UDPServer->stop();
+        m_TCPServer->stop();
         initUPNP(false);
     }
 }

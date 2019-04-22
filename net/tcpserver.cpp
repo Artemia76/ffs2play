@@ -48,14 +48,14 @@ TCPServer::TCPServer(QObject *parent) :
 ///
 TCPServer::~TCPServer()
 {
-    Stop();
+    stop();
 }
 
 ///
 /// \brief TCPServer::setPort
 /// \param pPort
 ///
-void TCPServer::SetPort(quint16 pPort)
+void TCPServer::setPort(quint16 pPort)
 {
     if (!m_running) m_port = pPort;
 }
@@ -63,9 +63,9 @@ void TCPServer::SetPort(quint16 pPort)
 ///
 /// \brief TCPServer::start
 ///
-bool TCPServer::Start ()
+bool TCPServer::start ()
 {
-    if (this->isListening()) Stop();
+    if (this->isListening()) stop();
     m_running = this->listen(QHostAddress::AnyIPv4, m_port);
     if (m_running)
     {
@@ -83,7 +83,7 @@ bool TCPServer::Start ()
 ///
 /// \brief TCPServer::stop
 ///
-void TCPServer::Stop ()
+void TCPServer::stop ()
 {
     if (this->isListening())
     {
@@ -102,13 +102,13 @@ void TCPServer::incomingConnection(qintptr socketDescriptor)
     fireNewConnexion(client);
 }
 
-void TCPServer::Accept(TCPClient* pPeer)
+void TCPServer::accept(TCPClient* pPeer)
 {
 }
 
-void TCPServer::closeClient(TCPClient* pPeer)
+void TCPServer::OnCloseClient(TCPClient* pPeer)
 {
-    m_log->log("TCPServer : " + tr("Peer Disconnected : ") + pPeer->GetPeerAddress().toString(), Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("TCPServer : " + tr("Peer Disconnected : ") + pPeer->getPeerAddress().toString(), Qt::darkBlue,LEVEL_NORMAL);
     int i= m_clients.indexOf(pPeer);
     if (i!=-1)
         m_clients.removeAt(i);

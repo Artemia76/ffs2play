@@ -41,7 +41,7 @@ TCPClient::TCPClient(QObject *parent) :
 
 TCPClient::~TCPClient()
 {
-    Close();
+    close();
 }
 
 ///
@@ -55,9 +55,9 @@ void TCPClient::handle(qintptr ID)
     m_running=true;
 }
 
-void TCPClient::Connect(QHostAddress pHost, quint16 pPort)
+void TCPClient::connectToHost(QHostAddress pHost, quint16 pPort)
 {
-   if (m_running) Close();
+   if (m_running) close();
    m_PeerIP = pHost;
    m_Port = pPort;
    m_socketDescriptor=0;
@@ -68,7 +68,7 @@ void TCPClient::run()
 {
     if (m_Socket!=nullptr)
     {
-        if (m_Socket->isOpen()) Close();
+        if (m_Socket->isOpen()) close();
     }
     m_Socket = new QTcpSocket(this);
     if (m_socketDescriptor==0)
@@ -101,7 +101,7 @@ void TCPClient::run()
     }
 }
 
-void TCPClient::Close()
+void TCPClient::close()
 {
     if (m_running)
     {
@@ -118,7 +118,7 @@ void TCPClient::Close()
     }
 }
 
-void TCPClient::Send(const QNetworkDatagram& pData)
+void TCPClient::send(const QNetworkDatagram& pData)
 {
     if (m_Socket!=nullptr)
     {
@@ -129,17 +129,17 @@ void TCPClient::Send(const QNetworkDatagram& pData)
     }
 }
 
-QHostAddress TCPClient::GetPeerAddress()
+QHostAddress TCPClient::getPeerAddress()
 {
     return m_PeerIP;
 }
 
-quint16 TCPClient::GetPeerPort()
+quint16 TCPClient::getPeerPort()
 {
     return m_Port;
 }
 
-void TCPClient::ReadyRead()
+void TCPClient::OnIncomingData()
 {
     QNetworkDatagram datagram;
     datagram.setData(m_Socket->readAll());
@@ -153,7 +153,7 @@ void TCPClient::ReadyRead()
     emit(fireIncomingData(datagram));
 }
 
-void TCPClient::Connected()
+void TCPClient::OnConnected()
 {
     if (m_Socket!=nullptr)
     {
@@ -166,7 +166,7 @@ void TCPClient::Connected()
 
 }
 
-void TCPClient::Disconnected()
+void TCPClient::OnDisconnected()
 {
 #ifdef FFS_DEBUG
     m_log->log("TCPSocket : " + tr("Peer disconnected IP = ") +

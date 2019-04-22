@@ -30,11 +30,11 @@ protected:
 public:
     explicit    TCPClient(QObject *parent = nullptr);
                 ~TCPClient ();
-    void        Connect(QHostAddress pHost, quint16 pPort);
-    void        Close();
-    void        Send(const QNetworkDatagram& pData);
-    QHostAddress GetPeerAddress();
-    quint16     GetPeerPort();
+    void        connectToHost(QHostAddress pHost, quint16 pPort);
+    void        close();
+    void        send(const QNetworkDatagram& pData);
+    QHostAddress getPeerAddress();
+    quint16     getPeerPort();
 
 signals:
     void        error(QTcpSocket::SocketError socketError);
@@ -42,9 +42,9 @@ signals:
     void        fireDisconnected (TCPClient*);
 
 private slots:
-    void        ReadyRead () ;
-    void        Connected();
-    void        Disconnected();
+    void        OnIncomingData () ;
+    void        OnConnected();
+    void        OnDisconnected();
 };
 
 #endif // TCPCLIENT_H

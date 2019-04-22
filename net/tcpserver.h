@@ -53,16 +53,16 @@ protected:
 public:
     explicit    TCPServer(QObject *parent = nullptr);
                 ~TCPServer();
-    bool        Start();
-    void        Stop();
-    void        SetPort(quint16 pPort);
-    void        Accept(TCPClient*);
+    bool        start();
+    void        stop();
+    void        setPort(quint16 pPort);
+    void        accept(TCPClient*);
 
 signals:
     void        fireNewConnexion (TCPClient*);
 
 private slots:
-    void        closeClient(TCPClient*);
+    void        OnCloseClient(TCPClient*);
 signals:
 
 public slots:

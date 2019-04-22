@@ -47,14 +47,14 @@ private:
 public:
                 UDPServer(QObject *pParent = nullptr);
                 ~UDPServer();
-    bool        Start();
-    void        Stop();
-    void        SetPort(quint16 pPort);
-    void        Send(const QNetworkDatagram& pData);
+    bool        start();
+    void        stop();
+    void        setPort(quint16 pPort);
+    void        send(const QNetworkDatagram& pData);
 signals:
     void        fireIncomingData (QNetworkDatagram);
 private slots:
-    void        incomingData () ;
+    void        OnIncomingData () ;
 };
 
 #endif // UDPSERVER_H
