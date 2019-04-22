@@ -103,6 +103,9 @@ void CPeer::sendPing()
     }
     if ((m_counter > 5) && (!m_onLine) && (m_PeerMode==UDP) && (m_TCPClient==nullptr) && (!m_EP.isNull()))
     {
+#ifdef FFS_DEBUG
+        m_log->log("Peer [" + m_callSign + "] " + tr(" 5 retry occured, switch to TCPClient mode"),Qt::darkBlue,LEVEL_NORMAL);
+#endif
         m_TCPClient = new TCPClient(this);
         m_TCPClient->connectToHost(m_EP, m_port);
         connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));

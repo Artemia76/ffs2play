@@ -44,7 +44,7 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
             m_TCPServer->accept(m_TCPClient);
             m_PeerMode=TCP_SERVER;
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] " + tr(" received incoming TCP connection, switch to TCPServer mode"),Qt::darkBlue,LEVEL_VERBOSE);
+            m_log->log("Peer [" + m_callSign + "] " + tr(" received incoming TCP connection, switch to TCPServer mode"),Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
         else if((!m_EP.isEqual(pTCPClient->getPeerAddress())) || (m_port != pTCPClient->getPeerPort())) return;
