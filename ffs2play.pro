@@ -496,7 +496,8 @@ win32 {
     RC_ICONS = ffs2play_48x48.ico
     CONFIG(debug, debug|release) : DLL_SUFFIX=d
     CONFIG(release, debug|release) : DLL_SUFFIX=
-    deploy.commands = mkdir $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
+    exists($$DEPLOY_BASE) : deploy.commands += rmdir $$p($$DEPLOY_BASE) /s /q &&
+    deploy.commands += mkdir $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
     deploy.commands += xcopy /Y $$p($$OUT_PWD/ffs2play.exe) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/README.md) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/intl/*.qm) $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&

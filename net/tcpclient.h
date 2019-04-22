@@ -3,14 +3,13 @@
 
 #include <QObject>
 #include <QTcpSocket>
-#include <QThread>
 #include <QNetworkDatagram>
 
 #include "tools/clogger.h"
 
 class TCPServer;
 
-class TCPClient : public QThread
+class TCPClient : public QObject
 {
     friend class TCPServer;
     Q_OBJECT
@@ -24,7 +23,6 @@ private:
 
 protected:
     QTcpSocket* m_Socket;
-    void        run() override;
     void        handle(QTcpSocket* pSocket);
 
 public:
