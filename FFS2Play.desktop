@@ -1,0 +1,15 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=2.1.8
+Type=Application
+Categories=Game;Simulation
+Terminal=false
+Exec=/usr/bin/ffs2play
+Name=FFS2play
+Comment=Multiplayer Engine for Flight Simulators
+Comment[fr]= Moteur multijoueur pour simulateurs de vol
+Comment[es]= Motor multijugador para simuladores de vuelo
+Icon=/usr/share/icons/hicolor/72x72/apps/plane.png
+Keywords=aviation;simulation;multiplayer
+Keywords[fr]=aviation;simulation;multijoueur
+Keywords[es]=aviación;simulación;multijugador

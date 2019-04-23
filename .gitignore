@@ -8,7 +8,15 @@
 *.exe
 *.zip
 *.7z
+*.tgz
 ui*.h
+Makefile
+*.stash
+.directory
+moc_*
+*.deb
+description-pak
+ffs2play
 
 # Build results
 
@@ -26,6 +34,7 @@ build/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+*.o
 *_i.c
 *_p.c
 *.ilk

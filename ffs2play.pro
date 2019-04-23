@@ -411,6 +411,14 @@ unix:!macx {
     Theme.path = $${PREFIX}/share/$${TARGET}
     Theme.files = $$PWD/*.qss
     INSTALLS += Theme
+
+    Icons.path = $${PREFIX}/share/icons/hicolor/72x72/apps
+    Icons.files = $$PWD/gfx/plane.png
+    INSTALLS += Icons
+
+    Shortcut.path = $${PREFIX}/share/applications
+    Shortcut.files = $$PWD/*.desktop
+    INSTALLS += Shortcut
 }
 
 # Linux specific deploy target
