@@ -30,7 +30,9 @@ TEMPLATE = app
 
 TARGET_NAME=ffs2play
 
-TRANSLATIONS=intl/ffs2play_fr_FR.ts
+TRANSLATIONS= \
+    intl/ffs2play_fr_FR.ts \
+    intl/ffs2play_es_ES.ts
 
 # =======================================================================
 # Copy ennvironment variables into qmake variables

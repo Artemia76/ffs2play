@@ -92,9 +92,9 @@ void CPeer::sendPing()
     {
 #ifdef FFS_DEBUG
         if (m_counter > 2)
-            m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Timeout"),Qt::darkBlue,LEVEL_NORMAL);
+            m_log->log("Peer [" + m_callSign + "] " + " go offline = Timeout",Qt::darkBlue,LEVEL_NORMAL);
         else
-            m_log->log("Peer [" + m_callSign + "] " + tr(" go offline = Diconnected"),Qt::darkBlue,LEVEL_NORMAL);
+            m_log->log("Peer [" + m_callSign + "] " + " go offline = Diconnected",Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_onLine = false;
         m_version = 0;
@@ -104,7 +104,7 @@ void CPeer::sendPing()
     if ((m_counter > 7) && (!m_onLine) && (m_PeerMode==UDP) && (m_TCPClient==nullptr) && (!m_EP.isNull()))
     {
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] " + tr(" 5 retry occured, switch to TCPClient mode"),Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("Peer [" + m_callSign + "] " + " 5 retry occured, switch to TCPClient mode",Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_TCPClient = new TCPClient(this);
         m_TCPClient->connectToHost(m_EP, m_port);

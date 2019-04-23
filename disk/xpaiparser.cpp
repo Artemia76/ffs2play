@@ -58,7 +58,7 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
         if (!query.next())
         {
 #ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : No record was found for ") + pKey, Qt::darkYellow,LEVEL_VERBOSE);
+            m_log->log("AIMapping : No record was found for " + pKey, Qt::darkYellow,LEVEL_VERBOSE);
 #endif
             try
             {
@@ -84,14 +84,14 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 Static_CG_Height =  s.value("properties","acf/_h_eqlbm").toDouble();
                 Static_Pitch =  s.value("properties","acf/_the_eqlbm").toDouble();
 #if FFS_DEBUG
-                m_log->log(tr("AIMapping : Path = ") + Path,Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : Editor = ") + Editor,Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : ATCModel = ") + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : ATCType = ") + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : Category = ") + Category, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : EngineType = ") + QString::number(Engine_Type), Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : CG Height = ") +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log(tr("AIMapping : Pitch = ") +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Path = " + Path,Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Editor = " + Editor,Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : ATCModel = " + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : ATCType = " + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Category = " + Category, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : EngineType = " + QString::number(Engine_Type), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : CG Height = " +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Pitch = " +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
                 int nb_moteur = 0;
                 while (true)
@@ -104,7 +104,7 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                     else break;
                 }
 #if FFS_DEBUG
-                m_log->log(tr("AIMapping : Engine quantity = ") + QString::number(nb_moteur),Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Engine quantity = " + QString::number(nb_moteur),Qt::darkYellow,LEVEL_VERBOSE);
 #endif
                 int nb_title = 0;
                 while (true)
@@ -112,7 +112,7 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                     if (Title != "")
                     {
 #if FFS_DEBUG
-                        m_log->log(tr("AIMapping : livery found Title = ") + Title,Qt::darkYellow,LEVEL_VERBOSE);
+                        m_log->log("AIMapping : livery found Title = " + Title,Qt::darkYellow,LEVEL_VERBOSE);
 #endif
                         nb_title++;
                         query.prepare("SELECT * FROM Aircrafts WHERE (Title = :Title) AND (checksum = :checksum) AND (Sim = :Sim)" );

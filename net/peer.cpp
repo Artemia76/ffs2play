@@ -191,8 +191,8 @@ void CPeer::spawnAI(bool pFlag)
     {
 #ifdef FFS_DEBUG
         m_log->log("Peer [" + m_callSign + "] " +
-                tr(" Local request for Title solve = ") + m_data.Title +
-                tr (" , Model = ") + m_data.Model ,
+                " Local request for Title solve = " + m_data.Title +
+                " , Model = " + m_data.Model ,
                 Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_AIResolution = m_AIMapping->SolveTitle(m_data.Title,m_data.Model, m_data.Type);
@@ -208,10 +208,10 @@ void CPeer::spawnAI(bool pFlag)
             if (m_simManager->removeAI(m_objectID))
             {
 #ifdef FFS_DEBUG
-                m_log->log("Peer [" + m_callSign + "] " + tr(" Remove aircraft"), Qt::darkBlue,LEVEL_NORMAL);
+                m_log->log("Peer [" + m_callSign + "] " + " Remove aircraft", Qt::darkBlue,LEVEL_NORMAL);
 #endif
             }
-            else m_log->log("Peer [" + m_callSign + "] " + tr(" Error during removing of the aircraft"), Qt::darkMagenta);
+            else m_log->log("Peer [" + m_callSign + "] " + " Error during removing of the aircraft", Qt::darkMagenta);
         }
     }
 }
@@ -232,8 +232,8 @@ void CPeer::createAI()
         if (m_data.Category == "Helicopter") m_trySimpleAI = true;
         m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] " + tr(" Requesting creation of aircraft with Title = ") + QString::fromStdString(m_AIResolution.title())
-            + tr(" Model = ") + QString::fromStdString(m_AIResolution.model())
+        m_log->log("Peer [" + m_callSign + "] " + " Requesting creation of aircraft with Title = " + QString::fromStdString(m_AIResolution.title())
+            + " Model = " + QString::fromStdString(m_AIResolution.model())
             , Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_simManager->createAI(m_AIResolution, m_tail,m_data, m_trySimpleAI);

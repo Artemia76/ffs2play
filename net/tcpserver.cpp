@@ -38,7 +38,7 @@ TCPServer::TCPServer(QObject *parent) :
     qRegisterMetaType<QHostAddress>("QHostAddress");
     m_log = CLogger::instance();
 #ifdef FFS_DEBUG
-    m_log->log("TCPServer : " + tr("constructor"), Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("TCPServer : " + "constructor", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     m_running = false;
     m_port = 0;
@@ -71,13 +71,13 @@ bool TCPServer::start ()
     if (m_running)
     {
 #ifdef FFS_DEBUG
-        m_log->log("TCPServer : " + tr("listenning on port ") + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("TCPServer : " + "listenning on port " + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
 #endif
         connect(this,SIGNAL(newConnection()),this,SLOT(OnNewConnection()));
     }
     else
     {
-        m_log->log("TCPServer : " + tr("Failed to open TCP port ") + QString::number(m_port), Qt::darkMagenta);
+        m_log->log("TCPServer : " + "Failed to open TCP port " + QString::number(m_port), Qt::darkMagenta);
     }
     return m_running;
 }
@@ -100,7 +100,7 @@ void TCPServer::OnNewConnection()
     QTcpSocket* socket = nextPendingConnection();
     if (socket==nullptr) return;
 #ifdef FFS_DEBUG
-    m_log->log("TCPServer : " + tr("incomingConnection..."), Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("TCPServer : " + "incomingConnection...", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     TCPClient* client = new TCPClient(this);
     client->handle(socket);
@@ -116,7 +116,7 @@ void TCPServer::accept(TCPClient* pPeer)
 void TCPServer::OnCloseClient(TCPClient* pPeer)
 {
 #ifdef FFS_DEBUG
-    m_log->log("TCPServer : " + tr("Peer Disconnected : ") + pPeer->getPeerAddress().toString(), Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("TCPServer : " + "Peer Disconnected : " + pPeer->getPeerAddress().toString(), Qt::darkBlue,LEVEL_NORMAL);
 #endif
     int i= m_clients.indexOf(pPeer);
     if (i!=-1)

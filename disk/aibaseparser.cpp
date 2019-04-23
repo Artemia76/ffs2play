@@ -38,7 +38,7 @@ AIBaseParser::AIBaseParser(QObject *parent) : QObject(parent)
     QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
     m_Table = version.valueToKey(m_simManager->getVersion());
 #ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : aibaseparser constructor : ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+    m_log->log("AIMapping : aibaseparser constructor : " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
     // AI Database initialisation
     initSQLite();
@@ -48,7 +48,7 @@ AIBaseParser::~AIBaseParser()
 {
     m_DB.close();
 #ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : aibaseparser destructor : ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+    m_log->log("AIMapping : aibaseparser destructor : " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
 }
 
@@ -66,7 +66,7 @@ void AIBaseParser::initSQLite()
     }
     m_BaseFile = PathDatabase + QString("/AIDB.sqlite");
 #ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : open database : ") + m_BaseFile, Qt::darkYellow,LEVEL_NORMAL);
+    m_log->log("AIMapping : open database : " + m_BaseFile, Qt::darkYellow,LEVEL_NORMAL);
 #endif
     m_DB.setDatabaseName(m_BaseFile);
     m_DB.open();
@@ -77,7 +77,7 @@ void AIBaseParser::initSQLite()
     if (!query.exec())
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create Version Table : ") + query.lastError().text(), Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to create Version Table : " + query.lastError().text(), Qt::darkYellow,LEVEL_NORMAL);
 #endif
         return;
     }
@@ -89,7 +89,7 @@ void AIBaseParser::initSQLite()
     if (!query.exec())
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create SimPath Table"), Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to create SimPath Table", Qt::darkYellow,LEVEL_NORMAL);
 #endif
         return;
     }
@@ -101,7 +101,7 @@ void AIBaseParser::initSQLite()
     if (!query.exec())
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create Aircrafts Table"), Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to create Aircrafts Table", Qt::darkYellow,LEVEL_NORMAL);
 #endif
         return;
     }
@@ -113,7 +113,7 @@ void AIBaseParser::initSQLite()
     if (!query.exec())
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to create Replacement Table"), Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to create Replacement Table", Qt::darkYellow,LEVEL_NORMAL);
 #endif
         return;
     }
@@ -158,7 +158,7 @@ void AIBaseParser::DBTableVersionCheck(const QString& pTable, int pVersion, bool
     else
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to query Version Table : ") + query.lastError().text(), Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to query Version Table : " + query.lastError().text(), Qt::darkYellow,LEVEL_NORMAL);
 #endif
     }
     if (NeedUpdate)
@@ -207,7 +207,7 @@ QStringList AIBaseParser::getPathList()
         else
         {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to query path list for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to query path list for simulator " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
         }
     }
@@ -250,7 +250,7 @@ void AIBaseParser::scanSimObject()
     else
     {
 #if FFS_DEBUG
-        m_log->log(tr("AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion"),Qt::darkMagenta);
+        m_log->log("AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion",Qt::darkMagenta);
 #endif
     }
     //Close DB Connexion
@@ -270,7 +270,7 @@ void AIBaseParser::DBFilePurge()
     int m_NbDeleted=0;
     int total =0;
 #ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : Start of automatic cleaning..."),Qt::darkYellow,LEVEL_NORMAL);
+    m_log->log("AIMapping : Start of automatic cleaning...",Qt::darkYellow,LEVEL_NORMAL);
 #endif
     QSqlQuery query(m_DB);
     query.prepare("SELECT Path FROM Aircrafts WHERE Sim =:Sim");
@@ -284,7 +284,7 @@ void AIBaseParser::DBFilePurge()
             if (!Acft.exists())
             {
 #ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : deleting file ") + Acft.fileName() + tr(" from DB"),Qt::darkYellow,LEVEL_NORMAL);
+                m_log->log("AIMapping : deleting file " + Acft.fileName() + " from DB",Qt::darkYellow,LEVEL_NORMAL);
 #endif
                 m_NbDeleted++;
                 QSqlQuery query2(m_DB);
@@ -296,7 +296,7 @@ void AIBaseParser::DBFilePurge()
         }
     }
 #ifdef FFS_DEBUG
-    m_log->log(tr("AIMapping : End of automatic cleaning.: ") + QString::number(m_NbDeleted)  + tr(" over ") + QString::number(total) + tr(" entry(ies) removed"),Qt::darkYellow,LEVEL_NORMAL);
+    m_log->log("AIMapping : End of automatic cleaning.: " + QString::number(m_NbDeleted)  + " over " + QString::number(total) + " entry(ies) removed",Qt::darkYellow,LEVEL_NORMAL);
 #endif
 }
 
@@ -342,7 +342,7 @@ QString AIBaseParser::getAircraftPath(const QString &pTitle)
         else
         {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to query path list for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to query path list for simulator " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
         }
     }
@@ -384,7 +384,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     if (Rule != "")
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Local rule found in DB : ") +  Title + tr(" replaced by ") + Rule, Qt::darkYellow,LEVEL_VERBOSE);
+        m_log->log("AIMapping : Local rule found in DB : " +  Title + " replaced by " + Rule, Qt::darkYellow,LEVEL_VERBOSE);
 #endif
         Title = Rule;
     }
@@ -405,7 +405,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             Resol.set_model(query.value(4).toString().toStdString());
             Resol.set_airline(query.value(5).toString().toStdString());
 #ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : Title Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
+            m_log->log("AIMapping : Title Match found in database : " + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
         }
         else if (Model.count()>0)
@@ -424,14 +424,14 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
                     Resol.set_model(query.value(4).toString().toStdString());
                     Resol.set_airline(query.value(5).toString().toStdString());
     #ifdef FFS_DEBUG
-                    m_log->log(tr("AIMapping : ATC Model")+ Model+ tr(" Match found in database : ") + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
+                    m_log->log("AIMapping : ATC Model"+ Model+ " Match found in database : " + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
     #endif
                 }
             }
             else
             {
 #ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Fail to query database.", Qt::darkYellow,LEVEL_VERBOSE);
 #endif
             }
         }
@@ -456,7 +456,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             else
             {
 #ifdef FFS_DEBUG
-                m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Fail to query database.", Qt::darkYellow,LEVEL_VERBOSE);
 #endif
             }
         }
@@ -465,7 +465,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     else
     {
 #ifdef FFS_DEBUG
-            m_log->log(tr("AIMapping : Fail to query database."), Qt::darkYellow,LEVEL_VERBOSE);
+            m_log->log("AIMapping : Fail to query database.", Qt::darkYellow,LEVEL_VERBOSE);
 #endif
     }
     return Resol;
@@ -619,7 +619,7 @@ bool AIBaseParser::addPath(const QString& pPath,const QString& pSim)
     if (!query.exec())
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to add path ") + pPath + tr(" for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to add path " + pPath + " for simulator " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
         return false;
     }
@@ -642,7 +642,7 @@ bool AIBaseParser::delPath(const QString& pPath)
     if (query.exec())
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Remove ") + QString::number(query.numRowsAffected()) + tr(" AI for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Remove " + QString::number(query.numRowsAffected()) + " AI for simulator " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
     }
     query.prepare("DELETE FROM SimPaths WHERE (Sim  = :Sim ) and (Path = :Path);");
@@ -651,7 +651,7 @@ bool AIBaseParser::delPath(const QString& pPath)
     if (!query.exec())
     {
 #ifdef FFS_DEBUG
-        m_log->log(tr("AIMapping : Fail to remove path ") + pPath + tr(" for simulator ") + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+        m_log->log("AIMapping : Fail to remove path " + pPath + " for simulator " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
         return false;
     }

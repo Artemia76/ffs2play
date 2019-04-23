@@ -120,7 +120,7 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                 item.Port=Player.attribute("port").toUShort();
                 item.externalIP=m_crypto.DecryptFromBase64(Player.attribute("ip"));
 #ifdef FFS_DEBUG
-                m_log->log("WEBManager : " + tr(" CallSign = ") + item.CallSign
+                m_log->log("WEBManager : " + " CallSign = " + item.CallSign
                             + " IP = " + item.externalIP.toString()
                             + " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
@@ -130,7 +130,7 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                 {
                     item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.string(j))));
 #ifdef FFS_DEBUG
-                    m_log->log("WEBManager : " + tr(" Local IP = ") + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
+                    m_log->log("WEBManager : " + " Local IP = " + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                 }
                 //Check for team membership
