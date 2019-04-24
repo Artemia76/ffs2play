@@ -158,7 +158,7 @@ void CFGManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("FGManager : " + "Send freezeAI", Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("FGManager : Send freezeAI", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
 }
@@ -169,7 +169,7 @@ void CFGManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
 void CFGManager::sendPing()
 {
 #ifdef FFS_DEBUG
-    m_log->log("FGManager : " + "Send PING", Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("FGManager : Send PING", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     /*QByteArray Data;
     QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -188,7 +188,7 @@ void CFGManager::sendData()
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("FGManager : " + "Send DATA", Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("FGManager : Send DATA", Qt::darkBlue,LEVEL_NORMAL);
 #endif
         /*QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -227,7 +227,7 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
     if (FGData.GetAirData(m_state))
     {
 #ifdef FFS_DEBUG
-        m_log->log("FGManager : " + "Received Data from FG : Model = " +
+        m_log->log("FGManager : Received Data from FG : Model = " +
             m_state.Title +
             " , Latitude = " + QString::number(m_state.Latitude) +
             " , Longitude = " + QString::number(m_state.Longitude) +

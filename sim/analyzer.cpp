@@ -512,7 +512,7 @@ void Analyzer::setPhase(Phases pPhase)
     m_phase = pPhase;
 
 #ifdef FFS_DEBUG
-    m_log->log("Analyzer : " + "Change Phase = " +  getPhaseName(), Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("Analyzer : Change Phase = " +  getPhaseName(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     firePhaseChange(pPhase);
 }
