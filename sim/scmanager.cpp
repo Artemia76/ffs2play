@@ -187,7 +187,7 @@ void CSCManager::process(SIMCONNECT_RECV *pData, DWORD)
         default:
         {
 #ifdef FFS_DEBUG
-            m_log->log("SCManager : " + "Get an unknown Event ID", Qt::darkMagenta,LEVEL_VERBOSE);
+            m_log->log("SCManager : Get an unknown Event ID", Qt::darkMagenta,LEVEL_VERBOSE);
 #endif
             break;
         }
@@ -376,7 +376,7 @@ void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
 void CSCManager::OnRecvQuit(SIMCONNECT_RECV*)
 {
 #ifdef FFS_DEBUG
-    m_log->log("SCManager : " + "Receive SIMCONNECT_RECV event", Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("SCManager : Receive SIMCONNECT_RECV event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     close();
     emit(fireSimDisconnected());
@@ -389,7 +389,7 @@ void CSCManager::OnRecvQuit(SIMCONNECT_RECV*)
 void CSCManager::OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data)
 {
 #ifdef FFS_DEBUG
-    m_log->log("SCManager : " + "Receive SIMCONNECT_RECV_SYSTEM_STATE event", Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("SCManager : Receive SIMCONNECT_RECV_SYSTEM_STATE event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     SimEvent Event;
     switch (data->dwRequestID)
@@ -439,7 +439,7 @@ void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 {
 #ifdef FFS_DEBUG
-    m_log->log("SCManager : " + "Receive SIMCONNECT_RECV_EVENT event", Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("SCManager : Receive SIMCONNECT_RECV_EVENT event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     SimEvent Event;
     Event.Data = static_cast<int>(data->dwData);
@@ -492,7 +492,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
         case static_cast<DWORD>(REQUEST_ID::PERIODIQUE):
         {
 #ifdef FFS_DEBUG
-            m_log->log("SCManager : " + "OnRecvSimObjectData Periodic", Qt::darkBlue,LEVEL_VERBOSE);
+            m_log->log("SCManager : OnRecvSimObjectData Periodic", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
             UserState* Data =  reinterpret_cast<UserState*>(&data->dwData);
             m_state.TimeStamp = Now();
@@ -546,7 +546,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
             if (data->dwRequestID >= static_cast<DWORD>(REQUEST_ID::AI_UPDATE))
             {
 #ifdef FFS_DEBUG
-                m_log->log("SCManager : " + "OnRecvSimObjectData AIUpdate ObjectID = " + QString::number(data->dwRequestID-static_cast<DWORD>(REQUEST_ID::AI_UPDATE)), Qt::darkBlue,LEVEL_VERBOSE);
+                m_log->log("SCManager : OnRecvSimObjectData AIUpdate ObjectID = " + QString::number(data->dwRequestID-static_cast<DWORD>(REQUEST_ID::AI_UPDATE)), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                 AIUpdateStruct* Data =  reinterpret_cast<AIUpdateStruct*>(&data->dwData);
                 CAircraftState AIData;
@@ -684,7 +684,7 @@ void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMO
         case static_cast<DWORD>(EVENT_ID::ADDED_AIRCRAFT):
         {
 #ifdef FFS_DEBUG
-            m_log->log("SCManager : " + "Object as been created type = " + QString::number(data->eObjType)
+            m_log->log("SCManager : Object as been created type = " + QString::number(data->eObjType)
                     + tr(" with n°") + QString::number(data->dwData)
                    ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -693,7 +693,7 @@ void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMO
         case static_cast<DWORD>(EVENT_ID::REMOVED_AIRCRAFT):
         {
 #ifdef FFS_DEBUG
-            m_log->log("SCManager : " + "Object as been removed type = " + QString::number(data->eObjType)
+            m_log->log("SCManager : Object as been removed type = " + QString::number(data->eObjType)
                     + " with n°" + QString::number(data->dwData)
                    ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -714,7 +714,7 @@ void CSCManager::OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data
     if (it != m_AIProcess.end())
     {
 #ifdef FFS_DEBUG
-        m_log->log("SCManager : " + "Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID Request = " + QString::number(data->dwRequestID) +
+        m_log->log("SCManager : Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID Request = " + QString::number(data->dwRequestID) +
                    " , Name = " + it.value() +
                    " , Object_ID = " + QString::number(data->dwObjectID),
                    Qt::darkBlue,LEVEL_NORMAL);
@@ -783,7 +783,7 @@ bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircr
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("SCManager : " + "Create_AI Title = "+ QString::fromStdString(pAircraft.title()) + tr(" ; Tail = ")+pTail + " ; NonAIObject=" + QString::number(pNonAIObject), Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("SCManager : Create_AI Title = "+ QString::fromStdString(pAircraft.title()) + tr(" ; Tail = ")+pTail + " ; NonAIObject=" + QString::number(pNonAIObject), Qt::darkBlue,LEVEL_NORMAL);
 #endif
         SIMCONNECT_DATA_INITPOSITION data;
         data.Altitude = pData.Altitude;
@@ -827,7 +827,7 @@ bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircr
 bool CSCManager::removeAI(uint& pObjectID)
 {
 #ifdef FFS_DEBUG
-    m_log->log("SCManager : " + "removeAI called object ID = " + QString::number(pObjectID), Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("SCManager : removeAI called object ID = " + QString::number(pObjectID), Qt::darkBlue,LEVEL_NORMAL);
 #endif
     if (m_connected)
     {
@@ -849,7 +849,7 @@ bool CSCManager::removeAI(uint& pObjectID)
 bool CSCManager::updateAI(uint pObjectID, const CAircraftState& pData)
 {
 #ifdef FFS_DEBUG
-    m_log->log("SCManager : " + "updateAI called", Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("SCManager : updateAI called", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (m_connected && (pObjectID>0))
     {
@@ -901,7 +901,7 @@ bool CSCManager::updateAI(uint pObjectID, const CAircraftState& pData)
 void CSCManager::freezeAI(uint pObjectID, bool pState)
 {
 #ifdef FFS_DEBUG
-    m_log->log("SCManager : " + "freezeAI called", Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("SCManager : freezeAI called", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (m_connected && (pObjectID > 0))
     {

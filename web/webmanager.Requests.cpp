@@ -112,12 +112,12 @@ void CWebManager::CheckNewVersion()
         CheckVersionURL +="&beta=1";
     }
 #ifdef Q_OS_MAC
-    CheckVersionURL +="&os=mac";
+    CheckVersionURL += "&os=mac";
 #else
 #ifdef Q_OS_LINUX
-    CheckVersionURL +="&os=lin";
+    CheckVersionURL += "&os=lin";
 #else
-    CheckVersionURL +="&os=win";
+    CheckVersionURL += "&os=win";
 #endif
 #endif
     CHttpRequest* Request =new CHttpRequest(this);

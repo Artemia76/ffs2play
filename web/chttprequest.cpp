@@ -82,7 +82,7 @@ void CHttpRequest::execute(const QString& pURL, QDomDocument& pDoc)
     connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
 #ifdef FFS_DEBUG
     m_log->log("HttpRequest : URL = " + pURL,Qt::darkGreen,LEVEL_VERBOSE );
-    m_log->log("HttpRequest Post = " + QString(content),Qt::darkGreen,LEVEL_VERBOSE );
+    m_log->log("HttpRequest : Post = " + QString(content),Qt::darkGreen,LEVEL_VERBOSE );
 #endif
 }
 
@@ -96,7 +96,7 @@ void CHttpRequest::execute(const QString& URL)
     m_reply = m_ptNetworkManager->get(m_request);
     connect(m_reply,&QNetworkReply::finished,this,&CHttpRequest::callback);
 #ifdef FFS_DEBUG
-    m_log->log("HttpRequest Get URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
+    m_log->log("HttpRequest : Get URL = " + URL,Qt::darkGreen,LEVEL_VERBOSE );
 #endif
 }
 
@@ -107,7 +107,7 @@ void CHttpRequest::callback()
 {
     if (m_reply!= nullptr) m_response = m_reply->readAll();
 #ifdef FFS_DEBUG
-    m_log->log("HttpRequest Response = " + m_response,Qt::darkRed,LEVEL_VERBOSE );
+    m_log->log("HttpRequest : Response = " + m_response,Qt::darkRed,LEVEL_VERBOSE );
 #endif
     emit(finished(this));
 }
@@ -134,7 +134,7 @@ bool CHttpRequest::getAsXml(QDomDocument& pDoc)
         pDoc.setContent(m_response,&ErrorMessage);
         if (!ErrorMessage.isEmpty())
         {
-            m_log->log("HttpRequest error : " + ErrorMessage);
+            m_log->log("HttpRequest : error = " + ErrorMessage);
             return false;
         }
         return true;

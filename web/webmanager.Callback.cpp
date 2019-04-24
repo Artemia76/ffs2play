@@ -41,7 +41,7 @@
 void CWebManager::HelloCallback (CHttpRequest* Request)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "Get HelloCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("WEBManager : Get HelloCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QDomDocument Doc;
     if (Request->getAsXml(Doc))
@@ -50,7 +50,7 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
         QString SCert = NodeCert.firstChild().nodeValue();
         m_sCrypted_AESKey = m_crypto.RSA_EncryptToBase64(SCert, m_crypto.EncryptionKey());
 #ifdef FFS_DEBUG
-        m_log->log("WEBManager: AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("WEBManager : AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
 #endif
         emit (FireHelloCallback());
     }
@@ -64,7 +64,7 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
 void CWebManager::ConnectCallback(CHttpRequest *pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "Get ConnectCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("WEBManager : Get ConnectCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QDomDocument Doc;
     try
@@ -86,11 +86,11 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
     #ifdef FFS_DEBUG
                         if (ExternalIP.isNull())
                         {
-                            m_log->log("WEBManager : " + "Get invalid external IP",Qt::darkMagenta,LEVEL_VERBOSE);
+                            m_log->log("WEBManager : Get invalid external IP",Qt::darkMagenta,LEVEL_VERBOSE);
                         }
                         else
                         {
-                            m_log->log("WEBManager : " + "Get external IP = " + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
+                            m_log->log("WEBManager : Get external IP = " + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
                         }
     #endif
                     }
@@ -143,7 +143,7 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
 void CWebManager::LiveUpdateCallback(CHttpRequest* pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "Get LiveUpdateCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("WEBManager : Get LiveUpdateCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (m_bConnected)
     {
@@ -176,7 +176,7 @@ void CWebManager::LiveUpdateCallback(CHttpRequest* pRequest)
 void CWebManager::ATCCallback(CHttpRequest *pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "Get ATCCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("WEBManager : Get ATCCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     pRequest->deleteLater();
 }
@@ -188,7 +188,7 @@ void CWebManager::ATCCallback(CHttpRequest *pRequest)
 void CWebManager::LogoutCallback(CHttpRequest* 	pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "Get LogoutCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("WEBManager : Get LogoutCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     pRequest->deleteLater();
 }
@@ -199,7 +199,7 @@ void CWebManager::LogoutCallback(CHttpRequest* 	pRequest)
 void CWebManager::OnATCUpdate()
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "Get ATCUpdate",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("WEBManager : Get ATCUpdate",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (isConnected() && m_simManager->isConnected())
     {
@@ -231,7 +231,7 @@ void CWebManager::OnATCUpdate()
 void CWebManager::OnLiveUpdate()
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "Get OnLiveUpdate",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("WEBManager : Get OnLiveUpdate",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (m_bConnected && m_simManager->isConnected())
     {
@@ -290,7 +290,7 @@ void CWebManager::CheckNewVersionCallback(CHttpRequest* pRequest)
         else
         {
 #ifdef FFS_DEBUG
-            m_log->log("WEBManager : " + "Error on Version checking : " + xmlError.text(),Qt::darkBlue,LEVEL_NORMAL);
+            m_log->log("WEBManager : Error on Version checking : " + xmlError.text(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
     }

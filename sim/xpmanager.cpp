@@ -130,7 +130,7 @@ void CXPManager::sendScrollingText(const QString& pMessage)
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "Send scrolling text : " + pMessage, Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("XPManager : Send scrolling text = " + pMessage, Qt::darkBlue,LEVEL_NORMAL);
 #endif
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -138,7 +138,7 @@ void CXPManager::sendScrollingText(const QString& pMessage)
         StringToStream(stream,pMessage);
         QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "Hexa : " + QString(Data.toHex()), Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("XPManager : Hexa = " + QString(Data.toHex()), Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_Server->send(Output);
     }
@@ -156,7 +156,7 @@ bool CXPManager::createAI(AIResol& pAircraft, const QString& pTail,const CAircra
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "Send createAI", Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("XPManager : Send createAI", Qt::darkBlue,LEVEL_NORMAL);
 #endif
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -180,7 +180,7 @@ bool CXPManager::removeAI(uint& pObjectID)
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "Send removeAI", Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("XPManager : Send removeAI", Qt::darkBlue,LEVEL_NORMAL);
 #endif
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -206,7 +206,7 @@ bool CXPManager::updateAI(uint pObjectID, const CAircraftState& pData)
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "Send updateAI", Qt::darkBlue,LEVEL_VERBOSE);
+        m_log->log("XPManager : Send updateAI", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -230,7 +230,7 @@ void CXPManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "Send freezeAI", Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("XPManager : Send freezeAI", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
 }
@@ -241,7 +241,7 @@ void CXPManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
 void CXPManager::sendPing()
 {
 #ifdef FFS_DEBUG
-    m_log->log("XPManager : " + "Send PING Option=" + QString::number(m_options), Qt::darkBlue,LEVEL_VERBOSE);
+    m_log->log("XPManager : Send PING Option=" + QString::number(m_options), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QByteArray Data;
     QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -261,7 +261,7 @@ void CXPManager::sendData(bool pFlag)
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "Send DATA", Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("XPManager : Send DATA", Qt::darkBlue,LEVEL_NORMAL);
 #endif
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -344,7 +344,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
                 m_version.Build = static_cast<int>(Build);
                 m_version.Name = QString::asprintf("xffs2play_%i_%i_%i", m_version.Major,m_version.Minor,m_version.Build);
 #ifdef FFS_DEBUG
-                m_log->log("XPManager : " + "Plugin Version Major = " + QString::number(m_version.Major) +
+                m_log->log("XPManager : Plugin Version Major = " + QString::number(m_version.Major) +
                    " Minor = " + QString::number(m_version.Minor) +
                    " Build = " + QString::number(m_version.Build)
                    ,Qt::darkBlue,LEVEL_NORMAL);
@@ -365,7 +365,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
                 m_PlayerData.ParseFromString(data.toStdString());
                 m_state.fromAirData(m_PlayerData);
 #ifdef FFS_DEBUG
-                m_log->log("XPManager : " + "Receive DATA_SEND event", Qt::darkBlue,LEVEL_VERBOSE);
+                m_log->log("XPManager : Receive DATA_SEND event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                 emit(fireSimVariableEvent(m_state));
                 emit(fireSimEventFrame(20,50));
@@ -381,7 +381,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
         {
             m_Mutex.lock();
 #ifdef FFS_DEBUG
-                m_log->log("XPManager : " + "Receive ADD_PEER " +
+                m_log->log("XPManager : Receive ADD_PEER " +
                     QString::fromStdString(datagram.data().toHex(':').toStdString())
                     , Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -399,8 +399,8 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
                 else
                 {
 #ifdef FFS_DEBUG
-                    m_log->log("XPManager : " + "Receive ADD_PEER event, object ID=" +
-                    QString::number(Object_ID) + "callsign=" +
+                    m_log->log("XPManager : Receive ADD_PEER event, object ID = " +
+                    QString::number(Object_ID) + "callsign = " +
                     CallSign
                     , Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -423,7 +423,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
                 quint32 Object_ID;
                 stream >> Object_ID;
 #ifdef FFS_DEBUG
-                m_log->log("XPManager : " + "Receive DEL_PEER event, object ID=" +
+                m_log->log("XPManager : Receive DEL_PEER event, object ID = " +
                     QString::number(Object_ID)
                     , Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -445,7 +445,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
         default:
         {
 #ifdef FFS_DEBUG
-        m_log->log("XPManager : " + "unknown code = " +
+        m_log->log("XPManager : unknown code = " +
                 QString(Code),
                 Qt::darkBlue,LEVEL_VERBOSE);
 #endif

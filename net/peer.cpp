@@ -190,8 +190,7 @@ void CPeer::spawnAI(bool pFlag)
     if (pFlag && (m_objectID == 0) && (m_spawned == 0))
     {
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] " +
-                " Local request for Title solve = " + m_data.Title +
+        m_log->log("Peer [" + m_callSign + "] : Local request for Title solve = " + m_data.Title +
                 " , Model = " + m_data.Model ,
                 Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -208,10 +207,10 @@ void CPeer::spawnAI(bool pFlag)
             if (m_simManager->removeAI(m_objectID))
             {
 #ifdef FFS_DEBUG
-                m_log->log("Peer [" + m_callSign + "] " + " Remove aircraft", Qt::darkBlue,LEVEL_NORMAL);
+                m_log->log("Peer [" + m_callSign + "] : Remove aircraft", Qt::darkBlue,LEVEL_NORMAL);
 #endif
             }
-            else m_log->log("Peer [" + m_callSign + "] " + " Error during removing of the aircraft", Qt::darkMagenta);
+            else m_log->log("Peer [" + m_callSign + "] : Error during removing of the aircraft", Qt::darkMagenta);
         }
     }
 }
@@ -232,7 +231,7 @@ void CPeer::createAI()
         if (m_data.Category == "Helicopter") m_trySimpleAI = true;
         m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] " + " Requesting creation of aircraft with Title = " + QString::fromStdString(m_AIResolution.title())
+        m_log->log("Peer [" + m_callSign + "] : Requesting creation of aircraft with Title = " + QString::fromStdString(m_AIResolution.title())
             + " Model = " + QString::fromStdString(m_AIResolution.model())
             , Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -320,11 +319,6 @@ void CPeer::refreshData()
             m_deltaBank = m_futurData.Bank - m_actualPos.Bank;
             if (m_deltaBank < -180) m_deltaBank += 360;
             if (m_deltaBank >= 180) m_deltaBank -= 360;
-            /*m_log->log(tr("Horizon = ") + QString::number(CoefHoriz) +
-                       " Retard = " + QString::number(Retard.count()) +
-                       " RemoteRefreshyRate =" + QString::number(m_remoteRefreshRate.count()) +
-                       " m_predictiveTime =" + QString::number(m_predictiveTime.count())
-                       ,Qt::darkBlue,LEVEL_NORMAL);*/
         }
         m_spawned = 7;
         m_actualPos.Pitch = m_AIData.Pitch;

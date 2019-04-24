@@ -7,11 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>680</width>
-    <height>128</height>
+    <height>130</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Aircraft Replacement</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
   </property>
   <property name="modal">
    <bool>true</bool>

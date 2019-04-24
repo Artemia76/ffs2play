@@ -90,16 +90,22 @@ void AIMapping::onSimReceiveOpen()
         break;
 #endif
         case SimConnector::SIM_VERSION::XPLANE:
-        m_AIParser = new XPAIParser(this);
-        break;
+        {
+            m_AIParser = new XPAIParser(this);
+            break;
+        }
         case SimConnector::SIM_VERSION::XPLANE_CSL:
-        m_AIParser = new XPCSLParser(this);
-        break;
+        {
+            m_AIParser = new XPCSLParser(this);
+            break;
+        }
         /*case SimConnector::SIM_VERSION::FLIGHTGEAR:
         m_AIParser = new FGAIParser(this);
         break;*/
         default:
-        return;
+        {
+            return;
+        }
     }
     m_AIParser->startScanSimObject();
     m_simManager->setPathList(getPathList());

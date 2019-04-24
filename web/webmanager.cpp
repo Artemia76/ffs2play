@@ -85,7 +85,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     m_settings.endGroup();
     m_currentUser = num;
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : " + "AES Key generated = " + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("WEBManager : AES Key generated = " + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
 
