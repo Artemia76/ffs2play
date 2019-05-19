@@ -126,7 +126,7 @@
     <message>
         <location filename="../net/p2pmanager.cpp" line="797"/>
         <source>Drop rate : </source>
-        <translation>Tasa de abandono : </translation>
+        <translation>Tasa de caída : </translation>
     </message>
     <message>
         <location filename="../net/p2pmanager.cpp" line="797"/>
@@ -144,7 +144,7 @@
     <message>
         <location filename="../net/peer.cpp" line="176"/>
         <source> leave from P2P Network</source>
-        <translation> salir de la red P2P</translation>
+        <translation> saliendo de la red P2P</translation>
     </message>
 </context>
 <context>
@@ -182,7 +182,7 @@
     <message>
         <location filename="../sim/scmanager.cpp" line="430"/>
         <source>Get a SimConnect exception = </source>
-        <translation>Obtener una excepción SimConnect = </translation>
+        <translation>Obteniendo una excepción SimConnect = </translation>
     </message>
     <message>
         <location filename="../sim/scmanager.cpp" line="431"/>
@@ -212,7 +212,7 @@
     <message>
         <location filename="../sim/scmanager.cpp" line="839"/>
         <source>Delete Aircrfaft failed</source>
-        <translation>Borrar Aircrfaft falló</translation>
+        <translation>La supresión de la aeronave falló</translation>
     </message>
 </context>
 <context>
@@ -220,7 +220,7 @@
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="81"/>
         <source>FFS2Play is connected on server</source>
-        <translation>FFS2Play está conectado en el servidor</translation>
+        <translation>FFS2Play está conectado al servidor</translation>
     </message>
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="134"/>
@@ -230,12 +230,12 @@
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="268"/>
         <source>This version of FFS2Play is legacy and does not suppported. Do you want update it ?</source>
-        <translation>Esta versión de FFS2Play es heredada y no se admite. ¿Quieres actualizarlo?</translation>
+        <translation>Esta versión de FFS2Play es heredada y no se admite. ¿Quieres actualizarla?</translation>
     </message>
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="274"/>
         <source>This version of FFS2Play is not up to date. Do you want update it?</source>
-        <translation>Esta versión de FFS2Play no está actualizada. ¿Quieres actualizarlo?</translation>
+        <translation>Esta versión de FFS2Play no está actualizada. ¿Quieres actualizarla?</translation>
     </message>
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="280"/>
@@ -245,7 +245,7 @@
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="324"/>
         <source>The X-Plane XFFS2Play plugin is not up to date. Do you want update it?</source>
-        <translation>El complemento X-Plane XFFS2Play no está actualizado. ¿Quieres actualizarlo?</translation>
+        <translation>El plugin X-Plane XFFS2Play no está actualizado. ¿Quieres actualizarlo?</translation>
     </message>
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="326"/>
@@ -270,12 +270,12 @@
     <message>
         <location filename="../web/webmanager.cpp" line="63"/>
         <source>Users Profils Settings is empty but default user is set. Reset of default user</source>
-        <translation>La configuración de los perfiles de los usuarios está vacía, pero el usuario predeterminado está configurado. Restablecimiento del usuario predeterminado</translation>
+        <translation>La configuración del perfil del usuario está vacía, pero el usuario predeterminado está configurado. Reiniciando el perfil de usuario predeterminado</translation>
     </message>
     <message>
         <location filename="../web/webmanager.cpp" line="80"/>
         <source>Users Profils Settings checkum error, repair setting datas</source>
-        <translation>Error de suma de comprobación de configuración de perfiles de usuarios, datos de configuración de reparación</translation>
+        <translation>Error de suma de comprobación de configuración de perfiles de usuarios, reparando datos de configuración</translation>
     </message>
 </context>
 <context>
@@ -288,103 +288,7 @@
     <message>
         <location filename="../sim/xpmanager.cpp" line="66"/>
         <source>XPlane Module unloaded</source>
-        <translation>Ouvrir dans Google Traduction	
-Commentaires
-Résultat Web avec des liens annexes
-Google Traduction
-https://translate.google.com/?hl=fr
-
-Ce service gratuit de Google traduit instantanément des mots, des expressions et des pages Web du français vers plus de 100 autres langues.
-Translate
-Google&apos;s free service instantly translates words, phrases, and ...
-Autres résultats sur google.com »
-Résultats Web
-translate - English-French Dictionary WordReference.com
-www.wordreference.com/enfr/translate
-
-translate - traduction anglais-français. Forums pour discuter de translate, voir ses formes composées, des exemples et poser vos questions. Gratuit.
-Google Traduction
-https://translate.google.fr/
-
-Ce service gratuit de Google traduit instantanément des mots, des expressions et des pages Web du français vers plus de 100 autres langues.
-translate - Traduction française – Linguee
-https://www.linguee.fr/anglais-francais/traduction/translate.html
-
-De très nombreux exemples de phrases traduites contenant &quot;translate&quot; – Dictionnaire français-anglais et moteur de recherche de traductions françaises.
-translate - Traduction en français - exemples anglais | Reverso Context
-https://context.reverso.net/traduction/anglais-francais/translate
-
-Traductions en contexte de &quot;translate&quot; en anglais-français avec Reverso Context : translate into, need to translate, able to translate, in order to translate, ...
-Amazon Translate – Traduction automatique neuronale – AWS
-https://aws.amazon.com/fr/translate/
-
-Amazon Translate est un service de traduction automatique neuronale offrant des traductions linguistiques rapides, abordables et d&apos;excellente qualité.
-Tarification Amazon Translate – Amazon Web Services (AWS)
-https://aws.amazon.com/fr/translate/pricing/
-
-Avec Amazon Translate, vous ne payez qu&apos;en fonction de votre consommation. Et dans le cadre de l&apos;offre gratuite d&apos;AWS, vous pouvez commencer à utiliser le ...
-Traduction : translate - Dictionnaire anglais-français Larousse
-https://www.larousse.fr/dictionnaires/anglais-francais/translate/619461
-
-translate - Traduction Anglais-Français : Retrouvez la traduction de translate, mais également la conjugaison de translate, sa prononciation, la traduction des ...
-Extension:Translate - MediaWiki
-https://www.mediawiki.org/wiki/Extension:Translate/fr
-
-4 mars 2019 - Fonctionnalités. L&apos;extension Traduire (Translate) présente de nombreuses fonctionnalités particulièrement destinées aux traducteurs, ...
-MediaWiki‎: ‎1.31+
-Téléchargement‎: ‎Inclus dans le paquet Langu...
-Autres questions posées
-Comment faire pour que Google traduit automatiquement ?
-
-
-Comment traduire un texte sur Google ?
-
-
-Comment supprimer Google Traduction ?
-
-Comment traduire avec une photo ?
-
-
-Commentaires
-Recherches associées à translate
-
-translate reverso
-
-traduire
-
-yahoo translate
-
-amazon translate
-
-translate english to french
-
-linguee
-
-linguee translate
-
-condition translate
-Navigation par pages
-	1	
-2
-	
-3
-	
-4
-	
-5
-	
-6
-	
-7
-	
-8
-	
-9
-	
-10
-	
-Suivant
-Liens de pied de page</translation>
+        <translation>Módulo XPlane no se ha cargado</translation>
     </message>
     <message>
         <location filename="../sim/xpmanager.cpp" line="77"/>
@@ -422,6 +326,7 @@ Liens de pied de page</translation>
         <translation>Error de DEL_PEER : </translation>
     </message>
 </context>
+
 <context>
     <name>DialogP2P</name>
     <message>
@@ -432,12 +337,12 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="26"/>
         <source>uPNP NAT</source>
-        <translation></translation>
+        <translation>uPNP NAT</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="35"/>
         <source>UPNP protocol, if your router enable it, give you the oportunity to open P2P UDP port automatically</source>
-        <translation>El protocolo UPNP, si su enrutador lo habilita, le da la oportunidad de abrir el puerto P2P UDP automáticamente</translation>
+        <translation>El protocolo UPNP, si tiene accesi a su router y esta autorizado a hacer ajustes, este le dará la oportunidad de abrir el puerto P2P UDP automáticamente</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="63"/>
@@ -457,13 +362,15 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="107"/>
         <source>mSec</source>
-        <translation></translation>
+        <translation>mSeg</translation>
     </message>
+	
     <message>
         <location filename="../gui/dialogp2p.ui" line="116"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;100 to 200 mSec : Fighters aircrafts&lt;br/&gt;200 to 300 mSec : Civil aircrafts&lt;br/&gt;400 msec : Liners&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt; &lt;p&gt; 100 a 200 mSec: Aviones de combate &lt;br/&gt; 200 a 300 mSec: Aviones civiles &lt;br/&gt; 400 msec: Liners &lt;/p&gt; &lt;/body&gt; &lt;/ html &gt;</translation>
     </message>
+	
     <message>
         <location filename="../gui/dialogp2p.ui" line="129"/>
         <source>Multiplayer</source>
@@ -487,7 +394,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="174"/>
         <source>NM</source>
-        <translation></translation>
+        <translation>Millas Nauticas</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="181"/>
@@ -507,7 +414,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="242"/>
         <source>Enable Display CallSign</source>
-        <translation>Habilitar Display CallSign</translation>
+        <translation>Habilitar Display del CallSign</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="384"/>
@@ -517,27 +424,27 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="390"/>
         <source>P2P Port is used by FFS2Play to each other peers. Valid range for P2P application is 49152 to 65535</source>
-        <translation>El puerto P2P es utilizado por FFS2Play entre sí. El rango válido para la aplicación P2P es 49152 a 65535</translation>
+        <translation>El puerto P2P es utilizado por FFS2Play entre sí. El rango válido para la aplicación P2P es de 49152 a 65535</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="434"/>
         <source>Beta Participation</source>
-        <translation>Participación Beta</translation>
+        <translation>Participación a las Beta</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="440"/>
         <source>Check the box below to receive Beta new version notification. Beta version cannot ensure stability and bugless</source>
-        <translation>Marque la casilla de abajo para recibir la notificación de la nueva versión Beta. La versión beta no puede garantizar la estabilidad y sin errores</translation>
+        <translation>Marque la casilla de abajo para recibir notificaciones de nuevas versiones Beta. Una versión beta puede no ser estable y pude tener bugs</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="450"/>
         <source>Enable Beta Notification and installation</source>
-        <translation>Habilitar notificación e instalación Beta</translation>
+        <translation>Habilitar notificación e instalación de nuevas Betas</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="466"/>
         <source>AI Folders</source>
-        <translation>Directorio de AI</translation>
+        <translation>Carpeta de AI</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="517"/>
@@ -552,7 +459,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="570"/>
         <source>Reset Database</source>
-        <translation>Restablecer base de datos</translation>
+        <translation>Reiniciar la base de datos</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="576"/>
@@ -567,7 +474,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="602"/>
         <source>Miscelaneous</source>
-        <translation>Diverso</translation>
+        <translation>Diversos</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="614"/>
@@ -577,7 +484,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.ui" line="627"/>
         <source>Publish Touch Vertical Speed</source>
-        <translation>Publicar velocidad vertical táctil</translation>
+        <translation>Mostrar velocidad vertical táctil</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="637"/>
@@ -592,7 +499,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogp2p.cpp" line="447"/>
         <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
-        <translation>Esta función restablece todas las bases de datos AI para todos los simuladores, ¿está seguro de continuar?</translation>
+        <translation>Esta función restablece todas las bases de datos de AI para todos los simuladores, ¿está seguro de continuar?</translation>
     </message>
 </context>
 <context>
@@ -650,7 +557,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/dialogprofils.cpp" line="146"/>
         <source>There is some modifications on selected profil. Do you want apply them?</source>
-        <translation>Hay algunas modificaciones en el perfil seleccionado. ¿Quieres aplicarlos?</translation>
+        <translation>Hay algunas modificaciones en el perfil seleccionado. ¿Quieres aplicar los cambios?</translation>
     </message>
 </context>
 <context>
@@ -693,7 +600,7 @@ Liens de pied de page</translation>
         <location filename="../gui/mainwindow.ui" line="89"/>
         <location filename="../gui/mainwindow.ui" line="330"/>
         <source>Heading</source>
-        <translation>Título</translation>
+        <translation>Rumbo</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="94"/>
@@ -703,12 +610,12 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="99"/>
         <source>Air Speed(IAS)</source>
-        <translation>Velocidad del aire (IAS)</translation>
+        <translation>Velocidad indicada(IAS)</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="104"/>
         <source>Ground Speed(GS)</source>
-        <translation>Velocidad de avance (GS)</translation>
+        <translation>Velocidad sobre el suelo (GS)</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="109"/>
@@ -853,17 +760,17 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="345"/>
         <source>Ground Speed</source>
-        <translation>Pista de velocidad</translation>
+        <translation>Velocidad sobre el suelo</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="350"/>
         <source>TAS</source>
-        <translation></translation>
+        <translation>velocidad verdadera (TAS)</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="355"/>
         <source>Total Fuel Qty</source>
-        <translation>Cantidad de combustible total</translation>
+        <translation>Cantidad total de combustible</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="360"/>
@@ -878,7 +785,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="370"/>
         <source>Pitch</source>
-        <translation>Tono</translation>
+        <translation>Cabeceo</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="375"/>
@@ -903,17 +810,17 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="395"/>
         <source>Ambient Wind Velocity</source>
-        <translation>Velocidad del viento ambiental</translation>
+        <translation>Velocidad del viento</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="400"/>
         <source>Ambient Wind Direction</source>
-        <translation>Dirección del viento ambiental</translation>
+        <translation>Dirección del viento</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="405"/>
         <source>Ambiant Precipitation State</source>
-        <translation>Estado de precipitación ambiental</translation>
+        <translation>Estado de precipitaciones</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="410"/>
@@ -923,7 +830,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="415"/>
         <source>IAS</source>
-        <translation></translation>
+        <translation>Velocidad indicada (IAS)</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="420"/>
@@ -933,7 +840,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="425"/>
         <source>Aileron Position</source>
-        <translation>Posición de alerón</translation>
+        <translation>Posición del alerón</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="430"/>
@@ -978,42 +885,42 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="470"/>
         <source>Throttle 1</source>
-        <translation>Acelerador 1</translation>
+        <translation>Mando de gas 1</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="475"/>
         <source>Throttle 2</source>
-        <translation>Acelerador 2</translation>
+        <translation>mando de gas 2</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="480"/>
         <source>Throttle 3</source>
-        <translation>Acelerador 3</translation>
+        <translation>mando de gas 3</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="485"/>
         <source>Beacon Light</source>
-        <translation>Faro de luz</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="490"/>
         <source>Landing Light</source>
-        <translation>Luz de aterrizaje</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="495"/>
         <source>Strobe Light</source>
-        <translation>Luz estroboscópica</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="500"/>
         <source>Nav Light</source>
-        <translation>Luz de navegación</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="505"/>
         <source>Reco Light</source>
-        <translation>Luz de reconocimiento</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="510"/>
@@ -1044,12 +951,12 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="535"/>
         <source>Squawk Mode</source>
-        <translation>Modo Squawk</translation>
+        <translation>Modo transpondedor</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="540"/>
         <source>Squawk Code</source>
-        <translation>Código de Squawk</translation>
+        <translation>Código de transpondedor</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="545"/>
@@ -1179,7 +1086,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.ui" line="1248"/>
         <source>Choose Sim to use</source>
-        <translation>Elige Sim para usar</translation>
+        <translation>Elige Sim a utilizar</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.GuiEvents.cpp" line="82"/>
@@ -1189,12 +1096,12 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.GuiEvents.cpp" line="263"/>
         <source>Clear</source>
-        <translation>Claro</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.GuiEvents.cpp" line="264"/>
         <source>Save</source>
-        <translation>Salvar</translation>
+        <translation>Guardar</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.GuiEvents.cpp" line="286"/>
@@ -1214,7 +1121,7 @@ Liens de pied de page</translation>
     <message>
         <location filename="../gui/mainwindow.cpp" line="237"/>
         <source>Simulator Aircraft Folder</source>
-        <translation>Directorio de aviones simulador</translation>
+        <translation>Carpeta de aviones simulador</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.cpp" line="237"/>
