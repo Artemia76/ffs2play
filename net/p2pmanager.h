@@ -60,6 +60,7 @@ private:
     int                 m_AIRadius;
     int                 m_P2PRate;
     bool                m_bUPNP;
+    bool                m_EnforceTCP;
     bool                m_Shadow;
     bool                m_DropRateDisplay;
     bool                m_SendDropRate;

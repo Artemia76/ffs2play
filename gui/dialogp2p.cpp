@@ -71,6 +71,7 @@ DialogP2P::DialogP2P(QWidget *parent)
     ui->cbInfoSim->setChecked(m_settings.value("InfoEnable", true).toBool());
     ui->cbUPNP->setChecked(m_settings.value("UPNPEnable",true).toBool());
     ui->numPort->setValue(m_settings.value("Port", 54857).toInt());
+    ui->cbEnforceTCP->setChecked(m_settings.value("EnforceTCP", false).toBool());
     m_settings.endGroup();
     m_settings.beginGroup("Main");
     ui->cbBeta->setChecked(m_settings.value("Beta",true).toBool());
@@ -149,6 +150,11 @@ void DialogP2P::applyChangedItem()
     if (ui->numPort->value() != m_settings.value("Port", 54857).toInt())
     {
         m_settings.setValue("Port",ui->numPort->value());
+    }
+    if (ui->cbEnforceTCP->isChecked() != m_settings.value("EnforceTCP", false).toBool())
+    {
+        m_settings.setValue("EnforceTCP", ui->cbEnforceTCP->isChecked());
+        m_needP2PRestart = true;
     }
     m_settings.endGroup();
     if (ui->cbShadow->isChecked() != m_P2PManager->getShadowMode())
@@ -252,6 +258,10 @@ void DialogP2P::checkIfChanged()
         m_needP2PRestart =true;
     }
     if (ui->numPort->value() != m_settings.value("Port", 54857).toInt())
+    {
+        m_changed = true;
+    }
+    if (ui->cbEnforceTCP->isChecked() != m_settings.value("EnforceTCP", false).toBool())
     {
         m_changed = true;
     }
@@ -460,3 +470,10 @@ void DialogP2P::on_cbDisableAltCorr_stateChanged(int)
     checkIfChanged();
 }
 
+///
+/// \brief DialogP2P::on_cbEnforceTCP_stateChanged
+///
+void DialogP2P::on_cbEnforceTCP_stateChanged(int)
+{
+    checkIfChanged();
+}

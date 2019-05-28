@@ -83,53 +83,53 @@
 <context>
     <name>CP2PManager</name>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="270"/>
+        <location filename="../net/p2pmanager.cpp" line="272"/>
         <source>Adding UDP port mapping failed with code </source>
         <translation>L&apos;ajout du mapping du port UDP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="285"/>
+        <location filename="../net/p2pmanager.cpp" line="287"/>
         <source>Adding TCP port mappping failed with code </source>
         <translation>L&apos;ajout du mapping du port TCP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="290"/>
+        <location filename="../net/p2pmanager.cpp" line="292"/>
         <source>No valid Internet Gateway Device found.</source>
         <translation>Aucune passerelle Internet valide trouvée.</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="296"/>
+        <location filename="../net/p2pmanager.cpp" line="298"/>
         <source>No IGD UPNP Device found on the network !</source>
         <translation>Aucun dispositif IGD UPNP trouvé sur le réseau !</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="311"/>
+        <location filename="../net/p2pmanager.cpp" line="313"/>
         <source>Delete UDP port mapping failed with code </source>
         <translation>La suppression du mapping du port UDP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="321"/>
+        <location filename="../net/p2pmanager.cpp" line="323"/>
         <source>Delete TCP port mapping failed with code </source>
         <translation>La suppression du mapping du port TCP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="419"/>
-        <location filename="../net/p2pmanager.cpp" line="448"/>
+        <location filename="../net/p2pmanager.cpp" line="421"/>
+        <location filename="../net/p2pmanager.cpp" line="450"/>
         <source>Bad IP Address</source>
         <translation>Mauvaise adresse IP</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="434"/>
+        <location filename="../net/p2pmanager.cpp" line="436"/>
         <source>User </source>
         <translation>Utilisateur </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="797"/>
+        <location filename="../net/p2pmanager.cpp" line="799"/>
         <source>Drop rate : </source>
         <translation>Taux de chute : </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="797"/>
+        <location filename="../net/p2pmanager.cpp" line="799"/>
         <source> ft/min</source>
         <translation></translation>
     </message>
@@ -137,12 +137,12 @@
 <context>
     <name>CPeer</name>
     <message>
-        <location filename="../net/peer.cpp" line="147"/>
+        <location filename="../net/peer.cpp" line="156"/>
         <source> is connected on P2P Network</source>
         <translation> est connecté sur le réseau P2P</translation>
     </message>
     <message>
-        <location filename="../net/peer.cpp" line="176"/>
+        <location filename="../net/peer.cpp" line="185"/>
         <source> leave from P2P Network</source>
         <translation> quitte le réseau P2P</translation>
     </message>
@@ -424,77 +424,87 @@
         <translation>Le port P2P est utilisé par FFS2Plau pour joindre les autres joueurs. La plage valide pour une application P2P est de 49152 à 65535</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="434"/>
+        <location filename="../gui/dialogp2p.ui" line="411"/>
+        <source>Port : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="452"/>
+        <source>Enforce TCP Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="464"/>
         <source>Beta Participation</source>
         <translation>Participation aux versions beta</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="440"/>
+        <location filename="../gui/dialogp2p.ui" line="470"/>
         <source>Check the box below to receive Beta new version notification. Beta version cannot ensure stability and bugless</source>
         <translation>Cochez la boite pour recevoir les notification de nouvelles versions Beta. Les version Beta ne peuvent pas garantir la stabilité</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="450"/>
+        <location filename="../gui/dialogp2p.ui" line="480"/>
         <source>Enable Beta Notification and installation</source>
         <translation>Autoriser les notifications et l&apos;installation des version betas</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="466"/>
+        <location filename="../gui/dialogp2p.ui" line="496"/>
         <source>AI Folders</source>
         <translation>Dossiers des AI</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="517"/>
+        <location filename="../gui/dialogp2p.ui" line="547"/>
         <source>+</source>
         <translation>+</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="545"/>
+        <location filename="../gui/dialogp2p.ui" line="575"/>
         <source>-</source>
         <translation>-</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="570"/>
+        <location filename="../gui/dialogp2p.ui" line="600"/>
         <source>Reset Database</source>
         <translation>Réinitialisation de la base de donnée</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="576"/>
+        <location filename="../gui/dialogp2p.ui" line="606"/>
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="589"/>
+        <location filename="../gui/dialogp2p.ui" line="619"/>
         <source>Add here folders witch contain aircraft models on corresponding simulator. Exemple : the IVAO MTL library</source>
         <translation>Ajouter ici les répertoires qui contiennent les models d&apos;avions du simulateur correspondant. Example : la bibliothèque IVAO MTL</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="602"/>
+        <location filename="../gui/dialogp2p.ui" line="632"/>
         <source>Miscelaneous</source>
         <translation>Divers</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="614"/>
+        <location filename="../gui/dialogp2p.ui" line="644"/>
         <source>Display Touch Vertical Speed</source>
         <translation>Afficher le taux de chute</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="627"/>
+        <location filename="../gui/dialogp2p.ui" line="657"/>
         <source>Publish Touch Vertical Speed</source>
         <translation>Publier le taux de chute</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="637"/>
+        <location filename="../gui/dialogp2p.ui" line="667"/>
         <source>Disable Altitude Correction</source>
         <translation>Désactive la correction automatique d&apos;altitude</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="446"/>
+        <location filename="../gui/dialogp2p.cpp" line="456"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="447"/>
+        <location filename="../gui/dialogp2p.cpp" line="457"/>
         <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
         <translation>Cette fonction efface toute la base de donnée des AI, êtes vous sûre de vouloir continuer?</translation>
     </message>

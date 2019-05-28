@@ -99,12 +99,13 @@ private slots:
     void                on_numPort_valueChanged(int);
     void                on_numAIRadius_valueChanged(int);
     void                on_numAILimit_valueChanged(int);
-    void                on_cbEnableCallsign_stateChanged(int arg1);
-    void                on_cbDropRateDisp_stateChanged(int arg1);
-    void                on_cbSendDropRate_stateChanged(int arg1);
+    void                on_cbEnableCallsign_stateChanged(int);
+    void                on_cbDropRateDisp_stateChanged(int);
+    void                on_cbSendDropRate_stateChanged(int);
     void                on_pbTextColor_released();
-    void on_pushButton_released();
-    void on_cbDisableAltCorr_stateChanged(int arg1);
+    void                on_pushButton_released();
+    void                on_cbDisableAltCorr_stateChanged(int);
+    void                on_cbEnforceTCP_stateChanged(int);
 };
 
 #endif // DIALOGP2P_H

@@ -53,7 +53,8 @@ CPeer::CPeer(UDPServer* pUDPServer,
         QObject *pParent,
         int pP2PRate,
         int pP2PRadius,
-        QString pTeam) : QObject(pParent),
+        QString pTeam,
+        bool pEnforceTCP) : QObject(pParent),
             CallSign(m_callSign),
             Disabled(m_disabled)
 {
@@ -82,8 +83,16 @@ CPeer::CPeer(UDPServer* pUDPServer,
     m_team = pTeam;
     P2PRadius = pP2PRadius;
     P2PRate = pP2PRate;
-    m_PeerMode = UDP;
     m_TCPClient=nullptr;
+    m_EnforceTCP=pEnforceTCP;
+    if (!m_EnforceTCP)
+    {
+        m_PeerMode = UDP;
+    }
+    else
+    {
+        m_PeerMode = TCP_CLIENT;
+    }
     if (m_simManager->getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
     else m_disableCalculation = false;
     connect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));

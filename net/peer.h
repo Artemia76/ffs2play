@@ -137,7 +137,8 @@ protected:
                                 QObject *pParent = nullptr,
                                 int pP2PRate = 200,
                                 int pP2PRadius = 10,
-                                QString pTeam=""
+                                QString pTeam="",
+                                bool pEnforceTCP=false
                             );
                             ~CPeer ();
     void                    Start();
@@ -216,6 +217,7 @@ private:
     double                  m_old_fps;
     double                  m_old_GND_AI;
     QString                 m_team;
+    bool                    m_EnforceTCP;
 
     ///
     /// \brief send

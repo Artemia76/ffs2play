@@ -1,4 +1,6 @@
 #! /bin/bash
+mkdir deb-build
+cd deb-build
 sudo checkinstall \
     --pkgsource="http://ffs2play.fr/" \
     --pkglicense="GPL3" \

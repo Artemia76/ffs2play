@@ -42,6 +42,7 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     m_log=CLogger::instance();
     m_analyser = Analyzer::instance();
     m_bUPNP=false;
+    m_EnforceTCP=false;
     connect (m_analyser, SIGNAL(fireTouchSpeed(double)),this,SLOT(onLanding(double)));
     m_UDPServer = new UDPServer(this);
     m_TCPServer = new TCPServer(this);
@@ -172,6 +173,7 @@ void CP2PManager::init(bool flag)
         m_TCPServer->start();
         if (m_settings.value("UPNPEnable", true).toBool())
             initUPNP(true);
+        m_EnforceTCP = m_settings.value("EnforceTCP", false).toBool();
         m_Shadow = m_settings.value("ShadowEnable", false).toBool();
         m_AILimit = m_settings.value("AILimit",0).toInt();
         m_AIRadius = m_settings.value("AIRadius",10).toInt();
