@@ -177,6 +177,11 @@ void DialogP2P::applyChangedItem()
     {
         m_P2PManager->init(false);
         m_P2PManager->init(true);
+        if (m_WebManager->isConnected())
+        {
+            m_WebManager->Disconnect();
+            m_WebManager->Connect();
+        }
         m_needP2PRestart=false;
     }
     if (m_needDBReload)

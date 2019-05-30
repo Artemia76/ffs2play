@@ -38,3 +38,5 @@ ChangeLog:
 
 2.1.9 : Add TCP Client Checkbox to enable choose from user
         Add Spanish Translation (Thanks to Carlo Alias Radiosabines)
+
+2.1.10 : Fix TCP Client UDP Switch issue. Add ICAO Model on peer list to help choose CSL replacement

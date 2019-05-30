@@ -107,6 +107,12 @@ CPeer::~CPeer()
 {
     disconnect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
     disconnect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
+    if (m_TCPClient!=nullptr)
+    {
+       disconnect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
+       disconnect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+       m_TCPClient=nullptr;
+    }
     Stop();
 }
 void CPeer::Disable(bool pFlag)

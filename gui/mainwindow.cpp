@@ -665,50 +665,55 @@ void MainWindow::onUpdate()
             }
             case 2:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f ft", PeerState.Altitude));
+                ui->twPeerDetail->item(i,0)->setText(PeerState.Model);
                 break;
             }
             case 3:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f °", PeerState.Heading));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f ft", PeerState.Altitude));
                 break;
             }
             case 4:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", Distance));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f °", PeerState.Heading));
                 break;
             }
             case 5:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts", PeerState.IASSpeed));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", Distance));
                 break;
             }
             case 6:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts",PeerState.GroundSpeed));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts", PeerState.IASSpeed));
                 break;
             }
             case 7:
             {
-                ui->twPeerDetail->item(i,0)->setText(QString::number((PeerConnexionStatus.IP.toIPv4Address() & 0xFF000000)>>24) + ".X.X." + QString::number(PeerConnexionStatus.IP.toIPv4Address() & 0xFF));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts",PeerState.GroundSpeed));
                 break;
             }
             case 8:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.Port));
+                ui->twPeerDetail->item(i,0)->setText(QString::number((PeerConnexionStatus.IP.toIPv4Address() & 0xFF000000)>>24) + ".X.X." + QString::number(PeerConnexionStatus.IP.toIPv4Address() & 0xFF));
                 break;
             }
             case 9:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f mSec",PeerConnexionStatus.Ping));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.Port));
                 break;
             }
             case 10:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.RcvCnt));
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f mSec",PeerConnexionStatus.Ping));
                 break;
             }
             case 11:
+            {
+                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.RcvCnt));
+                break;
+            }
+            case 12:
             {
                 ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.SndCnt));
                 break;

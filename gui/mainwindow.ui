@@ -54,11 +54,11 @@
          <attribute name="horizontalHeaderVisible">
           <bool>false</bool>
          </attribute>
-         <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>200</number>
-         </attribute>
          <attribute name="horizontalHeaderMinimumSectionSize">
           <number>100</number>
+         </attribute>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>200</number>
          </attribute>
          <attribute name="verticalHeaderVisible">
           <bool>true</bool>
@@ -77,6 +77,11 @@
          <row>
           <property name="text">
            <string>Remote Aircraft Name</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>ICAO Model</string>
           </property>
          </row>
          <row>
@@ -146,22 +151,22 @@
          </item>
          <item row="2" column="0">
           <property name="text">
-           <string>0 ft</string>
+           <string>ZZZZ</string>
           </property>
          </item>
          <item row="3" column="0">
           <property name="text">
-           <string>0 °</string>
+           <string>0 ft</string>
           </property>
          </item>
          <item row="4" column="0">
           <property name="text">
-           <string>0 NM</string>
+           <string>0 °</string>
           </property>
          </item>
          <item row="5" column="0">
           <property name="text">
-           <string>0 Kts</string>
+           <string>0 NM</string>
           </property>
          </item>
          <item row="6" column="0">
@@ -171,25 +176,30 @@
          </item>
          <item row="7" column="0">
           <property name="text">
-           <string>255.X.X.255</string>
+           <string>0 Kts</string>
           </property>
          </item>
          <item row="8" column="0">
           <property name="text">
-           <string>57435</string>
+           <string>255.X.X.255</string>
           </property>
          </item>
          <item row="9" column="0">
           <property name="text">
-           <string>50 msec</string>
+           <string>57435</string>
           </property>
          </item>
          <item row="10" column="0">
           <property name="text">
-           <string>0</string>
+           <string>50 msec</string>
           </property>
          </item>
          <item row="11" column="0">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </item>
+         <item row="12" column="0">
           <property name="text">
            <string>0</string>
           </property>

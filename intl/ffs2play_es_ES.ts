@@ -137,12 +137,12 @@
 <context>
     <name>CPeer</name>
     <message>
-        <location filename="../net/peer.cpp" line="156"/>
+        <location filename="../net/peer.cpp" line="162"/>
         <source> is connected on P2P Network</source>
         <translation> está conectado a la red P2P</translation>
     </message>
     <message>
-        <location filename="../net/peer.cpp" line="185"/>
+        <location filename="../net/peer.cpp" line="191"/>
         <source> leave from P2P Network</source>
         <translation> saliendo de la red P2P</translation>
     </message>
@@ -499,12 +499,12 @@
         <translation>Deshabilitar la corrección de altitud</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="456"/>
+        <location filename="../gui/dialogp2p.cpp" line="461"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="457"/>
+        <location filename="../gui/dialogp2p.cpp" line="462"/>
         <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
         <translation>Esta función restablece todas las bases de datos de AI para todos los simuladores, ¿está seguro de continuar?</translation>
     </message>
@@ -599,499 +599,509 @@
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="84"/>
-        <location filename="../gui/mainwindow.ui" line="315"/>
+        <source>ICAO Model</source>
+        <translation>ICAO Modelo</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="89"/>
+        <location filename="../gui/mainwindow.ui" line="325"/>
         <source>Altitude</source>
         <translation>Altitud</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="89"/>
-        <location filename="../gui/mainwindow.ui" line="330"/>
+        <location filename="../gui/mainwindow.ui" line="94"/>
+        <location filename="../gui/mainwindow.ui" line="340"/>
         <source>Heading</source>
         <translation>Rumbo</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="94"/>
+        <location filename="../gui/mainwindow.ui" line="99"/>
         <source>Distance</source>
         <translation>Distancia</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="99"/>
+        <location filename="../gui/mainwindow.ui" line="104"/>
         <source>Air Speed(IAS)</source>
         <translation>Velocidad indicada(IAS)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="104"/>
+        <location filename="../gui/mainwindow.ui" line="109"/>
         <source>Ground Speed(GS)</source>
         <translation>Velocidad sobre el suelo (GS)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="109"/>
+        <location filename="../gui/mainwindow.ui" line="114"/>
         <source>Peer IP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="114"/>
+        <location filename="../gui/mainwindow.ui" line="119"/>
         <source>Peer Port</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="119"/>
+        <location filename="../gui/mainwindow.ui" line="124"/>
         <source>Ping</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="124"/>
+        <location filename="../gui/mainwindow.ui" line="129"/>
         <source>RcvCnt</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="129"/>
+        <location filename="../gui/mainwindow.ui" line="134"/>
         <source>SndCnt</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="134"/>
+        <location filename="../gui/mainwindow.ui" line="139"/>
         <source>Value</source>
         <translation>Valor</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="139"/>
         <location filename="../gui/mainwindow.ui" line="144"/>
-        <location filename="../gui/mainwindow.ui" line="560"/>
-        <location filename="../gui/mainwindow.ui" line="1090"/>
+        <location filename="../gui/mainwindow.ui" line="149"/>
+        <location filename="../gui/mainwindow.ui" line="570"/>
+        <location filename="../gui/mainwindow.ui" line="1100"/>
         <source>None</source>
         <translation>Ninguna</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="149"/>
-        <source>0 ft</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../gui/mainwindow.ui" line="154"/>
-        <source>0 °</source>
+        <source>ZZZZ</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="159"/>
-        <source>0 NM</source>
+        <source>0 ft</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="164"/>
+        <source>0 °</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../gui/mainwindow.ui" line="169"/>
-        <source>0 Kts</source>
+        <source>0 NM</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="174"/>
-        <source>255.X.X.255</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../gui/mainwindow.ui" line="179"/>
-        <source>57435</source>
+        <source>0 Kts</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="184"/>
-        <source>50 msec</source>
+        <source>255.X.X.255</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="189"/>
+        <source>57435</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../gui/mainwindow.ui" line="194"/>
+        <source>50 msec</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.ui" line="199"/>
+        <location filename="../gui/mainwindow.ui" line="204"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="206"/>
+        <location filename="../gui/mainwindow.ui" line="216"/>
         <source>Tool Bar</source>
         <translation>Barra de herramientas</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="235"/>
+        <location filename="../gui/mainwindow.ui" line="245"/>
         <source>&amp;Tchat Zone</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="273"/>
+        <location filename="../gui/mainwindow.ui" line="283"/>
         <source>SIM &amp;Variables</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="290"/>
+        <location filename="../gui/mainwindow.ui" line="300"/>
         <source>Title</source>
         <translation>Título</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="295"/>
+        <location filename="../gui/mainwindow.ui" line="305"/>
         <source>Type</source>
         <translation>Tipo</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="300"/>
+        <location filename="../gui/mainwindow.ui" line="310"/>
         <source>Model</source>
         <translation>Modelo</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="305"/>
+        <location filename="../gui/mainwindow.ui" line="315"/>
         <source>Category</source>
         <translation>Categoría</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="310"/>
+        <location filename="../gui/mainwindow.ui" line="320"/>
         <source>Phase</source>
         <translation>Fase</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="320"/>
+        <location filename="../gui/mainwindow.ui" line="330"/>
         <source>Ground Altitude</source>
         <translation>Altitud del suelo</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="325"/>
+        <location filename="../gui/mainwindow.ui" line="335"/>
         <source>Vertical Speed</source>
         <translation>Velocidad vertical</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="335"/>
+        <location filename="../gui/mainwindow.ui" line="345"/>
         <source>Longitude</source>
         <translation>Longitud</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="340"/>
+        <location filename="../gui/mainwindow.ui" line="350"/>
         <source>Latitude</source>
         <translation>Latitud</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="345"/>
+        <location filename="../gui/mainwindow.ui" line="355"/>
         <source>Ground Speed</source>
         <translation>Velocidad sobre el suelo</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="350"/>
+        <location filename="../gui/mainwindow.ui" line="360"/>
         <source>TAS</source>
         <translation>velocidad verdadera (TAS)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="355"/>
+        <location filename="../gui/mainwindow.ui" line="365"/>
         <source>Total Fuel Qty</source>
         <translation>Cantidad total de combustible</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="360"/>
+        <location filename="../gui/mainwindow.ui" line="370"/>
         <source>Total Fuel Capacity</source>
         <translation>Capacidad total de combustible</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="365"/>
+        <location filename="../gui/mainwindow.ui" line="375"/>
         <source>Fuel Weight per Gallon</source>
         <translation>Peso del combustible por galón</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="370"/>
+        <location filename="../gui/mainwindow.ui" line="380"/>
         <source>Pitch</source>
         <translation>Cabeceo</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="375"/>
+        <location filename="../gui/mainwindow.ui" line="385"/>
         <source>Bank</source>
         <translation>Banco</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="380"/>
+        <location filename="../gui/mainwindow.ui" line="390"/>
         <source>G Force</source>
         <translation>Fuerza G</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="385"/>
+        <location filename="../gui/mainwindow.ui" line="395"/>
         <source>Total Weight</source>
         <translation>Peso total</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="390"/>
+        <location filename="../gui/mainwindow.ui" line="400"/>
         <source>Realism</source>
         <translation>Realismo</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="395"/>
+        <location filename="../gui/mainwindow.ui" line="405"/>
         <source>Ambient Wind Velocity</source>
         <translation>Velocidad del viento</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="400"/>
+        <location filename="../gui/mainwindow.ui" line="410"/>
         <source>Ambient Wind Direction</source>
         <translation>Dirección del viento</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="405"/>
+        <location filename="../gui/mainwindow.ui" line="415"/>
         <source>Ambiant Precipitation State</source>
         <translation>Estado de precipitaciones</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="410"/>
+        <location filename="../gui/mainwindow.ui" line="420"/>
         <source>Sea level Pressure</source>
         <translation>Presión a nivel del mar</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="415"/>
+        <location filename="../gui/mainwindow.ui" line="425"/>
         <source>IAS</source>
         <translation>Velocidad indicada (IAS)</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="420"/>
+        <location filename="../gui/mainwindow.ui" line="430"/>
         <source>Elevator Position</source>
         <translation>Posición del elevador</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="425"/>
+        <location filename="../gui/mainwindow.ui" line="435"/>
         <source>Aileron Position</source>
         <translation>Posición del alerón</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="430"/>
+        <location filename="../gui/mainwindow.ui" line="440"/>
         <source>Rudder Position</source>
         <translation>Posición del timón</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="435"/>
+        <location filename="../gui/mainwindow.ui" line="445"/>
         <source>Simulation Rate</source>
         <translation>Tasa de simulación</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="440"/>
+        <location filename="../gui/mainwindow.ui" line="450"/>
         <source>Exit 0</source>
         <translation>Salida 0</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="445"/>
+        <location filename="../gui/mainwindow.ui" line="455"/>
         <source>Exit 1</source>
         <translation>Salida 1</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="450"/>
+        <location filename="../gui/mainwindow.ui" line="460"/>
         <source>Exit 2</source>
         <translation>Salida 2</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="455"/>
+        <location filename="../gui/mainwindow.ui" line="465"/>
         <source>Exit 3</source>
         <translation>Salida 3</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="460"/>
+        <location filename="../gui/mainwindow.ui" line="470"/>
         <source>Parking Brake</source>
         <translation>Freno de mano</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="465"/>
+        <location filename="../gui/mainwindow.ui" line="475"/>
         <source>Throttle 0</source>
         <translation>Acelerador 0</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="470"/>
+        <location filename="../gui/mainwindow.ui" line="480"/>
         <source>Throttle 1</source>
         <translation>Mando de gas 1</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="475"/>
+        <location filename="../gui/mainwindow.ui" line="485"/>
         <source>Throttle 2</source>
         <translation>mando de gas 2</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="480"/>
+        <location filename="../gui/mainwindow.ui" line="490"/>
         <source>Throttle 3</source>
         <translation>mando de gas 3</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="485"/>
+        <location filename="../gui/mainwindow.ui" line="495"/>
         <source>Beacon Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="490"/>
+        <location filename="../gui/mainwindow.ui" line="500"/>
         <source>Landing Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="495"/>
+        <location filename="../gui/mainwindow.ui" line="505"/>
         <source>Strobe Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="500"/>
+        <location filename="../gui/mainwindow.ui" line="510"/>
         <source>Nav Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="505"/>
+        <location filename="../gui/mainwindow.ui" line="515"/>
         <source>Reco Light</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="510"/>
+        <location filename="../gui/mainwindow.ui" line="520"/>
         <source>State Engine 1</source>
         <translatorcomment>Estado del motor 1</translatorcomment>
         <translation>Motor de estado 1</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="515"/>
+        <location filename="../gui/mainwindow.ui" line="525"/>
         <source>State Engine 2</source>
         <translation>Estado del motor 2</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="520"/>
+        <location filename="../gui/mainwindow.ui" line="530"/>
         <source>State Engine 3</source>
         <translation>Estado del motor 3</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="525"/>
+        <location filename="../gui/mainwindow.ui" line="535"/>
         <source>State Engine 4</source>
         <translation>Estado del motor 4</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="530"/>
+        <location filename="../gui/mainwindow.ui" line="540"/>
         <source>Flaps Index</source>
         <translation>Indice de Flaps</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="535"/>
+        <location filename="../gui/mainwindow.ui" line="545"/>
         <source>Squawk Mode</source>
         <translation>Modo transpondedor</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="540"/>
+        <location filename="../gui/mainwindow.ui" line="550"/>
         <source>Squawk Code</source>
         <translation>Código de transpondedor</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="545"/>
+        <location filename="../gui/mainwindow.ui" line="555"/>
         <source>Data</source>
         <translation>Datos</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="922"/>
+        <location filename="../gui/mainwindow.ui" line="932"/>
         <source>&amp;Log</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1074"/>
+        <location filename="../gui/mainwindow.ui" line="1084"/>
         <source>De&amp;bug Options</source>
         <translation>Opciones de De&amp;bug</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1097"/>
+        <location filename="../gui/mainwindow.ui" line="1107"/>
         <source>Normal</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1104"/>
+        <location filename="../gui/mainwindow.ui" line="1114"/>
         <source>Verbose</source>
         <translation>Verboso</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1115"/>
+        <location filename="../gui/mainwindow.ui" line="1125"/>
         <source>*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1120"/>
+        <location filename="../gui/mainwindow.ui" line="1130"/>
         <source>AIMapping*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1125"/>
+        <location filename="../gui/mainwindow.ui" line="1135"/>
         <source>Analyzer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1130"/>
+        <location filename="../gui/mainwindow.ui" line="1140"/>
         <source>HttpRequest*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1135"/>
+        <location filename="../gui/mainwindow.ui" line="1145"/>
         <source>P2PManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1140"/>
+        <location filename="../gui/mainwindow.ui" line="1150"/>
         <source>Peer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1145"/>
+        <location filename="../gui/mainwindow.ui" line="1155"/>
         <source>UDPServer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1150"/>
+        <location filename="../gui/mainwindow.ui" line="1160"/>
         <source>TCPServer*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1155"/>
+        <location filename="../gui/mainwindow.ui" line="1165"/>
         <source>TCPClient*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1160"/>
+        <location filename="../gui/mainwindow.ui" line="1170"/>
         <source>SCManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1165"/>
+        <location filename="../gui/mainwindow.ui" line="1175"/>
         <source>XPManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1170"/>
+        <location filename="../gui/mainwindow.ui" line="1180"/>
         <source>FGManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1175"/>
+        <location filename="../gui/mainwindow.ui" line="1185"/>
         <source>WEBManager*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1190"/>
-        <location filename="../gui/mainwindow.ui" line="1193"/>
+        <location filename="../gui/mainwindow.ui" line="1200"/>
+        <location filename="../gui/mainwindow.ui" line="1203"/>
         <source>Connect to Sim</source>
         <translation>Conectarse a sim</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1203"/>
-        <location filename="../gui/mainwindow.ui" line="1206"/>
+        <location filename="../gui/mainwindow.ui" line="1213"/>
+        <location filename="../gui/mainwindow.ui" line="1216"/>
         <source>Connect to web server</source>
         <extracomment>Connexion au serveur</extracomment>
         <translatorcomment>Conexión al servidor</translatorcomment>
         <translation>Conectar al servidor web</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1215"/>
+        <location filename="../gui/mainwindow.ui" line="1225"/>
         <source>Help</source>
         <translation>Ayuda</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1224"/>
+        <location filename="../gui/mainwindow.ui" line="1234"/>
         <source>Profil</source>
         <translation>Perfil</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1233"/>
-        <location filename="../gui/mainwindow.ui" line="1236"/>
+        <location filename="../gui/mainwindow.ui" line="1243"/>
+        <location filename="../gui/mainwindow.ui" line="1246"/>
         <source>P2P Settings</source>
         <translation>Configuraciones P2P</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1245"/>
+        <location filename="../gui/mainwindow.ui" line="1255"/>
         <source>Sim Type</source>
         <translation>Tipo sim</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.ui" line="1248"/>
+        <location filename="../gui/mainwindow.ui" line="1258"/>
         <source>Choose Sim to use</source>
         <translation>Elige Sim a utilizar</translation>
     </message>
