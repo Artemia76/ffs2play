@@ -68,7 +68,7 @@ void CPeer::OnTCPClientDisconnected(TCPClient* pTCPClient)
             disconnect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
             disconnect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
             m_TCPClient=nullptr;
-            m_PeerMode=UDP;
+            //m_PeerMode=UDP;
             m_counter = 0;
         }
     }

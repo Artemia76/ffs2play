@@ -35,3 +35,6 @@ ChangeLog:
 2.1.6 : Add CSL ICAO Support
 
 2.1.8 : Add TCP Server Emergency socket to connect blocked user behind non accessible PAT Firewall
+
+2.1.9 : Add TCP Client Checkbox to enable choose from user
+        Add Spanish Translation (Thanks to Carlo Alias Radiosabines)

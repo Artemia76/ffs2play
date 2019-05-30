@@ -185,6 +185,7 @@ void CP2PManager::init(bool flag)
     }
     else
     {
+        clear();
         m_UDPServer->stop();
         m_TCPServer->stop();
         initUPNP(false);
@@ -423,7 +424,20 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
             }
             if ((!IP.isNull()) && (data.Port>0))
             {
-                m_peers.push_back(new CPeer(m_UDPServer, m_TCPServer, IP,data.Port,data.CallSign,Disabled,m_ExternalIP.isEqual(IP),&data.localIPs,this,m_P2PRate,m_AIRadius,data.Team));
+                m_peers.push_back(new CPeer(
+                                      m_UDPServer,
+                                      m_TCPServer,
+                                      IP,
+                                      data.Port,
+                                      data.CallSign,
+                                      Disabled,
+                                      m_ExternalIP.isEqual(IP),
+                                      &data.localIPs,
+                                      this,
+                                      m_P2PRate,
+                                      m_AIRadius,
+                                      data.Team,
+                                      m_EnforceTCP));
                 connect(this, SIGNAL(fireSendTChat(QString)),m_peers.last(),SLOT(OnSendTChat(QString)));
                 connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
                 emit(firePeerAdd(data.CallSign));

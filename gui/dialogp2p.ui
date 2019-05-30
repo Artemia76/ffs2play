@@ -449,7 +449,7 @@
            <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Enforce TCP Mode</string>
+           <string>Enable TCP Client</string>
           </property>
          </widget>
         </item>

@@ -83,53 +83,53 @@
 <context>
     <name>CP2PManager</name>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="272"/>
+        <location filename="../net/p2pmanager.cpp" line="273"/>
         <source>Adding UDP port mapping failed with code </source>
         <translation>L&apos;ajout du mapping du port UDP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="287"/>
+        <location filename="../net/p2pmanager.cpp" line="288"/>
         <source>Adding TCP port mappping failed with code </source>
         <translation>L&apos;ajout du mapping du port TCP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="292"/>
+        <location filename="../net/p2pmanager.cpp" line="293"/>
         <source>No valid Internet Gateway Device found.</source>
         <translation>Aucune passerelle Internet valide trouvée.</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="298"/>
+        <location filename="../net/p2pmanager.cpp" line="299"/>
         <source>No IGD UPNP Device found on the network !</source>
         <translation>Aucun dispositif IGD UPNP trouvé sur le réseau !</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="313"/>
+        <location filename="../net/p2pmanager.cpp" line="314"/>
         <source>Delete UDP port mapping failed with code </source>
         <translation>La suppression du mapping du port UDP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="323"/>
+        <location filename="../net/p2pmanager.cpp" line="324"/>
         <source>Delete TCP port mapping failed with code </source>
         <translation>La suppression du mapping du port TCP a échoué avec le code </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="421"/>
-        <location filename="../net/p2pmanager.cpp" line="450"/>
+        <location filename="../net/p2pmanager.cpp" line="422"/>
+        <location filename="../net/p2pmanager.cpp" line="464"/>
         <source>Bad IP Address</source>
         <translation>Mauvaise adresse IP</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="436"/>
+        <location filename="../net/p2pmanager.cpp" line="450"/>
         <source>User </source>
         <translation>Utilisateur </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="799"/>
+        <location filename="../net/p2pmanager.cpp" line="813"/>
         <source>Drop rate : </source>
         <translation>Taux de chute : </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="799"/>
+        <location filename="../net/p2pmanager.cpp" line="813"/>
         <source> ft/min</source>
         <translation></translation>
     </message>
@@ -426,12 +426,12 @@
     <message>
         <location filename="../gui/dialogp2p.ui" line="411"/>
         <source>Port : </source>
-        <translation type="unfinished"></translation>
+        <translation>Port : </translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="452"/>
-        <source>Enforce TCP Mode</source>
-        <translation type="unfinished"></translation>
+        <source>Enable TCP Client</source>
+        <translation>Autoriser Client TCP</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="464"/>

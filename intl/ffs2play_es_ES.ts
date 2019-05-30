@@ -83,53 +83,53 @@
 <context>
     <name>CP2PManager</name>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="272"/>
+        <location filename="../net/p2pmanager.cpp" line="273"/>
         <source>Adding UDP port mapping failed with code </source>
         <translation>La adición del mapeo de puertos UDP falló con el código </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="287"/>
+        <location filename="../net/p2pmanager.cpp" line="288"/>
         <source>Adding TCP port mappping failed with code </source>
         <translation>La adición de asignación de puerto TCP falló con el código </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="292"/>
+        <location filename="../net/p2pmanager.cpp" line="293"/>
         <source>No valid Internet Gateway Device found.</source>
         <translation>No se encontró un dispositivo de puerta de enlace de Internet válido.</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="298"/>
+        <location filename="../net/p2pmanager.cpp" line="299"/>
         <source>No IGD UPNP Device found on the network !</source>
         <translation>¡No se ha encontrado ningún dispositivo IGD UPNP en la red!</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="313"/>
+        <location filename="../net/p2pmanager.cpp" line="314"/>
         <source>Delete UDP port mapping failed with code </source>
         <translation>Error al eliminar la asignación de puertos UDP con el código </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="323"/>
+        <location filename="../net/p2pmanager.cpp" line="324"/>
         <source>Delete TCP port mapping failed with code </source>
         <translation>Error al eliminar la asignación de puertos TCP con el código </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="421"/>
-        <location filename="../net/p2pmanager.cpp" line="450"/>
+        <location filename="../net/p2pmanager.cpp" line="422"/>
+        <location filename="../net/p2pmanager.cpp" line="464"/>
         <source>Bad IP Address</source>
         <translation>Dirección IP incorrecta</translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="436"/>
+        <location filename="../net/p2pmanager.cpp" line="450"/>
         <source>User </source>
         <translation>Usuario </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="799"/>
+        <location filename="../net/p2pmanager.cpp" line="813"/>
         <source>Drop rate : </source>
         <translation>Tasa de caída : </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="799"/>
+        <location filename="../net/p2pmanager.cpp" line="813"/>
         <source> ft/min</source>
         <translation></translation>
     </message>
@@ -187,7 +187,7 @@
     <message>
         <location filename="../sim/scmanager.cpp" line="431"/>
         <source> Related method invoked = </source>
-        <translation>Método relacionado invocado = </translation>
+        <translation> Método relacionado invocado = </translation>
     </message>
     <message>
         <location filename="../sim/scmanager.cpp" line="688"/>
@@ -406,7 +406,7 @@
     <message>
         <location filename="../gui/dialogp2p.ui" line="239"/>
         <source>Enable displaying Callsign over aircrafts</source>
-        <translation>Habilitar la visualización de indicativos en aviones.</translation>
+        <translation>Habilitar la visualización de indicativos en aviones</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="242"/>
@@ -426,12 +426,12 @@
     <message>
         <location filename="../gui/dialogp2p.ui" line="411"/>
         <source>Port : </source>
-        <translation type="unfinished"></translation>
+        <translation>Puerto : </translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="452"/>
-        <source>Enforce TCP Mode</source>
-        <translation type="unfinished"></translation>
+        <source>Enable TCP Client</source>
+        <translation>Habilitar TCP</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="464"/>

@@ -36,23 +36,42 @@
 ///
 void CPeer::send(const QByteArray &pOutput)
 {
+    //select remote or local mode
+    QHostAddress Host;
     if (!m_EP.isNull())
     {
-        QNetworkDatagram Output(pOutput,m_EP, m_port);
-        if (m_PeerMode==UDP)
-            m_UDPServer->send(Output);
-        else if ((m_PeerMode==TCP_CLIENT) || (m_PeerMode==TCP_SERVER))
-            m_TCPClient->send(Output);
+        Host = m_EP;
     }
     else
     {
         if (m_local && (m_internalIP.count()>0))
         {
             if (m_sel_iplocal >= m_internalIP.count()) m_sel_iplocal = 0;
-            QNetworkDatagram Output(pOutput,m_internalIP[m_sel_iplocal], m_port);
-            m_UDPServer->send(Output);
             m_sel_iplocal++;
+            Host = m_internalIP[m_sel_iplocal];
         }
+    }
+    QNetworkDatagram Output(pOutput,Host, m_port);
+
+    if (m_PeerMode==UDP)
+            m_UDPServer->send(Output);
+    else
+    {
+        if (m_TCPClient==nullptr)
+        {
+            // Create new TCP Client socket in case of caller mode (TCP_CLIENT)
+            if (m_PeerMode==TCP_CLIENT)
+            {
+#ifdef FFS_DEBUG
+                m_log->log("Peer [" + m_callSign + "] : Creating TCPClient socket",Qt::darkBlue,LEVEL_NORMAL);
+#endif
+                m_TCPClient = new TCPClient(this);
+                m_TCPClient->connectToHost(m_EP, m_port);
+                connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
+                connect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+            }
+        }
+        else m_TCPClient->send(Output);
     }
 }
 
@@ -100,17 +119,6 @@ void CPeer::sendPing()
         m_version = 0;
         m_miniPing = milliseconds(1000);
         spawnAI(false);
-    }
-    if ((m_counter > 7) && (!m_onLine) && ((m_PeerMode==UDP)||(m_EnforceTCP)) && (m_TCPClient==nullptr) && (!m_EP.isNull()))
-    {
-#ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] : 5 retry occured, switch to TCPClient mode",Qt::darkBlue,LEVEL_NORMAL);
-#endif
-        m_TCPClient = new TCPClient(this);
-        m_TCPClient->connectToHost(m_EP, m_port);
-        connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-        connect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
-        m_PeerMode=TCP_CLIENT;
     }
 }
 
