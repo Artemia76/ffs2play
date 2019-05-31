@@ -1,6 +1,8 @@
 #! /bin/bash
-mkdir deb-build
-cd deb-build
+mkdir build-deb
+cd build-deb
+qmake ../ffs2play.pro CONFIG+=release
+make -j3
 sudo checkinstall \
     --pkgsource="http://ffs2play.fr/" \
     --pkglicense="GPL3" \
