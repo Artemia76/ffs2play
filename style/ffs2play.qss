@@ -34,7 +34,7 @@ QCheckBox{
     color: white;
 }
 
-QRadioBox{
+QRadioButton{
     border: none;
     color: white;
 }

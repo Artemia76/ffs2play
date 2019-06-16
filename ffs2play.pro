@@ -411,7 +411,7 @@ unix:!macx {
     INSTALLS += Translation
 
     Theme.path = $${PREFIX}/share/$${TARGET}
-    Theme.files = $$PWD/*.qss
+    Theme.files = $$PWD/style/*.qss
     INSTALLS += Theme
 
     Icons.path = $${PREFIX}/share/icons/hicolor/72x72/apps
