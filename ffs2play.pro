@@ -386,7 +386,7 @@ unix:!macx {
 # Mac OS X - Copy help and Marble plugins and data
 macx {
     copydata.commands += cp -vf $$PWD/intl/*.qm $$OUT_PWD/ffs2play.app/Contents/Resources &&
-    copydata.commands += cp -vf $$PWD/*.qss $$OUT_PWD/ffs2play.app/Contents/Resources
+    copydata.commands += cp -vf $$PWD/style/*.qss $$OUT_PWD/ffs2play.app/Contents/Resources
 }
 
 #Windows - Copy Qt Style and translation

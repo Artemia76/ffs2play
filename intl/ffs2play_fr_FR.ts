@@ -281,47 +281,47 @@
 <context>
     <name>CXPManager</name>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="56"/>
+        <location filename="../sim/xpmanager.cpp" line="60"/>
         <source>XPlane Module loaded</source>
         <translation>Le module XPlane a été chargé</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="66"/>
+        <location filename="../sim/xpmanager.cpp" line="70"/>
         <source>XPlane Module unloaded</source>
         <translation>Le module XPlane a été déchargé</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="77"/>
+        <location filename="../sim/xpmanager.cpp" line="81"/>
         <source>Connecting to XPlane ...</source>
         <translation>Connexion à X-Plane ...</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="94"/>
+        <location filename="../sim/xpmanager.cpp" line="98"/>
         <source>Disconnected from XPlane.</source>
         <translation>Déconnexion de X-Plane.</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="335"/>
+        <location filename="../sim/xpmanager.cpp" line="333"/>
         <source>Connected to XPlane.</source>
         <translation>Connecté à X-Plane.</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="375"/>
+        <location filename="../sim/xpmanager.cpp" line="373"/>
         <source>DataSend Error : </source>
         <translation>Erreur DataSend : </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="397"/>
+        <location filename="../sim/xpmanager.cpp" line="395"/>
         <source>Receive ADD_PEER event, failed to create object</source>
         <translation>Réception d&apos; un événement ADD_PEER, impossible de créer l&apos;objet</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="412"/>
+        <location filename="../sim/xpmanager.cpp" line="410"/>
         <source>ADD_PEER Error : </source>
         <translation>Erreur ADD_PEER : </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="434"/>
+        <location filename="../sim/xpmanager.cpp" line="432"/>
         <source>DEL_PEER Error : </source>
         <translation>Erreur DEL_PEER : </translation>
     </message>
@@ -334,117 +334,117 @@
         <translation>Paramètres P2P</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="76"/>
+        <location filename="../gui/dialogp2p.ui" line="331"/>
         <source>Advanced Settings</source>
         <translation>Paramètres avancés</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="107"/>
+        <location filename="../gui/dialogp2p.ui" line="362"/>
         <source>mSec</source>
         <translation>mSec</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="129"/>
+        <location filename="../gui/dialogp2p.ui" line="26"/>
         <source>Multiplayer</source>
         <translation>Multijoueur</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="154"/>
+        <location filename="../gui/dialogp2p.ui" line="51"/>
         <source>AI Radius</source>
         <translation>Rayon AI</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="174"/>
+        <location filename="../gui/dialogp2p.ui" line="71"/>
         <source>NM</source>
         <translation>NM</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="181"/>
+        <location filename="../gui/dialogp2p.ui" line="78"/>
         <source>AI Limit</source>
         <translation>Limite AI</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="26"/>
+        <location filename="../gui/dialogp2p.ui" line="268"/>
         <source>uPNP NAT</source>
         <translation>uPNP NAT</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="35"/>
+        <location filename="../gui/dialogp2p.ui" line="277"/>
         <source>UPNP protocol, if your router enable it, give you the oportunity to open P2P UDP port automatically</source>
         <translation>Le protocole uPNP, si votre routeur l&apos;autorise, vous donne la possibilité d&apos;ouvrir les ports UDP P2P automatiquement</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="63"/>
+        <location filename="../gui/dialogp2p.ui" line="305"/>
         <source>Enable NAT uPNP</source>
         <translation>Autoriser le NAT uPNP</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="84"/>
+        <location filename="../gui/dialogp2p.ui" line="339"/>
         <source>Transmit Rate</source>
         <translation>Taux de transmission</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="116"/>
+        <location filename="../gui/dialogp2p.ui" line="371"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;100 to 200 mSec : Fighters aircrafts&lt;br/&gt;200 to 300 mSec : Civil aircrafts&lt;br/&gt;400 msec : Liners&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;100 à 200 mSec : Avions de combat&lt;br/&gt;200 à 300 mSec : Avions de tourisme&lt;br/&gt;400 msec : Avions de ligne&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="135"/>
+        <location filename="../gui/dialogp2p.ui" line="32"/>
         <source>Enable TChat activity</source>
         <translation>Autorise l&apos;activité du TChat</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="145"/>
+        <location filename="../gui/dialogp2p.ui" line="42"/>
         <source>Enable Shadow mode</source>
         <translation>Autoriser le mode ombre</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="197"/>
+        <location filename="../gui/dialogp2p.ui" line="94"/>
         <source>Limit the number of AI. 0 mean unlimited</source>
         <translation>Limite du nombre d&apos;AI. 0 signifie illimité</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="239"/>
+        <location filename="../gui/dialogp2p.ui" line="136"/>
         <source>Enable displaying Callsign over aircrafts</source>
         <translation>Autorise l&apos;affichage du pseudo</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="242"/>
+        <location filename="../gui/dialogp2p.ui" line="139"/>
         <source>Enable Display CallSign</source>
         <translation>Autoriser l&apos;affichage du pseudo</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="384"/>
+        <location filename="../gui/dialogp2p.ui" line="410"/>
         <source>P2P Port</source>
         <translation>Port P2P</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="390"/>
+        <location filename="../gui/dialogp2p.ui" line="416"/>
         <source>P2P Port is used by FFS2Play to each other peers. Valid range for P2P application is 49152 to 65535</source>
         <translation>Le port P2P est utilisé par FFS2Plau pour joindre les autres joueurs. La plage valide pour une application P2P est de 49152 à 65535</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="411"/>
+        <location filename="../gui/dialogp2p.ui" line="437"/>
         <source>Port : </source>
         <translation>Port : </translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="452"/>
+        <location filename="../gui/dialogp2p.ui" line="478"/>
         <source>Enable TCP Client</source>
         <translation>Autoriser Client TCP</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="464"/>
+        <location filename="../gui/dialogp2p.ui" line="384"/>
         <source>Beta Participation</source>
         <translation>Participation aux versions beta</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="470"/>
+        <location filename="../gui/dialogp2p.ui" line="390"/>
         <source>Check the box below to receive Beta new version notification. Beta version cannot ensure stability and bugless</source>
         <translation>Cochez la boite pour recevoir les notification de nouvelles versions Beta. Les version Beta ne peuvent pas garantir la stabilité</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="480"/>
+        <location filename="../gui/dialogp2p.ui" line="400"/>
         <source>Enable Beta Notification and installation</source>
         <translation>Autoriser les notifications et l&apos;installation des version betas</translation>
     </message>
@@ -484,27 +484,42 @@
         <translation>Divers</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="644"/>
+        <location filename="../gui/dialogp2p.ui" line="659"/>
         <source>Display Touch Vertical Speed</source>
         <translation>Afficher le taux de chute</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="657"/>
+        <location filename="../gui/dialogp2p.ui" line="683"/>
+        <source>XPlane AI Mode:</source>
+        <translation>Mode AI XPlane:</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="690"/>
+        <source>AI Aircrafts</source>
+        <translation>Appareils AI</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="697"/>
+        <source>CSL Aircrafts</source>
+        <translation>Appareils CSL</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogp2p.ui" line="646"/>
         <source>Publish Touch Vertical Speed</source>
         <translation>Publier le taux de chute</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="667"/>
+        <location filename="../gui/dialogp2p.ui" line="669"/>
         <source>Disable Altitude Correction</source>
         <translation>Désactive la correction automatique d&apos;altitude</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="461"/>
+        <location filename="../gui/dialogp2p.cpp" line="486"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="462"/>
+        <location filename="../gui/dialogp2p.cpp" line="487"/>
         <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
         <translation>Cette fonction efface toute la base de donnée des AI, êtes vous sûre de vouloir continuer?</translation>
     </message>
