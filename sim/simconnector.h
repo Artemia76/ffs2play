@@ -91,7 +91,9 @@ enum SimOption : unsigned int
 {
     DisplayCallSign = 0x01,
     DisableAltCorr = 0x02,
-    DisableTChat = 0x04
+    DisableTChat = 0x04,
+    UseCSL = 0x08,
+    UseAI = 0x10
 };
 
 class SimConnector : public QObject

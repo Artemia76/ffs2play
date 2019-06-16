@@ -76,6 +76,17 @@ DialogP2P::DialogP2P(QWidget *parent)
     m_settings.beginGroup("Main");
     ui->cbBeta->setChecked(m_settings.value("Beta",true).toBool());
     m_settings.endGroup();
+    m_settings.beginGroup("XPlane");
+    if (m_settings.value("AIMode",true).toBool())
+    {
+        ui->rbAI_Aircrafts->setChecked(true);
+    }
+    else
+    {
+        ui->rbCSL_Aircrafts->setChecked(true);
+    }
+    m_settings.endGroup();
+
     ui->cbEnableCallsign->setChecked(m_SimManager->getOption(DisplayCallSign));
     ui->cbDisableAltCorr->setChecked(m_SimManager->getOption(DisableAltCorr));
     ui->numAIRadius->setValue(m_P2PManager->getAIRadius());
@@ -156,6 +167,12 @@ void DialogP2P::applyChangedItem()
         m_settings.setValue("EnforceTCP", ui->cbEnforceTCP->isChecked());
         m_needP2PRestart = true;
     }
+    m_settings.endGroup();
+    m_settings.beginGroup("XPlane");
+    if (ui->rbCSL_Aircrafts->isChecked()) m_settings.setValue("AIMode", false);
+    else if (ui->rbAI_Aircrafts->isChecked()) m_settings.setValue("AIMode", true);
+    m_SimManager->setOptionChange(UseAI,ui->rbAI_Aircrafts->isChecked());
+    m_SimManager->setOptionChange(UseCSL,ui->rbCSL_Aircrafts->isChecked());
     m_settings.endGroup();
     if (ui->cbShadow->isChecked() != m_P2PManager->getShadowMode())
     {
@@ -267,6 +284,14 @@ void DialogP2P::checkIfChanged()
         m_changed = true;
     }
     if (ui->cbEnforceTCP->isChecked() != m_settings.value("EnforceTCP", false).toBool())
+    {
+        m_changed = true;
+    }
+    m_settings.endGroup();
+    m_settings.beginGroup("XPlane");
+    if (
+            (m_settings.value("AIMode",true).toBool() && ui->rbCSL_Aircrafts->isChecked()) ||
+            ((!m_settings.value("AIMode",true).toBool()) && ui->rbAI_Aircrafts->isChecked()))
     {
         m_changed = true;
     }
@@ -479,6 +504,16 @@ void DialogP2P::on_cbDisableAltCorr_stateChanged(int)
 /// \brief DialogP2P::on_cbEnforceTCP_stateChanged
 ///
 void DialogP2P::on_cbEnforceTCP_stateChanged(int)
+{
+    checkIfChanged();
+}
+
+void DialogP2P::on_rbAI_Aircrafts_toggled(bool)
+{
+    checkIfChanged();
+}
+
+void DialogP2P::on_rbCSLAircrafts_toggled(bool)
 {
     checkIfChanged();
 }

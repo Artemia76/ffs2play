@@ -45,6 +45,10 @@
 CXPManager::CXPManager(QObject* parent):
     SimConnector(parent)
 {
+    m_settings.beginGroup("XPlane");
+    setOptionChange(SimOption::UseAI, m_settings.value("AIMode", false).toBool());
+    setOptionChange(SimOption::UseCSL, !m_settings.value("AIMode", false).toBool());
+    m_settings.endGroup();
     m_XPPlugin.setAddress("127.0.0.1");
     m_LocalPort=47600;
     m_DestPort=47500;
@@ -111,15 +115,9 @@ void CXPManager::main_loop()
 SimConnector::SIM_VERSION CXPManager::getVersion()
 {
     if (!m_connected) return SimConnector::SIM_VERSION::UNKNOWN;
-    switch (m_version.Major)
-    {
-        case 1:
-            return SimConnector::SIM_VERSION::XPLANE;
-        case 2:
-            return SimConnector::SIM_VERSION::XPLANE_CSL;
-        default:
-            return SimConnector::SIM_VERSION::UNKNOWN;
-    }
+    if (getOption(UseAI)) return SimConnector::SIM_VERSION::XPLANE;
+    if (getOption(UseCSL)) return SimConnector::SIM_VERSION::XPLANE_CSL;
+    return SimConnector::SIM_VERSION::UNKNOWN;
 }
 
 ///
