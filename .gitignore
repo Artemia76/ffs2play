@@ -17,6 +17,7 @@ moc_*
 *.deb
 description-pak
 ffs2play
+*.qm
 
 # Build results
 
