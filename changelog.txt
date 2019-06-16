@@ -40,3 +40,5 @@ ChangeLog:
         Add Spanish Translation (Thanks to Carlo Alias Radiosabines)
 
 2.1.10 : Fix TCP Client UDP Switch issue. Add ICAO Model on peer list to help choose CSL replacement
+
+2.1.11 : Create support for Hybrid XFFS2Play (AI + CSL)
