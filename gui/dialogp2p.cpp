@@ -513,7 +513,7 @@ void DialogP2P::on_rbAI_Aircrafts_toggled(bool)
     checkIfChanged();
 }
 
-void DialogP2P::on_rbCSLAircrafts_toggled(bool)
+void DialogP2P::on_rbCSL_Aircrafts_toggled(bool)
 {
     checkIfChanged();
 }

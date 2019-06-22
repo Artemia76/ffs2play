@@ -106,8 +106,8 @@ private slots:
     void                on_pushButton_released();
     void                on_cbDisableAltCorr_stateChanged(int);
     void                on_cbEnforceTCP_stateChanged(int);
-    void on_rbAI_Aircrafts_toggled(bool checked);
-    void on_rbCSLAircrafts_toggled(bool checked);
+    void                on_rbAI_Aircrafts_toggled(bool);
+    void                on_rbCSL_Aircrafts_toggled(bool);
 };
 
 #endif // DIALOGP2P_H
