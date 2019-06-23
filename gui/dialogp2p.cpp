@@ -391,11 +391,11 @@ void DialogP2P::on_btnAddItem_released()
     if (FileDlg.exec())
     {
         Path = FileDlg.selectedFiles().first();
-        m_log->log(" Path = " + Path.canonicalPath() );
+        m_log->log(" Path = " + Path.absolutePath() );
         if (!Path.isEmpty())
         {
-            m_AIMapping->addPath(Path.canonicalPath());
-            ui->lvItems->addItem(Path.canonicalPath());
+            m_AIMapping->addPath(Path.absolutePath());
+            ui->lvItems->addItem(Path.absolutePath());
             m_AIMapping->startScanSimObject();
         }
     }
@@ -513,7 +513,7 @@ void DialogP2P::on_rbAI_Aircrafts_toggled(bool)
     checkIfChanged();
 }
 
-void DialogP2P::on_rbCSLAircrafts_toggled(bool)
+void DialogP2P::on_rbCSL_Aircrafts_toggled(bool)
 {
     checkIfChanged();
 }

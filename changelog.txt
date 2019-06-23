@@ -1,44 +1,22 @@
 ChangeLog:
 
-2.0.21 : Add xff2play version update available for x-plane
-         Solve bug for change port or IP
-2.0.22 : P2P Dialog : disable add and del button when not connected to sim
-         Profil Dialog : Auto fill url address
-         Change version checking to enable multi platform (mac, win and lin)
-2.0.25 : Add CallSign Color setting only on X-Plane.
-2.0.26 : Bug resolution for Default AI Replacement, AI Radius propagation when changed and Local IP when UPNP disable
-         New Feature : Button to reset AIDB in P2P dialog box
-2.0.27 : Disable ATC Update when X-Plane Squawk is off or stby
+2.1.12 : Correction to absolute path on linux and CSL AI chooser Widgets signal
 
-2.0.28 : Prevent Sleep Mode on osx Mojave
+2.1.11 : Create support for Hybrid XFFS2Play (AI + CSL)
 
-2.0.29 : Add Mask Peer Feature
-
-2.0.30 : Auto path finder for windows simulators (FSX,P3D)
-
-2.0.31 : Bug engine stopped on simconnect
-
-2.0.32 : Team support implementation
-         Improve uPNP rule name by adding port as suffix
-
-2.0.33 : Add Option to disable altitude correction
-         Add Tchat box on X-plane
-
-2.1.1  : First Release. Change AI Number unlimited from -1 to 0 value to avoid no visible AI
-
-2.1.2 : Change login limit to 32 char maximum
-
-2.1.3 : Add peer information when selecting player
-
-2.1.4 : Add peer information about connexion quality
-
-2.1.6 : Add CSL ICAO Support
-
-2.1.8 : Add TCP Server Emergency socket to connect blocked user behind non accessible PAT Firewall
+2.1.10 : Fix TCP Client UDP Switch issue. Add ICAO Model on peer list to help choose CSL replacement
 
 2.1.9 : Add TCP Client Checkbox to enable choose from user
         Add Spanish Translation (Thanks to Carlo Alias Radiosabines)
 
-2.1.10 : Fix TCP Client UDP Switch issue. Add ICAO Model on peer list to help choose CSL replacement
+2.1.8 : Add TCP Server Emergency socket to connect blocked user behind non accessible PAT Firewall
 
-2.1.11 : Create support for Hybrid XFFS2Play (AI + CSL)
+2.1.6 : Add CSL ICAO Support
+
+2.1.4 : Add peer information about connexion quality
+
+2.1.3 : Add peer information when selecting player
+
+2.1.2 : Change login limit to 32 char maximum
+
+2.1.1  : First Release. Change AI Number unlimited from -1 to 0 value to avoid no visible AI
