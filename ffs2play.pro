@@ -213,7 +213,7 @@ isEmpty(GIT_PATH) {
 
 #Protobuf generation
 
-PROTO_DIR = ./protobuf
+PROTO_DIR = $$PWD/protobuf
 PROTOS = $$files(protobuf/*.proto)
 include(protobuf.pri)
 
@@ -393,7 +393,7 @@ macx {
 win32 {
     defineReplace(p){return ($$shell_quote($$shell_path($$1)))}
     copydata.commands = xcopy /Y $$p($$PWD/intl/*.qm) $$p($$OUT_PWD/translations/) &&
-    copydata.commands += xcopy /Y $$p($$PWD/*.qss) $$p($$OUT_PWD/)
+    copydata.commands += xcopy /Y $$p($$PWD/style/*.qss) $$p($$OUT_PWD/)
 }
 
 # =====================================================================
@@ -511,7 +511,7 @@ win32 {
     deploy.commands += xcopy /Y $$p($$OUT_PWD/ffs2play.exe) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/README.md) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/intl/*.qm) $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
-    deploy.commands += xcopy /Y $$p($$PWD/*.qss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    deploy.commands += xcopy /Y $$p($$PWD/style/*.qss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/*.txt) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/LICENSE.GPLv3) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/*.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
