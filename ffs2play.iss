@@ -48,7 +48,7 @@ Name: "base"; Description: "base installation"
 Name: "FSX/P3D"; Description: "FSX/P3D specific installation"
 
 [Components]
-Name: "program"; Description: ""
+Name: "program"; Description: "Main Program"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
