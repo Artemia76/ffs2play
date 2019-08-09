@@ -1,5 +1,7 @@
 ChangeLog:
 
+2.1.13 : Upgrade Qt lib to 5.13.0
+
 2.1.12 : Correction to absolute path on linux and CSL AI chooser Widgets signal
 
 2.1.11 : Create support for Hybrid XFFS2Play (AI + CSL)
