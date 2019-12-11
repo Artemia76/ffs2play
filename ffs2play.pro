@@ -129,7 +129,7 @@ win32 {
     } else {
         LIBS += -L$$MINIUPNPC_LIB_PATH"\Debug"
     }
-    LIBS += -lminiupnpc
+    LIBS += -llibminiupnpc
 
     # Find OpenSSL location
     isEmpty(OPENSSL_PATH) {

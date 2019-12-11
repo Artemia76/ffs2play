@@ -109,7 +109,7 @@ void TCPServer::OnNewConnection()
     fireNewConnexion(client);
 }
 
-void TCPServer::accept(TCPClient* pPeer)
+void TCPServer::accept(TCPClient*)
 {
 }
 
