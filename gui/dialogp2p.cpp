@@ -161,6 +161,7 @@ void DialogP2P::applyChangedItem()
     if (ui->numPort->value() != m_settings.value("Port", 54857).toInt())
     {
         m_settings.setValue("Port",ui->numPort->value());
+        m_needP2PRestart = true;
     }
     if (ui->cbEnforceTCP->isChecked() != m_settings.value("EnforceTCP", false).toBool())
     {
