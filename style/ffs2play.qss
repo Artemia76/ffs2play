@@ -96,3 +96,7 @@ QSpinBox{
     color: black;
     background-color: white;
 }
+
+QRadioButton{
+    color: black;
+}
