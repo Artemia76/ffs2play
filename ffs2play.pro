@@ -56,6 +56,7 @@ CONFIG(debug, debug|release) {
     DEFINES += FFS_DEBUG=1
 } else {
     CONF_TYPE=release
+    DEFINES += FFS_DEBUG=1
 }
 
 isEmpty(DEPLOY_BASE) : DEPLOY_BASE=$$PWD/../deploy
