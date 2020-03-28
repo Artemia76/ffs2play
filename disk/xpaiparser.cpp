@@ -67,8 +67,8 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
 #ifdef Q_OS_WIN
                 Path = Path.replace("/","\\");
 #endif
-                QString Editor,Atc_model, Atc_type, Category, Title;
-                int Engine_Type = 0;
+                QString Editor,Atc_model, Atc_type, Airline, Category, Title;
+                int Engine_Type = 0,nb_moteur = 1;
                 double Static_CG_Height=0.0, Static_Pitch = 0.0;
                 Title = s.value("properties", "acf/_name").toString();
                 if (Title=="")
@@ -79,32 +79,72 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 Editor = s.value("properties", "acf/_studio").toString();
                 Atc_model = s.value("properties","acf/_ICAO").toString();
                 Atc_type = s.value("properties","acf/_manufacturer").toString();
-                //Category =  s.value("General","Category").toString();
-                //Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
+                Airline = s.value("properties","acf/_callsign").toString();
+                if (s.value("properties","acf/_is_airliner").toBool())
+                    Category = "airliner";
+                else if (s.value("properties","acf/_is_helicopter").toBool())
+                    Category = "helicopter";
+                else if (s.value("properties","acf/_is_general_aviation").toBool())
+                    Category = "airplane";
+                else if (s.value("properties","acf/_is_seaplane").toBool())
+                    Category = "seaplane";
+                else if (s.value("properties","acf/_is_vtol").toBool())
+                    Category = "vtol";
+                else if (s.value("properties","acf/_is_glider").toBool())
+                    Category = "glider";
+                else
+                    Category = "undefined";
+
+                // Find the engine Type
+                // For XPlane AI, we find the fan rpm for N1 100% . if value different to 0, this mean
+                // we have a turbine
+                QString EngType = s.value("properties","_engn/0/_type").toString();
+                bool Feather = s.value("properties","acf/_feather_on_prop_pull_EQ").toBool();
+                if (Category != "glider")
+                {
+                    if (EngType == "TRB_FRE")
+                    {
+                        if (Category == "helicopter")
+                            Engine_Type = 3;//We have a rotor turbine
+                        else
+                            Engine_Type = 5;// We have a turbo propeller
+                    }
+                    else if (EngType.startsWith("JET"))
+                    {
+                        Engine_Type = 1; // We have a piston engine
+                    }
+                    else if (EngType == "ELE")
+                    {
+                        Engine_Type = 6; // Electrical engine
+                    }
+                    else if (EngType =="RCP_INJ")
+                    {
+                        Engine_Type = 0; // We have a piston engine
+                    }
+                    else
+                    {
+                        Engine_Type = 4; // Undefined
+                    }
+                }
+                else
+                {
+                    Engine_Type =2;
+                }
                 Static_CG_Height =  s.value("properties","acf/_h_eqlbm").toDouble();
                 Static_Pitch =  s.value("properties","acf/_the_eqlbm").toDouble();
+                nb_moteur = s.value("properties","acf/_num_engn").toInt();
+
 #if FFS_DEBUG
                 m_log->log("AIMapping : Path = " + Path,Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : Editor = " + Editor,Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : ATCModel = " + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : ATCType = " + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : Airline = " + Airline, Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : Category = " + Category, Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : EngineType = " + QString::number(Engine_Type), Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : CG Height = " +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : Pitch = " +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
-#endif
-                int nb_moteur = 0;
-                while (true)
-                {
-                    QString Reponse = s.value("GeneralEngineData", QString("Engine.") + QString::number(nb_moteur)).toString();
-                    if (Reponse != "")
-                    {
-                        nb_moteur++;
-                    }
-                    else break;
-                }
-#if FFS_DEBUG
-                m_log->log("AIMapping : Engine quantity = " + QString::number(nb_moteur),Qt::darkYellow,LEVEL_VERBOSE);
+                m_log->log("AIMapping : NBEngine = " + QString::number(nb_moteur), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
                 int nb_title = 0;
                 while (true)
@@ -124,17 +164,18 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                             // If there is no result, we have a new aircraft to register
                             if (!query.next())
                             {
-                                query.prepare("INSERT INTO Aircrafts (checksum, Sim, Title, Editor, Type, Model, Path, Category, NbEngine, EngineType, CGHeight, Pitch)"
-                                              "VALUES (:checksum, :Sim, :Title, :Editor, :Type, :Model, :Path, :Category, :NBEngine, :EngineType, :CGHeight, :Pitch)");
+                                query.prepare("INSERT INTO Aircrafts (checksum, Sim, Title, Editor, Type, Model, AirLine, Path, Category, NbEngine, EngineType, CGHeight, Pitch)"
+                                              "VALUES (:checksum, :Sim, :Title, :Editor, :Type, :Model, :AirLine, :Path, :Category, :NbEngine, :EngineType, :CGHeight, :Pitch)");
                                 query.bindValue(":checksum", pKey);
                                 query.bindValue(":Sim",m_Table);
                                 query.bindValue(":Title", Title);
                                 query.bindValue(":Editor", Editor);
                                 query.bindValue(":Type", Atc_type);
                                 query.bindValue(":Model", Atc_model);
+                                query.bindValue(":AirLine", Airline);
                                 query.bindValue(":Path", Path);
                                 query.bindValue(":Category", Category);
-                                query.bindValue(":NBEngine", nb_moteur);
+                                query.bindValue(":NbEngine", nb_moteur);
                                 query.bindValue(":EngineType", Engine_Type);
                                 query.bindValue(":CGHeight", Static_CG_Height);
                                 query.bindValue(":Pitch", Static_Pitch);
@@ -143,16 +184,17 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                             }
                             else //Update Record
                             {
-                                query.prepare("UPDATE Aircrafts SET checksum = :checksum, Editor = :Editor, Type = :Type, Model = :Model, Path = :Path, Category = :Category, NbEngine = :NbEngine, EngineType = :EngineType, CGHeight = :CHeight, Pitch = :Pitch WHERE (Title = :Title) and (Sim = :Sim)");
+                                query.prepare("UPDATE Aircrafts SET checksum = :checksum, Editor = :Editor, Type = :Type, Model = :Model, AirLine = :AirLine, Path = :Path, Category = :Category, NbEngine = :NbEngine, EngineType = :EngineType, CGHeight = :CHeight, Pitch = :Pitch WHERE (Title = :Title) and (Sim = :Sim)");
                                 query.bindValue(":checksum", pKey);
                                 query.bindValue(":Sim",m_Table);
                                 query.bindValue(":Title", Title);
                                 query.bindValue(":Editor", Editor);
                                 query.bindValue(":Type", Atc_type);
                                 query.bindValue(":Model", Atc_model);
+                                query.bindValue(":AirLine", Airline);
                                 query.bindValue(":Path", Path);
                                 query.bindValue(":Category", Category);
-                                query.bindValue(":NBEngine", nb_moteur);
+                                query.bindValue(":NbEngine", nb_moteur);
                                 query.bindValue(":EngineType", Engine_Type);
                                 query.bindValue(":CGHeight", Static_CG_Height);
                                 query.bindValue(":Pitch", Static_Pitch);

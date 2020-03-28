@@ -36,7 +36,7 @@
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 
-#define AIDB_AIRCRAFTS_VERSION 3
+#define AIDB_AIRCRAFTS_VERSION 4
 #define AIDB_SIMPATHS_VERSION 1
 #define AIDB_REPLACEMENT_VERSION 1
 

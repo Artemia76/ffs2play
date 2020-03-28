@@ -241,7 +241,7 @@ void CPeer::createAI()
         {
             m_simManager->removeAI(m_objectID);
         }
-        if (m_callSign.length()>8) m_tail = m_callSign.left(8);
+        if (m_callSign.length()>12) m_tail = m_callSign.left(12);
         else m_tail = m_callSign;
         if (m_data.Category == "Helicopter") m_trySimpleAI = true;
         m_timerCreateAI.start(5000);

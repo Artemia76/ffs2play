@@ -73,7 +73,7 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 Editor = s.value("fltsim.0", "ui_createdby").toString();
                 Atc_model = s.value("General","atc_model").toString();
                 Atc_type =  s.value("General","atc_type").toString();
-                Category =  s.value("General","Category").toString();
+                Category =  s.value("General","Category").toString().toLower();
                 Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
                 Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
                 Static_Pitch =  s.value("contact_points","static_pitch").toDouble();

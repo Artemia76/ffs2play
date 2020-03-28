@@ -267,8 +267,8 @@ bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
                             Decoded=true;;
                         }
                     }
-                    break;
                 }
+                break;
             }
             case INT:
             case LONG:

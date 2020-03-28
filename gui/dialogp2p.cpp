@@ -490,6 +490,7 @@ void DialogP2P::on_pushButton_released()
     if (ret == QMessageBox::Yes)
     {
         m_AIMapping->cleanAIDB();
+        ui->lvItems->clear();
     }
 }
 
