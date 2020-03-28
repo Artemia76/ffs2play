@@ -63,7 +63,66 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
     m_Peer = pPeer;
     QString RemoteAI = m_P2PManager->getTitle(m_Peer);
     m_UI->leOriginal->setText(RemoteAI);
-    m_UI->cbReplacement->addItems(m_AIMapping->getAITitreDispo("*","*","*","*"));
+
+    // Fill Category List
+    m_UI->cbCategory->addItems(m_AIMapping->getCategoryList());
+    m_UI->cbCategory->insertItem(0,"*");
+    m_UI->cbCategory->setCurrentIndex(0);
+
+    // Fill Editor List
+    m_UI->cbEditor->addItems(m_AIMapping->getEditorList());
+    m_UI->cbEditor->insertItem(0,"*");
+    m_UI->cbEditor->setCurrentIndex(0);
+
+    // Fill Type List
+    m_UI->cbType->addItems(m_AIMapping->getATCTypeList());
+    m_UI->cbType->insertItem(0,"*");
+    m_UI->cbType->setCurrentIndex(0);
+
+    // Fill Model List
+    m_UI->cbModel->addItems(m_AIMapping->getATCModelList());
+    m_UI->cbModel->insertItem(0,"*");
+    m_UI->cbModel->setCurrentIndex(0);
+
+    // Fill Engine Type
+    m_UI->cbEngineType->addItems(m_AIMapping->getEngineTypeList());
+    m_UI->cbEngineType->insertItem(0,"*");
+    m_UI->cbEngineType->setCurrentIndex(0);
+
+    // Fill Number of Engine
+    m_UI->cbEngineNB->addItems(m_AIMapping->getNbEngineList());
+    m_UI->cbEngineNB->insertItem(0,"*");
+    m_UI->cbEngineNB->setCurrentIndex(0);
+    refreshReplacelist();
+}
+
+///
+/// \brief AIReplace::~AIReplace
+///
+/// Destructor
+///
+AIReplace::~AIReplace()
+{
+    delete m_UI;
+}
+
+void AIReplace::refreshReplacelist()
+{
+    QString Category = m_UI->cbCategory->currentText();
+    QString Type = m_UI->cbType->currentText();
+    QString Model = m_UI->cbModel->currentText();
+    QString Editor = m_UI->cbEditor->currentText();
+    QString EngineType = m_UI->cbEngineType->currentText();
+    QString NbEngine = m_UI->cbEngineNB->currentText();
+    m_UI->cbReplacement->clear();
+    m_UI->cbReplacement->addItems(m_AIMapping->getAITitleDispo(
+                                      Category,
+                                      Editor,
+                                      Type,
+                                      Model,
+                                      EngineType,
+                                      NbEngine));
+    QString RemoteAI = m_P2PManager->getTitle(m_Peer);
     m_ExistingRule = m_AIMapping->getRule(RemoteAI);
     if (m_ExistingRule != "")
     {
@@ -79,16 +138,6 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
         }
         m_UI->btnDeleteRule->setVisible(false);
     }
-}
-
-///
-/// \brief AIReplace::~AIReplace
-///
-/// Destructor
-///
-AIReplace::~AIReplace()
-{
-    delete m_UI;
 }
 
 ///
@@ -122,3 +171,56 @@ void AIReplace::on_btnBox_rejected()
     close();
 }
 
+///
+/// \brief AIReplace::on_cbCategory_currentIndexChanged
+/// \param arg1
+///
+void AIReplace::on_cbCategory_currentIndexChanged(const QString&)
+{
+    refreshReplacelist();
+}
+
+///
+/// \brief AIReplace::on_cbEngineNB_currentIndexChanged
+/// \param arg1
+///
+void AIReplace::on_cbEngineNB_currentIndexChanged(const QString&)
+{
+    refreshReplacelist();
+}
+
+///
+/// \brief AIReplace::on_cbEngineType_currentIndexChanged
+/// \param arg1
+///
+void AIReplace::on_cbEngineType_currentIndexChanged(const QString&)
+{
+    refreshReplacelist();
+}
+
+///
+/// \brief AIReplace::on_cbType_currentIndexChanged
+/// \param arg1
+///
+void AIReplace::on_cbType_currentIndexChanged(const QString&)
+{
+    refreshReplacelist();
+}
+
+///
+/// \brief AIReplace::on_cbModel_currentIndexChanged
+/// \param arg1
+///
+void AIReplace::on_cbModel_currentIndexChanged(const QString&)
+{
+    refreshReplacelist();
+}
+
+///
+/// \brief AIReplace::on_cbEditor_currentIndexChanged
+/// \param arg1
+///
+void AIReplace::on_cbEditor_currentIndexChanged(const QString&)
+{
+    refreshReplacelist();
+}

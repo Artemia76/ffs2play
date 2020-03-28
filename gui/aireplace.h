@@ -75,10 +75,17 @@ private:
     QString             m_Peer;
     QString             m_ExistingRule;
 
+    void                refreshReplacelist();
 private slots:
     void                on_btnDeleteRule_clicked();
     void                on_btnBox_accepted();
-    void on_btnBox_rejected();
+    void                on_btnBox_rejected();
+    void                on_cbCategory_currentIndexChanged(const QString&);
+    void                on_cbEngineNB_currentIndexChanged(const QString&);
+    void                on_cbEngineType_currentIndexChanged(const QString&);
+    void                on_cbType_currentIndexChanged(const QString&);
+    void                on_cbModel_currentIndexChanged(const QString&);
+    void                on_cbEditor_currentIndexChanged(const QString&);
 };
 
 #endif // DIALOGP2P_H

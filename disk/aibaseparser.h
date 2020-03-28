@@ -36,7 +36,7 @@
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 
-#define AIDB_AIRCRAFTS_VERSION 3
+#define AIDB_AIRCRAFTS_VERSION 4
 #define AIDB_SIMPATHS_VERSION 1
 #define AIDB_REPLACEMENT_VERSION 1
 
@@ -65,11 +65,29 @@ protected:
 
     void            startScanSimObject();
     QString         getAircraftPath(const QString& pTitle);
-    AIResol         SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
-    QStringList     getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
-    QString         getRule(const QString& pTitre);
+    AIResol         SolveTitle(
+            const QString& pTitle,
+            const QString& pModel,
+            const QString& pType );
+
+    QStringList     getAITitleDispo(
+            QString pCategorie = "",
+            QString pEditor="",
+            QString pType="",
+            QString pModel="",
+            QString pEngineType="",
+            QString pEngineNumber="");
+
+    QString         getRule(const QString& pTitle);
     void            addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
     void            delRule(const QString& pRemoteTitle);
+    QStringList     getCategoryList();
+    QStringList     getEditorList();
+    QStringList     getATCTypeList();
+    QStringList     getATCModelList();
+    QStringList     getEngineTypeList();
+    QStringList     getNbEngineList();
+
     void            cleanAIDB();
     bool            addPath(const QString& pPath, const QString& pSim="");
     bool            delPath(const QString& pPath);

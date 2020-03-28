@@ -56,7 +56,6 @@ CONFIG(debug, debug|release) {
     DEFINES += FFS_DEBUG=1
 } else {
     CONF_TYPE=release
-    DEFINES += FFS_DEBUG=1
 }
 
 isEmpty(DEPLOY_BASE) : DEPLOY_BASE=$$PWD/../deploy
@@ -221,7 +220,7 @@ include(protobuf.pri)
 # Application Version
 VERSION_MAJOR = 2
 VERSION_MINOR = 1
-VERSION_BUILD = 14
+VERSION_BUILD = 15
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
@@ -507,7 +506,7 @@ win32 {
     RC_ICONS = ffs2play_48x48.ico
     CONFIG(debug, debug|release) : DLL_SUFFIX=d
     CONFIG(release, debug|release) : DLL_SUFFIX=
-    deploy.commands = ( rmdir /s /q $$p($$DEPLOY_BASE/$$TARGET_NAME) || echo Directory already empty) &&
+    deploy.commands = ( rmdir /s /q $$p($$DEPLOY_BASE) || echo Directory already empty) &&
     deploy.commands += mkdir $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
     deploy.commands += xcopy /Y $$p($$OUT_PWD/ffs2play.exe) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/README.md) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&

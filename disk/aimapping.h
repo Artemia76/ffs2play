@@ -59,13 +59,22 @@ public:
 
     void                    startScanSimObject();
     AIResol                 SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
-    QStringList             getAITitreDispo(QString pCategorie = "", QString pEditeur="", QString pType="", QString pModel="");
+    QStringList             getAITitleDispo(
+                                QString pCategorie = "",
+                                QString pEditor="",
+                                QString pType="",
+                                QString pModel="",
+                                QString pEngineType="",
+                                QString pNbEngine="");
     QStringList             getCategoryList();
-    QStringList             getEditeurList();
+    QStringList             getEditorList();
     QStringList             getATCTypeList();
     QStringList             getATCModelList();
+    QStringList             getEngineTypeList();
+    QStringList             getNbEngineList();
+
     QStringList             getPathList();
-    QString                 getRule(const QString& pTitre);
+    QString                 getRule(const QString& pTitle);
     void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
     void                    delRule(const QString& pRemoteTitle);
     void                    cleanAIDB();
