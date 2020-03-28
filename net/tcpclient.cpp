@@ -169,7 +169,7 @@ void TCPClient::OnDisconnected()
     this->deleteLater();
 }
 
-void TCPClient::OnError(QAbstractSocket::SocketError pError)
+void TCPClient::OnError(QAbstractSocket::SocketError)
 {
 #ifdef FFS_DEBUG
     m_log->log("TCPClient : Socket error = " + m_Socket->errorString(), Qt::cyan,LEVEL_NORMAL);
