@@ -56,7 +56,6 @@ CONFIG(debug, debug|release) {
     DEFINES += FFS_DEBUG=1
 } else {
     CONF_TYPE=release
-    DEFINES += FFS_DEBUG=1
 }
 
 isEmpty(DEPLOY_BASE) : DEPLOY_BASE=$$PWD/../deploy
@@ -130,7 +129,7 @@ win32 {
     } else {
         LIBS += -L$$MINIUPNPC_LIB_PATH"\Debug"
     }
-    LIBS += -llibminiupnpc
+    LIBS += -lminiupnpc
 
     # Find OpenSSL location
     isEmpty(OPENSSL_PATH) {
