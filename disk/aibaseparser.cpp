@@ -472,14 +472,20 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
 }
 
 ///
-/// \brief AIBaseParser::getAITitreDispo
+/// \brief AIBaseParser::getAITitleDispo
 /// \param pCategory
 /// \param pEditor
 /// \param pType
 /// \param pModel
 /// \return
 ///
-QStringList AIBaseParser::getAITitreDispo(QString pCategory, QString pEditor, QString pType, QString pModel)
+QStringList AIBaseParser::getAITitleDispo(
+        QString pCategory,
+        QString pEditor,
+        QString pType,
+        QString pModel,
+        QString pEngineType,
+        QString pNbEngine)
 {
     QStringList List;
     if (m_Initialized)
@@ -488,8 +494,11 @@ QStringList AIBaseParser::getAITitreDispo(QString pCategory, QString pEditor, QS
         if (pEditor == "*") pEditor = "";
         if (pType == "*") pType = "";
         if (pModel == "*") pModel = "";
-        bool Category, Editor, Type, Model;
-        Category=Editor=Type=Model=false;
+        if (pEngineType == "*") pEngineType = "";
+        if (pNbEngine == "*") pNbEngine = "";
+        bool Category, Editor, Type, Model, EngineType,NbEngine ;
+        int EngineTypeVal=0;
+        Category=Editor=Type=Model=EngineType=NbEngine=false;
         QSqlQuery query(m_DB);
         QString command =  "SELECT Title FROM Aircrafts WHERE Sim = :Sim";
         if (pCategory.length()>0)
@@ -512,6 +521,23 @@ QStringList AIBaseParser::getAITitreDispo(QString pCategory, QString pEditor, QS
             command += " and Model like :Model";
             Model = true;
         }
+        if (pEngineType.length()>0)
+        {
+            if (pEngineType=="Piston") EngineTypeVal=0;
+            else if (pEngineType=="Jet") EngineTypeVal=1;
+            else if (pEngineType=="None") EngineTypeVal=2;
+            else if (pEngineType=="RotorTurbine") EngineTypeVal=3;
+            else if (pEngineType=="TurboProp") EngineTypeVal=5;
+            else if (pEngineType=="Elec") EngineTypeVal=6;
+            else EngineTypeVal=4;
+            command += " and EngineType like :EngineType";
+            EngineType = true;
+        }
+        if (pNbEngine.length()>0)
+        {
+            command += " and NbEngine = :NbEngine";
+            NbEngine = true;
+        }
         command += " order by Title;";
         query.prepare(command);
         query.bindValue(":Sim",m_Table);
@@ -519,7 +545,8 @@ QStringList AIBaseParser::getAITitreDispo(QString pCategory, QString pEditor, QS
         if (Editor) query.bindValue(":Editor",pEditor);
         if (Type) query.bindValue(":Type",pType);
         if (Model) query.bindValue(":Model",pModel);
-
+        if (EngineType) query.bindValue(":EngineType",EngineTypeVal);
+        if (NbEngine) query.bindValue(":NbEngine",pNbEngine.toInt());
         if (query.exec())
         {
             while (query.next())
@@ -533,10 +560,10 @@ QStringList AIBaseParser::getAITitreDispo(QString pCategory, QString pEditor, QS
 
 ///
 /// \brief AIBaseParser::getRule
-/// \param pTitre
+/// \param pTitle
 /// \return
 ///
-QString AIBaseParser::getRule(const QString &pTitre)
+QString AIBaseParser::getRule(const QString &pTitle)
 {
     QString Response="";
     if (m_Initialized)
@@ -544,7 +571,7 @@ QString AIBaseParser::getRule(const QString &pTitre)
         QSqlQuery query(m_DB);
         query.prepare("SELECT LocalTitle FROM Replacement WHERE (RemoteTitle like :RemoteTitle) and (Sim like :Sim)");
         query.bindValue(":Sim",m_Table);
-        query.bindValue(":RemoteTitle",pTitre);
+        query.bindValue(":RemoteTitle",pTitle);
         if (query.exec())
         {
             if (query.next())
@@ -584,6 +611,179 @@ void AIBaseParser::delRule(const QString &pRemoteTitle)
     query.bindValue(":Sim",m_Table);
     query.bindValue(":RemoteTitle",pRemoteTitle);
     query.exec();
+}
+
+///
+/// \brief AIBaseParser::getCategoryList
+/// \return
+///
+QStringList AIBaseParser::getCategoryList()
+{
+    QStringList List;
+    if (m_Initialized)
+    {
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT Distinct Category FROM Aircrafts order by Category");
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                List.append(query.value(0).toString());
+            }
+        }
+    }
+    return List;
+}
+
+///
+/// \brief AIBaseParser::getEditorList
+/// \return
+///
+QStringList AIBaseParser::getEditorList()
+{
+    QStringList List;
+    if (m_Initialized)
+    {
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT Distinct Editor FROM Aircrafts order by Editor");
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                List.append(query.value(0).toString());
+            }
+        }
+    }
+    return List;
+}
+
+///
+/// \brief AIBaseParser::getATCTypeList
+/// \return
+///
+QStringList AIBaseParser::getATCTypeList()
+{
+    QStringList List;
+    if (m_Initialized)
+    {
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT Distinct Type FROM Aircrafts order by Type");
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                List.append(query.value(0).toString());
+            }
+        }
+    }
+    return List;
+}
+
+///
+/// \brief AIBaseParser::getATCModelList
+/// \return
+///
+QStringList AIBaseParser::getATCModelList()
+{
+    QStringList List;
+    if (m_Initialized)
+    {
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT Distinct Model FROM Aircrafts order by Model");
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                List.append(query.value(0).toString());
+            }
+        }
+    }
+    return List;
+}
+
+///
+/// \brief AIBaseParser::getEngineTypeList
+/// \return
+///
+QStringList AIBaseParser::getEngineTypeList()
+{
+    QStringList List;
+    if (m_Initialized)
+    {
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT Distinct EngineType FROM Aircrafts order by EngineType");
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                QString EngineType;
+                switch (query.value(0).toInt())
+                {
+                    case 0:
+                    {
+                        EngineType = "Piston";
+                        break;
+                    }
+                    case 1:
+                    {
+                        EngineType = "Jet";
+                        break;
+                    }
+                    case 2:
+                    {
+                        EngineType = "None";
+                        break;
+                    }
+                    case 3:
+                    {
+                        EngineType = "RotorTurbine";
+                        break;
+                    }
+                    case 4:
+                    {
+                        EngineType = "Undefined";
+                        break;
+                    }
+                    case 5:
+                    {
+                        EngineType = "TurboProp";
+                        break;
+                    }
+                    case 6:
+                    {
+                        EngineType = "Elec";
+                        break;
+                    }
+                    default:
+                        EngineType = "Undefined";
+                }
+                List.append(EngineType);
+            }
+        }
+    }
+    return List;
+}
+
+///
+/// \brief AIBaseParser::getEngineNumberList
+/// \return
+///
+QStringList AIBaseParser::getNbEngineList()
+{
+    QStringList List;
+    if (m_Initialized)
+    {
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT Distinct NbEngine FROM Aircrafts order by NbEngine");
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                List.append(query.value(0).toString());
+            }
+        }
+    }
+    return List;
 }
 
 ///

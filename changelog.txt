@@ -1,4 +1,8 @@
 ChangeLog:
+2.1.15 : Add Filter for AI replacement
+         Extend AI name to 12 characters
+
+2.1.14 : Correction about some TCP issues
 
 2.1.13 : Upgrade Qt lib to 5.13.0
 

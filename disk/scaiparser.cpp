@@ -74,6 +74,7 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 Atc_model = s.value("General","atc_model").toString();
                 Atc_type =  s.value("General","atc_type").toString();
                 Category =  s.value("General","Category").toString().toLower();
+                Category = Category.remove(' ');
                 Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
                 Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
                 Static_Pitch =  s.value("contact_points","static_pitch").toDouble();
@@ -121,7 +122,7 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                             if (!query.next())
                             {
                                 query.prepare("INSERT INTO Aircrafts (checksum, Sim, Title, Editor, Type, Model, Path, Category, NbEngine, EngineType, CGHeight, Pitch)"
-                                              "VALUES (:checksum, :Sim, :Title, :Editor, :Type, :Model, :Path, :Category, :NBEngine, :EngineType, :CGHeight, :Pitch)");
+                                              "VALUES (:checksum, :Sim, :Title, :Editor, :Type, :Model, :Path, :Category, :NbEngine, :EngineType, :CGHeight, :Pitch)");
                                 query.bindValue(":checksum", pKey);
                                 query.bindValue(":Sim",m_Table);
                                 query.bindValue(":Title", Title);
@@ -130,7 +131,7 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                                 query.bindValue(":Model", Atc_model);
                                 query.bindValue(":Path", Path);
                                 query.bindValue(":Category", Category);
-                                query.bindValue(":NBEngine", nb_moteur);
+                                query.bindValue(":NbEngine", nb_moteur);
                                 query.bindValue(":EngineType", Engine_Type);
                                 query.bindValue(":CGHeight", Static_CG_Height);
                                 query.bindValue(":Pitch", Static_Pitch);

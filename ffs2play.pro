@@ -129,7 +129,7 @@ win32 {
     } else {
         LIBS += -L$$MINIUPNPC_LIB_PATH"\Debug"
     }
-    LIBS += -lminiupnpc
+    LIBS += -llibminiupnpc
 
     # Find OpenSSL location
     isEmpty(OPENSSL_PATH) {
@@ -506,7 +506,7 @@ win32 {
     RC_ICONS = ffs2play_48x48.ico
     CONFIG(debug, debug|release) : DLL_SUFFIX=d
     CONFIG(release, debug|release) : DLL_SUFFIX=
-    deploy.commands = ( rmdir /s /q $$p($$DEPLOY_BASE/$$TARGET_NAME) || echo Directory already empty) &&
+    deploy.commands = ( rmdir /s /q $$p($$DEPLOY_BASE) || echo Directory already empty) &&
     deploy.commands += mkdir $$p($$DEPLOY_BASE/$$TARGET_NAME/translations) &&
     deploy.commands += xcopy /Y $$p($$OUT_PWD/ffs2play.exe) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/README.md) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&

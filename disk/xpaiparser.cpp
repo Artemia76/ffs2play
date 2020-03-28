@@ -99,7 +99,6 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 // For XPlane AI, we find the fan rpm for N1 100% . if value different to 0, this mean
                 // we have a turbine
                 QString EngType = s.value("properties","_engn/0/_type").toString();
-                bool Feather = s.value("properties","acf/_feather_on_prop_pull_EQ").toBool();
                 if (Category != "glider")
                 {
                     if (EngType == "TRB_FRE")

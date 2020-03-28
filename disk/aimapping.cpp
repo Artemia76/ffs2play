@@ -144,19 +144,31 @@ AIResol AIMapping::SolveTitle(const QString& pTitle, const QString& pModel, cons
 }
 
 ///
-/// \brief AIMapping::getAITitreDispo
+/// \brief AIMapping::getAITitleDispo
 /// \param pCategory
 /// \param pEditor
 /// \param pType
 /// \param pModel
 /// \return
 ///
-QStringList AIMapping::getAITitreDispo(QString pCategory, QString pEditor, QString pType, QString pModel)
+QStringList AIMapping::getAITitleDispo(
+        QString pCategory,
+        QString pEditor,
+        QString pType,
+        QString pModel,
+        QString pEngineType,
+        QString pNbEngine)
 {
     QStringList List;
     if (isInit())
     {
-        List = m_AIParser->getAITitreDispo(pCategory,pEditor,pType,pModel);
+        List = m_AIParser->getAITitleDispo(
+                    pCategory,
+                    pEditor,
+                    pType,
+                    pModel,
+                    pEngineType,
+                    pNbEngine);
     }
     return List;
 }
@@ -170,21 +182,21 @@ QStringList AIMapping::getCategoryList()
     QStringList List;
     if (isInit())
     {
-
+        List = m_AIParser->getCategoryList();
     }
     return List;
 }
 
 ///
-/// \brief AIMapping::getEditeurList
+/// \brief AIMapping::getEditorList
 /// \return
 ///
-QStringList AIMapping::getEditeurList()
+QStringList AIMapping::getEditorList()
 {
     QStringList List;
     if (isInit())
     {
-
+        List = m_AIParser->getEditorList();
     }
     return List;
 }
@@ -198,7 +210,7 @@ QStringList AIMapping::getATCTypeList()
     QStringList List;
     if (isInit())
     {
-
+        List = m_AIParser->getATCTypeList();
     }
     return List;
 }
@@ -212,7 +224,35 @@ QStringList AIMapping::getATCModelList()
     QStringList List;
     if (isInit())
     {
+        List = m_AIParser->getATCModelList();
+    }
+    return List;
+}
 
+///
+/// \brief AIMapping::getEngineTypeList
+/// \return
+///
+QStringList AIMapping::getEngineTypeList()
+{
+    QStringList List;
+    if (isInit())
+    {
+        List = m_AIParser->getEngineTypeList();
+    }
+    return List;
+}
+
+///
+/// \brief AIMapping::getEngineNumberList
+/// \return
+///
+QStringList AIMapping::getNbEngineList()
+{
+    QStringList List;
+    if (isInit())
+    {
+        List = m_AIParser->getNbEngineList();
     }
     return List;
 }
