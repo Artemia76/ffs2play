@@ -179,7 +179,7 @@ macx {
     #add /usr/local scope which is not included by default on osx
     INCLUDEPATH += /usr/local/include
     LIBS += -L/usr/local/lib
-    LIBS += "-framework CoreFoundation"
+    LIBS += -framework CoreFoundation
 
     isEmpty(GIT_PATH) : GIT_PATH=git
 
