@@ -18,12 +18,16 @@ moc_*
 description-pak
 ffs2play
 
+#Qt temporary project files
+*.save
+*.pro.user.*
+
 # Build results
 
 [Dd]ebug/
 [Rr]elease/
 x64/
-build/
+build*/
 [Bb]in/
 [Oo]bj/
 

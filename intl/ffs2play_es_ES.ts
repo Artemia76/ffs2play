@@ -48,6 +48,41 @@
     </message>
     <message>
         <location filename="../gui/aireplace.ui" line="97"/>
+        <source>Filters</source>
+        <translation>Filtros</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="109"/>
+        <source>Editor :</source>
+        <translation>Editor :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="135"/>
+        <source>Number of engines :</source>
+        <translation>Numero de motores :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="148"/>
+        <source>Model :</source>
+        <translation>Modelo :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="161"/>
+        <source>Engine type :</source>
+        <translation>Tipo de motor :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="174"/>
+        <source>Category :</source>
+        <translation>Categoría :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="197"/>
+        <source>Type :</source>
+        <translation>Tipo :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="283"/>
         <source>Delete Rule</source>
         <translation>Eliminar regla</translation>
     </message>
@@ -436,17 +471,17 @@
     <message>
         <location filename="../gui/dialogp2p.ui" line="683"/>
         <source>XPlane AI Mode:</source>
-        <translation type="unfinished">XPlane AI Modo:</translation>
+        <translation>XPlane AI Modo:</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="690"/>
         <source>AI Aircrafts</source>
-        <translation type="unfinished"></translation>
+        <translation>Aviones AI</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="697"/>
         <source>CSL Aircrafts</source>
-        <translation type="unfinished"></translation>
+        <translation>Aviones CSL</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="384"/>
@@ -471,12 +506,12 @@
     <message>
         <location filename="../gui/dialogp2p.ui" line="547"/>
         <source>+</source>
-        <translation></translation>
+        <translation>+</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="575"/>
         <source>-</source>
-        <translation></translation>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="600"/>
@@ -486,7 +521,7 @@
     <message>
         <location filename="../gui/dialogp2p.ui" line="606"/>
         <source>R</source>
-        <translation></translation>
+        <translation>R</translation>
     </message>
     <message>
         <location filename="../gui/dialogp2p.ui" line="619"/>
@@ -514,12 +549,12 @@
         <translation>Deshabilitar la corrección de altitud</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="486"/>
+        <location filename="../gui/dialogp2p.cpp" line="487"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="487"/>
+        <location filename="../gui/dialogp2p.cpp" line="488"/>
         <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
         <translation>Esta función restablece todas las bases de datos de AI para todos los simuladores, ¿está seguro de continuar?</translation>
     </message>
@@ -1164,12 +1199,12 @@
 <context>
     <name>SCAIParser</name>
     <message>
-        <location filename="../disk/scaiparser.cpp" line="165"/>
+        <location filename="../disk/scaiparser.cpp" line="166"/>
         <source>AIMapping : IniParser error = </source>
         <translation>AIMapping: IniParser error = </translation>
     </message>
     <message>
-        <location filename="../disk/scaiparser.cpp" line="169"/>
+        <location filename="../disk/scaiparser.cpp" line="170"/>
         <source>AIMapping : Error = </source>
         <translation></translation>
     </message>
@@ -1177,12 +1212,12 @@
 <context>
     <name>XPAIParser</name>
     <message>
-        <location filename="../disk/xpaiparser.cpp" line="169"/>
+        <location filename="../disk/xpaiparser.cpp" line="210"/>
         <source>AIMapping : IniParser error = </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../disk/xpaiparser.cpp" line="173"/>
+        <location filename="../disk/xpaiparser.cpp" line="214"/>
         <source>AIMapping : Error = </source>
         <translation></translation>
     </message>

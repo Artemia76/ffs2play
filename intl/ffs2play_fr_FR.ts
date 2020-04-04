@@ -48,6 +48,41 @@
     </message>
     <message>
         <location filename="../gui/aireplace.ui" line="97"/>
+        <source>Filters</source>
+        <translation>Filtres</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="109"/>
+        <source>Editor :</source>
+        <translation>Éditeur :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="135"/>
+        <source>Number of engines :</source>
+        <translation>Nombre de moteurs :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="148"/>
+        <source>Model :</source>
+        <translation>Modèle :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="161"/>
+        <source>Engine type :</source>
+        <translation>Type de moteur :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="174"/>
+        <source>Category :</source>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="197"/>
+        <source>Type :</source>
+        <translation>Type :</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="283"/>
         <source>Delete Rule</source>
         <translation>Suprimer la règle</translation>
     </message>
@@ -514,12 +549,12 @@
         <translation>Désactive la correction automatique d&apos;altitude</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="486"/>
+        <location filename="../gui/dialogp2p.cpp" line="487"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.cpp" line="487"/>
+        <location filename="../gui/dialogp2p.cpp" line="488"/>
         <source>This function reset all AI Database for all simulator, are you sure to continue?</source>
         <translation>Cette fonction efface toute la base de donnée des AI, êtes vous sûre de vouloir continuer?</translation>
     </message>
@@ -1162,12 +1197,12 @@
 <context>
     <name>SCAIParser</name>
     <message>
-        <location filename="../disk/scaiparser.cpp" line="165"/>
+        <location filename="../disk/scaiparser.cpp" line="166"/>
         <source>AIMapping : IniParser error = </source>
         <translation>AIMapping : erreur du IniParser = </translation>
     </message>
     <message>
-        <location filename="../disk/scaiparser.cpp" line="169"/>
+        <location filename="../disk/scaiparser.cpp" line="170"/>
         <source>AIMapping : Error = </source>
         <translation>AIMapping : Erreur = </translation>
     </message>
@@ -1175,12 +1210,12 @@
 <context>
     <name>XPAIParser</name>
     <message>
-        <location filename="../disk/xpaiparser.cpp" line="169"/>
+        <location filename="../disk/xpaiparser.cpp" line="210"/>
         <source>AIMapping : IniParser error = </source>
         <translation>AIMapping : erreur du IniParser = </translation>
     </message>
     <message>
-        <location filename="../disk/xpaiparser.cpp" line="173"/>
+        <location filename="../disk/xpaiparser.cpp" line="214"/>
         <source>AIMapping : Error = </source>
         <translation>AIMapping : Erreur = </translation>
     </message>
