@@ -47,42 +47,57 @@
         <translation>Aviones de reemplazo</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="97"/>
+        <location filename="../gui/aireplace.ui" line="95"/>
         <source>Filters</source>
         <translation>Filtros</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="109"/>
+        <location filename="../gui/aireplace.ui" line="107"/>
         <source>Editor :</source>
         <translation>Editor :</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="135"/>
+        <location filename="../gui/aireplace.ui" line="133"/>
         <source>Number of engines :</source>
         <translation>Numero de motores :</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="148"/>
+        <location filename="../gui/aireplace.ui" line="146"/>
         <source>Model :</source>
         <translation>Modelo :</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="161"/>
+        <location filename="../gui/aireplace.ui" line="159"/>
         <source>Engine type :</source>
         <translation>Tipo de motor :</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="174"/>
+        <location filename="../gui/aireplace.ui" line="172"/>
         <source>Category :</source>
         <translation>Categoría :</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="197"/>
+        <location filename="../gui/aireplace.ui" line="195"/>
         <source>Type :</source>
         <translation>Tipo :</translation>
     </message>
     <message>
-        <location filename="../gui/aireplace.ui" line="283"/>
+        <location filename="../gui/aireplace.ui" line="277"/>
+        <source>Rules</source>
+        <translation>Reglas</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="296"/>
+        <source>Source</source>
+        <translation>Fuente</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="301"/>
+        <source>Replacement</source>
+        <translation>Reemplazo</translation>
+    </message>
+    <message>
+        <location filename="../gui/aireplace.ui" line="314"/>
         <source>Delete Rule</source>
         <translation>Eliminar regla</translation>
     </message>
@@ -159,12 +174,12 @@
         <translation>Usuario </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="813"/>
+        <location filename="../net/p2pmanager.cpp" line="837"/>
         <source>Drop rate : </source>
         <translation>Tasa de caída : </translation>
     </message>
     <message>
-        <location filename="../net/p2pmanager.cpp" line="813"/>
+        <location filename="../net/p2pmanager.cpp" line="837"/>
         <source> ft/min</source>
         <translation></translation>
     </message>
@@ -215,37 +230,37 @@
         <translation>Conectado a FS.</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="430"/>
+        <location filename="../sim/scmanager.cpp" line="431"/>
         <source>Get a SimConnect exception = </source>
         <translation>Obteniendo una excepción SimConnect = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="431"/>
+        <location filename="../sim/scmanager.cpp" line="432"/>
         <source> Related method invoked = </source>
         <translation> Método relacionado invocado = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="688"/>
+        <location filename="../sim/scmanager.cpp" line="691"/>
         <source> with n°</source>
         <translation> con n°</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="737"/>
+        <location filename="../sim/scmanager.cpp" line="740"/>
         <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID with unknown request ID  = </source>
         <translation>Reciba SIMCONNECT_RECV_ASSIGNED_OBJECT_ID con un ID de solicitud desconocido = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="768"/>
+        <location filename="../sim/scmanager.cpp" line="771"/>
         <source>Send Text Failed</source>
         <translation>Error de envío de texto</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="786"/>
+        <location filename="../sim/scmanager.cpp" line="789"/>
         <source> ; Tail = </source>
         <translation> ; Cola = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="839"/>
+        <location filename="../sim/scmanager.cpp" line="842"/>
         <source>Delete Aircrfaft failed</source>
         <translation>La supresión de la aeronave falló</translation>
     </message>
@@ -336,7 +351,7 @@
         <translation>Desconectado de XPlane.</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="333"/>
+        <location filename="../sim/xpmanager.cpp" line="334"/>
         <source>Connected to XPlane.</source>
         <translation>Conectado a XPlane.</translation>
     </message>
@@ -346,17 +361,17 @@
         <translation>Error de envío de datos : </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="395"/>
+        <location filename="../sim/xpmanager.cpp" line="393"/>
         <source>Receive ADD_PEER event, failed to create object</source>
         <translation>Recibe el evento ADD_PEER, no se pudo crear el objeto</translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="410"/>
+        <location filename="../sim/xpmanager.cpp" line="408"/>
         <source>ADD_PEER Error : </source>
         <translation>Error ADD_PEER : </translation>
     </message>
     <message>
-        <location filename="../sim/xpmanager.cpp" line="432"/>
+        <location filename="../sim/xpmanager.cpp" line="428"/>
         <source>DEL_PEER Error : </source>
         <translation>Error de DEL_PEER : </translation>
     </message>
@@ -1199,12 +1214,12 @@
 <context>
     <name>SCAIParser</name>
     <message>
-        <location filename="../disk/scaiparser.cpp" line="166"/>
+        <location filename="../disk/scaiparser.cpp" line="168"/>
         <source>AIMapping : IniParser error = </source>
         <translation>AIMapping: IniParser error = </translation>
     </message>
     <message>
-        <location filename="../disk/scaiparser.cpp" line="170"/>
+        <location filename="../disk/scaiparser.cpp" line="172"/>
         <source>AIMapping : Error = </source>
         <translation></translation>
     </message>
@@ -1212,12 +1227,12 @@
 <context>
     <name>XPAIParser</name>
     <message>
-        <location filename="../disk/xpaiparser.cpp" line="210"/>
+        <location filename="../disk/xpaiparser.cpp" line="214"/>
         <source>AIMapping : IniParser error = </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../disk/xpaiparser.cpp" line="214"/>
+        <location filename="../disk/xpaiparser.cpp" line="218"/>
         <source>AIMapping : Error = </source>
         <translation></translation>
     </message>
@@ -1225,12 +1240,12 @@
 <context>
     <name>XPCSLParser</name>
     <message>
-        <location filename="../disk/xpcslparser.cpp" line="123"/>
+        <location filename="../disk/xpcslparser.cpp" line="126"/>
         <source>AIMapping : Error = </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../disk/xpcslparser.cpp" line="175"/>
+        <location filename="../disk/xpcslparser.cpp" line="178"/>
         <source>AIMapping : Fail to open file = </source>
         <translation>AIMapping: Fallo al abrir el archivo = </translation>
     </message>
