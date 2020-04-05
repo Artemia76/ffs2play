@@ -216,6 +216,7 @@ void CFGManager::sendDisc()
 ///
 void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
 {
+    QMutexLocker locker(&m_Mutex);
     m_FGAddress = datagram.senderAddress();
     m_FGPort = datagram.senderPort();
     QByteArray data(datagram.data());

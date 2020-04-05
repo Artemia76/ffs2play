@@ -74,8 +74,10 @@ private:
 
     QString             m_Peer;
     QString             m_ExistingRule;
+    bool                m_dialog_initialized;
 
     void                refreshReplacelist();
+    void                updateRulesTable();
 private slots:
     void                on_btnDeleteRule_clicked();
     void                on_btnBox_accepted();
@@ -86,6 +88,7 @@ private slots:
     void                on_cbType_currentIndexChanged(const QString&);
     void                on_cbModel_currentIndexChanged(const QString&);
     void                on_cbEditor_currentIndexChanged(const QString&);
+    void on_twRules_itemSelectionChanged();
 };
 
 #endif // DIALOGP2P_H

@@ -1,4 +1,7 @@
 ChangeLog:
+2.1.16 : Add Rule List to watch all rules in effect
+         Improve Thread Safety for Simconnect Manager
+
 2.1.15 : Add Filter for AI replacement
          Extend AI name to 12 characters
 

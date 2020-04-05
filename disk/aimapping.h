@@ -60,7 +60,7 @@ public:
     void                    startScanSimObject();
     AIResol                 SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
     QStringList             getAITitleDispo(
-                                QString pCategorie = "",
+                                QString pCategory = "",
                                 QString pEditor="",
                                 QString pType="",
                                 QString pModel="",
@@ -78,7 +78,7 @@ public:
     void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
     void                    delRule(const QString& pRemoteTitle);
     void                    cleanAIDB();
-    QMap<QString,QString>   getList();
+    QMap<QString,QString>   getRulesList();
     QString                 getAircraftPath(const QString& pTitle);
     QString                 getFileData(const QString& pKey);
 

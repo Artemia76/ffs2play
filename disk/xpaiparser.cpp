@@ -34,10 +34,7 @@ XPAIParser::XPAIParser(QObject *parent) : AIBaseParser(parent)
     m_AIFileFilter << "*.acf";
 }
 
-XPAIParser::~XPAIParser()
-{
-
-}
+XPAIParser::~XPAIParser() = default;
 
 ///
 /// \brief AIMapping::DBFileUpdate
@@ -67,9 +64,16 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
 #ifdef Q_OS_WIN
                 Path = Path.replace("/","\\");
 #endif
-                QString Editor,Atc_model, Atc_type, Airline, Category, Title;
-                int Engine_Type = 0,nb_moteur = 1;
-                double Static_CG_Height=0.0, Static_Pitch = 0.0;
+                QString Editor;
+                QString Atc_model;
+                QString Atc_type;
+                QString Airline;
+                QString Category;
+                QString Title;
+                int Engine_Type = 0;
+                int nb_moteur = 1;
+                double Static_CG_Height=0.0;
+                double Static_Pitch = 0.0;
                 Title = s.value("properties", "acf/_name").toString();
                 if (Title=="")
                 {

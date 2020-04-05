@@ -30,6 +30,7 @@
 #include "aimapping.h"
 #include "tools/singleton.h"
 #include "tools/iniparser.h"
+#include <utility>
 
 ///
 /// \brief AIMapping::AIMapping
@@ -42,6 +43,7 @@ AIMapping::AIMapping(QObject *parent) : QObject(parent)
     connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
     connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
     m_AIParser = nullptr;
+    m_Version = SimConnector::SIM_VERSION::UNKNOWN;
 }
 
 ///
@@ -163,12 +165,12 @@ QStringList AIMapping::getAITitleDispo(
     if (isInit())
     {
         List = m_AIParser->getAITitleDispo(
-                    pCategory,
-                    pEditor,
-                    pType,
-                    pModel,
-                    pEngineType,
-                    pNbEngine);
+                    std::move(pCategory),
+                    std::move(pEditor),
+                    std::move(pType),
+                    std::move(pModel),
+                    std::move(pEngineType),
+                    std::move(pNbEngine));
     }
     return List;
 }
@@ -262,11 +264,11 @@ QStringList AIMapping::getNbEngineList()
 /// \param pTitre
 /// \return
 ///
-QString AIMapping::getRule(const QString &pTitre)
+QString AIMapping::getRule(const QString &pTitle)
 {
     QString Response="";
     if (isInit())
-        Response = m_AIParser->getRule(pTitre);
+        Response = m_AIParser->getRule(pTitle);
     return Response;
 }
 
@@ -301,14 +303,12 @@ void AIMapping::cleanAIDB()
 /// \brief AIMapping::getList
 /// \return
 ///
-QMap<QString,QString> AIMapping::getList()
+QMap<QString,QString> AIMapping::getRulesList()
 {
-    QMap<QString,QString> md5mlist;
+    QMap<QString,QString> RulesList;
     if (isInit())
-    {
-
-    }
-    return md5mlist;
+        return m_AIParser->getRulesList();
+    return RulesList;
 }
 
 ///
@@ -360,7 +360,7 @@ bool AIMapping::addPath(const QString& pPath,const QString& pSim)
 {
     if (isInit())
         return m_AIParser->addPath(pPath,pSim);
-    else return false;
+    return false;
 }
 
 ///
@@ -372,7 +372,7 @@ bool AIMapping::delPath(const QString& pPath)
 {
     if (isInit())
         return m_AIParser->delPath(pPath);
-    else return false;
+    return false;
 }
 
 ///

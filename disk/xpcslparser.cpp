@@ -6,10 +6,7 @@ XPCSLParser::XPCSLParser(QObject *parent) : AIBaseParser(parent)
     m_AIFileFilter << "xsb_aircraft.txt";
 }
 
-XPCSLParser::~XPCSLParser()
-{
-
-}
+XPCSLParser::~XPCSLParser() =default;
 
 ///
 /// \brief AIMapping::DBFileUpdate
@@ -37,12 +34,18 @@ void XPCSLParser::DBFileUpdate(const QString &pKey, const QString &pPath)
 #ifdef Q_OS_WIN
             Path = Path.replace("/","\\");
 #endif
-            QString Editor,Atc_model, Atc_type, Atc_Airline, Category, Title;
+            QString Editor;
+            QString Atc_model;
+            QString Atc_type;
+            QString Atc_Airline;
+            QString Category;
+            QString Title;
             int Engine_Type = 0;
-            double Static_CG_Height=0.0, Static_Pitch = 0.0;
+            double Static_CG_Height=0.0;
+            double Static_Pitch = 0.0;
 
 
-            for (auto csl : Content.ArrCSL.toStdVector())
+            for (const auto& csl : Content.ArrCSL.toStdVector())
             {
                 Atc_model = csl.ICAO;
                 Atc_Airline = csl.AirLine;

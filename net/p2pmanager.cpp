@@ -50,7 +50,7 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     m_checkAITimer.start(5000);
     m_LastDropRate = Now();
     QList<QHostAddress> InterfaceList = QNetworkInterface::allAddresses();
-    for (QHostAddress IP : InterfaceList)
+    for (const QHostAddress& IP : InterfaceList)
     {
         if ((!IP.isLoopback())&&(IP.protocol()==QAbstractSocket::IPv4Protocol))
             m_InternalIP.add_string(IP.toString().toStdString());
@@ -710,6 +710,30 @@ QString CP2PManager::getTitle(const QString &pPeerName)
         if (Peer->CallSign == pPeerName)
         {
             return Peer->m_data.Title;
+        }
+    }
+    return "";
+}
+
+QString CP2PManager::getModel(const QString& pPeerName)
+{
+    for (CPeer* Peer : m_peers)
+    {
+        if (Peer->CallSign == pPeerName)
+        {
+            return Peer->m_data.Model;
+        }
+    }
+    return "";
+}
+
+QString CP2PManager::getType(const QString& pPeerName)
+{
+    for (CPeer* Peer : m_peers)
+    {
+        if (Peer->CallSign == pPeerName)
+        {
+            return Peer->m_data.Type;
         }
     }
     return "";

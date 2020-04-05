@@ -108,9 +108,8 @@ bool SimConnector::getOption(SimOption pOption)
 CAircraftState SimConnector::getState()
 {
     CAircraftState state;
-    m_Mutex.lock();
+    QMutexLocker locker(&m_Mutex);
     state=m_state;
-    m_Mutex.unlock();
     return state;
 }
 

@@ -224,7 +224,7 @@ void AIBaseParser::scanSimObject()
     m_NbDeleted=0;
     m_log->log(tr("Start updating aircraft database..."));
     //Since QT5.11, create new connexion for thread
-    const QString thread_address = QLatin1String("0x") + QString::number(reinterpret_cast<quintptr>(QThread::currentThreadId()), 16);
+    const QString thread_address = QStringLiteral("0x%1" ).arg( reinterpret_cast<quintptr>( QThread::currentThread() ), 2 * QT_POINTER_SIZE, 16, QLatin1Char( '0' ) );
     QSqlDatabase Thread_DB=QSqlDatabase::database(thread_address);
     Thread_DB.setDatabaseName(m_BaseFile);
     if ((!Thread_DB.isOpen()) || (!Thread_DB.isValid()))
@@ -235,7 +235,7 @@ void AIBaseParser::scanSimObject()
     m_Thread_DB.setDatabaseName(m_BaseFile);
     if (m_Thread_DB.open())
     {
-        for (QString Directory : m_AircraftPaths)
+        for (const QString& Directory : m_AircraftPaths)
         {
             QDirIterator it(QDir(Directory).canonicalPath(), m_AIFileFilter, QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext())
@@ -353,13 +353,13 @@ QString AIBaseParser::getAircraftPath(const QString &pTitle)
 /// \brief AIBaseParser::SolveTitle
 /// \return
 ///
-AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType)
+AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, const QString&)
 {
     //Default substitute airtcraft
     AIResol Resol;
     QString Title = pTitle.toLower();
     QString Model = pModel.toLower();
-    QString Type = pType.toLower();
+    //QString Type = pType.toLower();
     if (m_simManager->getType() == SIM_TYPE::FSX)
     {
         Resol.set_title("Mooney Bravo");
@@ -496,7 +496,7 @@ QStringList AIBaseParser::getAITitleDispo(
         if (pModel == "*") pModel = "";
         if (pEngineType == "*") pEngineType = "";
         if (pNbEngine == "*") pNbEngine = "";
-        bool Category, Editor, Type, Model, EngineType,NbEngine ;
+        bool Category, Editor, Type, Model, EngineType, NbEngine;
         int EngineTypeVal=0;
         Category=Editor=Type=Model=EngineType=NbEngine=false;
         QSqlQuery query(m_DB);
@@ -582,6 +582,30 @@ QString AIBaseParser::getRule(const QString &pTitle)
     }
     return Response;
 }
+
+///
+/// \brief AIBaseParser::getRulesList
+/// \return
+///
+QMap<QString,QString> AIBaseParser::getRulesList()
+{
+    QMap<QString,QString> RulesList;
+    if (m_Initialized)
+    {
+        QSqlQuery query(m_DB);
+        query.prepare("SELECT RemoteTitle,LocalTitle FROM Replacement WHERE (Sim like :Sim)");
+        query.bindValue(":Sim",m_Table);
+        if (query.exec())
+        {
+            while (query.next())
+            {
+                RulesList.insert(query.value(0).toString(),query.value(1).toString());
+            }
+        }
+    }
+    return RulesList;
+}
+
 
 ///
 /// \brief AIBaseParser::addRule

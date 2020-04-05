@@ -36,10 +36,7 @@ SCAIParser::SCAIParser(QObject *parent) : AIBaseParser(parent)
     searchSimPath();
 }
 
-SCAIParser::~SCAIParser()
-{
-
-}
+SCAIParser::~SCAIParser() = default;
 
 ///
 /// \brief AIMapping::DBFileUpdate
@@ -67,9 +64,14 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 SIM_TYPE sim=m_simManager->getType();
                 IniParser s(Path,sim);
                 Path = Path.replace("/","\\");
-                QString Editor,Atc_model, Atc_type, Category, Title;
+                QString Editor;
+                QString Atc_model;
+                QString Atc_type;
+                QString Category;
+                QString Title;
                 int Engine_Type = 0;
-                double Static_CG_Height=0.0, Static_Pitch = 0.0;
+                double Static_CG_Height=0.0;
+                double Static_Pitch = 0.0;
                 Editor = s.value("fltsim.0", "ui_createdby").toString();
                 Atc_model = s.value("General","atc_model").toString();
                 Atc_type =  s.value("General","atc_type").toString();
@@ -181,11 +183,11 @@ void SCAIParser::searchSimPath()
     QSqlQuery query(m_DB);
     QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
     QHash<QString, QString> hash;
-    hash[version.valueToKey(SimConnector::SIM_VERSION::FSX)] = "Microsoft\\Microsoft Games\\Flight Simulator\\10.0";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::FSX_STEAM)] = "DovetailGames\\FSX";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V2)] = "Lockheed Martin\\Prepar3D v2";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V3)] = "Lockheed Martin\\Prepar3D v3";
-    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V4)] = "Lockheed Martin\\Prepar3D v4";
+    hash[version.valueToKey(SimConnector::SIM_VERSION::FSX)] = R"(Microsoft\Microsoft Games\Flight Simulator\10.0)";
+    hash[version.valueToKey(SimConnector::SIM_VERSION::FSX_STEAM)] = R"(DovetailGames\FSX)";
+    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V2)] = R"(Lockheed Martin\Prepar3D v2)";
+    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V3)] = R"(Lockheed Martin\Prepar3D v3)";
+    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V4)] = R"(Lockheed Martin\Prepar3D v4)";
 
     // Lets search path installation for each supported windows simulators
     QHashIterator<QString, QString> it(hash);

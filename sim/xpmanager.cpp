@@ -318,6 +318,7 @@ void CXPManager::sendAIPaths()
 ///
 void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
 {
+    QMutexLocker locker(&m_Mutex);
     QByteArray data(datagram.data());
     QDataStream stream(&data,QIODevice::ReadOnly);
     quint8 Code;
@@ -356,7 +357,6 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
         }
         case DATA_SEND:
         {
-            m_Mutex.lock();
             try
             {
                 data.remove(0,1);
@@ -372,12 +372,10 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
             {
                 m_log->log(tr("DataSend Error : ") + QString(e.what()),Qt::magenta);
             }
-            m_Mutex.unlock();
             break;
         }
         case ADD_PEER:
         {
-            m_Mutex.lock();
 #ifdef FFS_DEBUG
                 m_log->log("XPManager : Receive ADD_PEER " +
                     QString::fromStdString(datagram.data().toHex(':').toStdString())
@@ -409,12 +407,10 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
             {
                 m_log->log(tr("ADD_PEER Error : ") + QString(e.what()),Qt::magenta);
             }
-            m_Mutex.unlock();
             break;
         }
         case DEL_PEER:
         {
-            m_Mutex.lock();
             try
             {
                 stream.setByteOrder(QDataStream::LittleEndian);
@@ -431,7 +427,6 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
             {
                 m_log->log(tr("DEL_PEER Error : ") + QString(e.what()),Qt::magenta);
             }
-            m_Mutex.unlock();
             break;
         }
         case DISC:

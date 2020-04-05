@@ -43,68 +43,69 @@
 class AIBaseParser : public QObject
 {
     Q_OBJECT
-    friend  class   AIMapping;
+    friend class            AIMapping;
 public:
-    explicit        AIBaseParser(QObject *parent = nullptr);
-    virtual         ~AIBaseParser();
+    explicit                AIBaseParser(QObject *parent = nullptr);
+    virtual                 ~AIBaseParser();
 
 protected:
-    bool            m_Initialized;
-    QThread*        m_thread;
-    QSqlDatabase    m_Thread_DB; //Since QT5.11, we need to separate DB connexion between threads
-    QSqlDatabase    m_DB;
-    QString         m_Table;
-    QAtomicInt      m_NbAdded;
-    QAtomicInt      m_NbUpdated;
-    QAtomicInt      m_NbDeleted;
-    CLogger*        m_log;
-    QStringList     m_AircraftPaths;
-    QString         m_BaseFile;
-    simbasemanager* m_simManager;
-    QStringList     m_AIFileFilter;
+    bool                    m_Initialized;
+    QThread*                m_thread;
+    QSqlDatabase            m_Thread_DB; //Since QT5.11, we need to separate DB connexion between threads
+    QSqlDatabase            m_DB;
+    QString                 m_Table;
+    QAtomicInt              m_NbAdded;
+    QAtomicInt              m_NbUpdated;
+    QAtomicInt              m_NbDeleted;
+    CLogger*                m_log;
+    QStringList             m_AircraftPaths;
+    QString                 m_BaseFile;
+    simbasemanager*         m_simManager;
+    QStringList             m_AIFileFilter;
 
-    void            startScanSimObject();
-    QString         getAircraftPath(const QString& pTitle);
-    AIResol         SolveTitle(
-            const QString& pTitle,
-            const QString& pModel,
-            const QString& pType );
+    void                    startScanSimObject();
+    QString                 getAircraftPath(const QString& pTitle);
+    AIResol                 SolveTitle(
+                    const QString& pTitle,
+                    const QString& pModel,
+                    const QString& pType );
 
-    QStringList     getAITitleDispo(
-            QString pCategorie = "",
-            QString pEditor="",
-            QString pType="",
-            QString pModel="",
-            QString pEngineType="",
-            QString pEngineNumber="");
+    QStringList             getAITitleDispo(
+                    QString pCategory = "",
+                    QString pEditor="",
+                    QString pType="",
+                    QString pModel="",
+                    QString pEngineType="",
+                    QString pNbEngine="");
 
-    QString         getRule(const QString& pTitle);
-    void            addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
-    void            delRule(const QString& pRemoteTitle);
-    QStringList     getCategoryList();
-    QStringList     getEditorList();
-    QStringList     getATCTypeList();
-    QStringList     getATCModelList();
-    QStringList     getEngineTypeList();
-    QStringList     getNbEngineList();
+    QString                 getRule(const QString& pTitle);
+    QMap<QString,QString>   getRulesList();
+    void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
+    void                    delRule(const QString& pRemoteTitle);
+    QStringList             getCategoryList();
+    QStringList             getEditorList();
+    QStringList             getATCTypeList();
+    QStringList             getATCModelList();
+    QStringList             getEngineTypeList();
+    QStringList             getNbEngineList();
 
-    void            cleanAIDB();
-    bool            addPath(const QString& pPath, const QString& pSim="");
-    bool            delPath(const QString& pPath);
-    virtual void    searchSimPath(){}
-    virtual QString findInstallationPath (const QString&,QSettings::Format){return "";}
-    QStringList     getPathList();
-    QString         MD5Hash(const QString& pFileName);
-    void            initSQLite();
-    void            DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);
+    void                    cleanAIDB();
+    bool                    addPath(const QString& pPath, const QString& pSim="");
+    bool                    delPath(const QString& pPath);
+    virtual void            searchSimPath(){}
+    virtual QString         findInstallationPath (const QString&,QSettings::Format){return "";}
+    QStringList             getPathList();
+    QString                 MD5Hash(const QString& pFileName);
+    void                    initSQLite();
+    void                    DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);
 
-virtual void        DBFileUpdate(const QString& pKey,const QString& pPath)=0;
-    void            DBFilePurge ();
+virtual void                DBFileUpdate(const QString& pKey,const QString& pPath)=0;
+    void                    DBFilePurge ();
 
 signals:
-    void            fireScanFinished(int pAdded, int pUpdated, int pDeleted);
+    void                    fireScanFinished(int pAdded, int pUpdated, int pDeleted);
 private slots:
-    void            scanSimObject();
+    void                    scanSimObject();
 };
 
 #endif // AIBASEPARSER_H

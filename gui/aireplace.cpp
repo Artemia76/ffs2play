@@ -45,9 +45,9 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
     QDialog(parent),
     m_UI(new Ui::AIReplace)
 {
+    m_dialog_initialized=false;
     // Init GUI Part
     m_UI->setupUi(this);
-
     // Get Logger instance
     m_Log = CLogger::instance();
 
@@ -61,8 +61,7 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
     m_SimManager = simbasemanager::instance();
 
     m_Peer = pPeer;
-    QString RemoteAI = m_P2PManager->getTitle(m_Peer);
-    m_UI->leOriginal->setText(RemoteAI);
+    m_UI->leOriginal->setText(m_P2PManager->getTitle(m_Peer));
 
     // Fill Category List
     m_UI->cbCategory->addItems(m_AIMapping->getCategoryList());
@@ -93,7 +92,10 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
     m_UI->cbEngineNB->addItems(m_AIMapping->getNbEngineList());
     m_UI->cbEngineNB->insertItem(0,"*");
     m_UI->cbEngineNB->setCurrentIndex(0);
+    m_dialog_initialized=true;
+    updateRulesTable();
     refreshReplacelist();
+    m_UI->twRules->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 ///
@@ -108,6 +110,7 @@ AIReplace::~AIReplace()
 
 void AIReplace::refreshReplacelist()
 {
+    if (!m_dialog_initialized) return;
     QString Category = m_UI->cbCategory->currentText();
     QString Type = m_UI->cbType->currentText();
     QString Model = m_UI->cbModel->currentText();
@@ -127,16 +130,26 @@ void AIReplace::refreshReplacelist()
     if (m_ExistingRule != "")
     {
         m_UI->cbReplacement->setCurrentIndex(m_UI->cbReplacement->findText(m_ExistingRule));
-        m_UI->btnDeleteRule->setVisible(true);
+        QList<QTableWidgetItem*> Item = m_UI->twRules->findItems(RemoteAI,Qt::MatchFixedString);
+        if (Item.count()>0)
+        {
+            m_UI->twRules->selectRow(Item[0]->row());
+            m_UI->btnDeleteRule->setVisible(true);
+        }
     }
     else
     {
-        int index =m_UI->cbReplacement->findText(RemoteAI);
+        AIResol Solve =m_AIMapping->SolveTitle(
+                    m_P2PManager->getTitle(m_Peer),
+                    m_P2PManager->getModel(m_Peer),
+                    m_P2PManager->getType(m_Peer));
+        int index =m_UI->cbReplacement->findText(QString::fromStdString(Solve.title()));
         if (index>-1)
         {
             m_UI->cbReplacement->setCurrentIndex(index);
         }
         m_UI->btnDeleteRule->setVisible(false);
+        m_UI->twRules->clearSelection();
     }
 }
 
@@ -145,9 +158,14 @@ void AIReplace::refreshReplacelist()
 ///
 void AIReplace::on_btnDeleteRule_clicked()
 {
-    m_AIMapping->delRule(m_UI->leOriginal->text());
-    m_UI->btnDeleteRule->setVisible(false);
-    m_P2PManager->ResetAI(m_Peer);
+    QList<QTableWidgetItem*> Selection = m_UI->twRules->selectedItems();
+    if (Selection.count()>0)
+    {
+        QString Source = Selection[0]->text();
+        m_AIMapping->delRule(Source);
+        updateRulesTable();
+        m_P2PManager->ResetAI(m_Peer);
+    }
 }
 
 ///
@@ -223,4 +241,32 @@ void AIReplace::on_cbModel_currentIndexChanged(const QString&)
 void AIReplace::on_cbEditor_currentIndexChanged(const QString&)
 {
     refreshReplacelist();
+}
+
+void AIReplace::updateRulesTable()
+{
+    QMap<QString,QString> RulesList;
+    RulesList = m_AIMapping->getRulesList();
+    for (int i=m_UI->twRules->rowCount(); i>0;i--)
+    {
+        m_UI->twRules->removeRow(i-1);
+    }
+    for(const auto& rules : RulesList.toStdMap())
+    {
+      m_UI->twRules->insertRow(m_UI->twRules->rowCount());
+      QTableWidgetItem* Source = new QTableWidgetItem();
+      Source->setText(rules.first);
+      QTableWidgetItem* Replace = new QTableWidgetItem();
+      Replace->setText(rules.second);
+      m_UI->twRules->setItem(m_UI->twRules->rowCount()-1, 0,Source);
+      m_UI->twRules->setItem(m_UI->twRules->rowCount()-1, 1,Replace);
+    }
+}
+
+void AIReplace::on_twRules_itemSelectionChanged()
+{
+    if (m_UI->twRules->selectedItems().count()>0)
+        m_UI->btnDeleteRule->setVisible(true);
+    else
+        m_UI->btnDeleteRule->setVisible(false);
 }

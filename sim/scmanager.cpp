@@ -388,6 +388,7 @@ void CSCManager::OnRecvQuit(SIMCONNECT_RECV*)
 ///
 void CSCManager::OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data)
 {
+    QMutexLocker locker(&m_Mutex);
 #ifdef FFS_DEBUG
     m_log->log("SCManager : Receive SIMCONNECT_RECV_SYSTEM_STATE event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
@@ -438,6 +439,7 @@ void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 ///
 void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 {
+    QMutexLocker locker(&m_Mutex);
 #ifdef FFS_DEBUG
     m_log->log("SCManager : Receive SIMCONNECT_RECV_EVENT event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
@@ -487,6 +489,7 @@ void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 ///
 void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 {
+    QMutexLocker locker(&m_Mutex);
     switch (data->dwRequestID)
     {
         case static_cast<DWORD>(REQUEST_ID::PERIODIQUE):
