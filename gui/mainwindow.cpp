@@ -122,6 +122,9 @@ MainWindow::MainWindow()
     delete ui->dwDebugOpt;
     delete ui->dwSimVariable;
 #endif
+#ifdef Q_OS_WIN64
+    setWindowTitle(windowTitle() + " x64");
+#endif
     //Start timer to updating GUI
     connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
     m_updateTimer.start(500);
@@ -670,27 +673,27 @@ void MainWindow::onUpdate()
             }
             case 3:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f ft", PeerState.Altitude));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1 ft").arg(PeerState.Altitude,0,'f',0));
                 break;
             }
             case 4:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f °", PeerState.Heading));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1 °").arg(PeerState.Heading,0,'f',0));
                 break;
             }
             case 5:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Nm", Distance));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1 NM").arg(Distance,0,'f',1));
                 break;
             }
             case 6:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts", PeerState.IASSpeed));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1 NM").arg(PeerState.IASSpeed,0,'f',0));
                 break;
             }
             case 7:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f Kts",PeerState.GroundSpeed));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1 Kts").arg(PeerState.GroundSpeed,0,'f',0));
                 break;
             }
             case 8:
@@ -700,22 +703,22 @@ void MainWindow::onUpdate()
             }
             case 9:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.Port));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1").arg(PeerConnexionStatus.Port));
                 break;
             }
             case 10:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%.0f mSec",PeerConnexionStatus.Ping));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1 mSec").arg(PeerConnexionStatus.Ping,0,'f',0));
                 break;
             }
             case 11:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.RcvCnt));
+                ui->twPeerDetail->item(i,0)->setText(Value = QString("%1").arg(PeerConnexionStatus.RcvCnt));
                 break;
             }
             case 12:
             {
-                ui->twPeerDetail->item(i,0)->setText(Value.sprintf("%i",PeerConnexionStatus.SndCnt));
+                ui->twPeerDetail->item(i,0)->setText(Value= QString("%1").arg(PeerConnexionStatus.SndCnt));
                 break;
             }
         }

@@ -99,50 +99,83 @@ win32 {
     CONFIG(release, debug|release) : WINDEPLOY_FLAGS += --release
 
     # Windows specific libs
-    isEmpty(WINDOWS_SDK_LIB_PATH) {
-        WINDOWS_SDK_LIB_PATH = "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x86"
-    }
+    #isEmpty(WINDOWS_SDK_LIB_PATH) {
+    #   !contains(QMAKE_TARGET.arch, x86_64) {
+    #       WINDOWS_SDK_LIB_PATH = "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x86"
+    #   } else {
+    #       WINDOWS_SDK_LIB_PATH = "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x86"
+    #   }
 
     DEFINES += _WINSOCKAPI_
-    LIBS += -L$$WINDOWS_SDK_LIB_PATH
+    #LIBS += -L$$WINDOWS_SDK_LIB_PATH
     LIBS += -lWs2_32
     LIBS += -liphlpapi
+    LIBS += -luser32
+    LIBS += -lole32
 
     # Find Simconnect location
     isEmpty(SIMCONNECT_PATH) {
-        SIMCONNECT_PATH= "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK"
-        SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib"
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            SIMCONNECT_PATH= "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK"
+            INCLUDEPATH += $$SIMCONNECT_PATH"\inc"
+            SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib"
+        } else {
+            SIMCONNECT_PATH= "D:\Program Files\Lockheed Martin\Prepar3D v4 SDK 4.1.7.22841"
+            INCLUDEPATH += $$SIMCONNECT_PATH"\inc\SimConnect"
+            SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib\SimConnect"
+        }
     }
     DEFINES += SIMCONNECT_BUILD
-    INCLUDEPATH += $$SIMCONNECT_PATH"\inc"
-    LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect
+
+    CONFIG(debug, debug|release) {
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect
+        } else {
+            LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnectDebug
+        }
+    } else {
+      LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect
+    }
 
     # Find Miniupnpc location
     isEmpty(MINIUPNPC_PATH) {
         MINIUPNPC_PATH=..\miniupnp\miniupnpc
-        MINIUPNPC_LIB_PATH = $$MINIUPNPC_PATH"\build"
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            MINIUPNPC_LIB_PATH = $$MINIUPNPC_PATH"\build32"
+        }  else {
+            MINIUPNPC_LIB_PATH = $$MINIUPNPC_PATH"\build64"
+        }
     }
     DEFINES += MINIUPNP_STATICLIB
     INCLUDEPATH += $$MINIUPNPC_PATH
     CONFIG(debug, debug|release) {
-        LIBS += -L$$MINIUPNPC_LIB_PATH"\Release"
-    } else {
         LIBS += -L$$MINIUPNPC_LIB_PATH"\Debug"
+    } else {
+        LIBS += -L$$MINIUPNPC_LIB_PATH"\Release"
     }
     LIBS += -llibminiupnpc
 
     # Find OpenSSL location
     isEmpty(OPENSSL_PATH) {
-        OPENSSL_PATH=..\..\openssl-1.1.1
-        OPENSSL_LIB_PATH=$$OPENSSL_PATH
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            OPENSSL_PATH="E:\devel\Qt\Tools\OpenSSL\Win_x86"
+        } else {
+            OPENSSL_PATH="E:\devel\Qt\Tools\OpenSSL\Win_x64"
+        }
     }
+    OPENSSL_LIB_PATH=$$OPENSSL_PATH"\lib"
+    OPENSSL_DLL_PATH=$$OPENSSL_PATH"\bin"
     INCLUDEPATH += $$OPENSSL_PATH"\include"
-    LIBS += -L$$OPENSSL_LIB_PATH -llibssl -lcryptlib
+    LIBS += -L$$OPENSSL_LIB_PATH -llibssl -llibcrypto
 
     # Find Crypto++ location
     isEmpty(CRYPTOPP_PATH) {
         CRYPTOPP_PATH=..\cryptopp
-        CRYPTOPP_LIB_PATH=$$CRYPTOPP_PATH"\Win32\Output"
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            CRYPTOPP_LIB_PATH=$$CRYPTOPP_PATH"\Win32\Output"
+        } else {
+            CRYPTOPP_LIB_PATH=$$CRYPTOPP_PATH"\x64\Output"
+        }
     }
     INCLUDEPATH += $$CRYPTOPP_PATH
     CONFIG(release, debug|release) {
@@ -150,13 +183,17 @@ win32 {
     } else {
         LIBS += -L$$CRYPTOPP_LIB_PATH"\Debug"
     }
-    LIBS += -llibcrypto
+    LIBS += -lcryptlib
 
     # Find ProtoBuf ressource
     isEmpty(PROTOBUF_PATH) {
-        PROTOBUF_PATH="D:\Program Files (x86)\protobuf"
-        PROTOBUF_LIB_PATH=$$PROTOBUF_PATH"\lib"
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            PROTOBUF_PATH="D:\Program Files (x86)\protobuf"
+        } else {
+            PROTOBUF_PATH="D:\Program Files\protobuf"
+        }
     }
+    PROTOBUF_LIB_PATH=$$PROTOBUF_PATH"\lib"
     INCLUDEPATH += $$PROTOBUF_PATH"\include"
     LIBS += -L$$PROTOBUF_LIB_PATH
     CONFIG(release, debug|release ) {
@@ -515,11 +552,21 @@ win32 {
     deploy.commands += xcopy /Y $$p($$PWD/*.txt) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/LICENSE.GPLv3) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/*.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += xcopy /Y $$p($$SIMCONNECT_PATH/lib/SimConnect.msi) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += xcopy /Y $$p($$OPENSSL_PATH/libcrypto-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    !contains(QMAKE_TARGET.arch, x86_64) {
+        deploy.commands += xcopy /Y $$p($$SIMCONNECT_PATH/lib/SimConnect.msi) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    } else {
+        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+    }
     deploy.commands += xcopy /Y $$p($$PWD/ffs2play_48x48.ico) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += $$p($$[QT_INSTALL_BINS]/windeployqt) $$WINDEPLOY_FLAGS $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += compil32 /cc $$p($$DEPLOY_BASE/$$TARGET_NAME/ffs2play.iss)
+    !contains(QMAKE_TARGET.arch, x86_64) {
+        deploy.commands += compil32 /cc $$p($$DEPLOY_BASE/$$TARGET_NAME/ffs2play.iss)
+    } else {
+        deploy.commands += compil32 /cc $$p($$DEPLOY_BASE/$$TARGET_NAME/ffs2play64.iss)
+    }
 }
 
 # =====================================================================
