@@ -80,5 +80,5 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ApplicationName}
 
 [Run]
 Filename: "{app}\{#ApplicationExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ApplicationName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/Q"; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Visual C++ 2010 (x86) installation. Please Wait..."
+Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/Q"; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Visual C++ 2017 (x64) installation. Please Wait..."
 
