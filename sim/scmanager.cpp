@@ -122,6 +122,8 @@ SimConnector::SIM_VERSION CSCManager::getVersion()
             return SimConnector::SIM_VERSION::P3D_V3;
         case 4:
             return SimConnector::SIM_VERSION::P3D_V4;
+        case 5:
+            return SimConnector::SIM_VERSION::P3D_V5;
         case 10:
             return SimConnector::SIM_VERSION::FSX;
         default:

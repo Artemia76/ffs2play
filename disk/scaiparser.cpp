@@ -188,6 +188,7 @@ void SCAIParser::searchSimPath()
     hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V2)] = R"(Lockheed Martin\Prepar3D v2)";
     hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V3)] = R"(Lockheed Martin\Prepar3D v3)";
     hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V4)] = R"(Lockheed Martin\Prepar3D v4)";
+    hash[version.valueToKey(SimConnector::SIM_VERSION::P3D_V5)] = R"(Lockheed Martin\Prepar3D v5)";
 
     // Lets search path installation for each supported windows simulators
     QHashIterator<QString, QString> it(hash);

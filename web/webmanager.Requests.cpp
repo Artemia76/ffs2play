@@ -106,18 +106,26 @@ void CWebManager::SendATCUpdate()
 void CWebManager::CheckNewVersion()
 {
     // Get the default profil selected in configuration file
-    QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?soft=ffs2play";
+    QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?";
     if (m_settings.value("Main/Beta",false).toBool())
     {
         CheckVersionURL +="&beta=1";
     }
 #ifdef Q_OS_MAC
+    CheckVersionURL += "soft=ffs2play";
     CheckVersionURL += "&os=mac";
 #else
 #ifdef Q_OS_LINUX
+    CheckVersionURL += "soft=ffs2play";
     CheckVersionURL += "&os=lin";
 #else
+#ifdef Q_OS_WIN32
+    CheckVersionURL += "soft=ffs2play";
     CheckVersionURL += "&os=win";
+#else
+    CheckVersionURL += "soft=ffs2play64";
+    CheckVersionURL += "&os=win";
+#endif
 #endif
 #endif
     CHttpRequest* Request =new CHttpRequest(this);

@@ -111,6 +111,7 @@ public:
         P3D_V2,
         P3D_V3,
         P3D_V4,
+        P3D_V5,
         XPLANE,
         XPLANE_CSL,
         FLIGHTGEAR,

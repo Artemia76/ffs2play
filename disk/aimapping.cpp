@@ -88,6 +88,7 @@ void AIMapping::onSimReceiveOpen()
         case SimConnector::SIM_VERSION::P3D_V2:
         case SimConnector::SIM_VERSION::P3D_V3:
         case SimConnector::SIM_VERSION::P3D_V4:
+        case SimConnector::SIM_VERSION::P3D_V5:
         m_AIParser = new SCAIParser(this);
         break;
 #endif

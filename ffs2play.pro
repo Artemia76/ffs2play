@@ -256,8 +256,8 @@ include(protobuf.pri)
 
 # Application Version
 VERSION_MAJOR = 2
-VERSION_MINOR = 1
-VERSION_BUILD = 16
+VERSION_MINOR = 2
+VERSION_BUILD = 0
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
@@ -407,10 +407,18 @@ win32 : RC_FILE = ffs2play.rc
 
 OTHER_FILES += \
     README.md \
-    ffs2play.iss \
-    style/ffs2play.qss \
     changelog.txt \
-    build-deb.sh
+    style/ffs2play.qss
+win32 {
+    !contains(QMAKE_TARGET.arch, x86_64) {
+        OTHER_FILES += ffs2play.iss
+    } else {
+        OTHER_FILES += ffs2play64.iss
+    }
+}
+unix:!macx {
+    OTHER_FILES += build-deb.sh
+}
 
 # =====================================================================
 # Local deployment commands for development
@@ -430,7 +438,14 @@ macx {
 win32 {
     defineReplace(p){return ($$shell_quote($$shell_path($$1)))}
     copydata.commands = xcopy /Y $$p($$PWD/intl/*.qm) $$p($$OUT_PWD/translations/) &&
-    copydata.commands += xcopy /Y $$p($$PWD/style/*.qss) $$p($$OUT_PWD/)
+    copydata.commands += xcopy /Y $$p($$PWD/style/*.qss) $$p($$OUT_PWD/) &&
+    !contains(QMAKE_TARGET.arch, x86_64) {
+        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1.dll) $$p($$OUT_PWD/) &&
+        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1.dll) $$p($$OUT_PWD/)
+    } else {
+        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1-x64.dll) $$p($$OUT_PWD/) &&
+        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1-x64.dll) $$p($$OUT_PWD/)
+    }
 }
 
 # =====================================================================
@@ -551,12 +566,13 @@ win32 {
     deploy.commands += xcopy /Y $$p($$PWD/style/*.qss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/*.txt) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += xcopy /Y $$p($$PWD/LICENSE.GPLv3) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-    deploy.commands += xcopy /Y $$p($$PWD/*.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     !contains(QMAKE_TARGET.arch, x86_64) {
+        deploy.commands += xcopy /Y $$p($$PWD/ffs2play.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
         deploy.commands += xcopy /Y $$p($$SIMCONNECT_PATH/lib/SimConnect.msi) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
         deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
         deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     } else {
+        deploy.commands += xcopy /Y $$p($$PWD/ffs2play64.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
         deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
         deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     }
