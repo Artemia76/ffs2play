@@ -107,10 +107,6 @@ void CWebManager::CheckNewVersion()
 {
     // Get the default profil selected in configuration file
     QString CheckVersionURL = "http://download.ffsimulateur2.fr/download.php?";
-    if (m_settings.value("Main/Beta",false).toBool())
-    {
-        CheckVersionURL +="&beta=1";
-    }
 #ifdef Q_OS_MAC
     CheckVersionURL += "soft=ffs2play";
     CheckVersionURL += "&os=mac";
@@ -128,6 +124,10 @@ void CWebManager::CheckNewVersion()
 #endif
 #endif
 #endif
+    if (m_settings.value("Main/Beta",false).toBool())
+    {
+        CheckVersionURL +="&beta=1";
+    }
     CHttpRequest* Request =new CHttpRequest(this);
     connect(Request,SIGNAL(finished(CHttpRequest*)),this, SLOT( CheckNewVersionCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(CheckVersionURL);
