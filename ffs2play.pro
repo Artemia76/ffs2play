@@ -20,6 +20,19 @@
 # be met: https://www.gnu.org/licenses/gpl-3.0.html.
 #****************************************************************************
 
+# Application Version
+VERSION_MAJOR = 2
+VERSION_MINOR = 2
+VERSION_BUILD = 1
+DEFINES += APP_NAME=\\\"$${TARGET}\\\"
+DEFINES += APP_MAJOR=$$VERSION_MAJOR
+DEFINES += APP_MINOR=$$VERSION_MINOR
+DEFINES += APP_BUILD=$$VERSION_BUILD
+
+QMAKE_EXTRA_TARGETS += versionTarget
+
+DEFINES += GIT_REVISION=$$GIT_REVISION
+
 QT += core widgets gui sql xml network
 
 CONFIG += build_all c++14
@@ -253,20 +266,6 @@ isEmpty(GIT_PATH) {
 PROTO_DIR = $$PWD/protobuf
 PROTOS = $$files(protobuf/*.proto)
 include(protobuf.pri)
-
-# Application Version
-VERSION_MAJOR = 2
-VERSION_MINOR = 2
-VERSION_BUILD = 1
-DEFINES += APP_NAME=\\\"$${TARGET}\\\"
-DEFINES += APP_MAJOR=$$VERSION_MAJOR
-DEFINES += APP_MINOR=$$VERSION_MINOR
-DEFINES += APP_BUILD=$$VERSION_BUILD
-
-QMAKE_EXTRA_TARGETS += versionTarget
-
-DEFINES += GIT_REVISION=$$GIT_REVISION
-
 
 # =======================================================================
 # Print values when running qmake

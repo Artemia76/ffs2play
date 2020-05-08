@@ -83,6 +83,6 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ApplicationName}
 
 [Run]
 Filename: "{app}\{#ApplicationExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ApplicationName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/Q"; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Visual C++ 2010 (x86) installation. Please Wait..."
+Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/Q"; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Visual C++ 2017 (x86) installation. Please Wait..."
 Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\SimConnect.msi"""; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Flight Simulator SDK installation. Please Wait..."
 
