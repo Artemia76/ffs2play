@@ -26,8 +26,8 @@
       <string>Multiplayer</string>
      </property>
      <layout class="QGridLayout" name="_2">
-      <item row="5" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item row="2" column="0">
+       <layout class="QHBoxLayout" name="hlCallSign">
         <item>
          <widget class="QCheckBox" name="cbEnableCallsign">
           <property name="toolTip">
@@ -156,8 +156,8 @@
         </item>
        </layout>
       </item>
-      <item row="10" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout">
+      <item row="3" column="0">
+       <layout class="QHBoxLayout" name="hlAI">
         <item>
          <widget class="QLabel" name="label">
           <property name="text">

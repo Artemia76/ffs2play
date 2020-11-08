@@ -242,7 +242,7 @@
   </widget>
   <widget class="QDockWidget" name="dwTchatZone">
    <property name="windowTitle">
-    <string>&amp;Tchat Zone</string>
+    <string>Tchat Zone</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -280,7 +280,7 @@
   </widget>
   <widget class="QDockWidget" name="dwSimVariable">
    <property name="windowTitle">
-    <string>SIM &amp;Variables</string>
+    <string>SIM Variables</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -929,7 +929,7 @@
     <bool>false</bool>
    </property>
    <property name="windowTitle">
-    <string>&amp;Log</string>
+    <string>Log</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -1081,7 +1081,7 @@
     <bool>false</bool>
    </property>
    <property name="windowTitle">
-    <string>De&amp;bug Options</string>
+    <string>Debug Options</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>

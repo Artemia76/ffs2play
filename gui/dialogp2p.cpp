@@ -391,7 +391,7 @@ void DialogP2P::on_btnAddItem_released()
     FileDlg.setFileMode(QFileDialog::Directory);
     if (FileDlg.exec())
     {
-        Path = FileDlg.selectedFiles().first();
+        Path.setPath(FileDlg.selectedFiles().first());
         m_log->log(" Path = " + Path.absolutePath() );
         if (!Path.isEmpty())
         {

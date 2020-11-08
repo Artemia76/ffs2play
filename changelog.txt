@@ -1,5 +1,7 @@
 ChangeLog:
 
+2.2.1  : Improve GUI P2P Dialog Box for bug under windows 7
+
 2.2.0  : Add Support for Prepar3D V5
          Add Support for x64 Prepar3D Simconnect
 

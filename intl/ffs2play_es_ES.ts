@@ -220,47 +220,47 @@
         <translation>Desconectado de FS.</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="362"/>
+        <location filename="../sim/scmanager.cpp" line="364"/>
         <source>Connected to simulator.</source>
         <translation>Conectado al simulador.</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="368"/>
+        <location filename="../sim/scmanager.cpp" line="370"/>
         <source>Connected to FS.</source>
         <translation>Conectado a FS.</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="431"/>
+        <location filename="../sim/scmanager.cpp" line="433"/>
         <source>Get a SimConnect exception = </source>
         <translation>Obteniendo una excepción SimConnect = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="432"/>
+        <location filename="../sim/scmanager.cpp" line="434"/>
         <source> Related method invoked = </source>
         <translation> Método relacionado invocado = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="691"/>
+        <location filename="../sim/scmanager.cpp" line="693"/>
         <source> with n°</source>
         <translation> con n°</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="740"/>
+        <location filename="../sim/scmanager.cpp" line="742"/>
         <source>Receive SIMCONNECT_RECV_ASSIGNED_OBJECT_ID with unknown request ID  = </source>
         <translation>Reciba SIMCONNECT_RECV_ASSIGNED_OBJECT_ID con un ID de solicitud desconocido = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="771"/>
+        <location filename="../sim/scmanager.cpp" line="773"/>
         <source>Send Text Failed</source>
         <translation>Error de envío de texto</translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="789"/>
+        <location filename="../sim/scmanager.cpp" line="791"/>
         <source> ; Tail = </source>
         <translation> ; Cola = </translation>
     </message>
     <message>
-        <location filename="../sim/scmanager.cpp" line="842"/>
+        <location filename="../sim/scmanager.cpp" line="844"/>
         <source>Delete Aircrfaft failed</source>
         <translation>La supresión de la aeronave falló</translation>
     </message>
@@ -384,37 +384,37 @@
         <translation>Configuraciones P2P</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="268"/>
+        <location filename="../gui/dialogp2p.ui" line="245"/>
         <source>uPNP NAT</source>
         <translation>uPNP NAT</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="277"/>
+        <location filename="../gui/dialogp2p.ui" line="254"/>
         <source>UPNP protocol, if your router enable it, give you the oportunity to open P2P UDP port automatically</source>
         <translation>El protocolo UPNP, si tiene accesi a su router y esta autorizado a hacer ajustes, este le dará la oportunidad de abrir el puerto P2P UDP automáticamente</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="305"/>
+        <location filename="../gui/dialogp2p.ui" line="282"/>
         <source>Enable NAT uPNP</source>
         <translation>Habilitar NAT uPNP</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="331"/>
+        <location filename="../gui/dialogp2p.ui" line="308"/>
         <source>Advanced Settings</source>
         <translation>Ajustes avanzados</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="339"/>
+        <location filename="../gui/dialogp2p.ui" line="316"/>
         <source>Transmit Rate</source>
         <translation>Tasa de transmisión</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="362"/>
+        <location filename="../gui/dialogp2p.ui" line="339"/>
         <source>mSec</source>
         <translation>mSeg</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="371"/>
+        <location filename="../gui/dialogp2p.ui" line="348"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;100 to 200 mSec : Fighters aircrafts&lt;br/&gt;200 to 300 mSec : Civil aircrafts&lt;br/&gt;400 msec : Liners&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt; &lt;p&gt; 100 a 200 mSec: Aviones de combate &lt;br/&gt; 200 a 300 mSec: Aviones civiles &lt;br/&gt; 400 msec: Liners &lt;/p&gt; &lt;/body&gt; &lt;/ html &gt;</translation>
     </message>
@@ -424,142 +424,142 @@
         <translation>Multijugador</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="32"/>
+        <location filename="../gui/dialogp2p.ui" line="235"/>
         <source>Enable TChat activity</source>
         <translation>Habilitar la actividad TChat</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="42"/>
+        <location filename="../gui/dialogp2p.ui" line="228"/>
         <source>Enable Shadow mode</source>
         <translation>Habilitar el modo Sombra</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="51"/>
+        <location filename="../gui/dialogp2p.ui" line="164"/>
         <source>AI Radius</source>
         <translation>Radio AI</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="71"/>
+        <location filename="../gui/dialogp2p.ui" line="184"/>
         <source>NM</source>
         <translation>Millas Nauticas</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="78"/>
+        <location filename="../gui/dialogp2p.ui" line="191"/>
         <source>AI Limit</source>
         <translation>Límite de IA</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="94"/>
+        <location filename="../gui/dialogp2p.ui" line="207"/>
         <source>Limit the number of AI. 0 mean unlimited</source>
         <translation>Limite el número de IA. 0 significa ilimitado</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="136"/>
+        <location filename="../gui/dialogp2p.ui" line="34"/>
         <source>Enable displaying Callsign over aircrafts</source>
         <translation>Habilitar la visualización de indicativos en aviones</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="139"/>
+        <location filename="../gui/dialogp2p.ui" line="37"/>
         <source>Enable Display CallSign</source>
         <translation>Habilitar Display del CallSign</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="410"/>
+        <location filename="../gui/dialogp2p.ui" line="387"/>
         <source>P2P Port</source>
         <translation>Puerto P2P</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="416"/>
+        <location filename="../gui/dialogp2p.ui" line="393"/>
         <source>P2P Port is used by FFS2Play to each other peers. Valid range for P2P application is 49152 to 65535</source>
         <translation>El puerto P2P es utilizado por FFS2Play entre sí. El rango válido para la aplicación P2P es de 49152 a 65535</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="437"/>
+        <location filename="../gui/dialogp2p.ui" line="414"/>
         <source>Port : </source>
         <translation>Puerto : </translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="478"/>
+        <location filename="../gui/dialogp2p.ui" line="455"/>
         <source>Enable TCP Client</source>
         <translation>Habilitar TCP</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="683"/>
+        <location filename="../gui/dialogp2p.ui" line="660"/>
         <source>XPlane AI Mode:</source>
         <translation>XPlane AI Modo:</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="690"/>
+        <location filename="../gui/dialogp2p.ui" line="667"/>
         <source>AI Aircrafts</source>
         <translation>Aviones AI</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="697"/>
+        <location filename="../gui/dialogp2p.ui" line="674"/>
         <source>CSL Aircrafts</source>
         <translation>Aviones CSL</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="384"/>
+        <location filename="../gui/dialogp2p.ui" line="361"/>
         <source>Beta Participation</source>
         <translation>Participación a las Beta</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="390"/>
+        <location filename="../gui/dialogp2p.ui" line="367"/>
         <source>Check the box below to receive Beta new version notification. Beta version cannot ensure stability and bugless</source>
         <translation>Marque la casilla de abajo para recibir notificaciones de nuevas versiones Beta. Una versión beta puede no ser estable y pude tener bugs</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="400"/>
+        <location filename="../gui/dialogp2p.ui" line="377"/>
         <source>Enable Beta Notification and installation</source>
         <translation>Habilitar notificación e instalación de nuevas Betas</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="496"/>
+        <location filename="../gui/dialogp2p.ui" line="473"/>
         <source>AI Folders</source>
         <translation>Carpeta de AI</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="547"/>
+        <location filename="../gui/dialogp2p.ui" line="524"/>
         <source>+</source>
         <translation>+</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="575"/>
+        <location filename="../gui/dialogp2p.ui" line="552"/>
         <source>-</source>
         <translation>-</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="600"/>
+        <location filename="../gui/dialogp2p.ui" line="577"/>
         <source>Reset Database</source>
         <translation>Reiniciar la base de datos</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="606"/>
+        <location filename="../gui/dialogp2p.ui" line="583"/>
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="619"/>
+        <location filename="../gui/dialogp2p.ui" line="596"/>
         <source>Add here folders witch contain aircraft models on corresponding simulator. Exemple : the IVAO MTL library</source>
         <translation>Agregue aquí las carpetas que contienen modelos de aviones en el simulador correspondiente. Ejemplo: la biblioteca de IVAO MTL</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="632"/>
+        <location filename="../gui/dialogp2p.ui" line="609"/>
         <source>Miscelaneous</source>
         <translation>Diversos</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="659"/>
+        <location filename="../gui/dialogp2p.ui" line="636"/>
         <source>Display Touch Vertical Speed</source>
         <translation>Pantalla táctil de velocidad vertical</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="646"/>
+        <location filename="../gui/dialogp2p.ui" line="623"/>
         <source>Publish Touch Vertical Speed</source>
         <translation>Mostrar velocidad vertical táctil</translation>
     </message>
     <message>
-        <location filename="../gui/dialogp2p.ui" line="669"/>
+        <location filename="../gui/dialogp2p.ui" line="646"/>
         <source>Disable Altitude Correction</source>
         <translation>Deshabilitar la corrección de altitud</translation>
     </message>
@@ -786,13 +786,13 @@
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="245"/>
-        <source>&amp;Tchat Zone</source>
-        <translation></translation>
+        <source>Tchat Zone</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="283"/>
-        <source>SIM &amp;Variables</source>
-        <translation></translation>
+        <source>SIM Variables</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="300"/>
@@ -1047,13 +1047,17 @@
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="932"/>
-        <source>&amp;Log</source>
-        <translation></translation>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="1084"/>
+        <source>Debug Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>De&amp;bug Options</source>
-        <translation>Opciones de De&amp;bug</translation>
+        <translation type="vanished">Opciones de De&amp;bug</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="1107"/>
@@ -1201,12 +1205,12 @@
         <translation>Bienvenido a FFS2Play</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="237"/>
+        <location filename="../gui/mainwindow.cpp" line="240"/>
         <source>Simulator Aircraft Folder</source>
         <translation>Carpeta de aviones simulador</translation>
     </message>
     <message>
-        <location filename="../gui/mainwindow.cpp" line="237"/>
+        <location filename="../gui/mainwindow.cpp" line="240"/>
         <source>at least one folder is not configured for your simulator. Do you want add the path location now?</source>
         <translation>Al menos una carpeta no está configurada para su simulador. ¿Quieres añadir la ubicación de la ruta ahora?</translation>
     </message>
