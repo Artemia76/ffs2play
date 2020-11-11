@@ -35,12 +35,12 @@
 #define VER_COMPANYNAME_STR         "FFS2"
 #define VER_FILEDESCRIPTION_STR     "FFS2Play"
 #define VER_INTERNALNAME_STR        "FFS2Play"
-#define VER_LEGALCOPYRIGHT_STR      "Copyright © 2017 FFSimulateur2.fr"
+#define VER_LEGALCOPYRIGHT_STR      "Copyright © 2020 ffs2play.fr"
 #define VER_LEGALTRADEMARKS1_STR    "All Rights Reserved"
 #define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
 #define VER_ORIGINALFILENAME_STR    "ffs2play.exe"
 #define VER_PRODUCTNAME_STR         "FFS2Play"
 
-#define VER_COMPANYDOMAIN_STR       "ffsimulation2.fr"
+#define VER_COMPANYDOMAIN_STR       "ffs2play.fr"
 
 #endif

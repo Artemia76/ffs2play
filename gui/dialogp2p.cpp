@@ -104,6 +104,9 @@ DialogP2P::DialogP2P(QWidget *parent)
     m_needDBReload=false;
     ui->pbTextColor->setVisible(false);
     ui->cbEnableCallsign->setVisible(false);
+    ui->lbl_XPlaneAIMode->setVisible(false);
+    ui->rbAI_Aircrafts->setVisible(false);
+    ui->rbCSL_Aircrafts->setVisible(false);
 
     m_textColor = m_SimManager->getCallSignColor();
     ui->pbTextColor->setStyleSheet(QString("QPushButton {" "background-color : %1" "}").arg(m_textColor.name()));
@@ -119,6 +122,9 @@ DialogP2P::DialogP2P(QWidget *parent)
         {
             ui->pbTextColor->setVisible(true);
             ui->cbEnableCallsign->setVisible(true);
+            ui->lbl_XPlaneAIMode->setVisible(true);
+            ui->rbAI_Aircrafts->setVisible(true);
+            ui->rbCSL_Aircrafts->setVisible(true);
         }
     }
     if (CWebManager::instance()->isConnected()) ui->numPort->setEnabled(false);

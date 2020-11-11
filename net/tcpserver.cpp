@@ -67,7 +67,7 @@ void TCPServer::setPort(quint16 pPort)
 bool TCPServer::start ()
 {
     if (this->isListening()) stop();
-    m_running = this->listen(QHostAddress::AnyIPv4, m_port);
+    m_running = this->listen(QHostAddress::Any, m_port);
     if (m_running)
     {
 #ifdef FFS_DEBUG

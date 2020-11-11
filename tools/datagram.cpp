@@ -64,9 +64,9 @@ void StringToStream(QDataStream& pStream,const QString& pString)
 ///
 void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage)
 {
-    char* buffer = new char[static_cast<uint>(pMessage.ByteSize())];
-    pMessage.SerializeToArray(buffer,pMessage.ByteSize());
-    pStream.writeRawData(buffer,pMessage.ByteSize());
+    char* buffer = new char[static_cast<uint>(pMessage.ByteSizeLong())];
+    pMessage.SerializeToArray(buffer,pMessage.ByteSizeLong());
+    pStream.writeRawData(buffer,pMessage.ByteSizeLong());
     delete[] buffer;
 }
 

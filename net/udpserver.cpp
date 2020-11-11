@@ -73,7 +73,7 @@ bool UDPServer::start ()
     if ((!m_running) && (m_pListenner!=nullptr))
     {
         if (m_pListenner->isOpen()) stop();
-        m_running = m_pListenner->bind (QHostAddress::AnyIPv4, m_port);
+        m_running = m_pListenner->bind (QHostAddress::Any, m_port);
         if (m_running)
         {
 #ifdef FFS_DEBUG

@@ -1,5 +1,7 @@
 ChangeLog:
 
+2.2.3 : Update to MSVC 2019 and Qt 5.15.0
+
 2.2.1  : Improve GUI P2P Dialog Box for bug under windows 7
 
 2.2.0  : Add Support for Prepar3D V5

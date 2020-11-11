@@ -258,7 +258,7 @@ size_t simple_file_parser::get_next_line()
     // processing the tokens. All of the data is stored in m_buf.
     p = m_buf;
     char* eol = is_continuation_line(p);
-    size_t sz = m_ifs->gcount();
+    streamsize sz = m_ifs->gcount();
     while (eol && !m_ifs->eof()) {
       // Note that the starting point and the sz need to be adjusted
       // because we ignore the actual backslash character.

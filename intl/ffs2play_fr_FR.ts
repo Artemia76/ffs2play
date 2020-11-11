@@ -747,12 +747,12 @@
     <message>
         <location filename="../gui/mainwindow.ui" line="245"/>
         <source>Tchat Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone de discussion</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="283"/>
         <source>SIM Variables</source>
-        <translation type="unfinished"></translation>
+        <translation>Variables du Simulateur</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="305"/>
@@ -1124,12 +1124,12 @@
     <message>
         <location filename="../gui/mainwindow.ui" line="932"/>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Log</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="1084"/>
         <source>Debug Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Options de débogage</translation>
     </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="1135"/>

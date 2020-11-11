@@ -221,9 +221,6 @@
       </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="cbShadow">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
         <property name="text">
          <string>Enable Shadow mode</string>
         </property>
@@ -266,23 +263,8 @@
       </item>
       <item alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="cbUPNP">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>120</width>
-          <height>20</height>
-         </size>
-        </property>
         <property name="text">
          <string>Enable NAT uPNP</string>
-        </property>
-        <property name="tristate">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -448,9 +430,6 @@
         </item>
         <item>
          <widget class="QCheckBox" name="cbEnforceTCP">
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
           <property name="text">
            <string>Enable TCP Client</string>
           </property>
@@ -613,12 +592,6 @@
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QCheckBox" name="cbSendDropRate">
-          <property name="minimumSize">
-           <size>
-            <width>180</width>
-            <height>20</height>
-           </size>
-          </property>
           <property name="text">
            <string>Publish Touch Vertical Speed</string>
           </property>
@@ -626,12 +599,6 @@
         </item>
         <item>
          <widget class="QCheckBox" name="cbDropRateDisp">
-          <property name="minimumSize">
-           <size>
-            <width>180</width>
-            <height>20</height>
-           </size>
-          </property>
           <property name="text">
            <string>Display Touch Vertical Speed</string>
           </property>
@@ -640,7 +607,7 @@
         <item>
          <widget class="QCheckBox" name="cbDisableAltCorr">
           <property name="toolTip">
-           <string extracomment="Disable auto mesh alignment for AI"/>
+           <string>Disable auto mesh alignment for AI</string>
           </property>
           <property name="text">
            <string>Disable Altitude Correction</string>
@@ -655,7 +622,7 @@
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <item>
-         <widget class="QLabel" name="label_12">
+         <widget class="QLabel" name="lbl_XPlaneAIMode">
           <property name="text">
            <string>XPlane AI Mode:</string>
           </property>
