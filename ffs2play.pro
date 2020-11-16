@@ -23,7 +23,7 @@
 # Application Version
 VERSION_MAJOR = 2
 VERSION_MINOR = 2
-VERSION_BUILD = 4
+VERSION_BUILD = 5
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
@@ -118,9 +118,9 @@ win32 {
     #   } else {
     #       WINDOWS_SDK_LIB_PATH = "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x86"
     #   }
-
+    #}
     DEFINES += _WINSOCKAPI_
-    #LIBS += -L$$WINDOWS_SDK_LIB_PATH
+    LIBS += -lshlwapi
     LIBS += -lWs2_32
     LIBS += -liphlpapi
     LIBS += -luser32
@@ -128,15 +128,16 @@ win32 {
 
     # Find Simconnect location
     isEmpty(SIMCONNECT_PATH) {
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            SIMCONNECT_PATH= "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK"
-            INCLUDEPATH += $$SIMCONNECT_PATH"\inc"
-            SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib"
-        } else {
-            SIMCONNECT_PATH= "D:\Program Files\Lockheed Martin\Prepar3D v4 SDK 4.1.7.22841"
-            INCLUDEPATH += $$SIMCONNECT_PATH"\inc\SimConnect"
-            SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib\SimConnect"
-        }
+        #!contains(QMAKE_TARGET.arch, x86_64) {
+            #SIMCONNECT_PATH= "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK"
+            SIMCONNECT_PATH= "D:\MSFS SDK\SimConnect SDK"
+            INCLUDEPATH += $$SIMCONNECT_PATH"\include"
+            SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib\static"
+        #} else {
+        #    SIMCONNECT_PATH= "D:\Program Files\Lockheed Martin\Prepar3D v4 SDK 4.1.7.22841"
+        #    INCLUDEPATH += $$SIMCONNECT_PATH"\inc\SimConnect"
+        #    SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib\SimConnect"
+        #}
     }
     DEFINES += SIMCONNECT_BUILD
 
@@ -144,7 +145,7 @@ win32 {
         !contains(QMAKE_TARGET.arch, x86_64) {
             LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect
         } else {
-            LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnectDebug
+            LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect_debug
         }
     } else {
       LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect

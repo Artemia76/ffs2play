@@ -27,6 +27,7 @@
 ** It also provide a programmed callback is case of response needs
 ****************************************************************************/
 
+#include <QMetaType>
 #include "web/chttprequest.h"
 
 ///
