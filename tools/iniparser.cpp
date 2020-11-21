@@ -89,6 +89,10 @@ IniParser::IniParser(const QString& pFilename, const SIM_TYPE pSimType)
                 }
             }
         }
+        if ((!Group.isEmpty())&&(Keys.count()>0))
+        {
+            m_GroupMap.insert(Group,Keys);
+        }
     }
     else
     {
@@ -136,7 +140,11 @@ QVariant IniParser::value(const QString& pGroup, const QString& pParameter, cons
                     {
                         Value = Value.left(Value.indexOf("//"));
                     }
-                    Result.setValue(Value.remove("//(.*?)\r?\n"));
+                    if (Value.contains(";"))
+                    {
+                        Value = Value.left(Value.indexOf(";"));
+                    }
+                    Result.setValue(Value.remove(QRegExp("[/(.*?)\r\n\"]")));
                     break;
                 }
             }

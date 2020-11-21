@@ -380,23 +380,35 @@ void CPeer::OnTimerCreateAI()
         }
         else
         {
-            if (m_simManager->getType()==SIM_TYPE::FSX)
+            switch (m_simManager->getVersion())
             {
-                m_AIResolution.set_title("Mooney Bravo");
-                m_AIResolution.set_cgheight(3.7);
-                m_AIResolution.set_pitch(2.9);
-            }
-            else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE)
-            {
-                m_AIResolution.set_title("Beech Baron 58");
-                m_AIResolution.set_cgheight(0.9);
-                m_AIResolution.set_pitch(1.93);
-            }
-            else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE_CSL)
-            {
-                m_AIResolution.set_title("C172:C172:0");
-                m_AIResolution.set_cgheight(0.0);
-                m_AIResolution.set_pitch(0.0);
+#ifdef Q_OS_WIN
+                case SimConnector::SIM_VERSION::FSX:
+                case SimConnector::SIM_VERSION::FSX_STEAM:
+                case SimConnector::SIM_VERSION::P3D_V2:
+                case SimConnector::SIM_VERSION::P3D_V3:
+                case SimConnector::SIM_VERSION::P3D_V4:
+                case SimConnector::SIM_VERSION::P3D_V5:
+                    m_AIResolution.set_title("Mooney Bravo");
+                    m_AIResolution.set_cgheight(3.7);
+                    m_AIResolution.set_pitch(2.9);
+                    break;
+#endif
+                case SimConnector::SIM_VERSION::XPLANE:
+                    m_AIResolution.set_title("Beech Baron 58");
+                    m_AIResolution.set_cgheight(0.9);
+                    m_AIResolution.set_pitch(1.93);
+                    break;
+                case SimConnector::SIM_VERSION::XPLANE_CSL:
+                    m_AIResolution.set_title("C172:C172:0");
+                    m_AIResolution.set_cgheight(0.0);
+                    m_AIResolution.set_pitch(0.0);
+                    break;
+                case SimConnector::SIM_VERSION::FS2020:
+                    m_AIResolution.set_title("Asobo Savage Cub");
+                    m_AIResolution.set_cgheight(0.0);
+                    m_AIResolution.set_pitch(0.0);
+                    break;
             }
 #ifdef FFS_DEBUG
             m_log->log("Peer [" + m_callSign + "] : Simulator have not created the requested AI, we are trying with default simulator aircraft" ,Qt::darkBlue,LEVEL_NORMAL);

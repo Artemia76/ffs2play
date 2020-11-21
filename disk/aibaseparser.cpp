@@ -360,23 +360,35 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     QString Title = pTitle.toLower();
     QString Model = pModel.toLower();
     //QString Type = pType.toLower();
-    if (m_simManager->getType() == SIM_TYPE::FSX)
+    switch (m_simManager->getVersion())
     {
-        Resol.set_title("Mooney Bravo");
-        Resol.set_cgheight(3.7);
-        Resol.set_pitch(2.9);
-    }
-    else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE)
-    {
-        Resol.set_title("Beech Baron 58");
-        Resol.set_cgheight(0.9);
-        Resol.set_pitch(1.93);
-    }
-    else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE_CSL)
-    {
-        Resol.set_title("C172:C172:0");
-        Resol.set_cgheight(0.0);
-        Resol.set_pitch(0.0);
+#ifdef Q_OS_WIN
+        case SimConnector::SIM_VERSION::FSX:
+        case SimConnector::SIM_VERSION::FSX_STEAM:
+        case SimConnector::SIM_VERSION::P3D_V2:
+        case SimConnector::SIM_VERSION::P3D_V3:
+        case SimConnector::SIM_VERSION::P3D_V4:
+        case SimConnector::SIM_VERSION::P3D_V5:
+            Resol.set_title("Mooney Bravo");
+            Resol.set_cgheight(3.7);
+            Resol.set_pitch(2.9);
+            break;
+#endif
+        case SimConnector::SIM_VERSION::XPLANE:
+            Resol.set_title("Beech Baron 58");
+            Resol.set_cgheight(0.9);
+            Resol.set_pitch(1.93);
+            break;
+        case SimConnector::SIM_VERSION::XPLANE_CSL:
+            Resol.set_title("C172:C172:0");
+            Resol.set_cgheight(0.0);
+            Resol.set_pitch(0.0);
+            break;
+        case SimConnector::SIM_VERSION::FS2020:
+            Resol.set_title("Asobo Savage Cub");
+            Resol.set_cgheight(0.0);
+            Resol.set_pitch(0.0);
+            break;
     }
     if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
     // Check local rules
