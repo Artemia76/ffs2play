@@ -20,10 +20,21 @@
 # be met: https://www.gnu.org/licenses/gpl-3.0.html.
 #****************************************************************************
 
+GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
+
+isEmpty(GIT_VERSION) {
 # Application Version
-VERSION_MAJOR = 2
-VERSION_MINOR = 3
-VERSION_BUILD = 0
+  VERSION_MAJOR = 0
+  VERSION_MINOR = 0
+  VERSION_BUILD = 1
+} else {
+  VERSIONS = $$split(GIT_VERSION, ".")
+  VERSION_MAJOR = $$member(VERSIONS, 0)
+  VERSION_MINOR = $$member(VERSIONS, 1)
+  VERSION_BUILD = $$member(VERSIONS, 2)
+  message(Find Git Version : $$VERSIONS)
+}
+
 DEFINES += APP_NAME=\\\"$${TARGET}\\\"
 DEFINES += APP_MAJOR=$$VERSION_MAJOR
 DEFINES += APP_MINOR=$$VERSION_MINOR
@@ -51,7 +62,6 @@ TRANSLATIONS= \
 # Copy ennvironment variables into qmake variables
 SIMCONNECT_PATH=$$(SIMCONNECT_PATH)
 DEPLOY_BASE=$$(DEPLOY_BASE)
-GIT_PATH=$$(GIT_PATH)
 MINIUPNPC_PATH=$$(MINIUPNPC_PATH)
 MINIUPNPC_LIB_PATH=$$(MINIUPNPC_LIB_PATH)
 OPENSSL_PATH=$$(OPENSSL_PATH)
@@ -172,9 +182,9 @@ win32 {
     # Find OpenSSL location
     isEmpty(OPENSSL_PATH) {
         !contains(QMAKE_TARGET.arch, x86_64) {
-            OPENSSL_PATH="E:\devel\Qt\Tools\OpenSSL\Win_x86"
+            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/Win_x86"
         } else {
-            OPENSSL_PATH="E:\devel\Qt\Tools\OpenSSL\Win_x64"
+            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/Win_x64"
         }
     }
     OPENSSL_LIB_PATH=$$OPENSSL_PATH"\lib"
@@ -256,12 +266,6 @@ macx {
     PKGCONFIG += protobuf
 }
 
-isEmpty(GIT_PATH) {
-  GIT_REVISION='\\"UNKNOWN\\"'
-} else {
-  GIT_REVISION='\\"$$system('$$GIT_PATH' rev-parse --short HEAD)\\"'
-}
-
 #Protobuf generation
 
 PROTO_DIR = $$PWD/protobuf
@@ -272,8 +276,6 @@ include(protobuf.pri)
 # Print values when running qmake
 !isEqual(QUIET, "true") {
 message(-----------------------------------)
-message(GIT_PATH: $$GIT_PATH)
-message(GIT_REVISION: $$GIT_REVISION)
 message(OPENSSL_PATH: $$OPENSSL_PATH)
 message(MINIUPNPC_PATH: $$MINIUPNPC_PATH)
 
