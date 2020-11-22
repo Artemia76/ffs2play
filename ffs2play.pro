@@ -20,7 +20,7 @@
 # be met: https://www.gnu.org/licenses/gpl-3.0.html.
 #****************************************************************************
 
-GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
+GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --abbrev=0 --tags)
 
 isEmpty(GIT_VERSION) {
 # Application Version
