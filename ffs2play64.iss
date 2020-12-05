@@ -44,14 +44,12 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
-[Components]
-Name: "program"; Description: "Main Program"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-source: "{#BaseDir}vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: nocompression createallsubdirs recursesubdirs deleteafterinstall
+source: "{#BaseDir}vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: nocompression createallsubdirs recursesubdirs deleteafterinstall;
 Source: "{#ApplicationFullPath}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}libcrypto-1_1-x64.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}libssl-1_1-x64.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -80,5 +78,5 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ApplicationName}
 
 [Run]
 Filename: "{app}\{#ApplicationExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ApplicationName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/Q"; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Visual C++ 2017 (x64) installation. Please Wait..."
+Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/Q"; Flags: waituntilterminated skipifdoesntexist; StatusMsg: "Microsoft Visual C++ 2019 (x64) installation. Please Wait..."
 
