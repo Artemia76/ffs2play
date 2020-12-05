@@ -402,7 +402,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     }
     // Check if Title exist in database
     QSqlQuery query(m_DB);
-    query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model,AirLine FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
+    query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model,AirLine FROM Aircrafts WHERE (Title like :Title) and (Sim = :Sim)");
     query.bindValue(":Sim",m_Table);
     query.bindValue(":Title",Title);
 

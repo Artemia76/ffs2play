@@ -144,7 +144,8 @@ QVariant IniParser::value(const QString& pGroup, const QString& pParameter, cons
                     {
                         Value = Value.left(Value.indexOf(";"));
                     }
-                    Result.setValue(Value.remove(QRegExp("[/(.*?)\r\n\"]")));
+                    Value = Value.remove(QRegExp("[/(.*?)\r\n\"]"));
+                    Result.setValue(Value.remove(QRegExp("^[ \t]+|[ \t]+$")));
                     break;
                 }
             }

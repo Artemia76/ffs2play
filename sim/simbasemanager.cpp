@@ -181,7 +181,7 @@ void simbasemanager::open ()
         m_connector->open();
         if (m_RetryCounter>2) m_RetryCounter=0;
         // Thread starting
-        m_thread->start();
+        m_thread->start(QThread::TimeCriticalPriority);
     }
 }
 

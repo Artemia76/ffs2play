@@ -729,12 +729,12 @@ void CSCManager::OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data
 #endif
         SimConnect_AIReleaseControl(m_hSimConnect,data->dwObjectID, static_cast<SIMCONNECT_DATA_REQUEST_ID>(REQUEST_ID::AI_RELEASE));
         trace("SimConnect_AIReleaseControl");
-        SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ATTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+        /*SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ATTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
         trace("SimConnect_TransmitClientEvent");
         SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
         trace("SimConnect_TransmitClientEvent");
         SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-        trace("SimConnect_TransmitClientEvent");
+        trace("SimConnect_TransmitClientEvent");*/
         emit(fireSimAICreated(it.value(),data->dwObjectID));
         m_AIProcess.remove(data->dwRequestID);
         SimConnect_RequestDataOnSimObject(m_hSimConnect, static_cast<SIMCONNECT_DATA_REQUEST_ID>(static_cast<uint>(REQUEST_ID::AI_UPDATE) + data->dwObjectID),DEFINITION_ID::AI_UPDATE,data->dwObjectID,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT,0,0,0);
@@ -921,17 +921,17 @@ void CSCManager::freezeAI(uint pObjectID, bool pState)
     {
         if (pState)
         {
-            SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            /*SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             trace("SimConnect_TransmitClientEvent");
             SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            trace("SimConnect_TransmitClientEvent");
+            trace("SimConnect_TransmitClientEvent");*/
         }
         else
         {
-            SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            /*SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_LATLONG), 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             trace("SimConnect_TransmitClientEvent");
             SimConnect_TransmitClientEvent(m_hSimConnect ,pObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE), 0,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            trace("SimConnect_TransmitClientEvent");
+            trace("SimConnect_TransmitClientEvent");*/
         }
     }
 
