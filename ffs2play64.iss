@@ -51,8 +51,8 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 source: "{#BaseDir}vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: nocompression createallsubdirs recursesubdirs deleteafterinstall;
 Source: "{#ApplicationFullPath}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseDir}libcrypto-1_1-x64.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseDir}libssl-1_1-x64.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#BaseDir}libcrypto-1_1-x64.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#BaseDir}libssl-1_1-x64.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDir}Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion

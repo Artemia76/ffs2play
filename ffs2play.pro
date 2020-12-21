@@ -182,15 +182,15 @@ win32 {
     # Find OpenSSL location
     isEmpty(OPENSSL_PATH) {
         !contains(QMAKE_TARGET.arch, x86_64) {
-            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/Win_x86"
+            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/src"
         } else {
-            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/Win_x64"
+            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/src"
         }
     }
-    OPENSSL_LIB_PATH=$$OPENSSL_PATH"\lib"
-    OPENSSL_DLL_PATH=$$OPENSSL_PATH"\bin"
+    OPENSSL_LIB_PATH=$$OPENSSL_PATH"\."
+    OPENSSL_DLL_PATH=$$OPENSSL_PATH"\."
     INCLUDEPATH += $$OPENSSL_PATH"\include"
-    LIBS += -L$$OPENSSL_LIB_PATH -llibssl -llibcrypto
+    LIBS += -L$$OPENSSL_LIB_PATH -llibssl_static -llibcrypto_static
 
     # Find Crypto++ location
     isEmpty(CRYPTOPP_PATH) {
@@ -440,14 +440,14 @@ macx {
 win32 {
     defineReplace(p){return ($$shell_quote($$shell_path($$1)))}
     copydata.commands = xcopy /Y $$p($$PWD/intl/*.qm) $$p($$OUT_PWD/translations/) &&
-    copydata.commands += xcopy /Y $$p($$PWD/style/*.qss) $$p($$OUT_PWD/) &&
-    !contains(QMAKE_TARGET.arch, x86_64) {
-        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1.dll) $$p($$OUT_PWD/) &&
-        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1.dll) $$p($$OUT_PWD/)
-    } else {
-        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1-x64.dll) $$p($$OUT_PWD/) &&
-        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1-x64.dll) $$p($$OUT_PWD/)
-    }
+    copydata.commands += xcopy /Y $$p($$PWD/style/*.qss) $$p($$OUT_PWD/) # &&
+#    !contains(QMAKE_TARGET.arch, x86_64) {
+#        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1.dll) $$p($$OUT_PWD/) &&
+#        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1.dll) $$p($$OUT_PWD/)
+#    } else {
+#        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1-x64.dll) $$p($$OUT_PWD/) &&
+#        copydata.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1-x64.dll) $$p($$OUT_PWD/)
+#    }
 }
 
 # =====================================================================
@@ -571,12 +571,12 @@ win32 {
     !contains(QMAKE_TARGET.arch, x86_64) {
         deploy.commands += xcopy /Y $$p($$PWD/ffs2play.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
         deploy.commands += xcopy /Y $$p($$SIMCONNECT_PATH/lib/SimConnect.msi) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+#        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+#        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     } else {
         deploy.commands += xcopy /Y $$p($$PWD/ffs2play64.iss) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
-        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+#        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libcrypto-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
+#        deploy.commands += xcopy /Y $$p($$OPENSSL_DLL_PATH/libssl-1_1-x64.dll) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     }
     deploy.commands += xcopy /Y $$p($$PWD/ffs2play_48x48.ico) $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
     deploy.commands += $$p($$[QT_INSTALL_BINS]/windeployqt) $$WINDEPLOY_FLAGS $$p($$DEPLOY_BASE/$$TARGET_NAME) &&
