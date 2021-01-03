@@ -134,9 +134,6 @@ MainWindow::MainWindow()
     QApplication::setPalette(this->palette());
     if(!ui->mainToolBar->isVisible()) ui->mainToolBar->setVisible(true);
     m_P2PDialogVisible=false;
-    QHostAddress ip("2a01:cb19:53f:2300:350b:c50a:c9bd:3590");
-    QHostAddress ip2 (ip.toIPv4Address());
-     m_log->log(tr("Ip = ") + ip2.toString(),Qt::blue);
 }
 
 ///

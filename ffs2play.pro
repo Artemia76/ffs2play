@@ -138,24 +138,23 @@ win32 {
 
     # Find Simconnect location
     isEmpty(SIMCONNECT_PATH) {
-        #!contains(QMAKE_TARGET.arch, x86_64) {
-            #SIMCONNECT_PATH= "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK"
+        contains(QMAKE_TARGET.arch, x86_64) {
             SIMCONNECT_PATH= "D:\MSFS SDK\SimConnect SDK"
             INCLUDEPATH += $$SIMCONNECT_PATH"\include"
             SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib\static"
-        #} else {
-        #    SIMCONNECT_PATH= "D:\Program Files\Lockheed Martin\Prepar3D v4 SDK 4.1.7.22841"
-        #    INCLUDEPATH += $$SIMCONNECT_PATH"\inc\SimConnect"
-        #    SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib\SimConnect"
-        #}
+        } else {
+            SIMCONNECT_PATH= "D:\Program Files (x86)\Microsoft Games\Microsoft Flight Simulator X SDK\SDK\Core Utilities Kit\SimConnect SDK"
+            INCLUDEPATH += $$SIMCONNECT_PATH"\inc"
+            SIMCONNECT_LIB_PATH = $$SIMCONNECT_PATH"\lib"
+        }
     }
     DEFINES += SIMCONNECT_BUILD
 
     CONFIG(debug, debug|release) {
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect
-        } else {
+        contains(QMAKE_TARGET.arch, x86_64) {
             LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect_debug
+        } else {
+            LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect
         }
     } else {
       LIBS += -L$$SIMCONNECT_LIB_PATH -lSimConnect
@@ -181,11 +180,7 @@ win32 {
 
     # Find OpenSSL location
     isEmpty(OPENSSL_PATH) {
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/src"
-        } else {
-            OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/src"
-        }
+        OPENSSL_PATH=$$[QT_INSTALL_PREFIX]"/../../Tools/OpenSSL/src"
     }
     OPENSSL_LIB_PATH=$$OPENSSL_PATH"\."
     OPENSSL_DLL_PATH=$$OPENSSL_PATH"\."
