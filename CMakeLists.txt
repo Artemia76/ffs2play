@@ -227,11 +227,16 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(WIN32 OR APPLE)
+    set(_deploy_options)
+    if(WIN32)
+        # windeployqt only options (macdeployqt rejects them)
+        set(_deploy_options DEPLOY_TOOL_OPTIONS --no-opengl-sw --no-system-d3d-compiler)
+    endif()
     qt_generate_deploy_app_script(
         TARGET ffs2play
         OUTPUT_SCRIPT _deploy_script
         NO_UNSUPPORTED_PLATFORM_ERROR
-        DEPLOY_TOOL_OPTIONS --no-opengl-sw --no-system-d3d-compiler)
+        ${_deploy_options})
     install(SCRIPT ${_deploy_script})
 endif()
 
