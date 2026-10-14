@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 #endif
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QCoreApplication::setOrganizationName("FFS2P");
-    QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
+    QCoreApplication::setOrganizationDomain("ffs2play.fr");
     QCoreApplication::setApplicationName("FFS2Play");
     QApplication app(argc, argv);
     QDir::setCurrent(app.applicationDirPath());
