@@ -69,6 +69,14 @@ build*/
 *.smproj
 *.pb.cc
 *.pb.h
+
+# CMake
+out/
+CMakeUserPresets.json
+CMakeLists.txt.user*
+
+# Generated translations (built by qt_add_translations)
+*.qm
 *.pro.user
 
 # Visual C++ cache files

@@ -27,53 +27,53 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
 1. DEPENDENCIES
 
-	- Qt : >=5.9
-	- Protobuf : >=3.0.0
-	- miniupnpc : >=1.9
-	- openssl : >=1.0.2
-	- crypto++ : >= 5.6
+	- Qt : >= 6.8 with modules Core, Gui, Widgets, Network, Sql, Xml, Protobuf and Linguist tools
+	- protoc (protobuf compiler) : >= 3.12, build time only (used by Qt qtprotobufgen)
+	- OpenSSL : >= 3.0 (libcrypto only)
+	- CMake : >= 3.27
+	- Windows only, optional : MSFS / P3D / FSX SimConnect SDK (FSX, P3D and MSFS support)
+
+	UPnP port mapping is built in (Qt Network), miniupnpc, Crypto++ and libprotobuf are no longer needed.
 
 1. Build on Linux
-	1. UBUNTU
+	1. UBUNTU (24.04 or newer)
 
-		On ubuntu you can enter this command line how provide you all dependencies needed to build ffs2play:
-
-			sudo apt-get install build-essential libssl-dev libminiupnpc-dev libcrypto++-dev libprotobuf-dev protobuf-compiler qt5-default pkg-config
-
-		On some qt installation you will need opengl devel :
-
-			sudo apt-get install mesa-common-dev
-
-		On Xenial , Qt packages are too old for FFS2Play , you can use PPA to give you opportunity de build on supported packages:
-
-			sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-xenial
-			sudo apt-get update
-			sudo apt-get install qt510-meta-full qt510creator
-
-	1. Gentoo / Calculate Linux
-
-		Prepare dependencies on terminal as superuser:
-
-			emerge crypto++ miniupnpc openssl protobuf @qt5-essentials
+			sudo apt-get install build-essential cmake ninja-build libssl-dev protobuf-compiler qt6-base-dev qt6-tools-dev qt6-l10n-tools libqt6sql6-sqlite qt6-protobuf-dev qt6-protobuf-tools
 
 	1. Arch Linux
 
-		Prepare dependencies on terminal :
-
-			sudo yaourt -S base-devel gdb qt5-base miniupnpc crypto++ openssl protobuf
+			sudo pacman -S base-devel cmake ninja openssl protobuf qt6-base qt6-tools qt6-grpc
 
 	1. Final build:
 
 		on git root :
 
-			qmake CONFIG+=release
-			make -j3
-			./release/ffs2play
+			cmake --preset linux-release
+			cmake --build --preset linux-release
+			./out/build/linux-release/ffs2play
 
-	1. Update
+	1. Debian package:
 
-		repeat previous commands after git pull
+			cpack --preset linux-release
 
-1. WIN(Visual studio community edition)
+1. Build on macOS
 
-	coming ...
+			brew install cmake ninja openssl@3 protobuf qt
+			cmake --preset macos-release -DCMAKE_PREFIX_PATH="$(brew --prefix qt);$(brew --prefix openssl@3)"
+			cmake --build --preset macos-release
+			cpack --preset macos-release
+
+1. Build on Windows (Visual Studio 2022 or newer)
+
+	1. Install Qt >= 6.8 for MSVC 64 bit with the "Qt Protobuf and Qt GRPC" add-on and the OpenSSL 3 tool (Qt maintenance tool)
+	1. Install protoc (https://github.com/protocolbuffers/protobuf/releases) and add it to PATH, or set Protobuf_ROOT
+	1. Optional : set SIMCONNECT_PATH to the "SimConnect SDK" folder (MSFS_SDK environment variable is also used)
+	1. Optional : install Inno Setup 6 or 7 to build the installer (cpack)
+
+			set QTDIR=C:\Qt\6.8.3\msvc2022_64
+			cmake --preset windows-msvc
+			cmake --build --preset windows-msvc-release
+			ctest --preset windows-msvc-release
+			cpack --preset windows-msvc-release
+
+	Local paths can be kept in a CMakeUserPresets.json (not versioned) inheriting the "windows-msvc" preset.

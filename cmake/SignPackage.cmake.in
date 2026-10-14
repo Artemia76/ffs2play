@@ -1,0 +1,11 @@
+# CPack post build script : Authenticode signing of the generated installers
+set(_sign_command "@FFS2PLAY_SIGN_COMMAND@")
+foreach(_package IN LISTS CPACK_PACKAGE_FILES)
+    if(_package MATCHES "\\.exe$")
+        message(STATUS "Signing: ${_package}")
+        execute_process(COMMAND ${_sign_command} "${_package}" RESULT_VARIABLE _sign_result)
+        if(NOT _sign_result EQUAL 0)
+            message(FATAL_ERROR "signtool failed on ${_package}")
+        endif()
+    endif()
+endforeach()

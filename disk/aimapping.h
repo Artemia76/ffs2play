@@ -34,8 +34,8 @@
 #include <QtSql>
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
-#include "protobuf/ffs2play.pb.h"
-#ifdef Q_OS_WIN
+#include "ffs2play.qpb.h"
+#ifdef SIMCONNECT_BUILD
 #include "scaiparser.h"
 #endif
 #include "xpaiparser.h"

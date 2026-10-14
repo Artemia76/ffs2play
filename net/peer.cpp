@@ -246,8 +246,8 @@ void CPeer::createAI()
         if (m_data.Category == "Helicopter") m_trySimpleAI = true;
         m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] : Requesting creation of aircraft with Title = " + QString::fromStdString(m_AIResolution.title())
-            + " Model = " + QString::fromStdString(m_AIResolution.model())
+        m_log->log("Peer [" + m_callSign + "] : Requesting creation of aircraft with Title = " + m_AIResolution.title()
+            + " Model = " + m_AIResolution.model()
             , Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_simManager->createAI(m_AIResolution, m_tail,m_data, m_trySimpleAI);
@@ -416,7 +416,7 @@ void CPeer::updateAI(datetime pTime, float pFPS)
             {
                 // Mise à jour de l'altitude sol de référence
                 m_old_GND_AI = m_AISimData.GroundAltitude;
-                m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgheight();
+                m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgHeight();
             }
             if (m_spawned >= 7)
             {

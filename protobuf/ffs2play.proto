@@ -1,64 +1,67 @@
 syntax = "proto3";
 
+// Field numbers are part of the wire format shared with the X-Plane plugin
+// (xffs2play) : never renumber an existing field, only add new ones.
+
 message StringArray {
-        repeated string String = 1;
+        repeated string values = 1;
 }
 
 message AirData {
-        int64		Timestamp = 1;
-        string		Title = 2;
-        string		Model = 3;
-        string		Type = 4;
-        string          AirLine = 46;
-        string		Category = 5;
-        double		Altitude = 6;
-        double		GroundAltitude = 7;
-        double		Heading = 8;
-        double		Longitude = 9;
-        double		Latitude = 10;
-        double		IASSpeed = 11;
-        double		Pitch = 12;
-        double		Bank = 13;
-        int32		Squawk = 14;
-        double		ElevatorPos = 15;
-        double		AileronPos = 16;
-        double		RudderPos = 17;
-        double          SpoilerPos = 47;
-        int32		Door1Pos = 18;
-        int32		Door2Pos = 19;
-        int32		Door3Pos = 20;
-        int32		Door4Pos = 21;
-        int32		FlapsIndex = 22;
-        int32		NumEngine = 23;
-        int32		ThrottleEng1 = 24;
-        int32		ThrottleEng2 = 25;
-        int32		ThrottleEng3 = 26;
-        int32		ThrottleEng4 = 27;
-        bool		OnGround = 28;
-        bool		GearPos = 29;
-        bool		LandingLight = 30;
-        bool		BeaconLight = 31;
-        bool		StrobeLight = 32;
-        bool		NavLight = 33;
-        bool		RecoLight = 34;
-        bool            TaxiLight = 45;
-        bool		StateEng1 = 35;
-        bool		StateEng2 = 36;
-        bool		StateEng3 = 37;
-        bool		StateEng4 = 38;
-        bool		Smoke = 39;
-        double		TASSpeed = 40;
-        double		GNDSpeed = 41;
-        bool            ParkingBrake = 42;
-        double          VSpeed = 43;
-        int32           SquawkMode = 44;
+        int64           timestamp = 1;
+        string          title = 2;
+        string          model = 3;
+        string          type = 4;
+        string          air_line = 46;
+        string          category = 5;
+        double          altitude = 6;
+        double          ground_altitude = 7;
+        double          heading = 8;
+        double          longitude = 9;
+        double          latitude = 10;
+        double          ias_speed = 11;
+        double          pitch = 12;
+        double          bank = 13;
+        int32           squawk = 14;
+        double          elevator_pos = 15;
+        double          aileron_pos = 16;
+        double          rudder_pos = 17;
+        double          spoiler_pos = 47;
+        int32           door1_pos = 18;
+        int32           door2_pos = 19;
+        int32           door3_pos = 20;
+        int32           door4_pos = 21;
+        int32           flaps_index = 22;
+        int32           num_engine = 23;
+        int32           throttle_eng1 = 24;
+        int32           throttle_eng2 = 25;
+        int32           throttle_eng3 = 26;
+        int32           throttle_eng4 = 27;
+        bool            on_ground = 28;
+        bool            gear_pos = 29;
+        bool            landing_light = 30;
+        bool            beacon_light = 31;
+        bool            strobe_light = 32;
+        bool            nav_light = 33;
+        bool            reco_light = 34;
+        bool            taxi_light = 45;
+        bool            state_eng1 = 35;
+        bool            state_eng2 = 36;
+        bool            state_eng3 = 37;
+        bool            state_eng4 = 38;
+        bool            smoke = 39;
+        double          tas_speed = 40;
+        double          gnd_speed = 41;
+        bool            parking_brake = 42;
+        double          v_speed = 43;
+        int32           squawk_mode = 44;
 }
 
 message AIResol {
-        string		Title = 1;
-        string		Path = 2;
-        string          Model = 5;
-        string          AirLine = 6;
-        double		CGHeight = 3;
-        double		Pitch = 4;
+        string          title = 1;
+        string          path = 2;
+        string          model = 5;
+        string          air_line = 6;
+        double          cg_height = 3;
+        double          pitch = 4;
 }

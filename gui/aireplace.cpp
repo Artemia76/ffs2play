@@ -143,7 +143,7 @@ void AIReplace::refreshReplacelist()
                     m_P2PManager->getTitle(m_Peer),
                     m_P2PManager->getModel(m_Peer),
                     m_P2PManager->getType(m_Peer));
-        int index =m_UI->cbReplacement->findText(QString::fromStdString(Solve.title()));
+        int index =m_UI->cbReplacement->findText(Solve.title());
         if (index>-1)
         {
             m_UI->cbReplacement->setCurrentIndex(index);

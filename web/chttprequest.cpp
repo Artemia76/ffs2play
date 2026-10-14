@@ -131,11 +131,10 @@ bool CHttpRequest::getAsXml(QDomDocument& pDoc)
 {
     if (!m_response.isEmpty())
     {
-        QString ErrorMessage;
-        pDoc.setContent(m_response,&ErrorMessage);
-        if (!ErrorMessage.isEmpty())
+        const QDomDocument::ParseResult result = pDoc.setContent(m_response);
+        if (!result)
         {
-            m_log->log("HttpRequest : error = " + ErrorMessage);
+            m_log->log("HttpRequest : error = " + result.errorMessage);
             return false;
         }
         return true;

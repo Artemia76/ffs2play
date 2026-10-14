@@ -32,7 +32,7 @@
 #include <QString>
 
 #include "tools/datetime.h"
-#include "protobuf/ffs2play.pb.h"
+#include "ffs2play.qpb.h"
 
 class CAircraftState
 {

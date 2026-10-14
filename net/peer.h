@@ -36,12 +36,11 @@
 #include <QMutex>
 #include <QDataStream>
 #include <QNetworkDatagram>
-#include <sstream>
 #include <cstddef>
 
 #include "sim/simbasemanager.h"
 #include "disk/aimapping.h"
-#include "protobuf/ffs2play.pb.h"
+#include "ffs2play.qpb.h"
 #include "tools/clogger.h"
 #include "net/udpserver.h"
 #include "net/tcpserver.h"

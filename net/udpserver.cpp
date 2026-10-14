@@ -28,7 +28,6 @@
 
 #include "net/udpserver.h"
 
-#include <QTextCodec>
 
 ///
 /// \brief UDPServer::UDPServer

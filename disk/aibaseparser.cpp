@@ -362,32 +362,32 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     //QString Type = pType.toLower();
     switch (m_simManager->getVersion())
     {
-#ifdef Q_OS_WIN
+#ifdef SIMCONNECT_BUILD
         case SimConnector::SIM_VERSION::FSX:
         case SimConnector::SIM_VERSION::FSX_STEAM:
         case SimConnector::SIM_VERSION::P3D_V2:
         case SimConnector::SIM_VERSION::P3D_V3:
         case SimConnector::SIM_VERSION::P3D_V4:
         case SimConnector::SIM_VERSION::P3D_V5:
-            Resol.set_title("Mooney Bravo");
-            Resol.set_cgheight(3.7);
-            Resol.set_pitch(2.9);
+            Resol.setTitle("Mooney Bravo");
+            Resol.setCgHeight(3.7);
+            Resol.setPitch(2.9);
             break;
 #endif
         case SimConnector::SIM_VERSION::XPLANE:
-            Resol.set_title("Beech Baron 58");
-            Resol.set_cgheight(0.9);
-            Resol.set_pitch(1.93);
+            Resol.setTitle("Beech Baron 58");
+            Resol.setCgHeight(0.9);
+            Resol.setPitch(1.93);
             break;
         case SimConnector::SIM_VERSION::XPLANE_CSL:
-            Resol.set_title("C172:C172:0");
-            Resol.set_cgheight(0.0);
-            Resol.set_pitch(0.0);
+            Resol.setTitle("C172:C172:0");
+            Resol.setCgHeight(0.0);
+            Resol.setPitch(0.0);
             break;
         case SimConnector::SIM_VERSION::FS2020:
-            Resol.set_title("Asobo Savage Cub");
-            Resol.set_cgheight(0.0);
-            Resol.set_pitch(0.0);
+            Resol.setTitle("Asobo Savage Cub");
+            Resol.setCgHeight(0.0);
+            Resol.setPitch(0.0);
             break;
     }
     if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
@@ -410,17 +410,17 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
     {
         if (query.next())
         {
-            Resol.set_title(query.value(0).toString().toStdString());
-            Resol.set_cgheight(query.value(1).toDouble());
-            Resol.set_pitch(query.value(2).toDouble());
-            Resol.set_path(query.value(3).toString().toStdString());
-            Resol.set_model(query.value(4).toString().toStdString());
-            Resol.set_airline(query.value(5).toString().toStdString());
+            Resol.setTitle(query.value(0).toString());
+            Resol.setCgHeight(query.value(1).toDouble());
+            Resol.setPitch(query.value(2).toDouble());
+            Resol.setPath(query.value(3).toString());
+            Resol.setModel(query.value(4).toString());
+            Resol.setAirLine(query.value(5).toString());
 #ifdef FFS_DEBUG
-            m_log->log("AIMapping : Title Match found in database : " + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
+            m_log->log("AIMapping : Title Match found in database : " + Resol.title(), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
         }
-        else if (Model.count()>0)
+        else if (!Model.isEmpty())
         {
             query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model,AirLine FROM Aircrafts WHERE (Model like :Model) and (Sim = :Sim)");
             query.bindValue(":Sim",m_Table);
@@ -429,14 +429,14 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             {
                 if (query.next())
                 {
-                    Resol.set_title(query.value(0).toString().toStdString());
-                    Resol.set_cgheight(query.value(1).toDouble());
-                    Resol.set_pitch(query.value(2).toDouble());
-                    Resol.set_path(query.value(3).toString().toStdString());
-                    Resol.set_model(query.value(4).toString().toStdString());
-                    Resol.set_airline(query.value(5).toString().toStdString());
+                    Resol.setTitle(query.value(0).toString());
+                    Resol.setCgHeight(query.value(1).toDouble());
+                    Resol.setPitch(query.value(2).toDouble());
+                    Resol.setPath(query.value(3).toString());
+                    Resol.setModel(query.value(4).toString());
+                    Resol.setAirLine(query.value(5).toString());
     #ifdef FFS_DEBUG
-                    m_log->log("AIMapping : ATC Model"+ Model+ " Match found in database : " + QString::fromStdString(Resol.title()), Qt::darkYellow,LEVEL_VERBOSE);
+                    m_log->log("AIMapping : ATC Model"+ Model+ " Match found in database : " + Resol.title(), Qt::darkYellow,LEVEL_VERBOSE);
     #endif
                 }
             }
@@ -449,7 +449,7 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
         }
         else
         {
-            Title = QString::fromStdString(Resol.title());
+            Title = Resol.title();
             query.prepare( "SELECT Title,CGHeight,Pitch,Path,Model,AirLine FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim)");
             query.bindValue(":Sim",m_Table);
             query.bindValue(":Title",Title);
@@ -457,12 +457,12 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             {
                 if (query.next())
                 {
-                    Resol.set_title(query.value(0).toString().toStdString());
-                    Resol.set_cgheight(query.value(1).toDouble());
-                    Resol.set_pitch(query.value(2).toDouble());
-                    Resol.set_path(query.value(3).toString().toStdString());
-                    Resol.set_model(query.value(4).toString().toStdString());
-                    Resol.set_airline(query.value(5).toString().toStdString());
+                    Resol.setTitle(query.value(0).toString());
+                    Resol.setCgHeight(query.value(1).toDouble());
+                    Resol.setPitch(query.value(2).toDouble());
+                    Resol.setPath(query.value(3).toString());
+                    Resol.setModel(query.value(4).toString());
+                    Resol.setAirLine(query.value(5).toString());
                 }
             }
             else

@@ -146,10 +146,10 @@ void CPeer::sendVersion()
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << static_cast<quint8>(Protocol::VERSION);
     stream << PROTO_VERSION;
-    StringToStream(stream,QString::fromStdString(m_sendData.title()));
-    StringToStream(stream,QString::fromStdString(m_sendData.type()));
-    StringToStream(stream,QString::fromStdString(m_sendData.model()));
-    StringToStream(stream,QString::fromStdString(m_sendData.category()));
+    StringToStream(stream,m_sendData.title());
+    StringToStream(stream,m_sendData.type());
+    StringToStream(stream,m_sendData.model());
+    StringToStream(stream,m_sendData.category());
     send(Data);
 }
 

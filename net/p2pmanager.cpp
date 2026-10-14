@@ -29,7 +29,6 @@
 
 #include <QNetworkInterface>
 #include <cfloat>
-#include <sstream>
 
 #include "tools/singleton.h"
 
@@ -46,6 +45,11 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     connect (m_analyser, SIGNAL(fireTouchSpeed(double)),this,SLOT(onLanding(double)));
     m_UDPServer = new UDPServer(this);
     m_TCPServer = new TCPServer(this);
+    m_upnp = new CUPnPClient(this);
+    connect(m_upnp, &CUPnPClient::failed, this, &CP2PManager::onUPnPFailed);
+    connect(m_upnp, &CUPnPClient::externalAddressFound, this, &CP2PManager::onUPnPExternalAddress);
+    connect(m_upnp, &CUPnPClient::portMapped, this, &CP2PManager::onUPnPPortMapped);
+    connect(m_upnp, &CUPnPClient::portUnmapped, this, &CP2PManager::onUPnPPortUnmapped);
     connect (&m_checkAITimer,SIGNAL(timeout()),this,SLOT(onCheckAI()));
     m_checkAITimer.start(5000);
     m_LastDropRate = Now();
@@ -53,13 +57,13 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     for (const QHostAddress& IP : InterfaceList)
     {
         if ((!IP.isLoopback())&&(IP.protocol()==QAbstractSocket::IPv4Protocol))
-            m_InternalIP.add_string(IP.toString().toStdString());
+            m_InternalIP.append(IP.toString());
     }
 #ifdef FFS_DEBUG
     m_log->log("P2PManager : Local LAN IP address : ",Qt::darkBlue,LEVEL_NORMAL);
-    for (int i=0 ; i< m_InternalIP.string_size(); ++i)
+    for (const QString& IP : std::as_const(m_InternalIP))
     {
-        m_log->log("P2PManager : IP address = " + QString(m_InternalIP.string(i).c_str()),Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("P2PManager : IP address = " + IP,Qt::darkBlue,LEVEL_NORMAL);
     }
 #endif
 }
@@ -201,129 +205,69 @@ void CP2PManager::initUPNP(bool flag)
     if (flag)
     {
         if (m_bUPNP) return;
-        UPNPDev* devlist;
-        char lanaddr[64]; // IP address on the LAN
-        char wanaddr[64]; // IP address on the Internet
-        const char* multicastif = nullptr;
-        const char* minissdpdpath = nullptr;
-        int error;
-        devlist = upnpDiscover(
-                    1000,
-                    multicastif,
-                    minissdpdpath,
-                    0,
-                    0,
-#if MINIUPNPC_API_VERSION >= 14
-                    4,
-#endif
-                    &error);
-        if (devlist != nullptr)
-        {
-#ifdef FFS_DEBUG
-            for (UPNPDev* device = devlist; device !=nullptr; device = device->pNext)
-            {
-                m_log->log("P2PManager : IGP Desc = " + QString(device->descURL) + " st: " + QString(device->st),Qt::darkBlue,LEVEL_NORMAL);
-            }
-#endif
-            if ((error = UPNP_GetValidIGD(devlist, &m_urls, &m_data, lanaddr, 64)) != 0)
-            {
-#ifdef FFS_DEBUG
-                switch (error)
-                {
-                    case 1:
-                    {
-                        m_log->log("P2PManager : Found valid IGD = " + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
-                        break;
-                    }
-                    case 2:
-                    {
-                        m_log->log("P2PManager : Found a (not connected?) IGD = " + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
-                        break;
-                    }
-                    case 3:
-                    {
-                        m_log->log("P2PManager : UPnP device found. Is it an IGD ? = " + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
-                        break;
-                    }
-                    default:
-                    {
-                        m_log->log("P2PManager : Found device (IGD ?) = " + QString(m_urls.controlURL),Qt::darkBlue,LEVEL_NORMAL);
-                        break;
-                    }
-                }
-#endif
-                UPNP_GetExternalIPAddress(m_urls.controlURL,m_data.first.servicetype,wanaddr);
-                m_ExternalIP = QHostAddress(QString(wanaddr));
-#ifdef FFS_DEBUG
-                m_log->log("P2PManager : Internet IP address = " + m_ExternalIP.toString(),Qt::darkBlue,LEVEL_NORMAL);
-#endif
-                error = UPNP_AddPortMapping(
-                        m_urls.controlURL,
-                        m_data.first.servicetype,
-                        QString::number(m_port).toStdString().c_str(),
-                        QString::number(m_port).toStdString().c_str(),
-                        lanaddr,
-                        QString(QString("FFS2P_UDP_")+QString::number(m_port)).toStdString().c_str(),
-                        "UDP",
-                        nullptr,
-                        "0"
-                );
-
-                if (error != UPNPCOMMAND_SUCCESS)
-                    m_log->log("P2PManager : " + tr("Adding UDP port mapping failed with code ") + QString::number(error),Qt::magenta);
-                else m_bUPNP=true;
-
-                error = UPNP_AddPortMapping(
-                        m_urls.controlURL,
-                        m_data.first.servicetype,
-                        QString::number(m_port).toStdString().c_str(),
-                        QString::number(m_port).toStdString().c_str(),
-                        lanaddr,
-                        QString(QString("FFS2P_TCP_")+QString::number(m_port)).toStdString().c_str(),
-                        "TCP",
-                        nullptr,
-                        "0"
-                );
-                if (error != UPNPCOMMAND_SUCCESS)
-                    m_log->log("P2PManager : " + tr("Adding TCP port mappping failed with code ") + QString::number(error),Qt::magenta);
-                else m_bUPNP=true;
-            }
-            else
-            {
-                m_log->log("P2PManager : " + tr("No valid Internet Gateway Device found."));
-            }
-            freeUPNPDevlist(devlist);
-        }
-        else
-        {
-            m_log->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
-        }
-
+        m_upnp->addPortMappings(m_port);
     }
     else
     {
-        if (!m_bUPNP) return;
-        int error = UPNP_DeletePortMapping(
-                    m_urls.controlURL,
-                    m_data.first.servicetype,
-                    QString::number(m_port).toStdString().c_str(),
-                    "UDP",
-                    nullptr
-        );
-        if (error != UPNPCOMMAND_SUCCESS)
-            m_log->log("P2PManager : " + tr("Delete UDP port mapping failed with code ") + QString::number(error),Qt::magenta);
-
-        error = UPNP_DeletePortMapping(
-                    m_urls.controlURL,
-                    m_data.first.servicetype,
-                    QString::number(m_port).toStdString().c_str(),
-                    "TCP",
-                    nullptr
-        );
-        if (error != UPNPCOMMAND_SUCCESS)
-            m_log->log("P2PManager : " + tr("Delete TCP port mapping failed with code ") + QString::number(error),Qt::magenta);
+        m_upnp->removePortMappings();
         m_bUPNP = false;
     }
+}
+
+///
+/// \brief CP2PManager::onUPnPFailed
+/// \param pError
+///
+void CP2PManager::onUPnPFailed(CUPnPClient::Error pError)
+{
+    if (pError == CUPnPClient::Error::NoDevice)
+        m_log->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
+    else
+        m_log->log("P2PManager : " + tr("No valid Internet Gateway Device found."));
+}
+
+///
+/// \brief CP2PManager::onUPnPExternalAddress
+/// \param pAddress
+///
+void CP2PManager::onUPnPExternalAddress(QHostAddress pAddress)
+{
+    m_ExternalIP = pAddress;
+#ifdef FFS_DEBUG
+    m_log->log("P2PManager : Internet IP address = " + m_ExternalIP.toString(),Qt::darkBlue,LEVEL_NORMAL);
+#endif
+}
+
+///
+/// \brief CP2PManager::onUPnPPortMapped
+/// \param pProtocol
+/// \param pErrorCode
+///
+void CP2PManager::onUPnPPortMapped(QString pProtocol, int pErrorCode)
+{
+    if (pErrorCode == 0)
+    {
+        m_bUPNP = true;
+        return;
+    }
+    if (pProtocol == "UDP")
+        m_log->log("P2PManager : " + tr("Adding UDP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
+    else
+        m_log->log("P2PManager : " + tr("Adding TCP port mappping failed with code ") + QString::number(pErrorCode),Qt::magenta);
+}
+
+///
+/// \brief CP2PManager::onUPnPPortUnmapped
+/// \param pProtocol
+/// \param pErrorCode
+///
+void CP2PManager::onUPnPPortUnmapped(QString pProtocol, int pErrorCode)
+{
+    if (pErrorCode == 0) return;
+    if (pProtocol == "UDP")
+        m_log->log("P2PManager : " + tr("Delete UDP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
+    else
+        m_log->log("P2PManager : " + tr("Delete TCP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
 }
 
 ///
@@ -341,10 +285,9 @@ int CP2PManager::getPort()
 ///
 QString CP2PManager::getLocalIPs()
 {
-    std::ostringstream out;
-    m_InternalIP.SerializeToOstream(&out);
-    QByteArray OutPut(out.str().c_str());
-    return QString(OutPut.toBase64());
+    StringArray LocalIPs;
+    LocalIPs.setValues(m_InternalIP);
+    return QString::fromLatin1(ProtobufSerialize(LocalIPs).toBase64());
 }
 
 ///

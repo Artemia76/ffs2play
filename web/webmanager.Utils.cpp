@@ -28,6 +28,7 @@
 
 #include "web/webmanager.h"
 #include "tools/singleton.h"
+#include "tools/datagram.h"
 #include <QXmlStreamWriter>
 
 /// Build Users Profils to Setting file
@@ -118,17 +119,17 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                 PeerData item;
                 item.CallSign = Player.nodeName();
                 item.Port=Player.attribute("port").toUShort();
-                item.externalIP=m_crypto.DecryptFromBase64(Player.attribute("ip"));
+                item.externalIP=QHostAddress(m_crypto.DecryptFromBase64(Player.attribute("ip")));
 #ifdef FFS_DEBUG
                 m_log->log("WEBManager : CallSign = " + item.CallSign
                             + " IP = " + item.externalIP.toString()
                             + " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                 StringArray LocalIP;
-                LocalIP.ParseFromString(QByteArray::fromBase64(Player.attribute("local_ip").toLatin1()).toStdString());
-                for (int j=0; j<LocalIP.string_size();j++)
+                ProtobufParse(LocalIP, QByteArray::fromBase64(Player.attribute("local_ip").toLatin1()));
+                for (const QString& IP : LocalIP.values())
                 {
-                    item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.string(j))));
+                    item.localIPs.append(QHostAddress(IP));
 #ifdef FFS_DEBUG
                     m_log->log("WEBManager : Local IP = " + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
 #endif

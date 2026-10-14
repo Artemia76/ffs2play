@@ -30,7 +30,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTextCodec>
 #include <QSettings>
 #include <QTimer>
 #include <QListWidget>

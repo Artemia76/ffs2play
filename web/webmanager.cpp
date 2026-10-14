@@ -46,7 +46,8 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     int index = mo->indexOfEnumerator("XmlCode");
     m_metaXmlCode = mo->enumerator(index);
 
-    qRegisterMetaTypeStreamOperators<QVector<SUser> >("QVector<SUser>");
+    // Keep the Qt5 type name as alias : it is stored in existing settings files
+    qRegisterMetaType<QVector<SUser> >("QVector<SUser>");
     m_log = CLogger::instance();
     m_P2P = CP2PManager::instance();
     m_simManager = simbasemanager::instance();

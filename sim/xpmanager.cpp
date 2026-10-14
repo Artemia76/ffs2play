@@ -33,7 +33,6 @@
 #include <QCoreApplication>
 #include <QDataStream>
 #include <QNetworkDatagram>
-#include <QTextCodec>
 #include <QApplication>
 
 #include "tools/datagram.h"
@@ -300,10 +299,7 @@ void CXPManager::sendAIPaths()
     if (m_connected)
     {
         StringArray Paths;
-        for (QString Path : m_AIPaths)
-        {
-            Paths.add_string(Path.toStdString());
-        }
+        Paths.setValues(m_AIPaths);
         QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
         stream << static_cast<quint8>(CSL_PATH);
@@ -360,7 +356,11 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
             try
             {
                 data.remove(0,1);
-                m_PlayerData.ParseFromString(data.toStdString());
+                if (!ProtobufParse(m_PlayerData, data))
+                {
+                    m_log->log(tr("DataSend Error : bad AirData datagram"),Qt::magenta);
+                    break;
+                }
                 m_state.fromAirData(m_PlayerData);
 #ifdef FFS_DEBUG
                 m_log->log("XPManager : Receive DATA_SEND event", Qt::darkBlue,LEVEL_VERBOSE);
@@ -439,7 +439,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
         {
 #ifdef FFS_DEBUG
         m_log->log("XPManager : unknown code = " +
-                QString(Code),
+                QString::number(Code),
                 Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         }

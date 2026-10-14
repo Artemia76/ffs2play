@@ -1,5 +1,11 @@
 ChangeLog:
 
+2.4.0 : Migration to Qt 6 (>= 6.8) and CMake (Windows / Linux / macOS presets, CPack installers)
+        Qt Protobuf replaces Google Protobuf, OpenSSL 3 replaces Crypto++
+        Built-in UPnP port mapping replaces miniupnpc (no more UI freeze at startup)
+        Translations and style sheet embedded in the executable
+        Bug fix : encrypted data and local IP list could be truncated
+
 2.3.1 : Bug fix : AI resolution. Todo : AI jump on ground due to underground shift
 
 2.3.0 : Add support of FS2020

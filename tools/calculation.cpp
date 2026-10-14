@@ -28,6 +28,7 @@
 
 #include "calculation.h"
 #include <QDataStream>
+#include <QIODevice>
 #include <limits>
 
 using namespace std;

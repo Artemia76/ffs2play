@@ -29,6 +29,8 @@
 
 #include "datagram.h"
 
+#include <QProtobufSerializer>
+
 ///
 /// \brief StringFromStream
 /// \param pStream
@@ -62,12 +64,33 @@ void StringToStream(QDataStream& pStream,const QString& pString)
 /// \param pStream
 /// \param pMessage
 ///
-void ProtobufToStream(QDataStream& pStream,::google::protobuf::Message& pMessage)
+void ProtobufToStream(QDataStream& pStream,const QProtobufMessage& pMessage)
 {
-    char* buffer = new char[static_cast<uint>(pMessage.ByteSizeLong())];
-    pMessage.SerializeToArray(buffer,pMessage.ByteSizeLong());
-    pStream.writeRawData(buffer,pMessage.ByteSizeLong());
-    delete[] buffer;
+    const QByteArray buffer = ProtobufSerialize(pMessage);
+    pStream.writeRawData(buffer.constData(),static_cast<int>(buffer.size()));
+}
+
+///
+/// \brief ProtobufSerialize
+/// \param pMessage
+/// \return protobuf wire format of pMessage
+///
+QByteArray ProtobufSerialize(const QProtobufMessage& pMessage)
+{
+    QProtobufSerializer serializer;
+    return pMessage.serialize(&serializer);
+}
+
+///
+/// \brief ProtobufParse
+/// \param pMessage
+/// \param pData protobuf wire format
+/// \return true on success
+///
+bool ProtobufParse(QProtobufMessage& pMessage, QByteArrayView pData)
+{
+    QProtobufSerializer serializer;
+    return pMessage.deserialize(&serializer, pData);
 }
 
 QString CStringFromStream(QDataStream& pStream, size_t pLen)

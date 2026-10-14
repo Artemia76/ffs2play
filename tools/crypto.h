@@ -33,21 +33,6 @@
 
 #include <QObject>
 #include <tools/clogger.h>
-#include <filters.h>
-#include <aes.h>
-#include <modes.h>
-#include <osrng.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
-
-using CryptoPP::StringSink;
-using CryptoPP::ArraySink;
-using CryptoPP::StringSource;
-using CryptoPP::StreamTransformationFilter;
-using CryptoPP::AES;
-using CryptoPP::CFB_Mode;
-using CryptoPP::AutoSeededRandomPool;
 
 class CCrypto : public QObject
 {

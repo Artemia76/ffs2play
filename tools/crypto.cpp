@@ -30,11 +30,63 @@
 
 #include "tools/crypto.h"
 
-#ifdef Q_OS_WIN32
-    #define BYTE CryptoPP::byte
-#else
-    #define BYTE quint8
-#endif
+#include <memory>
+
+#include <openssl/evp.h>
+#include <openssl/pem.h>
+#include <openssl/rand.h>
+#include <openssl/rsa.h>
+#include <openssl/x509.h>
+
+namespace
+{
+    const int        AES_KEY_SIZE = 32;     // AES-256
+    const int        AES_IV_SIZE = 16;      // AES block size
+    const QByteArray IV_SEPARATOR("-[--IV-[-");
+
+    struct EvpCipherCtxDeleter { void operator()(EVP_CIPHER_CTX* p) const { EVP_CIPHER_CTX_free(p); } };
+    struct EvpPkeyCtxDeleter { void operator()(EVP_PKEY_CTX* p) const { EVP_PKEY_CTX_free(p); } };
+    struct BioDeleter { void operator()(BIO* p) const { BIO_free(p); } };
+    struct X509Deleter { void operator()(X509* p) const { X509_free(p); } };
+
+    using EvpCipherCtxPtr = std::unique_ptr<EVP_CIPHER_CTX, EvpCipherCtxDeleter>;
+    using EvpPkeyCtxPtr = std::unique_ptr<EVP_PKEY_CTX, EvpPkeyCtxDeleter>;
+    using BioPtr = std::unique_ptr<BIO, BioDeleter>;
+    using X509Ptr = std::unique_ptr<X509, X509Deleter>;
+
+    ///
+    /// \brief aes256Cfb run AES-256-CFB128 (same mode as Crypto++ CFB_Mode<AES>)
+    /// \param pEncrypt true to encrypt, false to decrypt
+    /// \param pOk set to false on OpenSSL failure
+    ///
+    QByteArray aes256Cfb(bool pEncrypt, const QByteArray& pKey, const QByteArray& pIV, const QByteArray& pInput, bool& pOk)
+    {
+        pOk = false;
+        EvpCipherCtxPtr ctx(EVP_CIPHER_CTX_new());
+        if (!ctx) return QByteArray();
+        if (EVP_CipherInit_ex(ctx.get(), EVP_aes_256_cfb128(), nullptr,
+                              reinterpret_cast<const unsigned char*>(pKey.constData()),
+                              reinterpret_cast<const unsigned char*>(pIV.constData()),
+                              pEncrypt ? 1 : 0) != 1)
+            return QByteArray();
+        // CFB is a stream mode : output size equals input size
+        QByteArray output(pInput.size() + AES_IV_SIZE, Qt::Uninitialized);
+        int len = 0;
+        int total = 0;
+        if (EVP_CipherUpdate(ctx.get(),
+                             reinterpret_cast<unsigned char*>(output.data()), &len,
+                             reinterpret_cast<const unsigned char*>(pInput.constData()),
+                             static_cast<int>(pInput.size())) != 1)
+            return QByteArray();
+        total = len;
+        if (EVP_CipherFinal_ex(ctx.get(), reinterpret_cast<unsigned char*>(output.data()) + total, &len) != 1)
+            return QByteArray();
+        total += len;
+        output.resize(total);
+        pOk = true;
+        return output;
+    }
+}
 
 ///
 /// \brief CCrypto::CCrypto
@@ -43,9 +95,11 @@
 CCrypto::CCrypto(QObject *parent) : QObject(parent)
 {
     m_log = CLogger::instance();
-    m_key.resize(32);
-    AutoSeededRandomPool prng;
-    prng.GenerateBlock(reinterpret_cast<BYTE*>(m_key.data()),32);
+    m_key.resize(AES_KEY_SIZE);
+    if (RAND_bytes(reinterpret_cast<unsigned char*>(m_key.data()), AES_KEY_SIZE) != 1)
+    {
+        m_log->log("CCrypto : unable to generate AES key");
+    }
 }
 
 ///
@@ -69,32 +123,25 @@ QString CCrypto::EncryptionKeyString()
 ///
 /// \brief CCrypto::EncryptToBase64
 /// \param Data
-/// \return
+/// \return base64 of cipher + IV_SEPARATOR + IV
 ///
 QString CCrypto::EncryptToBase64(const QString& Data)
 {
-    std::string cipher;
     // Generate a random IV
-    QByteArray iv (AES::BLOCKSIZE,'\0');
-    AutoSeededRandomPool rnd;
-    rnd.GenerateBlock(reinterpret_cast<BYTE*>(iv.data()), AES::BLOCKSIZE);
-    try
+    QByteArray iv(AES_IV_SIZE, '\0');
+    if (RAND_bytes(reinterpret_cast<unsigned char*>(iv.data()), AES_IV_SIZE) != 1)
     {
-        CFB_Mode<AES>::Encryption cfbEncryption(reinterpret_cast<const BYTE*>(m_key.data()),m_key.size(),reinterpret_cast<const BYTE*>(iv.data()));
-        StringSource ss(Data.toStdString(), true,
-                    new StreamTransformationFilter ( cfbEncryption,
-                        new StringSink(cipher)
-                    )
-        );
-    }
-    catch( const CryptoPP::Exception& e)
-    {
-        m_log->log("CCrypto encode error : " + QString(e.what()));
+        m_log->log("CCrypto encode error : unable to generate IV");
         return QString("");
     }
-    QByteArray Output;
-    Output.append(cipher.c_str());
-    Output.append(QByteArray("-[--IV-[-"));
+    bool ok;
+    QByteArray Output = aes256Cfb(true, m_key, iv, Data.toUtf8(), ok);
+    if (!ok)
+    {
+        m_log->log("CCrypto encode error : AES encryption failed");
+        return QString("");
+    }
+    Output.append(IV_SEPARATOR);
     Output.append(iv);
     return QString(Output.toBase64());
 }
@@ -106,51 +153,64 @@ QString CCrypto::EncryptToBase64(const QString& Data)
 ///
 QString CCrypto::DecryptFromBase64(const QString& Data)
 {
-    QByteArray chaine = QByteArray::fromBase64(Data.toStdString().c_str());
-    int pos = chaine.indexOf("-[--IV-[-");
-    QByteArray iv = chaine.mid(pos+9);
-    std::string ToDecode = chaine.left(pos).toStdString();
-    std::string Decoded;
-    try
+    // Layout is cipher + IV_SEPARATOR + IV (fixed size) : parse from the end,
+    // cipher bytes may contain anything
+    QByteArray chaine = QByteArray::fromBase64(Data.toLatin1());
+    const qsizetype pos = chaine.size() - AES_IV_SIZE - IV_SEPARATOR.size();
+    if ((pos < 0) || (QByteArrayView(chaine).sliced(pos, IV_SEPARATOR.size()) != IV_SEPARATOR))
     {
-        CFB_Mode<AES>::Decryption cfbDecryption(reinterpret_cast<const BYTE*>(m_key.data()),m_key.size(),reinterpret_cast<const BYTE*>(iv.data()));
-        StringSource ss( ToDecode, true,
-                    new StreamTransformationFilter( cfbDecryption,
-                        new StringSink(Decoded)
-                    )
-        );
-    }
-    catch( const CryptoPP::Exception& e)
-    {
-        m_log->log("CCrypto decode error : " + QString(e.what()));
+        m_log->log("CCrypto decode error : IV not found");
         return QString("");
     }
-    return QString::fromStdString(Decoded);
+    QByteArray iv = chaine.right(AES_IV_SIZE);
+    bool ok;
+    QByteArray Decoded = aes256Cfb(false, m_key, iv, chaine.left(pos), ok);
+    if (!ok)
+    {
+        m_log->log("CCrypto decode error : AES decryption failed");
+        return QString("");
+    }
+    return QString::fromUtf8(Decoded);
 }
 
 ///
 /// \brief CCrypto::RSA_EncryptToBase64
+/// \param Cert PEM X509 certificate holding the RSA public key
 /// \param Data
-/// \return
+/// \return base64 of RSA PKCS#1 v1.5 encrypted Data
 ///
 QString CCrypto::RSA_EncryptToBase64(const QString& Cert, const QByteArray& Data)
 {
-    QByteArray encrypt(2048,'\0');
-    int Taille =0;
-    BIO* bio_mem = BIO_new(BIO_s_mem());
-    BIO_puts(bio_mem,QByteArray(Cert.toStdString().c_str()).data());
-    EVP_PKEY* pkey = X509_get_pubkey(PEM_read_bio_X509(bio_mem, nullptr, nullptr, nullptr));
-    if (pkey != nullptr)
+    const QByteArray pem = Cert.toLatin1();
+    BioPtr bio(BIO_new_mem_buf(pem.constData(), static_cast<int>(pem.size())));
+    if (!bio) return QString();
+    X509Ptr x509(PEM_read_bio_X509(bio.get(), nullptr, nullptr, nullptr));
+    if (!x509)
     {
-        RSA* rsa = EVP_PKEY_get1_RSA(pkey);
-        if (rsa != nullptr)
-        {
-            Taille = RSA_public_encrypt(Data.size(), reinterpret_cast<const unsigned char*>(Data.data()),  reinterpret_cast<unsigned char*>(encrypt.data()), rsa, RSA_PKCS1_PADDING);
-            RSA_free(rsa);
-        }
-        EVP_PKEY_free(pkey);
+        m_log->log("CCrypto RSA error : invalid certificate");
+        return QString();
     }
-    BIO_free(bio_mem);
-    encrypt.resize(Taille);
+    EVP_PKEY* pkey = X509_get0_pubkey(x509.get());
+    if (pkey == nullptr) return QString();
+    EvpPkeyCtxPtr ctx(EVP_PKEY_CTX_new_from_pkey(nullptr, pkey, nullptr));
+    if (!ctx
+        || (EVP_PKEY_encrypt_init(ctx.get()) <= 0)
+        || (EVP_PKEY_CTX_set_rsa_padding(ctx.get(), RSA_PKCS1_PADDING) <= 0))
+    {
+        m_log->log("CCrypto RSA error : unable to init encryption");
+        return QString();
+    }
+    size_t outLen = 0;
+    const unsigned char* in = reinterpret_cast<const unsigned char*>(Data.constData());
+    if (EVP_PKEY_encrypt(ctx.get(), nullptr, &outLen, in, static_cast<size_t>(Data.size())) <= 0)
+        return QString();
+    QByteArray encrypt(static_cast<qsizetype>(outLen), Qt::Uninitialized);
+    if (EVP_PKEY_encrypt(ctx.get(), reinterpret_cast<unsigned char*>(encrypt.data()), &outLen,
+                         in, static_cast<size_t>(Data.size())) <= 0)
+    {
+        m_log->log("CCrypto RSA error : encryption failed");
+        return QString();
+    }
+    encrypt.resize(static_cast<qsizetype>(outLen));
     return QString(encrypt.toBase64());
 }

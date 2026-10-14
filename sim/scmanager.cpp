@@ -791,7 +791,7 @@ bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircr
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("SCManager : Create_AI Title = "+ QString::fromStdString(pAircraft.title()) + tr(" ; Tail = ")+pTail + " ; NonAIObject=" + QString::number(pNonAIObject), Qt::darkBlue,LEVEL_NORMAL);
+        m_log->log("SCManager : Create_AI Title = "+ pAircraft.title() + tr(" ; Tail = ")+pTail + " ; NonAIObject=" + QString::number(pNonAIObject), Qt::darkBlue,LEVEL_NORMAL);
 #endif
         SIMCONNECT_DATA_INITPOSITION data;
         data.Altitude = pData.Altitude;
@@ -808,7 +808,7 @@ bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircr
         if (!pNonAIObject)
         {
             result = SimConnect_AICreateNonATCAircraft(m_hSimConnect,
-                                                        pAircraft.title().c_str(),
+                                                        pAircraft.title().toUtf8().constData(),
                                                         pTail.toStdString().c_str(),
                                                         data,
                                                         static_cast<SIMCONNECT_DATA_REQUEST_ID>(index));
@@ -817,7 +817,7 @@ bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircr
         else
         {
             result = SimConnect_AICreateSimulatedObject(m_hSimConnect,
-                                                           pAircraft.title().c_str(),
+                                                           pAircraft.title().toUtf8().constData(),
                                                            data,
                                                            static_cast<SIMCONNECT_DATA_REQUEST_ID>(index));
             trace("SimConnect_AICreateSimulatedObject");

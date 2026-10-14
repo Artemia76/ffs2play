@@ -36,13 +36,13 @@
 #include <QSettings>
 #include "tools/clogger.h"
 
-#ifdef Q_OS_WIN
+#ifdef SIMCONNECT_BUILD
     #include "sim/scmanager.h"
 #endif
 
 #include "sim/xpmanager.h"
 #include "sim/fgmanager.h"
-#include "protobuf/ffs2play.pb.h"
+#include "ffs2play.qpb.h"
 
 enum class SIM_TYPE
 {
