@@ -114,6 +114,7 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     gui/dialogp2p.cpp gui/dialogp2p.h gui/dialogp2p.ui
     gui/dialogprofils.cpp gui/dialogprofils.h gui/dialogprofils.ui
     gui/mainwindow.cpp gui/mainwindow.GuiEvents.cpp gui/mainwindow.h gui/mainwindow.ui
+    gui/theme.cpp gui/theme.h
     net/p2pmanager.cpp net/p2pmanager.h
     net/peer.cpp net/peer.Requests.cpp net/peer.Event.cpp net/peer.h
     net/tcpclient.cpp net/tcpclient.h
@@ -193,10 +194,10 @@ if(APPLE)
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
 endif()
 
-# Style sheet embedded in resources
+# Style sheets (light and dark themes) embedded in resources
 qt_add_resources(ffs2play "style"
     PREFIX "/"
-    FILES style/ffs2play.qss)
+    FILES style/ffs2play.qss style/ffs2play-dark.qss)
 
 # Translations : .ts are compiled to .qm and embedded under :/i18n
 qt_add_translations(ffs2play

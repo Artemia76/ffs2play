@@ -266,6 +266,24 @@
     </message>
 </context>
 <context>
+    <name>CTheme</name>
+    <message>
+        <location filename="../gui/theme.cpp" line="273"/>
+        <source>Follow system</source>
+        <translation>Suivre le système</translation>
+    </message>
+    <message>
+        <location filename="../gui/theme.cpp" line="274"/>
+        <source>Light</source>
+        <translation>Clair</translation>
+    </message>
+    <message>
+        <location filename="../gui/theme.cpp" line="275"/>
+        <source>Dark</source>
+        <translation>Sombre</translation>
+    </message>
+</context>
+<context>
     <name>CWebManager</name>
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="81"/>
@@ -642,6 +660,16 @@
 </context>
 <context>
     <name>MainWindow</name>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="139"/>
+        <source>Theme</source>
+        <translation>Thème</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="140"/>
+        <source>Light or dark theme</source>
+        <translation>Thème clair ou sombre</translation>
+    </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="20"/>
         <source>FFS2Play</source>
