@@ -39,7 +39,8 @@
 ///
 QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v)
 {
-    out << v.count();
+    // 32-bit count as in Qt5 : count() is a 64-bit qsizetype in Qt6
+    out << qint32(v.count());
     for (QVector<SUser>::const_iterator it = v.constBegin(); it != v.constEnd(); ++it)
     {
         out << it->Profil << it->Login << it->Password << it->URL;
@@ -56,8 +57,11 @@ QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v)
 QDataStream& operator>>(QDataStream& in, QVector<SUser>& v)
 {
     v.clear();
-    int num;
+    qint32 num;
     in >> num;
+    // Settings saved by early Qt6 builds hold a 64-bit count : skip its (zero) high half
+    if (num == 0 && !in.atEnd())
+        in >> num;
     for (int i=0; i < num; i++)
     {
         SUser User;
