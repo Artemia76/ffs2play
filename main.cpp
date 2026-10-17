@@ -27,6 +27,7 @@
  * **************************************************************************/
 
 #include "gui/mainwindow.h"
+#include "gui/theme.h"
 #include <QApplication>
 #include <QDir>
 #include <QFile>
@@ -63,13 +64,8 @@ int main(int argc, char *argv[])
     QTranslator FFS2PlayTS;
     if (FFS2PlayTS.load(QLocale(), "ffs2play", "_", ":/i18n"))
         app.installTranslator(&FFS2PlayTS);
-    //Load Style Sheet
-    QFile styleFile (":/style/ffs2play.qss");
-    if (styleFile.open(QFile::ReadOnly))
-    {
-        app.setStyleSheet(QString::fromUtf8(styleFile.readAll()));
-        styleFile.close();
-    }
+    // Light or dark theme (palette and style sheet)
+    CTheme::instance()->init();
     MainWindow mainWindow;
     mainWindow.show();
     return app.exec();

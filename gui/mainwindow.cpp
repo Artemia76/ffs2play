@@ -33,6 +33,12 @@
 #include <QDebug>
 
 #include "ui_mainwindow.h"
+#include "gui/theme.h"
+
+#include <QMenu>
+#include <QTextBlock>
+#include <QTextCursor>
+#include <QToolButton>
 
 ///
 /// \brief MainWindow::MainWindow
@@ -52,8 +58,6 @@ MainWindow::MainWindow()
     m_settings.beginGroup("log");
     m_maxLine = m_settings.value("MaxLine",200).toInt();
     m_settings.endGroup();
-    QPalette p = ui->pteLogger->palette();
-    p.setColor(QPalette::Text,Qt::darkBlue);
     m_log = CLogger::instance();
 
     switch (m_log->DebugLevel)
@@ -85,7 +89,6 @@ MainWindow::MainWindow()
         ui->cb_filter->setCurrentIndex(ui->cb_filter->findText(m_log->getFilter(),Qt::MatchExactly));
     }
     connect(m_log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)),Qt::QueuedConnection);
-    ui->pteLogger->setPalette(p);
     ui->pteLogger->setMaximumBlockCount(m_maxLine);
     m_log->log(tr("Welcome to FFS2Play"),Qt::blue);
     // Simconnect Manager Init
@@ -131,7 +134,14 @@ MainWindow::MainWindow()
     m_simManager->open_close();
     m_webManager->CheckNewVersion();
     m_webManager->Connect();
-    QApplication::setPalette(this->palette());
+    // Theme choice : last button of the tool bar, with its menu
+    CTheme* theme = CTheme::instance();
+    QAction* themeAction = ui->mainToolBar->addAction(theme->icon(), tr("Theme"));
+    themeAction->setToolTip(tr("Light or dark theme"));
+    themeAction->setMenu(theme->createMenu(this));
+    if (QToolButton* button = qobject_cast<QToolButton*>(ui->mainToolBar->widgetForAction(themeAction)))
+        button->setPopupMode(QToolButton::InstantPopup);
+    connect(theme, &CTheme::fireChanged, this, &MainWindow::onThemeChanged);
     if(!ui->mainToolBar->isVisible()) ui->mainToolBar->setVisible(true);
     m_P2PDialogVisible=false;
 }
@@ -155,9 +165,44 @@ MainWindow::~MainWindow()
 void MainWindow::onLog (const QString& pMessage, QColor pColor, CL_DEBUG_LEVEL)
 {
     QTextCharFormat fmt;
-    fmt.setForeground(QBrush(pColor));
+    fmt.setForeground(QBrush(CTheme::instance()->logColor(pColor)));
+    // Original color kept to adapt the line when the theme changes
+    fmt.setProperty(QTextFormat::UserProperty, pColor);
     ui->pteLogger->mergeCurrentCharFormat(fmt);
     ui->pteLogger->appendPlainText(pMessage);
+}
+
+///
+/// \brief MainWindow::onThemeChanged
+///
+/// Log lines take the colors of the new theme
+///
+void MainWindow::onThemeChanged()
+{
+    struct Fragment { int position; int length; QColor color; };
+    QList<Fragment> fragments;
+    QTextDocument* doc = ui->pteLogger->document();
+    for (QTextBlock block = doc->begin(); block.isValid(); block = block.next())
+    {
+        for (QTextBlock::iterator it = block.begin(); !it.atEnd(); ++it)
+        {
+            QTextFragment fragment = it.fragment();
+            QColor color = fragment.charFormat().property(QTextFormat::UserProperty).value<QColor>();
+            if (color.isValid()) fragments.append({fragment.position(), fragment.length(), color});
+        }
+    }
+    CTheme* theme = CTheme::instance();
+    QTextCursor cursor(doc);
+    cursor.beginEditBlock();
+    for (const Fragment& fragment : fragments)
+    {
+        QTextCharFormat fmt;
+        fmt.setForeground(QBrush(theme->logColor(fragment.color)));
+        cursor.setPosition(fragment.position);
+        cursor.setPosition(fragment.position + fragment.length, QTextCursor::KeepAnchor);
+        cursor.mergeCharFormat(fmt);
+    }
+    cursor.endEditBlock();
 }
 
 ///

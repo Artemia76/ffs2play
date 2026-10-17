@@ -1,0 +1,165 @@
+/*
+ * FFS2Play dark theme.
+ * Same structure as ffs2play.qss (light theme) : keep both in sync.
+ */
+
+QMainWindow {
+    background-color: #1F2A33;
+}
+
+QMainWindow QLabel, QMainWindow QCheckBox, QMainWindow QRadioButton {
+    color: #E3EBF2;
+}
+
+QToolBar {
+    background-color: #2A3A48;
+    border: none;
+}
+
+QDockWidget {
+    color: #E3EBF2;
+}
+
+QDockWidget::title {
+    background-color: #2A3A48;
+    padding: 4px;
+}
+
+QDialog {
+    background-color: #26333D;
+    color: #E3EBF2;
+}
+
+QDialog QLabel, QDialog QCheckBox, QDialog QRadioButton {
+    color: #E3EBF2;
+}
+
+QGroupBox {
+    font: bold;
+    color: #E3EBF2;
+    border: 1px solid #4A5B69;
+    border-radius: 6px;
+    margin-top: 6px;
+}
+
+QGroupBox::title {
+    background-color: #34495A;
+    subcontrol-origin: margin;
+    left: 7px;
+    padding: 0px 5px 0px 5px;
+}
+
+QCheckBox, QRadioButton {
+    border: none;
+}
+
+QPushButton {
+    color: #E3EBF2;
+    border: 2px solid #56697A;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #3A4A57, stop: 1 #2E3C48);
+    min-width: 80px;
+    padding: 2px 6px;
+}
+
+QPushButton:hover {
+    border-color: #3D8FD1;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2E3C48, stop: 1 #3A4A57);
+}
+
+QPushButton:disabled {
+    color: #6B7A86;
+    border-color: #3C4D5B;
+}
+
+QPushButton:flat {
+    border: none;
+}
+
+QPushButton:default {
+    border-color: #3D8FD1;
+}
+
+/* Input fields, lists and tables */
+QLineEdit, QTextEdit, QPlainTextEdit, QSpinBox, QComboBox,
+QListWidget, QListView, QTableWidget, QTableView, QTreeView {
+    color: #E3EBF2;
+    background-color: #141C22;
+    selection-color: white;
+    selection-background-color: #3D8FD1;
+}
+
+QLineEdit, QSpinBox, QComboBox {
+    border: 1px solid #3C4D5B;
+    border-radius: 3px;
+    padding: 1px 3px;
+}
+
+QLineEdit:disabled, QSpinBox:disabled, QComboBox:disabled, QTextEdit:disabled {
+    color: #6B7A86;
+    background-color: #1A242C;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #3C4D5B;
+}
+
+QTableWidget, QTableView {
+    gridline-color: #2C3A46;
+    alternate-background-color: #1A242C;
+}
+
+QAbstractItemView::item:hover {
+    background-color: #24323D;
+    color: #E3EBF2;
+}
+
+QAbstractItemView::item:selected {
+    background-color: #3D8FD1;
+    color: white;
+}
+
+QHeaderView::section, QTableCornerButton::section {
+    color: #E3EBF2;
+    background-color: #2A3A48;
+    border: none;
+    border-right: 1px solid #1F2A33;
+    border-bottom: 1px solid #1F2A33;
+    padding: 3px 6px;
+}
+
+/* Context menus */
+QMenu {
+    color: #E3EBF2;
+    background-color: #26333D;
+    border: 1px solid #3C4D5B;
+    padding: 3px 0px;
+}
+
+QMenu::item {
+    padding: 4px 24px 4px 24px;
+}
+
+QMenu::item:selected {
+    color: white;
+    background-color: #3D8FD1;
+}
+
+QMenu::item:disabled {
+    color: #6B7A86;
+}
+
+QMenu::separator {
+    height: 1px;
+    background: #3C4D5B;
+    margin: 3px 8px;
+}
+
+QToolTip {
+    color: #E3EBF2;
+    background-color: #2C3A46;
+    border: 1px solid #3C4D5B;
+}

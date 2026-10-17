@@ -62,6 +62,7 @@ public:
                 ~MainWindow();
 private slots:
     void        onLog(const QString& pMessage,QColor pColor, CL_DEBUG_LEVEL pLevel);
+    void        onThemeChanged();
     void        onSCM_Opened();
     void        onSCM_Closed();
     void        onSCM_Loaded(SIM_TYPE);
