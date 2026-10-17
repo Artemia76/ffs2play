@@ -33,7 +33,6 @@
 #include <QDebug>
 
 #include "ui_mainwindow.h"
-#include "gui/theme.h"
 
 #include <QMenu>
 #include <QTextBlock>
@@ -134,14 +133,11 @@ MainWindow::MainWindow()
     m_simManager->open_close();
     m_webManager->CheckNewVersion();
     m_webManager->Connect();
-    // Theme choice : last button of the tool bar, with its menu
-    CTheme* theme = CTheme::instance();
-    QAction* themeAction = ui->mainToolBar->addAction(QIcon(":/gfx/theme.png"), tr("Theme"));
-    themeAction->setToolTip(tr("Light or dark theme"));
-    themeAction->setMenu(theme->createMenu(this));
-    if (QToolButton* button = qobject_cast<QToolButton*>(ui->mainToolBar->widgetForAction(themeAction)))
+    m_Theme = CTheme::instance();
+    ui->afTheme->setMenu(m_Theme->createMenu(this));
+    if (QToolButton* button = qobject_cast<QToolButton*>(ui->mainToolBar->widgetForAction(ui->afTheme)))
         button->setPopupMode(QToolButton::InstantPopup);
-    connect(theme, &CTheme::fireChanged, this, &MainWindow::onThemeChanged);
+    connect(m_Theme, &CTheme::fireChanged, this, &MainWindow::onThemeChanged);
     if(!ui->mainToolBar->isVisible()) ui->mainToolBar->setVisible(true);
     m_P2PDialogVisible=false;
 }
@@ -769,3 +765,4 @@ void MainWindow::onUpdate()
         }
     }
 }
+

@@ -40,6 +40,7 @@
 #include "web/webmanager.h"
 #include "disk/aimapping.h"
 #include "sim/analyzer.h"
+#include "gui/theme.h"
 
 namespace Ui {
 class MainWindow;
@@ -104,6 +105,7 @@ private:
     CWebManager*    m_webManager;
     AIMapping*      m_AIMapping;
     Analyzer*       m_Analyzer;
+    CTheme*         m_Theme;
     QSettings       m_settings;
     QTimer          m_updateTimer;
     int             m_maxLine;
