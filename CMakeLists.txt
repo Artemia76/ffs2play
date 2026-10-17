@@ -138,6 +138,7 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     tools/singleton.h
     tools/version.h
     web/chttprequest.cpp web/chttprequest.h
+    web/caddrrequest.cpp web/caddrrequest.h
     web/webmanager.cpp web/webmanager.Callback.cpp web/webmanager.Requests.cpp
     web/webmanager.Utils.cpp web/webmanager.h
     ressources.qrc

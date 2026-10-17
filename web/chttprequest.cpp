@@ -114,6 +114,15 @@ void CHttpRequest::callback()
 }
 
 ///
+/// \brief CHttpRequest::finalUrl
+/// \return URL that answered, after redirections
+///
+QUrl CHttpRequest::finalUrl() const
+{
+    return (m_reply != nullptr) ? m_reply->url() : m_request.url();
+}
+
+///
 /// \brief CHttpRequest::getAsString
 /// \return
 ///

@@ -28,6 +28,8 @@
 
 #include <QtTest>
 #include <QProtobufSerializer>
+#include <QTcpServer>
+#include <QTcpSocket>
 #include <memory>
 
 #include <openssl/evp.h>
@@ -37,6 +39,7 @@
 
 #include "ffs2play.qpb.h"
 #include "net/upnpclient.h"
+#include "web/caddrrequest.h"
 #include "tools/crypto.h"
 #include "tools/datagram.h"
 
@@ -58,7 +61,87 @@ private slots:
     void ssdpLocation();
     void igdDescription();
     void soapParsing();
+
+    void addrRequestForcedLayer_data();
+    void addrRequestForcedLayer();
+    void addrRequestHttpError();
 };
+
+namespace
+{
+    /// Dual stack HTTP server answering like the portal : your_ip = address of the caller
+    class FakePortal : public QTcpServer
+    {
+    public:
+        QByteArray status = "200 OK";
+        QByteArray lastRequest;
+        explicit FakePortal()
+        {
+            connect(this, &QTcpServer::newConnection, this, [this]()
+            {
+                QTcpSocket* socket = nextPendingConnection();
+                connect(socket, &QTcpSocket::readyRead, socket, [this, socket]()
+                {
+                    lastRequest += socket->readAll();
+                    const qsizetype end = lastRequest.indexOf("\r\n\r\n");
+                    if (end < 0) return;
+                    const QByteArray length = lastRequest.mid(lastRequest.indexOf("Content-Length: ") + 16).split('\r').first();
+                    if (lastRequest.size() < end + 4 + length.toInt()) return;
+                    socket->write("HTTP/1.0 " + status + "\r\nContent-Type: text/xml\r\n\r\n"
+                                  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<info><your_ip>"
+                                  + socket->peerAddress().toString().toLatin1() + "</your_ip></info>\n");
+                    socket->disconnectFromHost();
+                });
+            });
+        }
+    };
+}
+
+void TestCore::addrRequestForcedLayer_data()
+{
+    QTest::addColumn<int>("protocol");
+    QTest::addColumn<QString>("expected");
+    QTest::newRow("IPv4") << int(QAbstractSocket::IPv4Protocol) << "127.0.0.1";
+    QTest::newRow("IPv6") << int(QAbstractSocket::IPv6Protocol) << "::1";
+}
+
+void TestCore::addrRequestForcedLayer()
+{
+    QFETCH(int, protocol);
+    QFETCH(QString, expected);
+    FakePortal portal;
+    QVERIFY(portal.listen(QHostAddress::Any, 0));
+    if ((protocol == QAbstractSocket::IPv6Protocol) && !QTcpSocket().bind(QHostAddress::LocalHostIPv6, 0))
+        QSKIP("no IPv6 loopback");
+
+    CAddrRequest request;
+    QSignalSpy finished(&request, &CAddrRequest::finished);
+    const QByteArray content = "<FFS2Play><switch><data>addr</data></switch></FFS2Play>";
+    request.execute(QUrl(QString("http://localhost:%1/action.php").arg(portal.serverPort())), content,
+                    static_cast<QAbstractSocket::NetworkLayerProtocol>(protocol));
+    QVERIFY(finished.wait(5000));
+    QVERIFY2(request.errorString().isEmpty(), qPrintable(request.errorString()));
+    // the layer is forced : the caller address seen by the server is of the requested family
+    QVERIFY(request.yourIP().isEqual(QHostAddress(expected), QHostAddress::StrictConversion)
+            || ((protocol == QAbstractSocket::IPv4Protocol) && request.yourIP().isEqual(QHostAddress(expected))));
+    QVERIFY(portal.lastRequest.startsWith("POST /action.php HTTP/1.0\r\n"));
+    QVERIFY(portal.lastRequest.contains(QString("Host: localhost:%1\r\n").arg(portal.serverPort()).toLatin1()));
+    QVERIFY(portal.lastRequest.endsWith(content));
+}
+
+void TestCore::addrRequestHttpError()
+{
+    FakePortal portal;
+    portal.status = "500 Internal Server Error";
+    QVERIFY(portal.listen(QHostAddress::Any, 0));
+    CAddrRequest request;
+    QSignalSpy finished(&request, &CAddrRequest::finished);
+    request.execute(QUrl(QString("http://localhost:%1/action.php").arg(portal.serverPort())), "<FFS2Play/>",
+                    QAbstractSocket::IPv4Protocol);
+    QVERIFY(finished.wait(5000));
+    QVERIFY(request.yourIP().isNull());
+    QVERIFY(!request.errorString().isEmpty());
+}
 
 void TestCore::initTestCase()
 {

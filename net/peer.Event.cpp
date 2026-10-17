@@ -37,8 +37,9 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
 #endif
     if (pTCPClient!=nullptr)
     {
-        if(!m_EP.isNull() && (m_EP.isEqual(pTCPClient->getPeerAddress())))
+        if(isCandidate(pTCPClient->getPeerAddress()))
         {
+            m_EP = normalized(pTCPClient->getPeerAddress());
             if (m_TCPClient!=nullptr)
             {
                 delete(m_TCPClient);
@@ -52,7 +53,7 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
             m_log->log("Peer [" + m_callSign + "] : received incoming TCP connection, switch to TCPServer mode",Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
-        else if((!m_EP.isEqual(pTCPClient->getPeerAddress())) || (m_port != pTCPClient->getPeerPort())) return;
+        else return;
     }
 }
 
@@ -80,15 +81,15 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
 {
     if (m_PeerMode==UDP)
     {
-        if(m_EP.isNull())
+        // accepted from every address of the peer : each side may keep a different layer
+        if ((m_port != pDatagram.senderPort()) || (!isCandidate(pDatagram.senderAddress()))) return;
+        if (m_EP.isNull())
         {
-          if(m_internalIP.contains(pDatagram.senderAddress()))
-          {
-              m_EP=pDatagram.senderAddress();
-          }
-          else return;
+            m_EP = normalized(pDatagram.senderAddress());
+#ifdef FFS_DEBUG
+            m_log->log("Peer [" + m_callSign + "] : answers on " + m_EP.toString(),Qt::darkBlue,LEVEL_NORMAL);
+#endif
         }
-        else if((!m_EP.isEqual(pDatagram.senderAddress())) || (m_port != pDatagram.senderPort())) return;
     }
     else
     {

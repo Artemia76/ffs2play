@@ -45,6 +45,7 @@
 #include "net/p2pmanager.h"
 #include "sim/analyzer.h"
 #include "web/chttprequest.h"
+#include "web/caddrrequest.h"
 #include "tools/crypto.h"
 #include "sim/aircraftstate.h"
 
@@ -72,7 +73,8 @@ public:
         verify,
         liveupdate,
         atc,
-        logout
+        logout,
+        addr
     };
     Q_ENUM(XmlCode)
 
@@ -98,10 +100,14 @@ private:
     QDateTime           m_lastGoodUpdate;
     int                 m_currentUser;
     QString             m_key;
+    QUrl                m_portalURL;
+    QHostAddress        m_publicIPv4;
+    QHostAddress        m_publicIPv6;
     CCrypto             m_crypto;
     void                XmlBuild(QDomDocument& pDoc, XmlCode pCode);
     bool                CheckError(QDomDocument& pDoc);
     void                CheckWhazzup (QDomDocument& pDoc);
+    void                UpdatePublicAddress (QHostAddress pAddress);
 
 protected:
     QVector<SUser>      m_users;
@@ -135,6 +141,8 @@ private slots:
     void                SendVerify();
     void                SendLiveUpdate();
     void                SendATCUpdate();
+    void                SendAddr();
+    void                AddrCallback (CAddrRequest* pRequest);
     void                OnATCUpdate();
     void                OnLiveUpdate();
 };
