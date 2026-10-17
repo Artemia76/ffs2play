@@ -32,7 +32,6 @@
 
 #include <QObject>
 #include <QColor>
-#include <QIcon>
 #include <QSettings>
 
 class QMenu;
@@ -54,7 +53,6 @@ public:
     void            setMode(Mode pMode);
     bool            isDark() const { return m_dark; }
     QColor          logColor(const QColor& pColor) const;
-    QIcon           icon() const;
     QMenu*          createMenu(QWidget* pParent);
 
 signals:

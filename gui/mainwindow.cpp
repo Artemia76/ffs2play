@@ -136,7 +136,7 @@ MainWindow::MainWindow()
     m_webManager->Connect();
     // Theme choice : last button of the tool bar, with its menu
     CTheme* theme = CTheme::instance();
-    QAction* themeAction = ui->mainToolBar->addAction(theme->icon(), tr("Theme"));
+    QAction* themeAction = ui->mainToolBar->addAction(QIcon(":/gfx/theme.png"), tr("Theme"));
     themeAction->setToolTip(tr("Light or dark theme"));
     themeAction->setMenu(theme->createMenu(this));
     if (QToolButton* button = qobject_cast<QToolButton*>(ui->mainToolBar->widgetForAction(themeAction)))

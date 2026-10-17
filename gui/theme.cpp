@@ -34,8 +34,6 @@
 #include <QApplication>
 #include <QFile>
 #include <QMenu>
-#include <QPainter>
-#include <QPainterPath>
 #include <QPalette>
 #include <QStyleFactory>
 #include <QStyleHints>
@@ -215,49 +213,6 @@ QColor CTheme::logColor(const QColor& pColor) const
             color.setHsl(h, s, l -= 5);
     }
     return color;
-}
-
-///
-/// \brief CTheme::icon
-/// \return
-///
-/// Toolbar icon : a sphere half day, half night
-///
-QIcon CTheme::icon() const
-{
-    QPixmap pixmap(72, 72);
-    pixmap.fill(Qt::transparent);
-    QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing);
-    QRectF ball(6, 6, 60, 60);
-    QRadialGradient light(QPointF(26, 24), 46);
-    light.setColorAt(0, QColor("#FFFFFF"));
-    light.setColorAt(1, QColor("#9CC9EC"));
-    QRadialGradient night(QPointF(46, 48), 46);
-    night.setColorAt(0, QColor("#2D5C8A"));
-    night.setColorAt(1, QColor("#0B2238"));
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(night);
-    painter.drawEllipse(ball);
-    QPainterPath day;
-    day.moveTo(ball.center());
-    day.arcTo(ball, 45, 180);
-    day.closeSubpath();
-    painter.setBrush(light);
-    painter.drawPath(day);
-    // Sun on the day side, crescent moon on the night side
-    painter.setBrush(QColor("#F5B027"));
-    painter.drawEllipse(QPointF(25, 27), 8, 8);
-    QPainterPath moon;
-    moon.addEllipse(QPointF(46, 45), 9, 9);
-    QPainterPath bite;
-    bite.addEllipse(QPointF(50, 41), 8, 8);
-    painter.setBrush(QColor("#F2F6FA"));
-    painter.drawPath(moon.subtracted(bite));
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(QColor("#0D3C74"), 3));
-    painter.drawEllipse(ball);
-    return QIcon(pixmap);
 }
 
 ///
