@@ -29,7 +29,8 @@ set(FFS2PLAY_VERSION "0.0.1")
 find_package(Git QUIET)
 if(GIT_FOUND)
     execute_process(
-        COMMAND "${GIT_EXECUTABLE}" describe --abbrev=0 --tags
+        # only version tags : other tags (backups...) must not change the version
+        COMMAND "${GIT_EXECUTABLE}" describe --abbrev=0 --tags --match "[0-9]*.[0-9]*.[0-9]*" --match "v[0-9]*.[0-9]*.[0-9]*"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         OUTPUT_VARIABLE _git_tag
         OUTPUT_STRIP_TRAILING_WHITESPACE
