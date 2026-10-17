@@ -1,16 +1,37 @@
-QMainWindow
-{
-    Background-color : #BDE3F8;
+/*
+ * FFS2Play light theme (original colors).
+ * Every text color is explicit : nothing depends on the system color scheme.
+ * Dark theme : ffs2play-dark.qss (same structure, keep both in sync).
+ */
+
+QMainWindow {
+    background-color: #BDE3F8;
 }
 
-QToolBar{
-    Background : #7fb3d9;
-    Background-color : #7fb3d9;
+QMainWindow QLabel, QMainWindow QCheckBox, QMainWindow QRadioButton {
+    color: #13293D;
+}
+
+QToolBar {
+    background-color: #7FB3D9;
     border: none;
+}
+
+QDockWidget {
+    color: #13293D;
+}
+
+QDockWidget::title {
+    background-color: #7FB3D9;
+    padding: 4px;
 }
 
 QDialog {
     background-color: #687D87;
+    color: white;
+}
+
+QDialog QLabel, QDialog QCheckBox, QDialog QRadioButton {
     color: white;
 }
 
@@ -29,74 +50,117 @@ QGroupBox::title {
     padding: 0px 5px 0px 5px;
 }
 
-QCheckBox{
+QCheckBox, QRadioButton {
     border: none;
-    color: white;
 }
 
-QRadioButton{
-    border: none;
-    color: white;
-}
-
-QPushButton
-{
-    color: black;
-    border: 2px solid #8f8f91;
+QPushButton {
+    color: #13293D;
+    border: 2px solid #8F8F91;
     border-radius: 6px;
-
-    background-color:  qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                        stop: 0 #f6f7fa, stop: 1 #dadbde);
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #F6F7FA, stop: 1 #DADBDE);
     min-width: 80px;
+    padding: 2px 6px;
+}
+
+QPushButton:hover {
+    border-color: #2F7FC1;
 }
 
 QPushButton:pressed {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #DADBDE, stop: 1 #F6F7FA);
+}
+
+QPushButton:disabled {
+    color: #8A9AA6;
+    border-color: #B8C2C9;
 }
 
 QPushButton:flat {
-    border: none; /* no border for a flat push button */
+    border: none;
 }
 
 QPushButton:default {
-    border-color: navy; /* make the default button prominent */
+    border-color: navy;
 }
 
-QLabel{
+/* Input fields, lists and tables */
+QLineEdit, QTextEdit, QPlainTextEdit, QSpinBox, QComboBox,
+QListWidget, QListView, QTableWidget, QTableView, QTreeView {
+    color: #13293D;
+    background-color: white;
+    selection-color: white;
+    selection-background-color: #2F7FC1;
+}
+
+QLineEdit, QSpinBox, QComboBox {
+    border: 1px solid #8FB4CF;
+    border-radius: 3px;
+    padding: 1px 3px;
+}
+
+QLineEdit:disabled, QSpinBox:disabled, QComboBox:disabled, QTextEdit:disabled {
+    color: #8A9AA6;
+    background-color: #EEF2F5;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #7FB3D9;
+}
+
+QTableWidget, QTableView {
+    gridline-color: #C5DBE9;
+    alternate-background-color: #EEF6FC;
+}
+
+QAbstractItemView::item:hover {
+    background-color: #DCEEFA;
+    color: #13293D;
+}
+
+QAbstractItemView::item:selected {
+    background-color: #2F7FC1;
     color: white;
 }
 
-QComboBox{
-    color: black;
-    background-color: white;
+QHeaderView::section, QTableCornerButton::section {
+    color: #13293D;
+    background-color: #D6ECF9;
+    border: none;
+    border-right: 1px solid #A9CDE6;
+    border-bottom: 1px solid #A9CDE6;
+    padding: 3px 6px;
 }
 
-QTextEdit{
-    color: black;
+/* Context menus */
+QMenu {
+    color: #13293D;
     background-color: white;
+    border: 1px solid #7FB3D9;
+    padding: 3px 0px;
 }
 
-QLineEdit{
-    color: black;
-    background-color: white;
+QMenu::item {
+    padding: 4px 24px 4px 24px;
 }
 
-QListWidget{
-    color: black;
-    background-color: white;
+QMenu::item:selected {
+    color: white;
+    background-color: #2F7FC1;
 }
 
-QTableWidget{
-    color: black;
-    background-color: white;
+QMenu::item:disabled {
+    color: #8A9AA6;
 }
 
-QSpinBox{
-    color: black;
-    background-color: white;
+QMenu::separator {
+    height: 1px;
+    background: #C5DBE9;
+    margin: 3px 8px;
 }
 
-QRadioButton{
-    color: black;
+QToolTip {
+    color: #13293D;
+    background-color: #FFFBE6;
+    border: 1px solid #7FB3D9;
 }

@@ -37,7 +37,7 @@
 
 #include "sim/simconnector.h"
 #include "net/udpserver.h"
-#include "protobuf/ffs2play.pb.h"
+#include "ffs2play.qpb.h"
 
 enum FFS2Proto
 {

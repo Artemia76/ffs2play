@@ -30,7 +30,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTextCodec>
 #include <QSettings>
 #include <QTimer>
 #include <QListWidget>
@@ -41,6 +40,7 @@
 #include "web/webmanager.h"
 #include "disk/aimapping.h"
 #include "sim/analyzer.h"
+#include "gui/theme.h"
 
 namespace Ui {
 class MainWindow;
@@ -63,6 +63,7 @@ public:
                 ~MainWindow();
 private slots:
     void        onLog(const QString& pMessage,QColor pColor, CL_DEBUG_LEVEL pLevel);
+    void        onThemeChanged();
     void        onSCM_Opened();
     void        onSCM_Closed();
     void        onSCM_Loaded(SIM_TYPE);
@@ -104,6 +105,7 @@ private:
     CWebManager*    m_webManager;
     AIMapping*      m_AIMapping;
     Analyzer*       m_Analyzer;
+    CTheme*         m_Theme;
     QSettings       m_settings;
     QTimer          m_updateTimer;
     int             m_maxLine;

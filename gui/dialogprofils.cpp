@@ -30,6 +30,7 @@
 #include "dialogprofils.h"
 
 #include <QMessageBox>
+#include <QRegularExpressionValidator>
 
 #include "ui_dialogprofils.h"
 
@@ -74,7 +75,7 @@ DialogProfils::DialogProfils(QWidget *parent)
 
     // Apply button is disabled at start
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
-    ui->lineEdit_Login->setValidator(new QRegExpValidator(QRegExp("[A-Za-z0-9_\\-\\.éèà]{0,32}"), this ));
+    ui->lineEdit_Login->setValidator(new QRegularExpressionValidator(QRegularExpression("[A-Za-z0-9_\\-\\.éèà]{0,32}"), this ));
 }
 
 ///

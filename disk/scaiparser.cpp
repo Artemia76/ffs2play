@@ -31,7 +31,7 @@
 
 SCAIParser::SCAIParser(QObject *parent) : AIBaseParser(parent)
 {
-    m_AIFileFilter << "aircraft.cfg" << "sim.cfg";
+    m_AIFileFilter << "aircraft.cfg";
     // FSX,FSX Steam Edition, P3D v2, P3D v3, P3D v4
     searchSimPath();
 }
@@ -70,14 +70,15 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 QString Category;
                 QString Title;
                 int Engine_Type = 0;
+                int nb_moteur=0;
                 double Static_CG_Height=0.0;
                 double Static_Pitch = 0.0;
                 Editor = s.value("fltsim.0", "ui_createdby").toString();
-                Atc_model = s.value("General","atc_model").toString();
-                Atc_type =  s.value("General","atc_type").toString();
+                Atc_model = s.value("General","icao_model").toString();
+                Atc_type =  s.value("General","icao_type_designator").toString();
                 Category =  s.value("General","Category").toString().toLower();
                 Category = Category.remove(' ');
-                Engine_Type =  s.value("GeneralEngineData","engine_type").toInt();
+                Engine_Type =  s.value("General","icao_engine_type").toInt();
                 Static_CG_Height =  s.value("contact_points","static_cg_height").toDouble();
                 Static_Pitch =  s.value("contact_points","static_pitch").toDouble();
 #if FFS_DEBUG
@@ -90,16 +91,7 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 m_log->log("AIMapping : CG Height = " +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
                 m_log->log("AIMapping : Pitch = " +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
-                int nb_moteur = 0;
-                while (true)
-                {
-                    QString Reponse = s.value("GeneralEngineData", QString("Engine.") + QString::number(nb_moteur)).toString();
-                    if (Reponse != "")
-                    {
-                        nb_moteur++;
-                    }
-                    else break;
-                }
+                nb_moteur = s.value("GENERAL", "icao_engine_count").toInt();
 #if FFS_DEBUG
                 m_log->log("AIMapping : Engine quantity = " + QString::number(nb_moteur),Qt::darkYellow,LEVEL_VERBOSE);
 #endif

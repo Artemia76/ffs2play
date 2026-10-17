@@ -21,5 +21,6 @@
         <file>gfx/p3d.png</file>
         <file>gfx/close.png</file>
         <file>gfx/flightgear.png</file>
+        <file>gfx/theme.png</file>
     </qresource>
 </RCC>

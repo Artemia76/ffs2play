@@ -28,6 +28,7 @@
 
 #include "web/webmanager.h"
 #include "tools/singleton.h"
+#include "tools/datagram.h"
 #include <QXmlStreamWriter>
 
 /// Build Users Profils to Setting file
@@ -38,7 +39,8 @@
 ///
 QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v)
 {
-    out << v.count();
+    // 32-bit count as in Qt5 : count() is a 64-bit qsizetype in Qt6
+    out << qint32(v.count());
     for (QVector<SUser>::const_iterator it = v.constBegin(); it != v.constEnd(); ++it)
     {
         out << it->Profil << it->Login << it->Password << it->URL;
@@ -55,8 +57,11 @@ QDataStream& operator<<(QDataStream& out, const QVector<SUser>& v)
 QDataStream& operator>>(QDataStream& in, QVector<SUser>& v)
 {
     v.clear();
-    int num;
+    qint32 num;
     in >> num;
+    // Settings saved by early Qt6 builds hold a 64-bit count : skip its (zero) high half
+    if (num == 0 && !in.atEnd())
+        in >> num;
     for (int i=0; i < num; i++)
     {
         SUser User;
@@ -118,17 +123,22 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                 PeerData item;
                 item.CallSign = Player.nodeName();
                 item.Port=Player.attribute("port").toUShort();
-                item.externalIP=m_crypto.DecryptFromBase64(Player.attribute("ip"));
+                // ip (IPv4) and ip6 : either may be missing (contract portal-api.md)
+                const QString IP4 = Player.attribute("ip");
+                if (!IP4.isEmpty()) item.externalIP=QHostAddress(m_crypto.DecryptFromBase64(IP4));
+                const QString IP6 = Player.attribute("ip6");
+                if (!IP6.isEmpty()) item.externalIP6=QHostAddress(m_crypto.DecryptFromBase64(IP6));
 #ifdef FFS_DEBUG
                 m_log->log("WEBManager : CallSign = " + item.CallSign
                             + " IP = " + item.externalIP.toString()
+                            + " IPv6 = " + item.externalIP6.toString()
                             + " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                 StringArray LocalIP;
-                LocalIP.ParseFromString(QByteArray::fromBase64(Player.attribute("local_ip").toLatin1()).toStdString());
-                for (int j=0; j<LocalIP.string_size();j++)
+                ProtobufParse(LocalIP, QByteArray::fromBase64(Player.attribute("local_ip").toLatin1()));
+                for (const QString& IP : LocalIP.values())
                 {
-                    item.localIPs.append(QHostAddress(QString::fromStdString(LocalIP.string(j))));
+                    item.localIPs.append(QHostAddress(IP));
 #ifdef FFS_DEBUG
                     m_log->log("WEBManager : Local IP = " + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
 #endif

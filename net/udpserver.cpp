@@ -28,7 +28,6 @@
 
 #include "net/udpserver.h"
 
-#include <QTextCodec>
 
 ///
 /// \brief UDPServer::UDPServer
@@ -82,7 +81,7 @@ bool UDPServer::start ()
         }
         else
         {
-            m_log->log("UDPServer : Failed to open UDP port " + QString::number(m_port), Qt::darkMagenta);
+            m_log->log("UDPServer : Failed to open UDP port " + QString::number(m_port) + ",Reason = " + m_pListenner->errorString(), Qt::darkMagenta);
         }
     }
     return m_running;

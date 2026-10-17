@@ -46,7 +46,8 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     int index = mo->indexOfEnumerator("XmlCode");
     m_metaXmlCode = mo->enumerator(index);
 
-    qRegisterMetaTypeStreamOperators<QVector<SUser> >("QVector<SUser>");
+    // Keep the Qt5 type name as alias : it is stored in existing settings files
+    qRegisterMetaType<QVector<SUser> >("QVector<SUser>");
     m_log = CLogger::instance();
     m_P2P = CP2PManager::instance();
     m_simManager = simbasemanager::instance();
@@ -230,6 +231,8 @@ void CWebManager::XmlBuild (QDomDocument& pDoc, XmlCode pCode)
         }
         case XmlCode::liveupdate:
         {
+            // without simulator : keep-alive only (slot kept, Whazzup received), no position
+            if (!m_simManager->isConnected()) break;
             CAircraftState State = m_simManager->getAircraftState();
             QDomElement xmlLiveUpdate = pDoc.createElement("liveupdate");
             xmlRoot.appendChild(xmlLiveUpdate);

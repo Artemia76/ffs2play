@@ -36,12 +36,11 @@
 #include <QMutex>
 #include <QDataStream>
 #include <QNetworkDatagram>
-#include <sstream>
 #include <cstddef>
 
 #include "sim/simbasemanager.h"
 #include "disk/aimapping.h"
-#include "protobuf/ffs2play.pb.h"
+#include "ffs2play.qpb.h"
 #include "tools/clogger.h"
 #include "net/udpserver.h"
 #include "net/tcpserver.h"
@@ -73,6 +72,7 @@ struct PeerData
 {
     QString CallSign;
     QHostAddress externalIP;
+    QHostAddress externalIP6;
     QVector<QHostAddress> localIPs;
     quint16 Port;
     QString Team;
@@ -129,6 +129,7 @@ protected:
                                 UDPServer* pUDPServer,
                                 TCPServer* pTCPServer,
                                 QHostAddress pExternalIP,
+                                QHostAddress pExternalIP6,
                                 quint16 pPort,
                                 QString pCallSign,
                                 bool pDisabled=false,
@@ -164,6 +165,10 @@ private:
     QHostAddress            m_EP;
     QVector<QHostAddress>   m_internalIP;
     QHostAddress            m_externalIP;
+    QHostAddress            m_externalIP6;
+    QVector<QHostAddress>   m_candidates;
+    bool                    isCandidate(const QHostAddress& pAddress) const;
+    static QHostAddress     normalized(const QHostAddress& pAddress);
     quint16                 m_port;
     CAircraftState          m_data;
     CAircraftState          m_oldData;

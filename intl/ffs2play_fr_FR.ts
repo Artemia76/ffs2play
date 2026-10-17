@@ -266,6 +266,24 @@
     </message>
 </context>
 <context>
+    <name>CTheme</name>
+    <message>
+        <location filename="../gui/theme.cpp" line="273"/>
+        <source>Follow system</source>
+        <translation>Suivre le système</translation>
+    </message>
+    <message>
+        <location filename="../gui/theme.cpp" line="274"/>
+        <source>Light</source>
+        <translation>Clair</translation>
+    </message>
+    <message>
+        <location filename="../gui/theme.cpp" line="275"/>
+        <source>Dark</source>
+        <translation>Sombre</translation>
+    </message>
+</context>
+<context>
     <name>CWebManager</name>
     <message>
         <location filename="../web/webmanager.Callback.cpp" line="81"/>
@@ -306,6 +324,22 @@
         <location filename="../web/webmanager.Utils.cpp" line="97"/>
         <source>Server : </source>
         <translation>Serveur : </translation>
+    </message>
+    <message>
+        <source>Connection to server failed : no certificate received</source>
+        <translation>Échec de la connexion au serveur : aucun certificat reçu</translation>
+    </message>
+    <message>
+        <source>Connection to server failed : no response</source>
+        <translation>Échec de la connexion au serveur : aucune réponse</translation>
+    </message>
+    <message>
+        <source>Public IPv4 address : </source>
+        <translation>Adresse IPv4 publique : </translation>
+    </message>
+    <message>
+        <source>Public IPv6 address : </source>
+        <translation>Adresse IPv6 publique : </translation>
     </message>
     <message>
         <location filename="../web/webmanager.cpp" line="63"/>
@@ -642,6 +676,16 @@
 </context>
 <context>
     <name>MainWindow</name>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="139"/>
+        <source>Theme</source>
+        <translation>Thème</translation>
+    </message>
+    <message>
+        <location filename="../gui/mainwindow.cpp" line="140"/>
+        <source>Light or dark theme</source>
+        <translation>Thème clair ou sombre</translation>
+    </message>
     <message>
         <location filename="../gui/mainwindow.ui" line="20"/>
         <source>FFS2Play</source>

@@ -27,7 +27,11 @@
  * **************************************************************************/
 
 #include "gui/mainwindow.h"
+#include "gui/theme.h"
 #include <QApplication>
+#include <QDir>
+#include <QFile>
+#include <QLibraryInfo>
 #include <QSettings>
 #include <QTranslator>
 
@@ -48,32 +52,20 @@ int main(int argc, char *argv[])
 #endif
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QCoreApplication::setOrganizationName("FFS2P");
-    QCoreApplication::setOrganizationDomain("ffsimulateur2.fr");
+    QCoreApplication::setOrganizationDomain("ffs2play.fr");
     QCoreApplication::setApplicationName("FFS2Play");
-    QString locale = QLocale::system().name();
     QApplication app(argc, argv);
     QDir::setCurrent(app.applicationDirPath());
+    // Qt own translations (deployed with the application)
+    QTranslator QtTS;
+    if (QtTS.load(QLocale(), "qtbase", "_", QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
+        app.installTranslator(&QtTS);
+    // Application translations and style sheet are embedded in resources
     QTranslator FFS2PlayTS;
-#ifdef Q_OS_LINUX
-    FFS2PlayTS.load("/usr/share/ffs2play/translations/ffs2play_" + locale +".qm");
-    QFile styleFile ("/usr/share/ffs2play/ffs2play.qss");
-#else
-#ifdef Q_OS_MACOS
-    FFS2PlayTS.load("../Resources/ffs2play_"+ locale +".qm");
-    QFile styleFile ("../Resources/ffs2play.qss");
-#else
-    FFS2PlayTS.load("translations/ffs2play_" + locale +".qm");
-    QFile styleFile ( "ffs2play.qss");
-#endif
-#endif
-    app.installTranslator(&FFS2PlayTS);
-    //Load Style Sheet
-    styleFile.open(QFile::ReadOnly);
-    if (styleFile.isOpen())
-    {
-        app.setStyleSheet(styleFile.readAll());
-        styleFile.close();
-    }
+    if (FFS2PlayTS.load(QLocale(), "ffs2play", "_", ":/i18n"))
+        app.installTranslator(&FFS2PlayTS);
+    // Light or dark theme (palette and style sheet)
+    CTheme::instance()->init();
     MainWindow mainWindow;
     mainWindow.show();
     return app.exec();

@@ -82,13 +82,14 @@ void AIMapping::onSimReceiveOpen()
     m_Version = m_simManager->getVersion();
     switch (m_Version)
     {
-#ifdef Q_OS_WIN
+#ifdef SIMCONNECT_BUILD
         case SimConnector::SIM_VERSION::FSX:
         case SimConnector::SIM_VERSION::FSX_STEAM:
         case SimConnector::SIM_VERSION::P3D_V2:
         case SimConnector::SIM_VERSION::P3D_V3:
         case SimConnector::SIM_VERSION::P3D_V4:
         case SimConnector::SIM_VERSION::P3D_V5:
+        case SimConnector::SIM_VERSION::FS2020:
         m_AIParser = new SCAIParser(this);
         break;
 #endif

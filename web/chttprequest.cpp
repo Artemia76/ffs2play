@@ -27,6 +27,7 @@
 ** It also provide a programmed callback is case of response needs
 ****************************************************************************/
 
+#include <QMetaType>
 #include "web/chttprequest.h"
 
 ///
@@ -113,6 +114,15 @@ void CHttpRequest::callback()
 }
 
 ///
+/// \brief CHttpRequest::finalUrl
+/// \return URL that answered, after redirections
+///
+QUrl CHttpRequest::finalUrl() const
+{
+    return (m_reply != nullptr) ? m_reply->url() : m_request.url();
+}
+
+///
 /// \brief CHttpRequest::getAsString
 /// \return
 ///
@@ -130,11 +140,10 @@ bool CHttpRequest::getAsXml(QDomDocument& pDoc)
 {
     if (!m_response.isEmpty())
     {
-        QString ErrorMessage;
-        pDoc.setContent(m_response,&ErrorMessage);
-        if (!ErrorMessage.isEmpty())
+        const QDomDocument::ParseResult result = pDoc.setContent(m_response);
+        if (!result)
         {
-            m_log->log("HttpRequest : error = " + ErrorMessage);
+            m_log->log("HttpRequest : error = " + result.errorMessage);
             return false;
         }
         return true;

@@ -115,6 +115,7 @@ public:
         XPLANE,
         XPLANE_CSL,
         FLIGHTGEAR,
+        FS2020,
         UNKNOWN
     };
     Q_ENUM(SIM_VERSION)

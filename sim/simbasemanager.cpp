@@ -44,7 +44,7 @@ simbasemanager::simbasemanager(QObject* parent):
     m_connector =nullptr;
     m_initialized = false;
     m_bRunning = false;
-#ifdef Q_OS_WIN
+#ifdef SIMCONNECT_BUILD
     m_simAvailable.append(SIM_TYPE::FSX);
 #endif
     m_simAvailable.append(SIM_TYPE::XPLANE);
@@ -107,7 +107,7 @@ void simbasemanager::load(SIM_TYPE pSimType)
     {
         case SIM_TYPE::FSX:
         {
-#ifdef Q_OS_WIN
+#ifdef SIMCONNECT_BUILD
             m_connector = new CSCManager(this);
 #endif
             break;
@@ -181,7 +181,7 @@ void simbasemanager::open ()
         m_connector->open();
         if (m_RetryCounter>2) m_RetryCounter=0;
         // Thread starting
-        m_thread->start();
+        m_thread->start(QThread::TimeCriticalPriority);
     }
 }
 

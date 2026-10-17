@@ -37,8 +37,9 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
 #endif
     if (pTCPClient!=nullptr)
     {
-        if(!m_EP.isNull() && (m_EP.isEqual(pTCPClient->getPeerAddress())))
+        if(isCandidate(pTCPClient->getPeerAddress()))
         {
+            m_EP = normalized(pTCPClient->getPeerAddress());
             if (m_TCPClient!=nullptr)
             {
                 delete(m_TCPClient);
@@ -52,7 +53,7 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
             m_log->log("Peer [" + m_callSign + "] : received incoming TCP connection, switch to TCPServer mode",Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
-        else if((!m_EP.isEqual(pTCPClient->getPeerAddress())) || (m_port != pTCPClient->getPeerPort())) return;
+        else return;
     }
 }
 
@@ -80,15 +81,15 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
 {
     if (m_PeerMode==UDP)
     {
-        if(m_EP.isNull())
+        // accepted from every address of the peer : each side may keep a different layer
+        if ((m_port != pDatagram.senderPort()) || (!isCandidate(pDatagram.senderAddress()))) return;
+        if (m_EP.isNull())
         {
-          if(m_internalIP.contains(pDatagram.senderAddress()))
-          {
-              m_EP=pDatagram.senderAddress();
-          }
-          else return;
+            m_EP = normalized(pDatagram.senderAddress());
+#ifdef FFS_DEBUG
+            m_log->log("Peer [" + m_callSign + "] : answers on " + m_EP.toString(),Qt::darkBlue,LEVEL_NORMAL);
+#endif
         }
-        else if((!m_EP.isEqual(pDatagram.senderAddress())) || (m_port != pDatagram.senderPort())) return;
     }
     else
     {
@@ -155,14 +156,17 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
             if (m_version == PROTO_VERSION)
             {
                 if(m_blockData) return;
-                m_mutex.lock();
                 quint8 CounterIn;
                 stream >> CounterIn;
-                m_oldData=m_data;
                 data.remove(0,2);
                 AirData ReceivedData;
-                std::istringstream in(data.toStdString());
-                ReceivedData.ParseFromIstream(&in);
+                if (!ProtobufParse(ReceivedData, data))
+                {
+                    m_log->log("Peer [" + m_callSign + "] : Bad AirData datagram dropped",Qt::magenta,LEVEL_NORMAL);
+                    return;
+                }
+                m_mutex.lock();
+                m_oldData=m_data;
                 m_data.fromAirData(ReceivedData);
                 m_data.TimeStamp += m_decalage;
                 if (m_data.TimeStamp<= m_oldData.TimeStamp)
@@ -326,7 +330,7 @@ void CPeer::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
 void CPeer::OnSimStateChange(CAircraftState pState)
 {
     bool Title_Changed = false;
-    if (m_sendData.title() != pState.Title.toStdString())
+    if (m_sendData.title() != pState.Title)
     {
         Title_Changed = true;
     }
@@ -380,23 +384,35 @@ void CPeer::OnTimerCreateAI()
         }
         else
         {
-            if (m_simManager->getType()==SIM_TYPE::FSX)
+            switch (m_simManager->getVersion())
             {
-                m_AIResolution.set_title("Mooney Bravo");
-                m_AIResolution.set_cgheight(3.7);
-                m_AIResolution.set_pitch(2.9);
-            }
-            else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE)
-            {
-                m_AIResolution.set_title("Beech Baron 58");
-                m_AIResolution.set_cgheight(0.9);
-                m_AIResolution.set_pitch(1.93);
-            }
-            else if (m_simManager->getVersion()==SimConnector::SIM_VERSION::XPLANE_CSL)
-            {
-                m_AIResolution.set_title("C172:C172:0");
-                m_AIResolution.set_cgheight(0.0);
-                m_AIResolution.set_pitch(0.0);
+#ifdef SIMCONNECT_BUILD
+                case SimConnector::SIM_VERSION::FSX:
+                case SimConnector::SIM_VERSION::FSX_STEAM:
+                case SimConnector::SIM_VERSION::P3D_V2:
+                case SimConnector::SIM_VERSION::P3D_V3:
+                case SimConnector::SIM_VERSION::P3D_V4:
+                case SimConnector::SIM_VERSION::P3D_V5:
+                    m_AIResolution.setTitle("Mooney Bravo");
+                    m_AIResolution.setCgHeight(3.7);
+                    m_AIResolution.setPitch(2.9);
+                    break;
+#endif
+                case SimConnector::SIM_VERSION::XPLANE:
+                    m_AIResolution.setTitle("Beech Baron 58");
+                    m_AIResolution.setCgHeight(0.9);
+                    m_AIResolution.setPitch(1.93);
+                    break;
+                case SimConnector::SIM_VERSION::XPLANE_CSL:
+                    m_AIResolution.setTitle("C172:C172:0");
+                    m_AIResolution.setCgHeight(0.0);
+                    m_AIResolution.setPitch(0.0);
+                    break;
+                case SimConnector::SIM_VERSION::FS2020:
+                    m_AIResolution.setTitle("Asobo Savage Cub");
+                    m_AIResolution.setCgHeight(0.0);
+                    m_AIResolution.setPitch(0.0);
+                    break;
             }
 #ifdef FFS_DEBUG
             m_log->log("Peer [" + m_callSign + "] : Simulator have not created the requested AI, we are trying with default simulator aircraft" ,Qt::darkBlue,LEVEL_NORMAL);

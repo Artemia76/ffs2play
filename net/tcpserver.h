@@ -30,8 +30,8 @@
 #define TCPSERVER_H
 
 #include <QObject>
-#include <QSctpServer>
-#include <QSctpSocket>
+#include <QTcpServer>
+#include <QTcpSocket>
 #include <QSettings>
 
 #include "net/tcpclient.h"

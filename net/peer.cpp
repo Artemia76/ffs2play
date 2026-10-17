@@ -32,7 +32,8 @@
 ///
 /// \brief CPeer::CPeer
 /// \param pServer
-/// \param pExternalIP
+/// \param pExternalIP public IPv4 (may be null)
+/// \param pExternalIP6 public IPv6 (may be null)
 /// \param pPort
 /// \param pCallSign
 /// \param pDisabled
@@ -45,6 +46,7 @@
 CPeer::CPeer(UDPServer* pUDPServer,
         TCPServer* pTCPServer,
         QHostAddress pExternalIP,
+        QHostAddress pExternalIP6,
         quint16 pPort,
         QString pCallSign,
         bool pDisabled,
@@ -65,14 +67,19 @@ CPeer::CPeer(UDPServer* pUDPServer,
     m_UDPServer = pUDPServer;
     m_TCPServer = pTCPServer;
     m_externalIP = pExternalIP;
+    m_externalIP6 = pExternalIP6;
     if (pInternalIP != nullptr)
     {
         m_internalIP = *pInternalIP;
     }
     m_port = pPort;
     m_local = pLocal;
-    if (!m_local) m_EP = m_externalIP;
-    else m_EP.clear();
+    // addresses probed in turn until the peer answers (contract p2p-peer.md)
+    if (!m_externalIP6.isNull()) m_candidates.append(m_externalIP6);
+    if (m_local) m_candidates.append(m_internalIP);
+    else if (!m_externalIP.isNull()) m_candidates.append(m_externalIP);
+    m_EP.clear();
+    if (m_candidates.count() == 1) m_EP = m_candidates.first();
     m_disabled = true;
     m_sel_iplocal = 0;
     m_trySimpleAI = false;
@@ -92,12 +99,41 @@ CPeer::CPeer(UDPServer* pUDPServer,
     else
     {
         m_PeerMode = TCP_CLIENT;
+        // TCP needs one address : IPv6 if both peers have it, else IPv4
+        if (m_EP.isNull() && !m_candidates.isEmpty()) m_EP = m_candidates.first();
     }
     if (m_simManager->getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
     else m_disableCalculation = false;
     connect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
     connect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
     connect(m_TCPServer, SIGNAL(fireNewConnexion(TCPClient*)),this,SLOT(OnNewTCPConnection(TCPClient*)));
+}
+
+///
+/// \brief CPeer::isCandidate
+/// \param pAddress
+/// \return true if pAddress is one of the peer addresses
+///
+bool CPeer::isCandidate(const QHostAddress& pAddress) const
+{
+    for (const QHostAddress& Candidate : m_candidates)
+    {
+        // tolerant comparison : the dual stack socket gives IPv4 senders as ::ffff:a.b.c.d
+        if (Candidate.isEqual(pAddress)) return true;
+    }
+    return false;
+}
+
+///
+/// \brief CPeer::normalized
+/// \param pAddress
+/// \return IPv4-mapped IPv6 address converted to IPv4
+///
+QHostAddress CPeer::normalized(const QHostAddress& pAddress)
+{
+    bool IsIPv4 = false;
+    const quint32 IPv4 = pAddress.toIPv4Address(&IsIPv4);
+    return IsIPv4 ? QHostAddress(IPv4) : pAddress;
 }
 
 ///
@@ -246,8 +282,8 @@ void CPeer::createAI()
         if (m_data.Category == "Helicopter") m_trySimpleAI = true;
         m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] : Requesting creation of aircraft with Title = " + QString::fromStdString(m_AIResolution.title())
-            + " Model = " + QString::fromStdString(m_AIResolution.model())
+        m_log->log("Peer [" + m_callSign + "] : Requesting creation of aircraft with Title = " + m_AIResolution.title()
+            + " Model = " + m_AIResolution.model()
             , Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_simManager->createAI(m_AIResolution, m_tail,m_data, m_trySimpleAI);
@@ -416,7 +452,7 @@ void CPeer::updateAI(datetime pTime, float pFPS)
             {
                 // Mise à jour de l'altitude sol de référence
                 m_old_GND_AI = m_AISimData.GroundAltitude;
-                m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgheight();
+                m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgHeight();
             }
             if (m_spawned >= 7)
             {

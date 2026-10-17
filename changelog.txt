@@ -1,5 +1,19 @@
 ChangeLog:
 
+2.4.0 : Migration to Qt 6 (>= 6.8) and CMake (Windows / Linux / macOS presets, CPack installers)
+        Qt Protobuf replaces Google Protobuf, OpenSSL 3 replaces Crypto++
+        Built-in UPnP port mapping replaces miniupnpc (no more UI freeze at startup)
+        Translations and style sheet embedded in the executable
+        Bug fix : encrypted data and local IP list could be truncated
+        IPv6 support : portal requests and peers
+        Light and dark themes
+        Portal connection kept alive without simulator
+        Bug fix : user profiles lost on restart
+
+2.3.1 : Bug fix : AI resolution. Todo : AI jump on ground due to underground shift
+
+2.3.0 : Add support of FS2020
+
 2.2.3 : Update to MSVC 2019 and Qt 5.15.0
 
 2.2.1  : Improve GUI P2P Dialog Box for bug under windows 7

@@ -28,6 +28,8 @@
 
 #include "tools/iniparser.h"
 
+#include <QRegularExpression>
+
 ///
 /// \brief IniParser::IniParser
 /// \param pFilename
@@ -49,12 +51,12 @@ IniParser::IniParser(const QString& pFilename, const SIM_TYPE pSimType)
             bool is_group=false;
             if (m_simType==SIM_TYPE::FSX)
             {
-                QRegExp rx("\\[(.*)\\]");
-                rx.setMinimal(true);
-                if (rx.indexIn(Line)>=0)
+                static const QRegularExpression rx("\\[(.*?)\\]");
+                const QRegularExpressionMatch match = rx.match(Line);
+                if (match.hasMatch())
                 {
                     is_group = true;
-                    NewGroup=rx.cap(1).toLower();
+                    NewGroup=match.captured(1).toLower();
                 }
             }
             else if (m_simType==SIM_TYPE::XPLANE)
@@ -88,6 +90,10 @@ IniParser::IniParser(const QString& pFilename, const SIM_TYPE pSimType)
                     Keys.append(Line);
                 }
             }
+        }
+        if ((!Group.isEmpty())&&(Keys.count()>0))
+        {
+            m_GroupMap.insert(Group,Keys);
         }
     }
     else
@@ -136,7 +142,14 @@ QVariant IniParser::value(const QString& pGroup, const QString& pParameter, cons
                     {
                         Value = Value.left(Value.indexOf("//"));
                     }
-                    Result.setValue(Value.remove("//(.*?)\r?\n"));
+                    if (Value.contains(";"))
+                    {
+                        Value = Value.left(Value.indexOf(";"));
+                    }
+                    static const QRegularExpression rxJunk("[/(.*?)\r\n\"]");
+                    static const QRegularExpression rxTrim("^[ \t]+|[ \t]+$");
+                    Value = Value.remove(rxJunk);
+                    Result.setValue(Value.remove(rxTrim));
                     break;
                 }
             }

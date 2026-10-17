@@ -35,9 +35,8 @@
 #include "sim/analyzer.h"
 #include "net/udpserver.h"
 #include "net/tcpserver.h"
-#include "miniupnpc.h"
-#include "upnpcommands.h"
-#include "protobuf/ffs2play.pb.h"
+#include "net/upnpclient.h"
+#include "ffs2play.qpb.h"
 #include "net/peer.h"
 #include "tools/datetime.h"
 
@@ -65,11 +64,15 @@ private:
     bool                m_DropRateDisplay{};
     bool                m_SendDropRate{};
     datetime            m_LastDropRate;
-    StringArray         m_InternalIP;
+    QStringList         m_InternalIP;
     QHostAddress        m_ExternalIP;
+    QHostAddress        m_PortalIPv4;
+    QHostAddress        m_UPnPIPv4;
+    QHostAddress        m_PublicIPv6;
+    bool                m_HasIPv6{};
+    void                updateExternalIP();
     QString             m_CallSign;
-    UPNPUrls            m_urls{};
-    IGDdatas            m_data{};
+    CUPnPClient*        m_upnp;
     QVector<CPeer*>     m_peers;
     QTimer              m_checkAITimer;
     QStringList         m_BlackList;
@@ -80,6 +83,8 @@ public:
     void                init (bool pFlag);
     int                 getPort();
     QString             getLocalIPs();
+    void                setPublicIPv4(const QHostAddress& pAddress);
+    void                setPublicIPv6(const QHostAddress& pAddress);
     void                setCallsign(const QString& pCallSign);
     QString             getCallsign();
     void                whazzup_Update(QVector<PeerData>& pWhazzup);
@@ -121,6 +126,10 @@ private slots:
     void                onCheckAI();
     void                onReceiveTChat(QString,QString);
     void                onLanding(double pVSpeed);
+    void                onUPnPFailed(CUPnPClient::Error pError);
+    void                onUPnPExternalAddress(QHostAddress pAddress);
+    void                onUPnPPortMapped(QString pProtocol, int pErrorCode);
+    void                onUPnPPortUnmapped(QString pProtocol, int pErrorCode);
 };
 
 #endif // P2PMANAGER_H

@@ -43,7 +43,6 @@ CLogger::CLogger(QObject* parent):
     m_logToFile = m_settings.value("LogToFile",false).toBool();
     m_filtreLog = m_settings.value("FiltreLog","*").toString();
     m_settings.endGroup();
-    m_rx = QRegularExpression(QRegularExpression::wildcardToRegularExpression("*.txt"));
     updatePattern();
 }
 
@@ -113,7 +112,8 @@ void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 ///
 void CLogger::updatePattern()
 {
-    m_rx.setPattern(m_filtreLog);
+    m_rx.setPattern(QRegularExpression::wildcardToRegularExpression(
+        m_filtreLog, QRegularExpression::NonPathWildcardConversion));
 }
 
 ///

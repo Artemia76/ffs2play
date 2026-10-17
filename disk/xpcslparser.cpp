@@ -45,7 +45,7 @@ void XPCSLParser::DBFileUpdate(const QString &pKey, const QString &pPath)
             double Static_Pitch = 0.0;
 
 
-            for (const auto& csl : Content.ArrCSL.toStdVector())
+            for (const auto& csl : std::as_const(Content.ArrCSL))
             {
                 Atc_model = csl.ICAO;
                 Atc_Airline = csl.AirLine;

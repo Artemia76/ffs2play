@@ -37,19 +37,12 @@
 void CPeer::send(const QByteArray &pOutput)
 {
     //select remote or local mode
-    QHostAddress Host;
-    if (!m_EP.isNull())
+    QHostAddress Host = m_EP;
+    if (Host.isNull() && !m_candidates.isEmpty())
     {
-        Host = m_EP;
-    }
-    else
-    {
-        if (m_local && (m_internalIP.count()>0))
-        {
-            if (m_sel_iplocal >= m_internalIP.count()) m_sel_iplocal = 0;
-            m_sel_iplocal++;
-            Host = m_internalIP[m_sel_iplocal];
-        }
+        // no answer yet : probe each address of the peer in turn
+        if (m_sel_iplocal >= m_candidates.count()) m_sel_iplocal = 0;
+        Host = m_candidates[m_sel_iplocal++];
     }
     QNetworkDatagram Output(pOutput,Host, m_port);
 
@@ -117,6 +110,8 @@ void CPeer::sendPing()
 #endif
         m_onLine = false;
         m_version = 0;
+        // probe again every address of the peer
+        if ((m_PeerMode == UDP) && (m_candidates.count() > 1)) m_EP.clear();
         m_miniPing = milliseconds(1000);
         spawnAI(false);
     }
@@ -146,10 +141,10 @@ void CPeer::sendVersion()
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << static_cast<quint8>(Protocol::VERSION);
     stream << PROTO_VERSION;
-    StringToStream(stream,QString::fromStdString(m_sendData.title()));
-    StringToStream(stream,QString::fromStdString(m_sendData.type()));
-    StringToStream(stream,QString::fromStdString(m_sendData.model()));
-    StringToStream(stream,QString::fromStdString(m_sendData.category()));
+    StringToStream(stream,m_sendData.title());
+    StringToStream(stream,m_sendData.type());
+    StringToStream(stream,m_sendData.model());
+    StringToStream(stream,m_sendData.category());
     send(Data);
 }
 
