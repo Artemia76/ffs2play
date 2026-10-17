@@ -50,6 +50,7 @@ public:
     void                        execute(const QString& pURL);
     QString                     getAsString();
     bool                        getAsXml(QDomDocument& pDoc);
+    QUrl                        finalUrl() const;
 private:
     QString                     m_response;
     CLogger*                    m_log;

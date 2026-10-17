@@ -46,13 +46,25 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
     QDomDocument Doc;
     if (Request->getAsXml(Doc))
     {
-        QDomNode NodeCert = Doc.elementsByTagName("certificat").at(0);
-        QString SCert = NodeCert.firstChild().nodeValue();
-        m_sCrypted_AESKey = m_crypto.RSA_EncryptToBase64(SCert, m_crypto.EncryptionKey());
+        // the server may refuse the connection : show its message instead of a certificate error
+        CheckError(Doc);
+        QString SCert = Doc.elementsByTagName("certificat").at(0).toElement().text();
+        if (SCert.isEmpty())
+        {
+            m_log->log(tr("Connection to server failed : no certificate received"),Qt::darkRed);
+        }
+        else
+        {
+            m_sCrypted_AESKey = m_crypto.RSA_EncryptToBase64(SCert, m_crypto.EncryptionKey());
 #ifdef FFS_DEBUG
-        m_log->log("WEBManager : AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
+            m_log->log("WEBManager : AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
 #endif
-        emit (FireHelloCallback());
+            emit (FireHelloCallback());
+        }
+    }
+    else
+    {
+        m_log->log(tr("Connection to server failed : no response"),Qt::darkRed);
     }
     Request->deleteLater();
 }
@@ -83,6 +95,7 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
                     if (!xmlExternalIP.isNull())
                     {
                         QHostAddress ExternalIP (xmlExternalIP.firstChild().nodeValue());
+                        if (!ExternalIP.isNull()) UpdatePublicAddress(ExternalIP);
     #ifdef FFS_DEBUG
                         if (ExternalIP.isNull())
                         {
@@ -98,6 +111,7 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
                     if (!xmlKey.isNull())
                     {
                         m_key = xmlKey.firstChild().nodeValue();
+                        m_portalURL = pRequest->finalUrl();
                         OnLiveUpdate();
                     }
                     QDomElement xmlAtc = Doc.elementsByTagName("atc").at(0).toElement();
@@ -233,9 +247,56 @@ void CWebManager::OnLiveUpdate()
 #ifdef FFS_DEBUG
     m_log->log("WEBManager : Get OnLiveUpdate",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
+    SendAddr();
     if (m_bConnected && m_simManager->isConnected())
     {
         SendLiveUpdate();
+    }
+}
+
+///
+/// \brief CWebManager::AddrCallback
+/// \param pRequest
+///
+void CWebManager::AddrCallback(CAddrRequest* pRequest)
+{
+    if (!pRequest->yourIP().isNull())
+    {
+        if (m_bConnected) UpdatePublicAddress(pRequest->yourIP());
+    }
+#ifdef FFS_DEBUG
+    else
+    {
+        m_log->log(QString("WEBManager : addr over %1 failed : %2")
+                   .arg(pRequest->protocol() == QAbstractSocket::IPv6Protocol ? "IPv6" : "IPv4", pRequest->errorString()),
+                   Qt::darkMagenta,LEVEL_VERBOSE);
+    }
+#endif
+    pRequest->deleteLater();
+}
+
+///
+/// \brief CWebManager::UpdatePublicAddress
+/// \param pAddress public address seen by the portal (IPv4 or IPv6)
+///
+void CWebManager::UpdatePublicAddress(QHostAddress pAddress)
+{
+    bool IsIPv4 = false;
+    const quint32 IPv4 = pAddress.toIPv4Address(&IsIPv4);
+    if (IsIPv4)
+    {
+        pAddress = QHostAddress(IPv4);
+        if (pAddress.isEqual(m_publicIPv4)) return;
+        m_publicIPv4 = pAddress;
+        m_log->log(tr("Public IPv4 address : ") + pAddress.toString());
+        m_P2P->setPublicIPv4(pAddress);
+    }
+    else if (pAddress.protocol() == QAbstractSocket::IPv6Protocol)
+    {
+        if (pAddress.isEqual(m_publicIPv6)) return;
+        m_publicIPv6 = pAddress;
+        m_log->log(tr("Public IPv6 address : ") + pAddress.toString());
+        m_P2P->setPublicIPv6(pAddress);
     }
 }
 

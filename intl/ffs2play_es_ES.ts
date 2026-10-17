@@ -336,6 +336,22 @@
         <translation>Servidor : </translation>
     </message>
     <message>
+        <source>Connection to server failed : no certificate received</source>
+        <translation>Error de conexión con el servidor : ningún certificado recibido</translation>
+    </message>
+    <message>
+        <source>Connection to server failed : no response</source>
+        <translation>Error de conexión con el servidor : sin respuesta</translation>
+    </message>
+    <message>
+        <source>Public IPv4 address : </source>
+        <translation>Dirección IPv4 pública : </translation>
+    </message>
+    <message>
+        <source>Public IPv6 address : </source>
+        <translation>Dirección IPv6 pública : </translation>
+    </message>
+    <message>
         <location filename="../web/webmanager.cpp" line="63"/>
         <source>Users Profils Settings is empty but default user is set. Reset of default user</source>
         <translation>La configuración del perfil del usuario está vacía, pero el usuario predeterminado está configurado. Reiniciando el perfil de usuario predeterminado</translation>

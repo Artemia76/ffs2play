@@ -58,6 +58,9 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     {
         if ((!IP.isLoopback())&&(IP.protocol()==QAbstractSocket::IPv4Protocol))
             m_InternalIP.append(IP.toString());
+        // a global IPv6 address : peers' IPv6 addresses are worth probing
+        if ((IP.protocol()==QAbstractSocket::IPv6Protocol) && IP.isGlobal())
+            m_HasIPv6 = true;
     }
 #ifdef FFS_DEBUG
     m_log->log("P2PManager : Local LAN IP address : ",Qt::darkBlue,LEVEL_NORMAL);
@@ -232,10 +235,51 @@ void CP2PManager::onUPnPFailed(CUPnPClient::Error pError)
 ///
 void CP2PManager::onUPnPExternalAddress(QHostAddress pAddress)
 {
-    m_ExternalIP = pAddress;
+    m_UPnPIPv4 = pAddress;
 #ifdef FFS_DEBUG
-    m_log->log("P2PManager : Internet IP address = " + m_ExternalIP.toString(),Qt::darkBlue,LEVEL_NORMAL);
+    m_log->log("P2PManager : UPnP Internet IP address = " + m_UPnPIPv4.toString(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
+    updateExternalIP();
+}
+
+///
+/// \brief CP2PManager::setPublicIPv4
+/// \param pAddress IPv4 address seen by the portal
+///
+void CP2PManager::setPublicIPv4(const QHostAddress& pAddress)
+{
+    m_PortalIPv4 = pAddress;
+    updateExternalIP();
+}
+
+///
+/// \brief CP2PManager::setPublicIPv6
+/// \param pAddress IPv6 address seen by the portal
+///
+void CP2PManager::setPublicIPv6(const QHostAddress& pAddress)
+{
+    m_PublicIPv6 = pAddress;
+    if (!pAddress.isNull()) m_HasIPv6 = true;
+}
+
+///
+/// \brief CP2PManager::updateExternalIP
+/// Public IPv4 used to detect peers on the same LAN : the one seen by the portal
+/// (compared with the addresses of the Whazzup), else the one given by UPnP
+///
+void CP2PManager::updateExternalIP()
+{
+    const QHostAddress ExternalIP = m_PortalIPv4.isNull() ? m_UPnPIPv4 : m_PortalIPv4;
+    if (ExternalIP.isEqual(m_ExternalIP)) return;
+    m_ExternalIP = ExternalIP;
+    // peers created before as remote are now known to be on our LAN : recreated at next Whazzup
+    QStringList LocalPeers;
+    for (CPeer* Peer : std::as_const(m_peers))
+    {
+        if (!Peer->m_local && !m_ExternalIP.isNull() && m_ExternalIP.isEqual(Peer->m_externalIP))
+            LocalPeers.append(Peer->CallSign);
+    }
+    for (const QString& CallSign : std::as_const(LocalPeers)) deleteUser(CallSign);
 }
 
 ///
@@ -343,6 +387,8 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
         }
         QVector<CPeer*>::iterator it;
         QHostAddress IP;
+        // the peer's IPv6 is only worth probing if we have IPv6 too
+        const QHostAddress IP6 = (Shadow || !m_HasIPv6) ? QHostAddress() : data.externalIP6;
         //Find any existing peer in list
         for (it = m_peers.begin();it != m_peers.end(); ++it )
         {
@@ -360,21 +406,22 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
             else
             {
                 IP = QHostAddress(data.externalIP);
-                if (IP.isNull())
+                if (IP.isNull() && IP6.isNull())
                 {
                     m_log->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
                 }
             }
-            if ((!IP.isNull()) && (data.Port>0))
+            if (((!IP.isNull()) || (!IP6.isNull())) && (data.Port>0))
             {
                 m_peers.push_back(new CPeer(
                                       m_UDPServer,
                                       m_TCPServer,
                                       IP,
+                                      IP6,
                                       data.Port,
                                       data.CallSign,
                                       Disabled,
-                                      m_ExternalIP.isEqual(IP),
+                                      !IP.isNull() && m_ExternalIP.isEqual(IP),
                                       &data.localIPs,
                                       this,
                                       m_P2PRate,
@@ -385,7 +432,7 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
                 connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
                 emit(firePeerAdd(data.CallSign));
 #ifdef FFS_DEBUG
-                m_log->log("P2PManager : Adding P2P user callsign = "+ data.CallSign + ", IP=" + IP.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
+                m_log->log("P2PManager : Adding P2P user callsign = "+ data.CallSign + ", IP=" + IP.toString() + ", IPv6=" + IP6.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
 #endif
             }
             else
@@ -402,13 +449,13 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
             else
             {
                 IP = QHostAddress(data.externalIP);
-                if (IP.isNull())
+                if (IP.isNull() && IP6.isNull())
                 {
                     m_log->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
                     user_change=true;
                 }
             }
-            if (!Peer->m_externalIP.isEqual(IP))
+            if ((!Peer->m_externalIP.isEqual(IP)) || (!Peer->m_externalIP6.isEqual(IP6)))
             {
 #ifdef FFS_DEBUG
                 m_log->log("P2PManager : Change IP for user " + Peer->CallSign + ", IP=" + Peer->m_externalIP.toString(),Qt::blue, LEVEL_NORMAL);

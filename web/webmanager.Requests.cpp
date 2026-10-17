@@ -60,6 +60,9 @@ void CWebManager::Disconnect()
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
     m_P2P->clear();
     m_bConnected = false;
+    m_portalURL.clear();
+    m_publicIPv4.clear();
+    m_publicIPv6.clear();
     m_ATCTimer.stop();
     emit (FireDisconnected());
 }
@@ -98,6 +101,25 @@ void CWebManager::SendATCUpdate()
     CHttpRequest* Request = new CHttpRequest(this);
     connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( ATCCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendAtcUpdate);
+}
+
+///
+/// \brief CWebManager::SendAddr
+/// Same addr request over IPv4 and over IPv6 : the portal records the address
+/// it observes for each layer (contract portal-api.md, sheet 0003)
+///
+void CWebManager::SendAddr()
+{
+    if (!m_bConnected || m_portalURL.isEmpty()) return;
+    QDomDocument SendAddr;
+    XmlBuild(SendAddr, XmlCode::addr);
+    const QByteArray Content = SendAddr.toByteArray();
+    for (QAbstractSocket::NetworkLayerProtocol Protocol : {QAbstractSocket::IPv4Protocol, QAbstractSocket::IPv6Protocol})
+    {
+        CAddrRequest* Request = new CAddrRequest(this);
+        connect(Request, &CAddrRequest::finished, this, &CWebManager::AddrCallback);
+        Request->execute(m_portalURL, Content, Protocol);
+    }
 }
 
 ///

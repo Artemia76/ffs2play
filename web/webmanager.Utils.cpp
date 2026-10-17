@@ -123,10 +123,15 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                 PeerData item;
                 item.CallSign = Player.nodeName();
                 item.Port=Player.attribute("port").toUShort();
-                item.externalIP=QHostAddress(m_crypto.DecryptFromBase64(Player.attribute("ip")));
+                // ip (IPv4) and ip6 : either may be missing (contract portal-api.md)
+                const QString IP4 = Player.attribute("ip");
+                if (!IP4.isEmpty()) item.externalIP=QHostAddress(m_crypto.DecryptFromBase64(IP4));
+                const QString IP6 = Player.attribute("ip6");
+                if (!IP6.isEmpty()) item.externalIP6=QHostAddress(m_crypto.DecryptFromBase64(IP6));
 #ifdef FFS_DEBUG
                 m_log->log("WEBManager : CallSign = " + item.CallSign
                             + " IP = " + item.externalIP.toString()
+                            + " IPv6 = " + item.externalIP6.toString()
                             + " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                 StringArray LocalIP;
