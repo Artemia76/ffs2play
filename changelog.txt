@@ -5,6 +5,10 @@ ChangeLog:
         Built-in UPnP port mapping replaces miniupnpc (no more UI freeze at startup)
         Translations and style sheet embedded in the executable
         Bug fix : encrypted data and local IP list could be truncated
+        IPv6 support : portal requests and peers
+        Light and dark themes
+        Portal connection kept alive without simulator
+        Bug fix : user profiles lost on restart
 
 2.3.1 : Bug fix : AI resolution. Todo : AI jump on ground due to underground shift
 
