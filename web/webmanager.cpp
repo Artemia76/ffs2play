@@ -231,6 +231,8 @@ void CWebManager::XmlBuild (QDomDocument& pDoc, XmlCode pCode)
         }
         case XmlCode::liveupdate:
         {
+            // without simulator : keep-alive only (slot kept, Whazzup received), no position
+            if (!m_simManager->isConnected()) break;
             CAircraftState State = m_simManager->getAircraftState();
             QDomElement xmlLiveUpdate = pDoc.createElement("liveupdate");
             xmlRoot.appendChild(xmlLiveUpdate);

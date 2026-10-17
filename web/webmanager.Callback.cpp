@@ -248,7 +248,8 @@ void CWebManager::OnLiveUpdate()
     m_log->log("WEBManager : Get OnLiveUpdate",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     SendAddr();
-    if (m_bConnected && m_simManager->isConnected())
+    // also sent without simulator : it keeps the slot alive on the portal
+    if (m_bConnected)
     {
         SendLiveUpdate();
     }
