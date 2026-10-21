@@ -35,9 +35,9 @@ class XPAIParser : public AIBaseParser
 {
 public:
     XPAIParser(QObject *parent = nullptr);
-    ~XPAIParser();
+    ~XPAIParser() override;
 private:
-    void    DBFileUpdate(const QString& pKey,const QString& pPath);
+    void    DBFileUpdate(const QString& pKey,const QString& pPath) override;
 };
 
 #endif // XPAIPARSER_H

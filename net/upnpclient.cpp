@@ -201,7 +201,7 @@ void CUPnPClient::onSsdpReadyRead()
         if (location.isValid() && !m_locations.contains(location))
         {
 #ifdef FFS_DEBUG
-            CLogger::instance()->log("UPnP : IGD Desc = " + location.toString(),Qt::darkBlue,LEVEL_NORMAL);
+            CLogger::instance().log("UPnP : IGD Desc = " + location.toString(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
             m_locations.append(location);
             m_deviceSeen = true;
@@ -275,7 +275,7 @@ void CUPnPClient::onGatewayFound()
     }
     m_lanAddress = localAddressFor(QHostAddress(m_service.controlUrl.host()));
 #ifdef FFS_DEBUG
-    CLogger::instance()->log("UPnP : Found valid IGD = " + m_service.controlUrl.toString()
+    CLogger::instance().log("UPnP : Found valid IGD = " + m_service.controlUrl.toString()
                              + " service = " + m_service.serviceType
                              + " LAN address = " + m_lanAddress.toString(),Qt::darkBlue,LEVEL_NORMAL);
 #endif

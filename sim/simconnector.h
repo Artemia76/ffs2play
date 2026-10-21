@@ -31,7 +31,6 @@
 #define SIMCONNECTOR_H
 
 #include <QObject>
-#include <QMutex>
 #include <QSettings>
 #include "sim/aircraftstate.h"
 #include "tools/clogger.h"
@@ -96,13 +95,18 @@ enum SimOption : unsigned int
     UseAI = 0x10
 };
 
+///
+/// \brief Base class of the simulator connectors
+/// A connector and all its members live in the GUI thread : the incoming data is driven
+/// by Qt events (UDP sockets, SimConnect Windows event), there is no worker thread.
+///
 class SimConnector : public QObject
 {
     Q_OBJECT
 friend  class simbasemanager;
 public:
     explicit        SimConnector(QObject *parent = nullptr);
-    virtual         ~SimConnector();
+                    ~SimConnector() override = default;
 
     enum SIM_VERSION
     {
@@ -122,10 +126,9 @@ public:
 
     bool            isConnected();
 protected:
-    CLogger*        m_log;
+    CLogger&        m_log = CLogger::instance();
     bool            m_connected;
     CAircraftState  m_state;
-    QMutex          m_Mutex;
     QSettings       m_settings;
     quint32         m_options;
     sVersion        m_version;
@@ -137,11 +140,11 @@ protected:
     void            setCallSignColor(const QColor& pColor);
     QColor          getCallSignColor();
     CAircraftState  getState();
+    void            setAIPaths(const QStringList& pPaths);
 
 virtual void            sendOptions()=0;
 virtual void            open()=0;
 virtual void            close()=0;
-virtual void            main_loop()=0;
 virtual SIM_VERSION     getVersion()=0;
 virtual void            sendScrollingText(const QString& pMessage)=0;
 virtual bool            createAI(AIResol& pAircraft,const QString& Tail,const CAircraftState& pData,bool pNonAIObject)=0;

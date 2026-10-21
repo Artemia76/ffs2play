@@ -49,8 +49,8 @@ private:
     void                initUPNP(bool flag);
     void                deleteUser(const QString pCallsign);
 
-    CLogger*            m_log;
-    Analyzer*           m_analyser;
+    CLogger&            m_log = CLogger::instance();
+    Analyzer&           m_analyser = Analyzer::instance();
     UDPServer*          m_UDPServer;
     TCPServer*          m_TCPServer;
     QSettings           m_settings;
@@ -79,7 +79,7 @@ private:
     QString             m_Team;
 public:
     ~CP2PManager();
-    static CP2PManager*	instance();
+    static CP2PManager&	instance();
     void                init (bool pFlag);
     int                 getPort();
     QString             getLocalIPs();

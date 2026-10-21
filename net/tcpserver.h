@@ -43,7 +43,7 @@ class TCPServer : public QTcpServer
     Q_OBJECT
 private:
     QVector<TCPClient*> m_clients;
-    CLogger*    m_log;
+    CLogger&    m_log = CLogger::instance();
     bool        m_running;
     quint16     m_port;
 

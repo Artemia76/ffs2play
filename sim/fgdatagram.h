@@ -116,6 +116,10 @@ enum Type {
 
 // magic value for messages
 const uint32_t MSG_MAGIC = 0x46474653;  // "FGFS"
+// position message (mpmessages.hxx)
+const uint32_t POS_DATA_ID = 7;
+// header (32 bytes) + T_PositionMsg (200 bytes), without properties
+const uint32_t POS_MSG_LEN = 232;
 // protocoll version
 const uint32_t PROTO_VER = 0x00010001;  // 1.1
 
@@ -691,23 +695,16 @@ struct FGPos
 
 struct FGPropertyData
 {
-    quint16 id;
-    // While the type isn't transmitted, it is needed for the destructor
-    Type type;
+    quint16 id = 0;
+    Type type = UNSPECIFIED;
     union
     {
         int int_value;
         float float_value;
-        char* string_value;
     };
-    FGPropertyData() : string_value(nullptr) {}
-    ~FGPropertyData()
-    {
-        if ((type == STRING) || (type == UNSPECIFIED))
-        {
-            delete [] string_value;
-        }
-    }
+    /// Value of STRING and UNSPECIFIED properties (owned, copyable)
+    QByteArray string_value;
+    FGPropertyData() : int_value(0) {}
 };
 
 class FGDatagram
@@ -724,13 +721,14 @@ public:
     bool                    SetPos(FGPos& pPos);
     bool                    GetAirData(CAircraftState& pData);
     bool                    SetAirData(const CAircraftState& pData);
+    void                    SetIdentity(const QString& pCallSign, const QString& pModel);
 
 private:
     FGHeader                m_Header;
     FGPos                   m_Pos;
     QVector<FGPropertyData> m_Props;
     bool                    m_Sane;
-    CLogger*                m_Log;
+    CLogger&                m_Log = CLogger::instance();
     bool                    GetProperty(QDataStream& pStream, FGPropertyData& pPropData);
 const   IdPropertyList*         FindProperty(unsigned short pID);
 

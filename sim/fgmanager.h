@@ -33,12 +33,17 @@
 #include <QObject>
 #include <QDateTime>
 #include <QTimer>
+#include <QMap>
 #include <QVector>
 
 #include "sim/simconnector.h"
 #include "sim/fgdatagram.h"
 #include "sim/aircraftstate.h"
 #include "net/udpserver.h"
+
+/// FlightGear drops a multiplayer aircraft 10 s after its last message : delay
+/// before a removed callsign can be used again with another model (ms)
+constexpr int FGReleaseDelay = 15000;
 
 ///
 /// \brief The CFGManager class
@@ -47,8 +52,8 @@ class CFGManager : public SimConnector
 {
     Q_OBJECT
 public:
-    explicit CFGManager(QObject *parent = 0);
-    ~CFGManager();
+    explicit CFGManager(QObject *parent = nullptr);
+    ~CFGManager() override;
 private:
     QTimer          m_PingTimer;
     datetime        m_LastPong;
@@ -56,23 +61,55 @@ private:
     quint16         m_FGPort;
     quint16         m_LocalPort;
     UDPServer*      m_Server;
+    /// ICAO type, type and category of the aircraft found in the AI database for m_InfoTitle
+    QString         m_InfoTitle;
+    QString         m_InfoModel;
+    QString         m_InfoType;
+    QString         m_InfoCategory;
+    bool            m_InfoFound;
+    int             m_InfoRetry;
+
+    /// Peer aircraft displayed in FlightGear as a multiplayer aircraft
+    struct FGAIObject
+    {
+        QString         Tail;
+        /// Callsign in FlightGear, which identifies the aircraft there (7 characters)
+        QString         CallSign;
+        QString         Model;
+        CAircraftState  State;
+        datetime        LastSend;
+        /// Nothing sent before : FlightGear still knows the previous aircraft with this callsign
+        datetime        HoldUntil;
+        bool            Sent = false;
+    };
+    QMap<uint, FGAIObject> m_AIObjects;
+    uint            m_NextObjectID;
+    /// Removed callsigns, still known by FlightGear for 10 s with their model
+    struct FGReleased
+    {
+        datetime        Time;
+        QString         Model;
+    };
+    QMap<QString, FGReleased> m_ReleasedCallSigns;
 
 protected:
-    void            open();
-    void            close();
-    void            main_loop();
-    SIM_VERSION     getVersion();
-    void            sendScrollingText(const QString&);
-    bool            createAI(AIResol&, const QString&, const CAircraftState&, bool);
-    bool            removeAI(uint&);
-    bool            updateAI(uint, const CAircraftState&);
-    void            freezeAI(uint, bool);
-    void            sendOptions(){}
-    void            sendCallSignColor(){}
+    void            open() override;
+    void            close() override;
+    SIM_VERSION     getVersion() override;
+    void            sendScrollingText(const QString&) override;
+    bool            createAI(AIResol&, const QString&, const CAircraftState&, bool) override;
+    bool            removeAI(uint&) override;
+    bool            updateAI(uint, const CAircraftState&) override;
+    void            freezeAI(uint, bool) override;
+    void            sendOptions() override {}
+    void            sendCallSignColor() override {}
 
     void            sendPing();
     void            sendData();
     void            sendDisc();
+    void            updateAircraftInfo();
+    bool            sendAI(FGAIObject& pObject);
+    void            hideAI(FGAIObject& pObject);
 
 private slots:
     void            OnReceiveDatagram(QNetworkDatagram datagram);

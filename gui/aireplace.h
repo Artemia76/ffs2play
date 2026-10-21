@@ -31,6 +31,7 @@
 #define AIREPLACE_H
 
 #include <QDialog>
+#include <memory>
 #include <QSettings>
 #include <QPushButton>
 
@@ -56,21 +57,21 @@ public:
 
 private:
     // UI Designer GUI
-    Ui::AIReplace*      m_UI;
+    std::unique_ptr<Ui::AIReplace> m_UI;
 
     // Logger singleton instance
-    CLogger*            m_Log;
+    CLogger&            m_Log = CLogger::instance();
 
     // Web Manager singleton instance
-    CP2PManager*        m_P2PManager;
+    CP2PManager&        m_P2PManager = CP2PManager::instance();
 
     // Simulator Manager singleton instance
-    simbasemanager*     m_SimManager;
+    simbasemanager&     m_SimManager = simbasemanager::instance();
 
     // Configuration file Access
     QSettings           m_Settings;
 
-    AIMapping*          m_AIMapping;
+    AIMapping&          m_AIMapping = AIMapping::instance();
 
     QString             m_Peer;
     QString             m_ExistingRule;
@@ -82,12 +83,12 @@ private slots:
     void                on_btnDeleteRule_clicked();
     void                on_btnBox_accepted();
     void                on_btnBox_rejected();
-    void                on_cbCategory_currentIndexChanged(const QString&);
-    void                on_cbEngineNB_currentIndexChanged(const QString&);
-    void                on_cbEngineType_currentIndexChanged(const QString&);
-    void                on_cbType_currentIndexChanged(const QString&);
-    void                on_cbModel_currentIndexChanged(const QString&);
-    void                on_cbEditor_currentIndexChanged(const QString&);
+    void                on_cbCategory_currentTextChanged(const QString&);
+    void                on_cbEngineNB_currentTextChanged(const QString&);
+    void                on_cbEngineType_currentTextChanged(const QString&);
+    void                on_cbType_currentTextChanged(const QString&);
+    void                on_cbModel_currentTextChanged(const QString&);
+    void                on_cbEditor_currentTextChanged(const QString&);
     void on_twRules_itemSelectionChanged();
 };
 

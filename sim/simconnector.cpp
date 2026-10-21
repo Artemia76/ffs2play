@@ -35,13 +35,12 @@
 ///
 SimConnector::SimConnector(QObject *parent) : QObject(parent)
 {
-    m_log=CLogger::instance();
     m_connected = false;
     m_settings.beginGroup("Sim");
     m_options = 0;
     m_options =m_settings.value("Options", 0x00000001).toUInt();
 #ifdef FFS_DEBUG
-    m_log->log("SimConnector : Option value = " + QString::number(m_options),Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("SimConnector : Option value = " + QString::number(m_options),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     m_CallSignColor = m_settings.value("CallSignColor", "#FF0000").toString();
     m_settings.endGroup();
@@ -50,14 +49,6 @@ SimConnector::SimConnector(QObject *parent) : QObject(parent)
     m_version.Major=0;
     m_version.Minor=0;
     m_version.Name="none";
-}
-
-///
-/// \brief SimConnector::~SimConnector
-///
-SimConnector::~SimConnector()
-{
-
 }
 
 ///
@@ -107,10 +98,7 @@ bool SimConnector::getOption(SimOption pOption)
 ///
 CAircraftState SimConnector::getState()
 {
-    CAircraftState state;
-    QMutexLocker locker(&m_Mutex);
-    state=m_state;
-    return state;
+    return m_state;
 }
 
 void SimConnector::setCallSignColor(const QColor& pColor)
@@ -120,6 +108,15 @@ void SimConnector::setCallSignColor(const QColor& pColor)
     m_settings.endGroup();
     m_CallSignColor = pColor;
     sendCallSignColor();
+}
+
+///
+/// \brief SimConnector::setAIPaths
+/// \param pPaths AI or CSL packages folders
+///
+void SimConnector::setAIPaths(const QStringList& pPaths)
+{
+    m_AIPaths = pPaths;
 }
 
 QColor SimConnector::getCallSignColor()

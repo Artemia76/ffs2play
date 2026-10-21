@@ -35,12 +35,12 @@ class SCAIParser : public AIBaseParser
 {
 public:
     SCAIParser( QObject *parent = nullptr);
-    ~SCAIParser();
+    ~SCAIParser() override;
 
 protected:
-    void    searchSimPath();
-    QString findInstallationPath (const QString& pKey,QSettings::Format pFormat = QSettings::NativeFormat);
-    void    DBFileUpdate(const QString& pKey,const QString& pPath);
+    void    searchSimPath() override;
+    QString findInstallationPath (const QString& pKey,QSettings::Format pFormat = QSettings::NativeFormat) override;
+    void    DBFileUpdate(const QString& pKey,const QString& pPath) override;
 };
 
 #endif // SCAIPARSER_H

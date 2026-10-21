@@ -14,7 +14,7 @@ class TCPClient : public QObject
     friend class TCPServer;
     Q_OBJECT
 private:
-    CLogger*    m_log;
+    CLogger&    m_log = CLogger::instance();
     bool        m_running;
     qintptr     m_socketDescriptor;
     QHostAddress m_PeerIP;

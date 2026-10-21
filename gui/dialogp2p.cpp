@@ -52,19 +52,14 @@ DialogP2P::DialogP2P(QWidget *parent)
     ui->setupUi(this);
 
     // Get Logger instance
-    m_log = CLogger::instance();
 
     // Get P2PManager instance
-    m_P2PManager = CP2PManager::instance();
 
     // Get AIMapping instance
-    m_AIMapping = AIMapping::instance();
 
     // Get SimManager instance
-    m_SimManager = simbasemanager::instance();
 
     // Get Webmanager instance
-    m_WebManager = CWebManager::instance();
 
     // Get the default profil selected in configuration file
     m_settings.beginGroup("P2P");
@@ -87,18 +82,18 @@ DialogP2P::DialogP2P(QWidget *parent)
     }
     m_settings.endGroup();
 
-    ui->cbEnableCallsign->setChecked(m_SimManager->getOption(DisplayCallSign));
-    ui->cbDisableAltCorr->setChecked(m_SimManager->getOption(DisableAltCorr));
-    ui->numAIRadius->setValue(m_P2PManager->getAIRadius());
-    ui->numAILimit->setValue(m_P2PManager->getAILimit());
-    ui->numP2PTx->setValue(m_P2PManager->getTxRate());
+    ui->cbEnableCallsign->setChecked(m_SimManager.getOption(DisplayCallSign));
+    ui->cbDisableAltCorr->setChecked(m_SimManager.getOption(DisableAltCorr));
+    ui->numAIRadius->setValue(m_P2PManager.getAIRadius());
+    ui->numAILimit->setValue(m_P2PManager.getAILimit());
+    ui->numP2PTx->setValue(m_P2PManager.getTxRate());
 #ifndef FFS_DEBUG
     ui->cbShadow->setVisible(false);
 #endif
-    ui->cbShadow->setChecked(m_P2PManager->getShadowMode());
+    ui->cbShadow->setChecked(m_P2PManager.getShadowMode());
 
-    ui->cbDropRateDisp->setChecked(m_P2PManager->getDropRateDisplay());
-    ui->cbSendDropRate->setChecked(m_P2PManager->getSendDropRate());
+    ui->cbDropRateDisp->setChecked(m_P2PManager.getDropRateDisplay());
+    ui->cbSendDropRate->setChecked(m_P2PManager.getSendDropRate());
 
     m_needP2PRestart=false;
     m_needDBReload=false;
@@ -108,17 +103,17 @@ DialogP2P::DialogP2P(QWidget *parent)
     ui->rbAI_Aircrafts->setVisible(false);
     ui->rbCSL_Aircrafts->setVisible(false);
 
-    m_textColor = m_SimManager->getCallSignColor();
+    m_textColor = m_SimManager.getCallSignColor();
     ui->pbTextColor->setStyleSheet(QString("QPushButton {" "background-color : %1" "}").arg(m_textColor.name()));
     ui->pbTextColor->update();
 
-    if (m_SimManager->isConnected())
+    if (m_SimManager.isConnected())
     {
-        for (QString Item : m_AIMapping->getPathList())
+        for (QString Item : m_AIMapping.getPathList())
         {
             ui->lvItems->addItem(Item);
         }
-        if (m_SimManager->getType()==SIM_TYPE::XPLANE)
+        if (m_SimManager.getType()==SIM_TYPE::XPLANE)
         {
             ui->pbTextColor->setVisible(true);
             ui->cbEnableCallsign->setVisible(true);
@@ -127,10 +122,10 @@ DialogP2P::DialogP2P(QWidget *parent)
             ui->rbCSL_Aircrafts->setVisible(true);
         }
     }
-    if (CWebManager::instance()->isConnected()) ui->numPort->setEnabled(false);
+    if (CWebManager::instance().isConnected()) ui->numPort->setEnabled(false);
 
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
-    if (m_SimManager->getVersion()==SimConnector::SIM_VERSION::UNKNOWN)
+    if (m_SimManager.getVersion()==SimConnector::SIM_VERSION::UNKNOWN)
     {
         ui->btnAddItem->setEnabled(false);
         ui->btnDelItem->setEnabled(false);
@@ -143,10 +138,7 @@ DialogP2P::DialogP2P(QWidget *parent)
 ///
 /// Destructor
 ///
-DialogP2P::~DialogP2P()
-{
-    delete ui;
-}
+DialogP2P::~DialogP2P() = default;
 
 ///
 /// \brief DialogP2P::applyChangedItem
@@ -178,33 +170,33 @@ void DialogP2P::applyChangedItem()
     m_settings.beginGroup("XPlane");
     if (ui->rbCSL_Aircrafts->isChecked()) m_settings.setValue("AIMode", false);
     else if (ui->rbAI_Aircrafts->isChecked()) m_settings.setValue("AIMode", true);
-    m_SimManager->setOptionChange(UseAI,ui->rbAI_Aircrafts->isChecked());
-    m_SimManager->setOptionChange(UseCSL,ui->rbCSL_Aircrafts->isChecked());
+    m_SimManager.setOptionChange(UseAI,ui->rbAI_Aircrafts->isChecked());
+    m_SimManager.setOptionChange(UseCSL,ui->rbCSL_Aircrafts->isChecked());
     m_settings.endGroup();
-    if (ui->cbShadow->isChecked() != m_P2PManager->getShadowMode())
+    if (ui->cbShadow->isChecked() != m_P2PManager.getShadowMode())
     {
-        m_P2PManager->setShadowMode(ui->cbShadow->isChecked());
+        m_P2PManager.setShadowMode(ui->cbShadow->isChecked());
     }
-    if (ui->numP2PTx->value() != m_P2PManager->getTxRate())
+    if (ui->numP2PTx->value() != m_P2PManager.getTxRate())
     {
-        m_P2PManager->setTxRate(ui->numP2PTx->value());
+        m_P2PManager.setTxRate(ui->numP2PTx->value());
     }
-    if (ui->numAIRadius->value() != m_P2PManager->getAIRadius())
+    if (ui->numAIRadius->value() != m_P2PManager.getAIRadius())
     {
-        m_P2PManager->setAIRadius(ui->numAIRadius->value());
+        m_P2PManager.setAIRadius(ui->numAIRadius->value());
     }
-    if (ui->numAILimit->value() != m_P2PManager->getAILimit())
+    if (ui->numAILimit->value() != m_P2PManager.getAILimit())
     {
-        m_P2PManager->setAILimit(ui->numAILimit->value());
+        m_P2PManager.setAILimit(ui->numAILimit->value());
     }
     if (m_needP2PRestart)
     {
-        m_P2PManager->init(false);
-        m_P2PManager->init(true);
-        if (m_WebManager->isConnected())
+        m_P2PManager.init(false);
+        m_P2PManager.init(true);
+        if (m_WebManager.isConnected())
         {
-            m_WebManager->Disconnect();
-            m_WebManager->Connect();
+            m_WebManager.Disconnect();
+            m_WebManager.Connect();
         }
         m_needP2PRestart=false;
     }
@@ -212,30 +204,30 @@ void DialogP2P::applyChangedItem()
     {
         m_needDBReload=false;
     }
-    if (ui->cbEnableCallsign->isChecked() != m_SimManager->getOption(DisplayCallSign))
+    if (ui->cbEnableCallsign->isChecked() != m_SimManager.getOption(DisplayCallSign))
     {
-        m_SimManager->setOptionChange(DisplayCallSign, ui->cbEnableCallsign->isChecked());
+        m_SimManager.setOptionChange(DisplayCallSign, ui->cbEnableCallsign->isChecked());
     }
-    if (ui->cbDisableAltCorr->isChecked() != m_SimManager->getOption(DisableAltCorr))
+    if (ui->cbDisableAltCorr->isChecked() != m_SimManager.getOption(DisableAltCorr))
     {
-        m_SimManager->setOptionChange(DisableAltCorr, ui->cbDisableAltCorr->isChecked());
+        m_SimManager.setOptionChange(DisableAltCorr, ui->cbDisableAltCorr->isChecked());
     }
-    if (ui->cbDropRateDisp->isChecked() != m_P2PManager->getDropRateDisplay())
+    if (ui->cbDropRateDisp->isChecked() != m_P2PManager.getDropRateDisplay())
     {
-        m_P2PManager->setDropRateDisplay(ui->cbDropRateDisp->isChecked());
+        m_P2PManager.setDropRateDisplay(ui->cbDropRateDisp->isChecked());
     }
-    if (ui->cbSendDropRate->isChecked() != m_P2PManager->getSendDropRate())
+    if (ui->cbSendDropRate->isChecked() != m_P2PManager.getSendDropRate())
     {
-        m_P2PManager->setSendDropRate(ui->cbSendDropRate->isChecked());
+        m_P2PManager.setSendDropRate(ui->cbSendDropRate->isChecked());
     }
     if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",true).toBool())
     {
         m_settings.setValue("Main/Beta",ui->cbBeta->isChecked());
-        m_WebManager->CheckNewVersion();
+        m_WebManager.CheckNewVersion();
     }
-    if (m_textColor != m_SimManager->getCallSignColor())
+    if (m_textColor != m_SimManager.getCallSignColor())
     {
-        m_SimManager->setCallSignColor(m_textColor.name());
+        m_SimManager.setCallSignColor(m_textColor.name());
     }
     m_changed=false;
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
@@ -304,35 +296,35 @@ void DialogP2P::checkIfChanged()
     }
     m_settings.endGroup();
     // is Shadow mode changed?
-    if (ui->cbShadow->isChecked() != m_P2PManager->getShadowMode())
+    if (ui->cbShadow->isChecked() != m_P2PManager.getShadowMode())
     {
         m_changed = true;
     }
-    if (ui->numP2PTx->value() != m_P2PManager->getTxRate())
+    if (ui->numP2PTx->value() != m_P2PManager.getTxRate())
     {
         m_changed = true;
     }
-    if (ui->numAIRadius->value() != m_P2PManager->getAIRadius())
+    if (ui->numAIRadius->value() != m_P2PManager.getAIRadius())
     {
         m_changed = true;
     }
-    if (ui->numAILimit->value() != m_P2PManager->getAILimit())
+    if (ui->numAILimit->value() != m_P2PManager.getAILimit())
     {
         m_changed = true;
     }
-    if (ui->cbEnableCallsign->isChecked() != m_SimManager->getOption(DisplayCallSign))
+    if (ui->cbEnableCallsign->isChecked() != m_SimManager.getOption(DisplayCallSign))
     {
         m_changed = true;
     }
-    if (ui->cbDisableAltCorr->isChecked() != m_SimManager->getOption(DisableAltCorr))
+    if (ui->cbDisableAltCorr->isChecked() != m_SimManager.getOption(DisableAltCorr))
     {
         m_changed = true;
     }
-    if (ui->cbDropRateDisp->isChecked() != m_P2PManager->getDropRateDisplay())
+    if (ui->cbDropRateDisp->isChecked() != m_P2PManager.getDropRateDisplay())
     {
         m_changed = true;
     }
-    if (ui->cbSendDropRate->isChecked() != m_P2PManager->getSendDropRate())
+    if (ui->cbSendDropRate->isChecked() != m_P2PManager.getSendDropRate())
     {
         m_changed = true;
     }
@@ -340,7 +332,7 @@ void DialogP2P::checkIfChanged()
     {
         m_changed = true;
     }
-    if (m_textColor != m_SimManager->getCallSignColor())
+    if (m_textColor != m_SimManager.getCallSignColor())
     {
         m_changed = true;
     }
@@ -398,12 +390,12 @@ void DialogP2P::on_btnAddItem_released()
     if (FileDlg.exec())
     {
         Path.setPath(FileDlg.selectedFiles().first());
-        m_log->log(" Path = " + Path.absolutePath() );
+        m_log.log(" Path = " + Path.absolutePath() );
         if (!Path.isEmpty())
         {
-            m_AIMapping->addPath(Path.absolutePath());
+            m_AIMapping.addPath(Path.absolutePath());
             ui->lvItems->addItem(Path.absolutePath());
-            m_AIMapping->startScanSimObject();
+            m_AIMapping.startScanSimObject();
         }
     }
 }
@@ -416,7 +408,7 @@ void DialogP2P::on_btnDelItem_released()
     QListWidgetItem* item = ui->lvItems->currentItem();
     if (item!=nullptr)
     {
-        m_AIMapping->delPath(item->text());
+        m_AIMapping.delPath(item->text());
         //ui->lvItems->removeItemWidget(item);
         delete item;
     }
@@ -495,7 +487,7 @@ void DialogP2P::on_pushButton_released()
         QMessageBox::Yes |QMessageBox::No);
     if (ret == QMessageBox::Yes)
     {
-        m_AIMapping->cleanAIDB();
+        m_AIMapping.cleanAIDB();
         ui->lvItems->clear();
     }
 }

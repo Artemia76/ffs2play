@@ -84,10 +84,10 @@ private:
     QSettings           m_settings;
     QTimer              m_liveUpdateTimer;
     QTimer              m_ATCTimer;
-    simbasemanager*     m_simManager;
-    CP2PManager*        m_P2P;
-    CLogger*            m_log;
-    Analyzer*           m_Analyzer;
+    simbasemanager&     m_simManager = simbasemanager::instance();
+    CP2PManager&        m_P2P = CP2PManager::instance();
+    CLogger&            m_log = CLogger::instance();
+    Analyzer&           m_Analyzer = Analyzer::instance();
     QMetaEnum           m_metaXmlCode;
     XmlCode             m_code;
 
@@ -116,7 +116,7 @@ protected:
 
 public:
                         ~CWebManager();
-    static CWebManager*	instance();
+    static CWebManager&	instance();
     void                Connect();
     void                Disconnect();
     bool                isConnected();
