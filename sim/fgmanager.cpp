@@ -93,8 +93,9 @@ void CFGManager::close ()
     if (m_connected)
     {
         sendDisc();
-        // FlightGear removes them 10 s after their last position
+        for (FGAIObject& Object : m_AIObjects) hideAI(Object);
         m_AIObjects.clear();
+        m_ReleasedCallSigns.clear();
         m_Server->stop();
         m_connected=false;
         m_log.log(tr("Disconnected from FlightGear."));
@@ -134,11 +135,12 @@ bool CFGManager::createAI(AIResol& pAircraft,const QString& pTail,const CAircraf
     const uint ObjectID = m_NextObjectID++;
     FGAIObject& Object = m_AIObjects[ObjectID];
     Object.Tail = pTail;
+    Object.CallSign = makeCallSign(pTail);
     Object.Model = pAircraft.title();
     Object.State = pData;
     sendAI(Object);
 #ifdef FFS_DEBUG
-    m_log.log("FGManager : Send createAI " + pTail + " , Model = " + Object.Model + " , Object ID = " + QString::number(ObjectID), Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("FGManager : Send createAI " + pTail + " , CallSign = " + Object.CallSign + " , Model = " + Object.Model + " , Object ID = " + QString::number(ObjectID), Qt::darkBlue,LEVEL_NORMAL);
 #endif
     // Answered after the return, like the X-Plane plugin, when the peer is waiting for it
     QTimer::singleShot(0, this, [this, pTail, ObjectID]()
@@ -151,18 +153,76 @@ bool CFGManager::createAI(AIResol& pAircraft,const QString& pTail,const CAircraf
 ///
 /// \brief CFGManager::removeAI
 /// There is no remove message : FlightGear removes a multiplayer aircraft
-/// 10 s after its last position message
+/// 10 s after its last position message. It is hidden until then.
 /// \param pObjectID set to 0
 /// \return
 ///
 bool CFGManager::removeAI(uint& pObjectID)
 {
+    auto it = m_AIObjects.find(pObjectID);
+    if (it != m_AIObjects.end())
+    {
 #ifdef FFS_DEBUG
-    m_log.log("FGManager : Send removeAI " + QString::number(pObjectID), Qt::darkBlue,LEVEL_NORMAL);
+        m_log.log("FGManager : Send removeAI " + it->CallSign + " , Object ID = " + QString::number(pObjectID), Qt::darkBlue,LEVEL_NORMAL);
 #endif
-    m_AIObjects.remove(pObjectID);
+        hideAI(*it);
+        m_ReleasedCallSigns.insert(it->CallSign, Now());
+        m_AIObjects.erase(it);
+    }
     pObjectID = 0;
     return true;
+}
+
+///
+/// \brief CFGManager::hideAI
+/// Last position of a removed aircraft : under the ground, out of sight until
+/// FlightGear removes it
+/// \param pObject
+///
+void CFGManager::hideAI(FGAIObject& pObject)
+{
+    pObject.State.Altitude = -30000.0;
+    pObject.State.TASSpeed = 0.0;
+    // Twice : UDP
+    sendAI(pObject);
+    sendAI(pObject);
+}
+
+///
+/// \brief CFGManager::makeCallSign
+/// FlightGear identifies a multiplayer aircraft by its callsign only (7 characters)
+/// and keeps its model : a callsign removed less than 10 s ago would show the
+/// previous model, a longer one can be shared by two peers. A digit is added then.
+/// \param pTail callsign of the peer
+/// \return callsign for FlightGear
+///
+QString CFGManager::makeCallSign(const QString& pTail)
+{
+    const datetime Time = Now();
+    for (auto it = m_ReleasedCallSigns.begin(); it != m_ReleasedCallSigns.end();)
+    {
+        // FlightGear timeout (10 s) and margin
+        if ((Time - it.value()) > milliseconds(12000)) it = m_ReleasedCallSigns.erase(it);
+        else ++it;
+    }
+    auto IsUsed = [this](const QString& pCallSign)
+    {
+        if (m_ReleasedCallSigns.contains(pCallSign)) return true;
+        for (const FGAIObject& Object : std::as_const(m_AIObjects))
+        {
+            if (Object.CallSign == pCallSign) return true;
+        }
+        return false;
+    };
+    const QString Base = pTail.left(7);
+    if (!IsUsed(Base)) return Base;
+    for (int i = 1; i < 100; i++)
+    {
+        const QString Suffix = QString::number(i);
+        const QString CallSign = Base.left(7 - Suffix.size()) + Suffix;
+        if (!IsUsed(CallSign)) return CallSign;
+    }
+    return Base;
 }
 
 ///
@@ -192,7 +252,7 @@ bool CFGManager::sendAI(FGAIObject& pObject)
 {
     if ((!m_connected) || (m_FGPort == 0)) return false;
     FGDatagram Datagram;
-    Datagram.SetIdentity(pObject.Tail, pObject.Model);
+    Datagram.SetIdentity(pObject.CallSign, pObject.Model);
     Datagram.SetAirData(pObject.State);
     QByteArray Data;
     QDataStream stream(&Data,QIODevice::WriteOnly);

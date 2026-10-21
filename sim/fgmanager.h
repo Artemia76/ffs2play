@@ -69,12 +69,16 @@ private:
     struct FGAIObject
     {
         QString         Tail;
+        /// Callsign in FlightGear, which identifies the aircraft there (7 characters)
+        QString         CallSign;
         QString         Model;
         CAircraftState  State;
         datetime        LastSend;
     };
     QMap<uint, FGAIObject> m_AIObjects;
     uint            m_NextObjectID;
+    /// Callsigns of the removed aircraft, still known by FlightGear for 10 s
+    QMap<QString, datetime> m_ReleasedCallSigns;
 
 protected:
     void            open() override;
@@ -93,6 +97,8 @@ protected:
     void            sendDisc();
     void            updateAircraftInfo();
     bool            sendAI(FGAIObject& pObject);
+    void            hideAI(FGAIObject& pObject);
+    QString         makeCallSign(const QString& pTail);
 
 private slots:
     void            OnReceiveDatagram(QNetworkDatagram datagram);
