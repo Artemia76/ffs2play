@@ -44,6 +44,22 @@ FGAIParser::~FGAIParser()
 }
 
 ///
+/// \brief FGAIParser::userFolders
+/// \return the folders where the launcher downloads FlightGear data and aircraft
+/// (FlightGear 2024.1 on Windows : %USERPROFILE%\FlightGear)
+///
+QStringList FGAIParser::userFolders()
+{
+    QStringList Folders;
+    Folders << QDir::homePath() + "/FlightGear";
+    Folders << QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/FlightGear";
+#ifndef Q_OS_WIN
+    Folders << QDir::homePath() + "/.fgfs";
+#endif
+    return Folders;
+}
+
+///
 /// \brief FGAIParser::findFGRoots
 /// \return the existing FlightGear data folders (FG_ROOT)
 ///
@@ -52,8 +68,15 @@ QStringList FGAIParser::findFGRoots()
     QStringList Candidates;
     const QString EnvRoot = qEnvironmentVariable("FG_ROOT");
     if (!EnvRoot.isEmpty()) Candidates << EnvRoot;
+    // Data downloaded by the launcher : <user folder>/Downloads/fgdata_2024_1, newest version first
+    for (const QString& Folder : userFolders())
+    {
+        const QDir Downloads(Folder + "/Downloads");
+        const QStringList Datas = Downloads.entryList({"fgdata*"}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
+        for (const QString& Data : Datas) Candidates << Downloads.absoluteFilePath(Data);
+    }
 #if defined(Q_OS_WIN)
-    // Default installation : C:\Program Files\FlightGear 2024.1\data
+    // Data installed with the program : C:\Program Files\FlightGear 2020.3\data
     for (const QString& ProgramFiles : {qEnvironmentVariable("ProgramFiles"), qEnvironmentVariable("ProgramFiles(x86)")})
     {
         if (ProgramFiles.isEmpty()) continue;
@@ -94,11 +117,12 @@ void FGAIParser::searchSimPath()
     // Additional aircraft folders given to FlightGear
     const QString EnvAircraft = qEnvironmentVariable("FG_AIRCRAFT");
     if (!EnvAircraft.isEmpty()) Candidates << EnvAircraft.split(QDir::listSeparator(), Qt::SkipEmptyParts);
-    // Download folder of the launcher (hangars and TerraSync)
-    Candidates << QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/FlightGear/Aircraft";
-#ifndef Q_OS_WIN
-    Candidates << QDir::homePath() + "/.fgfs/Aircraft";
-#endif
+    // Hangars downloaded by the launcher (Downloads/Aircraft/org.flightgear.fgaddon.stable_2024/Aircraft)
+    // and default folder of the aircraft added by hand
+    for (const QString& Folder : userFolders())
+    {
+        Candidates << Folder + "/Downloads/Aircraft" << Folder + "/Custom Aircraft" << Folder + "/Aircraft";
+    }
     QStringList Added;
     for (const QString& Candidate : std::as_const(Candidates))
     {

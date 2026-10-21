@@ -75,6 +75,7 @@ private slots:
     void fgPropertyList();
     void fgPropertyListInclude();
     void fgPropertyListInvalid();
+    void fgPropertyListRealAircraft();
 };
 
 namespace
@@ -527,6 +528,20 @@ void TestCore::fgPropertyListInvalid()
     QVERIFY(Props.read(Loop));
     QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Loop.xml"));
     QCOMPARE(Props.values("sim/model/path").size(), CFGPropertyList::MaxIncludeDepth + 1);
+}
+
+void TestCore::fgPropertyListRealAircraft()
+{
+    // Only with a FlightGear installation : FG_ROOT=<...>/fgdata_2024_1
+    const QString Root = qEnvironmentVariable("FG_ROOT");
+    if (Root.isEmpty()) QSKIP("FG_ROOT not set");
+    CFGPropertyList Props;
+    QVERIFY(Props.read(Root + "/Aircraft/c172p/c172p-set.xml", {Root}));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QCOMPARE(Props.value("aircraft/icao/type"), QStringLiteral("C172"));
+    QVERIFY(!Props.value("sim/description").isEmpty());
+    qInfo() << "description =" << Props.value("sim/description") << ", author =" << Props.value("sim/author")
+            << ", tags =" << Props.values("sim/tags/tag");
 }
 
 QTEST_GUILESS_MAIN(TestCore)

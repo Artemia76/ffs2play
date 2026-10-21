@@ -42,6 +42,7 @@ private:
 
     void    DBFileUpdate(const QString& pKey,const QString& pPath) override;
     void    searchSimPath() override;
+    static QStringList userFolders();
     static QStringList findFGRoots();
 };
 
