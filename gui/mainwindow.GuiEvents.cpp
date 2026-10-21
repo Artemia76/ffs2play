@@ -128,10 +128,10 @@ void MainWindow::on_rb_filterVerbose_toggled(bool checked)
 }
 
 ///
-/// \brief MainWindow::on_cb_filter_currentIndexChanged
+/// \brief MainWindow::on_cb_filter_currentTextChanged
 /// \param arg1
 ///
-void MainWindow::on_cb_filter_currentIndexChanged(const QString &arg1)
+void MainWindow::on_cb_filter_currentTextChanged(const QString &arg1)
 {
     m_log.setFilter(arg1);
 }

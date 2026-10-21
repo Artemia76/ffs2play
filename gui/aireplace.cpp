@@ -183,55 +183,55 @@ void AIReplace::on_btnBox_rejected()
 }
 
 ///
-/// \brief AIReplace::on_cbCategory_currentIndexChanged
+/// \brief AIReplace::on_cbCategory_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbCategory_currentIndexChanged(const QString&)
+void AIReplace::on_cbCategory_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbEngineNB_currentIndexChanged
+/// \brief AIReplace::on_cbEngineNB_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbEngineNB_currentIndexChanged(const QString&)
+void AIReplace::on_cbEngineNB_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbEngineType_currentIndexChanged
+/// \brief AIReplace::on_cbEngineType_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbEngineType_currentIndexChanged(const QString&)
+void AIReplace::on_cbEngineType_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbType_currentIndexChanged
+/// \brief AIReplace::on_cbType_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbType_currentIndexChanged(const QString&)
+void AIReplace::on_cbType_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbModel_currentIndexChanged
+/// \brief AIReplace::on_cbModel_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbModel_currentIndexChanged(const QString&)
+void AIReplace::on_cbModel_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbEditor_currentIndexChanged
+/// \brief AIReplace::on_cbEditor_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbEditor_currentIndexChanged(const QString&)
+void AIReplace::on_cbEditor_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
