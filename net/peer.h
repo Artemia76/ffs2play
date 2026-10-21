@@ -33,7 +33,6 @@
 #include <QObject>
 #include <QTimer>
 #include <QHostAddress>
-#include <QMutex>
 #include <QDataStream>
 #include <QNetworkDatagram>
 #include <cstddef>
@@ -204,7 +203,6 @@ private:
     datetime                m_lastAIUpdate;
     bool                    m_disabled;
     bool                    m_disableCalculation;
-    QMutex                  m_mutex;
     bool                    m_selected;
     bool                    m_local;
     int                     m_sel_iplocal;

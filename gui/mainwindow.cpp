@@ -59,7 +59,7 @@ MainWindow::MainWindow()
     m_settings.endGroup();
     m_log = CLogger::instance();
 
-    switch (m_log->DebugLevel)
+    switch (m_log->debugLevel())
     {
         case LEVEL_NONE:
         {

@@ -165,7 +165,6 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
                     m_log->log("Peer [" + m_callSign + "] : Bad AirData datagram dropped",Qt::magenta,LEVEL_NORMAL);
                     return;
                 }
-                m_mutex.lock();
                 m_oldData=m_data;
                 m_data.fromAirData(ReceivedData);
                 m_data.TimeStamp += m_decalage;
@@ -193,7 +192,6 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
                     if (m_spawned >=5) refreshData();
                 }
                 m_counter_In = CounterIn;
-                m_mutex.unlock();
             }
             break;
         }

@@ -55,12 +55,13 @@ private:
     bool                    m_logToFile;
     QString                 m_filtreLog;
     QRegularExpression      m_rx;
-    QMutex                  m_mutex;
+    /// log() is also called by the AI scan thread : the members above are protected by m_mutex
+    mutable QMutex          m_mutex;
 
 public:
                             ~CLogger();
-    const CL_DEBUG_LEVEL&   DebugLevel;
     static CLogger*         instance();
+    CL_DEBUG_LEVEL          debugLevel() const;
     void                    setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
     void                    log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
     void                    setFilter(const QString& pFilter);

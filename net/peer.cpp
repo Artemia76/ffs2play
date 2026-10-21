@@ -388,7 +388,6 @@ void CPeer::updateAI(datetime pTime, float pFPS)
     {
         return;
     }
-    m_mutex.lock();
     if ((m_objectID == 0) || (m_version != PROTO_VERSION))
     {
         m_lastRender = pTime;
@@ -460,7 +459,6 @@ void CPeer::updateAI(datetime pTime, float pFPS)
             }
         }
     }
-    m_mutex.unlock();
 }
 
 ///

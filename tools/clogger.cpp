@@ -34,8 +34,7 @@
 /// \param parent
 ///
 CLogger::CLogger(QObject* parent):
-    QObject(parent),
-    DebugLevel(m_DebugLevel)
+    QObject(parent)
 {
     qRegisterMetaType<CL_DEBUG_LEVEL>("CL_DEBUG_LEVEL");
     m_settings.beginGroup("Log");
@@ -81,14 +80,13 @@ CLogger* CLogger::instance()
 ///
 void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
 {
-    m_mutex.lock();
+    QMutexLocker locker(&m_mutex);
     if (pLevel < LEVEL_NONE ) m_DebugLevel=LEVEL_NONE;
     else if (pLevel > LEVEL_VERBOSE) m_DebugLevel=LEVEL_VERBOSE;
     else m_DebugLevel = pLevel;
     m_settings.beginGroup("Log");
     m_settings.setValue("DebugLevel",QVariant(m_DebugLevel));
     m_settings.endGroup();
-    m_mutex.unlock();
 }
 
 ///
@@ -99,12 +97,12 @@ void CLogger::setDebugLevel(CL_DEBUG_LEVEL pLevel)
 ///
 void CLogger::log (const QString& Texte,QColor pColor, CL_DEBUG_LEVEL pLevel)
 {
-    m_mutex.lock();
-    if ((m_rx.match(Texte).hasMatch()&&(pLevel <= m_DebugLevel))||(pLevel==LEVEL_NONE))
     {
-        emit(fireLog(Texte,pColor,pLevel));
+        QMutexLocker locker(&m_mutex);
+        if ((pLevel!=LEVEL_NONE) && ((pLevel > m_DebugLevel) || !m_rx.match(Texte).hasMatch())) return;
     }
-    m_mutex.unlock();
+    // Emitted without the lock : a slot may log again
+    emit fireLog(Texte,pColor,pLevel);
 }
 
 ///
@@ -122,13 +120,12 @@ void CLogger::updatePattern()
 ///
 void CLogger::setFilter(const QString& pFilter)
 {
-    m_mutex.lock();
+    QMutexLocker locker(&m_mutex);
     m_filtreLog=pFilter;
     updatePattern();
     m_settings.beginGroup("Log");
     m_settings.setValue("FiltreLog",m_filtreLog);
     m_settings.endGroup();
-    m_mutex.unlock();
 }
 
 ///
@@ -137,5 +134,16 @@ void CLogger::setFilter(const QString& pFilter)
 ///
 QString CLogger::getFilter()
 {
+    QMutexLocker locker(&m_mutex);
     return m_filtreLog;
+}
+
+///
+/// \brief CLogger::debugLevel
+/// \return current debug level
+///
+CL_DEBUG_LEVEL CLogger::debugLevel() const
+{
+    QMutexLocker locker(&m_mutex);
+    return m_DebugLevel;
 }
