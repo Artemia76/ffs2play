@@ -384,7 +384,7 @@ bool AIBaseParser::getAircraftInfo(const QString& pTitle, QString& pModel, QStri
     QSqlQuery query(m_DB);
     // Several variants can share the title : first one with an ICAO type, then the main
     // file of the aircraft folder (c172p-set.xml rather than c172p-amphibious-set.xml)
-    query.prepare("SELECT Model,Type FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim) ORDER BY (Model = ''), length(Path)");
+    query.prepare("SELECT Model,Type FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim) ORDER BY (ifnull(Model,'') = ''), length(Path)");
     query.bindValue(":Title",pTitle);
     query.bindValue(":Sim",m_Table);
     if (!query.exec())
