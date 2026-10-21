@@ -135,12 +135,20 @@ bool CFGManager::createAI(AIResol& pAircraft,const QString& pTail,const CAircraf
     const uint ObjectID = m_NextObjectID++;
     FGAIObject& Object = m_AIObjects[ObjectID];
     Object.Tail = pTail;
-    Object.CallSign = makeCallSign(pTail);
+    Object.CallSign = pTail.left(7);
     Object.Model = pAircraft.title();
     Object.State = pData;
+    // FlightGear identifies a multiplayer aircraft by its callsign only and keeps the
+    // model of its first message : after a removal with another model, wait until it
+    // has dropped the previous aircraft (10 s without message). With the same model,
+    // the hidden aircraft is simply moved back.
+    const auto Released = m_ReleasedCallSigns.constFind(Object.CallSign);
+    if ((Released != m_ReleasedCallSigns.constEnd()) && (Released->Model != Object.Model))
+        Object.HoldUntil = Released->Time + milliseconds(FGReleaseDelay);
     sendAI(Object);
 #ifdef FFS_DEBUG
-    m_log.log("FGManager : Send createAI " + pTail + " , CallSign = " + Object.CallSign + " , Model = " + Object.Model + " , Object ID = " + QString::number(ObjectID), Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("FGManager : Send createAI " + Object.CallSign + " , Model = " + Object.Model + " , Object ID = " + QString::number(ObjectID) +
+              (Object.Sent ? QString() : " , sent when FlightGear has removed the previous aircraft"), Qt::darkBlue,LEVEL_NORMAL);
 #endif
     // Answered after the return, like the X-Plane plugin, when the peer is waiting for it
     QTimer::singleShot(0, this, [this, pTail, ObjectID]()
@@ -165,8 +173,12 @@ bool CFGManager::removeAI(uint& pObjectID)
 #ifdef FFS_DEBUG
         m_log.log("FGManager : Send removeAI " + it->CallSign + " , Object ID = " + QString::number(pObjectID), Qt::darkBlue,LEVEL_NORMAL);
 #endif
-        hideAI(*it);
-        m_ReleasedCallSigns.insert(it->CallSign, Now());
+        // Not sent yet (waiting for the removal of a previous aircraft) : its removal time is kept
+        if (it->Sent)
+        {
+            hideAI(*it);
+            m_ReleasedCallSigns.insert(it->CallSign, {Now(), it->Model});
+        }
         m_AIObjects.erase(it);
     }
     pObjectID = 0;
@@ -189,43 +201,6 @@ void CFGManager::hideAI(FGAIObject& pObject)
 }
 
 ///
-/// \brief CFGManager::makeCallSign
-/// FlightGear identifies a multiplayer aircraft by its callsign only (7 characters)
-/// and keeps its model : a callsign removed less than 10 s ago would show the
-/// previous model, a longer one can be shared by two peers. A digit is added then.
-/// \param pTail callsign of the peer
-/// \return callsign for FlightGear
-///
-QString CFGManager::makeCallSign(const QString& pTail)
-{
-    const datetime Time = Now();
-    for (auto it = m_ReleasedCallSigns.begin(); it != m_ReleasedCallSigns.end();)
-    {
-        // FlightGear timeout (10 s) and margin
-        if ((Time - it.value()) > milliseconds(12000)) it = m_ReleasedCallSigns.erase(it);
-        else ++it;
-    }
-    auto IsUsed = [this](const QString& pCallSign)
-    {
-        if (m_ReleasedCallSigns.contains(pCallSign)) return true;
-        for (const FGAIObject& Object : std::as_const(m_AIObjects))
-        {
-            if (Object.CallSign == pCallSign) return true;
-        }
-        return false;
-    };
-    const QString Base = pTail.left(7);
-    if (!IsUsed(Base)) return Base;
-    for (int i = 1; i < 100; i++)
-    {
-        const QString Suffix = QString::number(i);
-        const QString CallSign = Base.left(7 - Suffix.size()) + Suffix;
-        if (!IsUsed(CallSign)) return CallSign;
-    }
-    return Base;
-}
-
-///
 /// \brief CFGManager::updateAI
 /// \param pObjectID
 /// \param pData
@@ -239,7 +214,8 @@ bool CFGManager::updateAI(uint pObjectID, const CAircraftState& pData)
     m_log.log("FGManager : Send updateAI " + it->Tail, Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     it->State = pData;
-    return sendAI(*it);
+    sendAI(*it);
+    return true;
 }
 
 ///
@@ -251,6 +227,7 @@ bool CFGManager::updateAI(uint pObjectID, const CAircraftState& pData)
 bool CFGManager::sendAI(FGAIObject& pObject)
 {
     if ((!m_connected) || (m_FGPort == 0)) return false;
+    if (Now() < pObject.HoldUntil) return false;
     FGDatagram Datagram;
     Datagram.SetIdentity(pObject.CallSign, pObject.Model);
     Datagram.SetAirData(pObject.State);
@@ -260,6 +237,7 @@ bool CFGManager::sendAI(FGAIObject& pObject)
     // FlightGear receives on the socket it sends from
     m_Server->send(QNetworkDatagram(Data, m_FGAddress, m_FGPort));
     pObject.LastSend = Now();
+    pObject.Sent = true;
     return true;
 }
 
@@ -394,11 +372,17 @@ void CFGManager::OnPingTimer()
 {
     if (m_connected)
     {
-        // Keeps the peer aircraft alive in FlightGear between two DATA of the peer
+        // Keeps the peer aircraft alive in FlightGear between two DATA of the peer,
+        // and sends the aircraft created while FlightGear had the previous one
         const datetime Time = Now();
         for (FGAIObject& Object : m_AIObjects)
         {
             if ((Time - Object.LastSend) > milliseconds(1000)) sendAI(Object);
+        }
+        for (auto it = m_ReleasedCallSigns.begin(); it != m_ReleasedCallSigns.end();)
+        {
+            if ((Time - it->Time) > milliseconds(FGReleaseDelay)) it = m_ReleasedCallSigns.erase(it);
+            else ++it;
         }
         /*if(timespan(Now() - m_LastPong).count()>10000)
         {

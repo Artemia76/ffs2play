@@ -41,6 +41,10 @@
 #include "sim/aircraftstate.h"
 #include "net/udpserver.h"
 
+/// FlightGear drops a multiplayer aircraft 10 s after its last message : delay
+/// before a removed callsign can be used again with another model (ms)
+constexpr int FGReleaseDelay = 15000;
+
 ///
 /// \brief The CFGManager class
 ///
@@ -74,11 +78,19 @@ private:
         QString         Model;
         CAircraftState  State;
         datetime        LastSend;
+        /// Nothing sent before : FlightGear still knows the previous aircraft with this callsign
+        datetime        HoldUntil;
+        bool            Sent = false;
     };
     QMap<uint, FGAIObject> m_AIObjects;
     uint            m_NextObjectID;
-    /// Callsigns of the removed aircraft, still known by FlightGear for 10 s
-    QMap<QString, datetime> m_ReleasedCallSigns;
+    /// Removed callsigns, still known by FlightGear for 10 s with their model
+    struct FGReleased
+    {
+        datetime        Time;
+        QString         Model;
+    };
+    QMap<QString, FGReleased> m_ReleasedCallSigns;
 
 protected:
     void            open() override;
@@ -98,7 +110,6 @@ protected:
     void            updateAircraftInfo();
     bool            sendAI(FGAIObject& pObject);
     void            hideAI(FGAIObject& pObject);
-    QString         makeCallSign(const QString& pTail);
 
 private slots:
     void            OnReceiveDatagram(QNetworkDatagram datagram);
