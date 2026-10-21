@@ -99,9 +99,11 @@ void AIMapping::onSimReceiveOpen()
             m_AIParser = std::make_unique<XPCSLParser>();
             break;
         }
-        /*case SimConnector::SIM_VERSION::FLIGHTGEAR:
-        m_AIParser = new FGAIParser(this);
-        break;*/
+        case SimConnector::SIM_VERSION::FLIGHTGEAR:
+        {
+            m_AIParser = std::make_unique<FGAIParser>();
+            break;
+        }
         default:
         {
             return;
@@ -322,6 +324,19 @@ QString AIMapping::getAircraftPath(const QString &pTitle)
     if (isInit())
         Response  = m_AIParser->getAircraftPath(pTitle);
     return Response;
+}
+
+///
+/// \brief AIMapping::getAircraftInfo
+/// \param pTitle
+/// \param pModel ICAO type of the aircraft
+/// \param pType
+/// \return false if the aircraft is not in the database
+///
+bool AIMapping::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType)
+{
+    if (!isInit()) return false;
+    return m_AIParser->getAircraftInfo(pTitle, pModel, pType);
 }
 
 ///

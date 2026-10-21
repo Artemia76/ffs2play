@@ -372,6 +372,34 @@ QString AIBaseParser::getAircraftPath(const QString &pTitle)
 }
 
 ///
+/// \brief AIBaseParser::getAircraftInfo
+/// \param pTitle
+/// \param pModel ICAO type of the aircraft
+/// \param pType
+/// \return false if the aircraft is not in the database
+///
+bool AIBaseParser::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType)
+{
+    if ((!m_Initialized) || m_Table.isEmpty()) return false;
+    QSqlQuery query(m_DB);
+    // An aircraft with an ICAO type first, when several variants share the title
+    query.prepare("SELECT Model,Type FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim) ORDER BY (Model = '')");
+    query.bindValue(":Title",pTitle);
+    query.bindValue(":Sim",m_Table);
+    if (!query.exec())
+    {
+#ifdef FFS_DEBUG
+        m_log.log("AIMapping : Fail to query database.", Qt::darkYellow,LEVEL_VERBOSE);
+#endif
+        return false;
+    }
+    if (!query.next()) return false;
+    pModel = query.value(0).toString();
+    pType = query.value(1).toString();
+    return true;
+}
+
+///
 /// \brief AIBaseParser::SolveTitle
 /// \return
 ///
@@ -410,6 +438,14 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             Resol.setTitle("Asobo Savage Cub");
             Resol.setCgHeight(0.0);
             Resol.setPitch(0.0);
+            break;
+        case SimConnector::SIM_VERSION::FLIGHTGEAR:
+            // Delivered with FlightGear
+            Resol.setTitle("Aircraft/c172p/Models/c172p.xml");
+            Resol.setCgHeight(0.0);
+            Resol.setPitch(0.0);
+            break;
+        default:
             break;
     }
     if ((!m_Initialized) || m_Table.isEmpty()) return Resol;
@@ -534,7 +570,7 @@ QStringList AIBaseParser::getAITitleDispo(
         int EngineTypeVal=0;
         Category=Editor=Type=Model=EngineType=NbEngine=false;
         QSqlQuery query(m_DB);
-        QString command =  "SELECT Title FROM Aircrafts WHERE Sim = :Sim";
+        QString command =  "SELECT DISTINCT Title FROM Aircrafts WHERE Sim = :Sim";
         if (pCategory.length()>0)
         {
             command += " and Category like :Category";

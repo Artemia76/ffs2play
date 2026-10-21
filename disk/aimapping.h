@@ -40,6 +40,7 @@
 #include "scaiparser.h"
 #endif
 #include "xpaiparser.h"
+#include "fgaiparser.h"
 #include "xpcslparser.h"
 
 class AIMapping : public QObject
@@ -82,6 +83,7 @@ public:
     void                    cleanAIDB();
     QMap<QString,QString>   getRulesList();
     QString                 getAircraftPath(const QString& pTitle);
+    bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType);
     QString                 getFileData(const QString& pKey);
 
     bool                    addPath(const QString& pPath, const QString& pSim="");
