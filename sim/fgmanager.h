@@ -56,10 +56,11 @@ private:
     quint16         m_FGPort;
     quint16         m_LocalPort;
     UDPServer*      m_Server;
-    /// ICAO type and type of the aircraft found in the AI database for m_InfoTitle
+    /// ICAO type, type and category of the aircraft found in the AI database for m_InfoTitle
     QString         m_InfoTitle;
     QString         m_InfoModel;
     QString         m_InfoType;
+    QString         m_InfoCategory;
     bool            m_InfoFound;
     int             m_InfoRetry;
 

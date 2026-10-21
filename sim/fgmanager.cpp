@@ -248,7 +248,7 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
 
 ///
 /// \brief CFGManager::updateAircraftInfo
-/// FlightGear only sends the model path : the ICAO type and the type come from
+/// FlightGear only sends the model path : the ICAO type, the type and the category come from
 /// the AI database (FGAIParser). Not called from the constructor : AIMapping
 /// needs simbasemanager, which is creating this connector.
 ///
@@ -259,6 +259,7 @@ void CFGManager::updateAircraftInfo()
         m_InfoTitle = m_state.Title;
         m_InfoModel.clear();
         m_InfoType.clear();
+        m_InfoCategory.clear();
         m_InfoFound = false;
         m_InfoRetry = 0;
     }
@@ -266,14 +267,15 @@ void CFGManager::updateAircraftInfo()
     if ((!m_InfoFound) && (--m_InfoRetry <= 0))
     {
         m_InfoRetry = 100;
-        m_InfoFound = AIMapping::instance().getAircraftInfo(m_InfoTitle, m_InfoModel, m_InfoType);
+        m_InfoFound = AIMapping::instance().getAircraftInfo(m_InfoTitle, m_InfoModel, m_InfoType, m_InfoCategory);
 #ifdef FFS_DEBUG
         if (m_InfoFound)
-            m_log.log("FGManager : Aircraft found in AI database : ICAO = " + m_InfoModel + " , Type = " + m_InfoType, Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("FGManager : Aircraft found in AI database : ICAO = " + m_InfoModel + " , Type = " + m_InfoType + " , Category = " + m_InfoCategory, Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
     m_state.Model = m_InfoModel;
     m_state.Type = m_InfoType;
+    m_state.Category = m_InfoCategory;
 }
 
 ///

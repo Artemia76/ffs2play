@@ -83,7 +83,7 @@ public:
     void                    cleanAIDB();
     QMap<QString,QString>   getRulesList();
     QString                 getAircraftPath(const QString& pTitle);
-    bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType);
+    bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory);
     QString                 getFileData(const QString& pKey);
 
     bool                    addPath(const QString& pPath, const QString& pSim="");

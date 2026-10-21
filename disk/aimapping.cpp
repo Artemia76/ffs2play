@@ -331,12 +331,13 @@ QString AIMapping::getAircraftPath(const QString &pTitle)
 /// \param pTitle
 /// \param pModel ICAO type of the aircraft
 /// \param pType
+/// \param pCategory
 /// \return false if the aircraft is not in the database
 ///
-bool AIMapping::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType)
+bool AIMapping::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory)
 {
     if (!isInit()) return false;
-    return m_AIParser->getAircraftInfo(pTitle, pModel, pType);
+    return m_AIParser->getAircraftInfo(pTitle, pModel, pType, pCategory);
 }
 
 ///
