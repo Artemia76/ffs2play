@@ -75,16 +75,21 @@ void FGDatagram::Read(QDataStream& pStream)
 #endif
     //Reading Position Data
     pStream.readRawData(&m_Pos.ModelName[0],sizeof (m_Pos.ModelName));
+    // Time, lag and position are 8 bytes XDR doubles, all the following values 4 bytes
+    // XDR floats : QDataStream reads float and double with the same precision setting
+    pStream.setFloatingPointPrecision(QDataStream::DoublePrecision);
     pStream >> m_Pos.Time;
     pStream >> m_Pos.Lag;
     for (int i=0; i<3; i++) pStream >> m_Pos.Position[i];
+    pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
     for (int i=0; i<3; i++) pStream >> m_Pos.Orientation[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.LinearVelocity[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.AngularVelocity[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.LinearAccel[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.AngularAccel[i];
-    char Dummy[8];
-    pStream.readRawData(&Dummy[0],8);
+    // xdr_data_t pad of T_PositionMsg (FlightGear mpmessages.hxx) : properties start at byte 232
+    char Dummy[4];
+    pStream.readRawData(&Dummy[0],sizeof(Dummy));
     float Roll, Pitch , Yaw;
     EulerToAngle (m_Pos.Orientation[0],m_Pos.Orientation[1],m_Pos.Orientation[2],Yaw,Pitch,Roll);
 #ifdef FFS_DEBUG

@@ -43,6 +43,7 @@
 #include "tools/crypto.h"
 #include "tools/datagram.h"
 #include "tools/fgpropertylist.h"
+#include "sim/fgdatagram.h"
 
 class TestCore : public QObject
 {
@@ -76,6 +77,7 @@ private slots:
     void fgPropertyListInclude();
     void fgPropertyListInvalid();
     void fgPropertyListRealAircraft();
+    void fgDatagramPosition();
 };
 
 namespace
@@ -542,6 +544,41 @@ void TestCore::fgPropertyListRealAircraft()
     QVERIFY(!Props.value("sim/description").isEmpty());
     qInfo() << "description =" << Props.value("sim/description") << ", author =" << Props.value("sim/author")
             << ", tags =" << Props.values("sim/tags/tag");
+}
+
+void TestCore::fgDatagramPosition()
+{
+    // Multiplayer position message as sent by FlightGear (mpmessages.hxx), XDR big endian
+    QByteArray Data;
+    QDataStream Out(&Data, QIODevice::WriteOnly);
+    Out.setByteOrder(QDataStream::BigEndian);
+    Out << quint32(simgear::MSG_MAGIC) << quint32(simgear::PROTO_VER) << quint32(7) << quint32(0) << quint32(100) << quint32(5001);
+    Out.writeRawData("TEST\0\0\0\0", 8);
+    QByteArray Model("Aircraft/c172p/Models/c172p.xml");
+    Model.resize(96, '\0');
+    Out.writeRawData(Model.constData(), Model.size());
+    Out.setFloatingPointPrecision(QDataStream::DoublePrecision);
+    Out << 12.5 << 0.25 << 4201000.0 << 187000.0 << 4790000.0;
+    Out.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    for (int i = 1; i <= 15; i++) Out << static_cast<float>(i) / 10.0f;
+    Out << quint32(0); // pad
+    QCOMPARE(Data.size(), 232);
+    // A V1 property (4 bytes id) : surface-positions/elevator-pos-norm
+    Out << quint16(0) << quint16(102) << 0.5f;
+
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    simgear::FGDatagram Datagram;
+    Datagram.Read(In);
+    QVERIFY(Datagram.IsSane());
+    simgear::FGPos Pos;
+    QVERIFY(Datagram.GetPos(Pos));
+    QCOMPARE(QString(Pos.ModelName), QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QCOMPARE(Pos.Time, 12.5);
+    QCOMPARE(Pos.Position[2], 4790000.0);
+    QCOMPARE(Pos.Orientation[0], 0.1f);
+    QCOMPARE(Pos.AngularAccel[2], 1.5f);
+    QVERIFY(In.atEnd());
+    QCOMPARE(In.status(), QDataStream::Ok);
 }
 
 QTEST_GUILESS_MAIN(TestCore)
