@@ -42,6 +42,7 @@
 #include "web/caddrrequest.h"
 #include "tools/crypto.h"
 #include "tools/datagram.h"
+#include "tools/fgpropertylist.h"
 
 class TestCore : public QObject
 {
@@ -70,6 +71,10 @@ private slots:
     void addrRequestForcedLayer_data();
     void addrRequestForcedLayer();
     void addrRequestHttpError();
+
+    void fgPropertyList();
+    void fgPropertyListInclude();
+    void fgPropertyListInvalid();
 };
 
 namespace
@@ -429,6 +434,99 @@ void TestCore::soapParsing()
 <errorCode>718</errorCode><errorDescription>ConflictInMappingEntry</errorDescription>
 </UPnPError></detail></s:Fault></s:Body></s:Envelope>)";
     QCOMPARE(CUPnPClient::soapValue(fault, "errorCode").toInt(), 718);
+}
+
+namespace
+{
+bool writeTextFile(const QString& pPath, const QByteArray& pContent)
+{
+    QDir().mkpath(QFileInfo(pPath).absolutePath());
+    QFile File(pPath);
+    return File.open(QIODevice::WriteOnly) && File.write(pContent) == pContent.size();
+}
+}
+
+void TestCore::fgPropertyList()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    const QString SetFile = Dir.filePath("Aircraft/dr400/dr400-set.xml");
+    QVERIFY(writeTextFile(SetFile, R"(<?xml version="1.0"?>
+<PropertyList>
+  <sim>
+    <description>Robin DR400</description>
+    <author>Someone</author>
+    <model><path>Aircraft/dr400/Models/dr400.xml</path></model>
+    <tags>
+      <tag>ga</tag>
+      <tag>piston</tag>
+      <tag>single-engine</tag>
+    </tags>
+  </sim>
+  <aircraft><icao><type>DR40</type></icao></aircraft>
+</PropertyList>
+)"));
+    CFGPropertyList Props;
+    QVERIFY(Props.read(SetFile));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Aircraft/dr400/Models/dr400.xml"));
+    QCOMPARE(Props.value("aircraft/icao/type"), QStringLiteral("DR40"));
+    QCOMPARE(Props.value("sim/description"), QStringLiteral("Robin DR400"));
+    QCOMPARE(Props.values("sim/tags/tag"), QStringList({"ga", "piston", "single-engine"}));
+    QVERIFY(Props.value("sim/missing").isEmpty());
+}
+
+void TestCore::fgPropertyListInclude()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    // Root include relative to the file, node include relative to a parent folder
+    const QString SetFile = Dir.filePath("Aircraft/c172p/c172p-set.xml");
+    QVERIFY(writeTextFile(SetFile, R"(<?xml version="1.0"?>
+<PropertyList include="c172p-common.xml">
+  <sim>
+    <description>Cessna 172P floats</description>
+    <tags include="Aircraft/Generic/tags.xml"/>
+  </sim>
+</PropertyList>
+)"));
+    QVERIFY(writeTextFile(Dir.filePath("Aircraft/c172p/c172p-common.xml"), R"(<?xml version="1.0"?>
+<PropertyList>
+  <sim>
+    <description>Cessna 172P</description>
+    <model><path>Aircraft/c172p/Models/c172p.xml</path></model>
+  </sim>
+  <aircraft><icao><type>C172</type></icao></aircraft>
+</PropertyList>
+)"));
+    QVERIFY(writeTextFile(Dir.filePath("Aircraft/Generic/tags.xml"), R"(<?xml version="1.0"?>
+<PropertyList><tag>seaplane</tag></PropertyList>
+)"));
+    CFGPropertyList Props;
+    QVERIFY(Props.read(SetFile));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QCOMPARE(Props.value("aircraft/icao/type"), QStringLiteral("C172"));
+    // The including file overrides the included one
+    QCOMPARE(Props.value("sim/description"), QStringLiteral("Cessna 172P floats"));
+    QCOMPARE(Props.values("sim/tags/tag"), QStringList({"seaplane"}));
+}
+
+void TestCore::fgPropertyListInvalid()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    CFGPropertyList Props;
+    QVERIFY(!Props.read(Dir.filePath("missing-set.xml")));
+    const QString Other = Dir.filePath("other-set.xml");
+    QVERIFY(writeTextFile(Other, "<?xml version=\"1.0\"?><root><a>1</a></root>"));
+    QVERIFY(!Props.read(Other));
+    // A file including itself stops at the maximum depth
+    const QString Loop = Dir.filePath("loop-set.xml");
+    QVERIFY(writeTextFile(Loop, R"(<?xml version="1.0"?>
+<PropertyList include="loop-set.xml"><sim><model><path>Loop.xml</path></model></sim></PropertyList>
+)"));
+    QVERIFY(Props.read(Loop));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Loop.xml"));
+    QCOMPARE(Props.values("sim/model/path").size(), CFGPropertyList::MaxIncludeDepth + 1);
 }
 
 QTEST_GUILESS_MAIN(TestCore)

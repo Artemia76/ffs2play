@@ -5,6 +5,7 @@ qt_add_executable(tst_core
     ${PROJECT_SOURCE_DIR}/tools/clogger.cpp ${PROJECT_SOURCE_DIR}/tools/clogger.h
     ${PROJECT_SOURCE_DIR}/tools/crypto.cpp ${PROJECT_SOURCE_DIR}/tools/crypto.h
     ${PROJECT_SOURCE_DIR}/tools/datagram.cpp ${PROJECT_SOURCE_DIR}/tools/datagram.h
+    ${PROJECT_SOURCE_DIR}/tools/fgpropertylist.cpp ${PROJECT_SOURCE_DIR}/tools/fgpropertylist.h
     ${PROJECT_SOURCE_DIR}/net/upnpclient.cpp ${PROJECT_SOURCE_DIR}/net/upnpclient.h
     ${PROJECT_SOURCE_DIR}/web/caddrrequest.cpp ${PROJECT_SOURCE_DIR}/web/caddrrequest.h
 )
