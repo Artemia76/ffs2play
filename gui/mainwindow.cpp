@@ -232,13 +232,11 @@ void MainWindow::onSCM_Loaded(SIM_TYPE pSimType)
             ui->afFSType->setIcon(QIcon(":/gfx/xplane.png"));
             break;
         }
-#ifdef FFS_DEBUG
         case SIM_TYPE::FLIGHTGEAR:
         {
             ui->afFSType->setIcon(QIcon(":/gfx/flightgear.png"));
             break;
         }
-#endif
     }
 }
 

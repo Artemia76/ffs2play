@@ -48,9 +48,7 @@ enum class SIM_TYPE
 {
     FSX,
     XPLANE,
-#ifdef FFS_DEBUG
     FLIGHTGEAR
-#endif
 };
 
 class simbasemanager : public QObject

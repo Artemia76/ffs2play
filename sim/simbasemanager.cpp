@@ -45,9 +45,7 @@ simbasemanager::simbasemanager(QObject* parent):
     m_simAvailable.append(SIM_TYPE::FSX);
 #endif
     m_simAvailable.append(SIM_TYPE::XPLANE);
-#ifdef FFS_DEBUG
     m_simAvailable.append(SIM_TYPE::FLIGHTGEAR);
-#endif
     m_settings.beginGroup("Sim");
     m_simType = static_cast<SIM_TYPE>(m_settings.value("DefaultSim",static_cast<int>(m_simAvailable.first())).toInt());
     m_settings.endGroup();
@@ -110,13 +108,11 @@ void simbasemanager::load(SIM_TYPE pSimType)
             m_connector = std::make_unique<CXPManager>();
             break;
         }
-#ifdef FFS_DEBUG
         case SIM_TYPE::FLIGHTGEAR:
         {
             m_connector = std::make_unique<CFGManager>();
             break;
         }
-#endif
     }
     if (!m_connector) return;
     m_initialized=true;
