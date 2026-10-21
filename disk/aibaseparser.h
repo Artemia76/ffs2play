@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QThread>
 #include <QtSql>
+#include <memory>
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 
@@ -50,7 +51,8 @@ public:
 
 protected:
     bool                    m_Initialized;
-    QThread*                m_thread;
+    /// Scan thread : the members below up to m_AIFileFilter are only read by it while it runs
+    std::unique_ptr<QThread> m_thread;
     QSqlDatabase            m_Thread_DB; //Since QT5.11, we need to separate DB connexion between threads
     QSqlDatabase            m_DB;
     QString                 m_Table;
@@ -62,6 +64,8 @@ protected:
     QString                 m_BaseFile;
     simbasemanager*         m_simManager;
     QStringList             m_AIFileFilter;
+    /// Simulator type of the scan, read by the scan thread instead of simbasemanager
+    SIM_TYPE                m_ScanSim;
 
     void                    startScanSimObject();
     QString                 getAircraftPath(const QString& pTitle);
@@ -102,9 +106,11 @@ protected:
 virtual void                DBFileUpdate(const QString& pKey,const QString& pPath)=0;
     void                    DBFilePurge ();
 
+    bool                    isScanInterrupted() const;
+
 signals:
     void                    fireScanFinished(int pAdded, int pUpdated, int pDeleted);
-private slots:
+private:
     void                    scanSimObject();
 };
 

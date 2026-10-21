@@ -61,7 +61,7 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
 #endif
             try
             {
-                SIM_TYPE sim=m_simManager->getType();
+                SIM_TYPE sim=m_ScanSim;
                 IniParser s(Path,sim);
                 Path = Path.replace("/","\\");
                 QString Editor;

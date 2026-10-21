@@ -34,7 +34,7 @@ AIBaseParser::AIBaseParser(QObject *parent) : QObject(parent)
     m_Initialized =false;
     m_log = CLogger::instance();
     m_simManager = simbasemanager::instance();
-    m_thread = nullptr;
+    m_ScanSim = m_simManager->getType();
     QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
     m_Table = version.valueToKey(m_simManager->getVersion());
 #ifdef FFS_DEBUG
@@ -46,6 +46,12 @@ AIBaseParser::AIBaseParser(QObject *parent) : QObject(parent)
 
 AIBaseParser::~AIBaseParser()
 {
+    // The scan thread uses this object : stop it before destruction
+    if (m_thread)
+    {
+        m_thread->requestInterruption();
+        m_thread->wait();
+    }
     m_DB.close();
 #ifdef FFS_DEBUG
     m_log->log("AIMapping : aibaseparser destructor : " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
@@ -173,16 +179,22 @@ void AIBaseParser::DBTableVersionCheck(const QString& pTable, int pVersion, bool
 ///
 void AIBaseParser::startScanSimObject()
 {
+    // Only one scan at a time on the database
+    if (m_thread && m_thread->isRunning()) return;
+    // Inputs of the scan are copied before the thread starts
     m_AircraftPaths = getPathList();
-    //if (m_AircraftPaths.count() == 0) return;
-    if (m_thread != nullptr)
-    {
-        if (m_thread->isRunning()) m_thread->exit();
-    }
-    m_thread = new QThread();
-    connect(m_thread, SIGNAL(started()), this, SLOT(scanSimObject()),Qt::DirectConnection);
-    m_thread->start();
-    m_thread->setPriority(QThread::IdlePriority);
+    m_ScanSim = m_simManager->getType();
+    m_thread.reset(QThread::create([this]() { scanSimObject(); }));
+    m_thread->start(QThread::IdlePriority);
+}
+
+///
+/// \brief AIBaseParser::isScanInterrupted
+/// \return true if the scan thread must stop (parser destroyed)
+///
+bool AIBaseParser::isScanInterrupted() const
+{
+    return m_thread && m_thread->isInterruptionRequested();
 }
 
 ///
@@ -238,7 +250,7 @@ void AIBaseParser::scanSimObject()
         for (const QString& Directory : m_AircraftPaths)
         {
             QDirIterator it(QDir(Directory).canonicalPath(), m_AIFileFilter, QDir::Files, QDirIterator::Subdirectories);
-            while (it.hasNext())
+            while (it.hasNext() && !isScanInterrupted())
             {
                 QString FileName = it.next();
                 QString Hash = MD5Hash(FileName);
@@ -253,8 +265,10 @@ void AIBaseParser::scanSimObject()
         m_log->log("AIMapping : Failed to start thread scan Object Path du to SQLite DB connexion",Qt::darkMagenta);
 #endif
     }
-    //Close DB Connexion
+    //Close and remove the DB connexion of this thread
     m_Thread_DB.close();
+    m_Thread_DB = QSqlDatabase();
+    QSqlDatabase::removeDatabase(thread_address);
     m_log->log(tr("End of update : ") + QString::number(m_NbAdded) +
                tr(" aircrafts added, ") + QString::number(m_NbUpdated) +
                tr(" updated and ") + QString::number(m_NbDeleted) + tr(" deleted."));
@@ -267,12 +281,12 @@ void AIBaseParser::scanSimObject()
 void AIBaseParser::DBFilePurge()
 {
     if (!m_Initialized) return;
-    int m_NbDeleted=0;
     int total =0;
 #ifdef FFS_DEBUG
     m_log->log("AIMapping : Start of automatic cleaning...",Qt::darkYellow,LEVEL_NORMAL);
 #endif
-    QSqlQuery query(m_DB);
+    // Runs in the scan thread : only its own connection can be used
+    QSqlQuery query(m_Thread_DB);
     query.prepare("SELECT Path FROM Aircrafts WHERE Sim =:Sim");
     query.bindValue(":Sim",m_Table);
     if (query.exec())
@@ -287,7 +301,7 @@ void AIBaseParser::DBFilePurge()
                 m_log->log("AIMapping : deleting file " + Acft.fileName() + " from DB",Qt::darkYellow,LEVEL_NORMAL);
 #endif
                 m_NbDeleted++;
-                QSqlQuery query2(m_DB);
+                QSqlQuery query2(m_Thread_DB);
                 query2.prepare("DELETE FROM Aircrafts WHERE (Path =:Path) and (Sim =:Sim)");
                 query2.bindValue(":Sim",m_Table);
                 query2.bindValue(":Path",Acft.fileName());
