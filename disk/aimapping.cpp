@@ -332,12 +332,15 @@ QString AIMapping::getAircraftPath(const QString &pTitle)
 /// \param pModel ICAO type of the aircraft
 /// \param pType
 /// \param pCategory
+/// \param pPath if not null, file of the aircraft
+/// \param pNbEngine if not null, number of engines (0 unknown)
 /// \return false if the aircraft is not in the database
 ///
-bool AIMapping::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory)
+bool AIMapping::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,
+                                QString* pPath, int* pNbEngine)
 {
     if (!isInit()) return false;
-    return m_AIParser->getAircraftInfo(pTitle, pModel, pType, pCategory);
+    return m_AIParser->getAircraftInfo(pTitle, pModel, pType, pCategory, pPath, pNbEngine);
 }
 
 ///

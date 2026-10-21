@@ -42,8 +42,9 @@
 bool CFGPropertyList::read(const QString& pFile, const QStringList& pRoots)
 {
     m_Props.clear();
+    m_Aliases.clear();
     m_Roots = pRoots;
-    return readFile(pFile, QString(), 0);
+    return readFile(pFile, QString(), QString(), 0);
 }
 
 ///
@@ -69,20 +70,31 @@ QStringList CFGPropertyList::values(const QString& pPath) const
 }
 
 ///
+/// \brief CFGPropertyList::aliases
+/// \return the alias attributes, by indexed property path without leading slash
+/// ("sim/multiplay/generic/int[12]", index 0 not written) and target path without leading slash
+///
+QHash<QString, QString> CFGPropertyList::aliases() const
+{
+    return m_Aliases;
+}
+
+///
 /// \brief CFGPropertyList::readFile
 /// \param pFile
 /// \param pPrefix property path where the content of the file is merged
+/// \param pIndexedPrefix same path with the indexes of the elements
 /// \param pDepth
 /// \return
 ///
-bool CFGPropertyList::readFile(const QString& pFile, const QString& pPrefix, int pDepth)
+bool CFGPropertyList::readFile(const QString& pFile, const QString& pPrefix, const QString& pIndexedPrefix, int pDepth)
 {
     if (pDepth > MaxIncludeDepth) return false;
     QFile File(pFile);
     if (!File.open(QIODevice::ReadOnly)) return false;
     QXmlStreamReader Xml(&File);
     if (!Xml.readNextStartElement() || Xml.name() != QLatin1String("PropertyList")) return false;
-    readNode(Xml, pFile, pPrefix, pDepth);
+    readNode(Xml, pFile, pPrefix, pIndexedPrefix, pDepth);
     return !Xml.hasError();
 }
 
@@ -92,19 +104,29 @@ bool CFGPropertyList::readFile(const QString& pFile, const QString& pPrefix, int
 /// \param pXml
 /// \param pFile file being read, base of the relative includes
 /// \param pPath property path of the element
+/// \param pIndexedPath same path with the indexes : attribute n, else rank among the
+/// elements of the same name (counted in each file)
 /// \param pDepth
 ///
-void CFGPropertyList::readNode(QXmlStreamReader& pXml, const QString& pFile, const QString& pPath, int pDepth)
+void CFGPropertyList::readNode(QXmlStreamReader& pXml, const QString& pFile, const QString& pPath, const QString& pIndexedPath, int pDepth)
 {
     // The included content comes first : the element's own content overrides it
     const QString Include = pXml.attributes().value(QLatin1String("include")).toString();
     if (!Include.isEmpty())
     {
         const QString IncludeFile = resolveInclude(pFile, Include);
-        if (!IncludeFile.isEmpty()) readFile(IncludeFile, pPath, pDepth + 1);
+        if (!IncludeFile.isEmpty()) readFile(IncludeFile, pPath, pIndexedPath, pDepth + 1);
+    }
+    const QString Alias = pXml.attributes().value(QLatin1String("alias")).toString();
+    if (!Alias.isEmpty() && !pIndexedPath.isEmpty())
+    {
+        QString Target = Alias;
+        while (Target.startsWith('/')) Target.remove(0, 1);
+        m_Aliases.insert(pIndexedPath, Target);
     }
     QString Text;
     bool HasChildren = false;
+    QHash<QString, int> NextIndex;
     while (!pXml.atEnd())
     {
         pXml.readNext();
@@ -112,7 +134,13 @@ void CFGPropertyList::readNode(QXmlStreamReader& pXml, const QString& pFile, con
         {
             HasChildren = true;
             const QString Name = pXml.name().toString();
-            readNode(pXml, pFile, pPath.isEmpty() ? Name : pPath + "/" + Name, pDepth);
+            bool Ok = false;
+            int Index = pXml.attributes().value(QLatin1String("n")).toInt(&Ok);
+            if (!Ok) Index = NextIndex.value(Name);
+            NextIndex[Name] = Index + 1;
+            const QString IndexedName = (Index > 0) ? QString("%1[%2]").arg(Name).arg(Index) : Name;
+            readNode(pXml, pFile, pPath.isEmpty() ? Name : pPath + "/" + Name,
+                     pIndexedPath.isEmpty() ? IndexedName : pIndexedPath + "/" + IndexedName, pDepth);
         }
         else if (pXml.isCharacters())
         {

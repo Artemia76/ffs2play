@@ -27,11 +27,138 @@
 ****************************************************************************/
 
 #include <QDateTime>
+#include <QIODevice>
+#include <QRegularExpression>
 #include <cstring>
 
 #include "fgdatagram.h"
 
 using namespace simgear;
+
+namespace
+{
+/// m/s to ft/min
+constexpr double MPS_TO_FPM = 196.8503937;
+
+/// Body frame (x forward, y right, z down) to local frame (north, east, down),
+/// FlightGear angles : heading, pitch nose up, roll right wing down (radians)
+void BodyToNED(double pPsi, double pTheta, double pPhi, const double pBody[3], double pNED[3])
+{
+    const double cPsi = cos(pPsi), sPsi = sin(pPsi);
+    const double cTheta = cos(pTheta), sTheta = sin(pTheta);
+    const double cPhi = cos(pPhi), sPhi = sin(pPhi);
+    const double M[3][3] = {
+        {cTheta * cPsi, sPhi * sTheta * cPsi - cPhi * sPsi, cPhi * sTheta * cPsi + sPhi * sPsi},
+        {cTheta * sPsi, sPhi * sTheta * sPsi + cPhi * cPsi, cPhi * sTheta * sPsi - sPhi * cPsi},
+        {-sTheta,       sPhi * cTheta,                      cPhi * cTheta}};
+    for (int i = 0; i < 3; i++) pNED[i] = M[i][0] * pBody[0] + M[i][1] * pBody[1] + M[i][2] * pBody[2];
+}
+
+/// Inverse of BodyToNED (transposed matrix)
+void NEDToBody(double pPsi, double pTheta, double pPhi, const double pNED[3], double pBody[3])
+{
+    const double cPsi = cos(pPsi), sPsi = sin(pPsi);
+    const double cTheta = cos(pTheta), sTheta = sin(pTheta);
+    const double cPhi = cos(pPhi), sPhi = sin(pPhi);
+    const double M[3][3] = {
+        {cTheta * cPsi, sPhi * sTheta * cPsi - cPhi * sPsi, cPhi * sTheta * cPsi + sPhi * sPsi},
+        {cTheta * sPsi, sPhi * sTheta * sPsi + cPhi * cPsi, cPhi * sTheta * sPsi - sPhi * cPsi},
+        {-sTheta,       sPhi * cTheta,                      cPhi * cTheta}};
+    for (int i = 0; i < 3; i++) pBody[i] = M[0][i] * pNED[0] + M[1][i] * pNED[1] + M[2][i] * pNED[2];
+}
+
+double Clamp(double pValue, double pMin, double pMax)
+{
+    return qBound(pMin, pValue, pMax);
+}
+}
+
+///
+/// \brief FGToSquawkMode
+/// FlightGear transponder mode (0 off, 1 standby, 2 test, 3 ground, 4 on, 5 altitude)
+/// to the FFS2Play mode of the X-Plane connector (0 off, 1 standby, 2 on, 3 altitude,
+/// 4 test, 5 ground), and back : the conversion is its own inverse
+/// \param pMode
+/// \return
+///
+int simgear::FGToSquawkMode(int pMode)
+{
+    switch (pMode)
+    {
+        case 2: return 4;
+        case 3: return 5;
+        case 4: return 2;
+        case 5: return 3;
+        default: return pMode;
+    }
+}
+
+///
+/// \brief FGGenericMap::fromPropertyList
+/// Finds the lights and the doors among the generic properties declared in the -set.xml
+/// of an aircraft (ex. c172p : <int n="12" alias="/sim/model/c172p/lighting/beacon/enabled"/>).
+/// An aircraft which sets its generic properties by Nasal has nothing to find here.
+/// \param pProps
+/// \return
+///
+FGGenericMap FGGenericMap::fromPropertyList(const CFGPropertyList& pProps)
+{
+    FGGenericMap Map;
+    static const QRegularExpression Generic("^sim/multiplay/generic/(float|int|short|bool)(\\[\\d+\\])?$");
+    // Sorted by property id : the first declared light wins, the doors keep their order
+    QMap<quint16, QString> Targets;
+    const QHash<QString, QString> Aliases = pProps.aliases();
+    for (auto it = Aliases.constBegin(); it != Aliases.constEnd(); ++it)
+    {
+        const QRegularExpressionMatch Match = Generic.match(it.key());
+        if (!Match.hasMatch()) continue;
+        // FlightGear names the index 0 of the generic properties
+        const QString Name = Match.captured(2).isEmpty() ? it.key() + "[0]" : it.key();
+        const quint16 Id = FGDatagram::FindPropertyId(Name);
+        if (Id != 0) Targets.insert(Id, it.value().toLower());
+    }
+    int Door = 0;
+    for (auto it = Targets.constBegin(); it != Targets.constEnd(); ++it)
+    {
+        const QString& Target = it.value();
+        const quint16 Id = it.key();
+        const bool IsFloat = (FGDatagram::FindProperty(Id)->type == FLOAT);
+        // A path element naming a door ("rightdoor"), not a group ("door-positions/leftwindow")
+        bool IsDoor = false;
+        for (const QString& Element : Target.split('/'))
+        {
+            if (Element.contains("door") && !Element.contains("positions") && !Element.endsWith("doors")) IsDoor = true;
+        }
+        if (IsDoor)
+        {
+            if (IsFloat && (Door < DoorCount)) Map.Doors[Door++] = Id;
+            continue;
+        }
+        if (!Target.contains("light")) continue;
+        quint16* Light = nullptr;
+        if (Target.contains("landing")) Light = &Map.LandingLight;
+        else if (Target.contains("strobe")) Light = &Map.StrobeLight;
+        else if (Target.contains("beacon")) Light = &Map.BeaconLight;
+        else if (Target.contains("nav")) Light = &Map.NavLight;
+        else if (Target.contains("recognition")) Light = &Map.RecoLight;
+        if (Light && (*Light == 0)) *Light = Id;
+    }
+    return Map;
+}
+
+///
+/// \brief FGGenericMap::isEmpty
+/// \return
+///
+bool FGGenericMap::isEmpty() const
+{
+    for (quint16 Door : Doors)
+    {
+        if (Door != 0) return false;
+    }
+    return (LandingLight == 0) && (StrobeLight == 0) && (BeaconLight == 0) && (NavLight == 0) && (RecoLight == 0);
+}
+
 ///
 /// \brief FGDataGram::FGDatagram
 ///
@@ -90,7 +217,8 @@ void FGDatagram::Read(QDataStream& pStream)
     for (int i=0; i<3; i++) pStream >> m_Pos.AngularVelocity[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.LinearAccel[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.AngularAccel[i];
-    // xdr_data_t pad of T_PositionMsg (FlightGear mpmessages.hxx) : properties start at byte 232
+    // xdr_data_t pad of T_PositionMsg (FlightGear mpmessages.hxx) : properties start at byte 232.
+    // V2_PAD_MAGIC with the 2017.2 protocol, 0 with the first one.
     char Dummy[4];
     pStream.readRawData(&Dummy[0],sizeof(Dummy));
 #ifdef FFS_DEBUG
@@ -100,51 +228,52 @@ void FGDatagram::Read(QDataStream& pStream)
         static_cast<double>(m_Pos.Orientation[2])
         ),Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-    //Reading Property data
+    //Reading Property data : an unknown property ends the reading, as in FlightGear
     m_Props.clear();
-    while (!pStream.atEnd())
+    while (!pStream.atEnd() && (pStream.status() == QDataStream::Ok))
     {
-        FGPropertyData prop;
-        if (!GetProperty(pStream,prop))
-        {
-            break;
-        }
+        if (!ReadProperty(pStream)) break;
+    }
 #ifdef FFS_DEBUG
+    // One line for the message : about 150 properties at 10 Hz
+    QStringList Values;
+    for (const FGPropertyData& Prop : std::as_const(m_Props))
+    {
         QString Value;
-        switch (static_cast<int>(prop.type))
+        switch (Prop.type)
         {
-        case TT_SHORTINT:
-        case TT_SHORT_FLOAT_1:
-        case TT_SHORT_FLOAT_2:
-        case TT_SHORT_FLOAT_3:
-        case TT_SHORT_FLOAT_4:
-        case TT_SHORT_FLOAT_NORM:
-        case INT:
-        case LONG:
-        case BOOL:
-            Value = QString::number(prop.int_value);
-            break;
         case FLOAT:
         case DOUBLE:
-            Value = QString::number(static_cast<double>(prop.float_value));
+            Value = QString::number(static_cast<double>(Prop.float_value));
             break;
         case STRING:
         case UNSPECIFIED:
-            Value = QString::fromUtf8(prop.string_value);
+            Value = "\"" + QString::fromUtf8(Prop.string_value) + "\"";
+            break;
+        default:
+            Value = QString::number(Prop.int_value);
             break;
         }
-        m_Log.log(QString::asprintf("FGManager : Property Id=%d , Value = ", prop.id)+Value,Qt::darkBlue,LEVEL_VERBOSE);
-#endif
-        //break;
+        Values << QString::number(Prop.id) + "=" + Value;
     }
+    m_Log.log("FGManager : Properties " + Values.join(" "),Qt::darkBlue,LEVEL_VERBOSE);
+#endif
 }
 
 ///
 /// \brief FGDatagram::Write
+/// Properties with the first protocol (pad 0) : 4 bytes id, then a 4 bytes value,
+/// understood by every FlightGear version
 /// \param pStream
 ///
 void FGDatagram::Write(QDataStream& pStream)
 {
+    QByteArray Properties;
+    {
+        QDataStream PropStream(&Properties, QIODevice::WriteOnly);
+        WriteProperties(PropStream);
+    }
+    m_Header.MsgLen = POS_MSG_LEN + static_cast<quint32>(Properties.size());
     pStream.setByteOrder(QDataStream::BigEndian);
     pStream << m_Header.Magic;
     pStream << m_Header.Version;
@@ -165,6 +294,47 @@ void FGDatagram::Write(QDataStream& pStream)
     for (int i=0; i<3; i++) pStream << m_Pos.LinearAccel[i];
     for (int i=0; i<3; i++) pStream << m_Pos.AngularAccel[i];
     pStream << quint32(0); // pad
+    pStream.writeRawData(Properties.constData(), static_cast<int>(Properties.size()));
+}
+
+///
+/// \brief FGDatagram::WriteProperties
+/// Numeric properties only. The generic booleans are sent by blocks of 31 in one int.
+/// \param pStream
+///
+void FGDatagram::WriteProperties(QDataStream& pStream) const
+{
+    pStream.setByteOrder(QDataStream::BigEndian);
+    pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    QMap<quint32, quint32> BoolBlocks;
+    for (const FGPropertyData& Prop : m_Props)
+    {
+        if ((Prop.id >= BOOLARRAY_START_ID) && (Prop.id < BOOLARRAY_END_ID + BOOLARRAY_BLOCKSIZE))
+        {
+            const quint32 Block = BOOLARRAY_BASE_1 + ((Prop.id - BOOLARRAY_BASE_1) / BOOLARRAY_BLOCKSIZE) * BOOLARRAY_BLOCKSIZE;
+            quint32& Bits = BoolBlocks[Block];
+            if (Prop.int_value) Bits |= (1u << (Prop.id - Block));
+            continue;
+        }
+        switch (Prop.type)
+        {
+        case BOOL:
+        case INT:
+        case LONG:
+            pStream << quint32(Prop.id) << qint32(Prop.int_value);
+            break;
+        case FLOAT:
+        case DOUBLE:
+            pStream << quint32(Prop.id) << Prop.float_value;
+            break;
+        default:
+            break;
+        }
+    }
+    for (auto it = BoolBlocks.constBegin(); it != BoolBlocks.constEnd(); ++it)
+    {
+        pStream << it.key() << it.value();
+    }
 }
 
 ///
@@ -250,29 +420,95 @@ bool FGDatagram::SetPos(FGPos& pPos)
 
 ///
 /// \brief FGDatagram::GetAirData
+/// Only what FlightGear transmits : the values without property in the message
+/// (throttle, parking brake, fuel...) are left unchanged
 /// \param pData
+/// \param pMap generic properties of the lights and doors of the aircraft
 /// \return
 ///
-bool FGDatagram::GetAirData(CAircraftState& pData)
+bool FGDatagram::GetAirData(CAircraftState& pData, const FGGenericMap& pMap)
 {
     if (!m_Sane) return false;
     CartToGeod (m_Pos.Position[0],m_Pos.Position[1], m_Pos.Position[2], pData.Longitude,pData.Latitude, pData.Altitude);
     FGOrientationToEuler(pData.Longitude, pData.Latitude, m_Pos.Orientation, pData.Heading, pData.Pitch, pData.Bank);
-    // Body frame velocity (m/s)
-    const double Speed = sqrt(static_cast<double>(m_Pos.LinearVelocity[0]*m_Pos.LinearVelocity[0] +
-                                                  m_Pos.LinearVelocity[1]*m_Pos.LinearVelocity[1] +
-                                                  m_Pos.LinearVelocity[2]*m_Pos.LinearVelocity[2]));
+    // Body frame velocity relative to the earth (m/s)
+    const double Body[3] = {static_cast<double>(m_Pos.LinearVelocity[0]),
+                            static_cast<double>(m_Pos.LinearVelocity[1]),
+                            static_cast<double>(m_Pos.LinearVelocity[2])};
+    const double Speed = sqrt(Body[0] * Body[0] + Body[1] * Body[1] + Body[2] * Body[2]);
     pData.TASSpeed = Speed / SG_KT_TO_MPS;
+    // FFS2Play pitch is positive nose down and bank positive left wing down
+    double NED[3];
+    BodyToNED(pData.Heading * SGD_DEGREES_TO_RADIANS, -pData.Pitch * SGD_DEGREES_TO_RADIANS, -pData.Bank * SGD_DEGREES_TO_RADIANS, Body, NED);
+    pData.GroundSpeed = sqrt(NED[0] * NED[0] + NED[1] * NED[1]) / SG_KT_TO_MPS;
+    pData.Vario = -NED[2] * MPS_TO_FPM;
     pData.Title = m_Pos.ModelName;
+
+    // Flight controls : FlightGear elevator positive nose down, X-Plane connector positive nose up
+    if (HasProperty(FGProp::LeftAileron)) pData.AileronPos = PropertyValue(FGProp::LeftAileron);
+    if (HasProperty(FGProp::Elevator)) pData.ElevatorPos = -PropertyValue(FGProp::Elevator);
+    if (HasProperty(FGProp::Rudder)) pData.RudderPos = PropertyValue(FGProp::Rudder);
+    // Flaps index 0 to 3, as the X-Plane connector
+    if (HasProperty(FGProp::Flaps)) pData.FlapsIndex = qRound(Clamp(PropertyValue(FGProp::Flaps), 0.0, 1.0) * 3.0);
+    if (HasProperty(FGProp::SpeedbrakePos)) pData.SpoilerPos = Clamp(PropertyValue(FGProp::SpeedbrakePos), 0.0, 1.0);
+    // Gear : position of the first gear (controls/gear/gear-down stays 0 on a fixed gear)
+    if (HasProperty(FGProp::GearPosition)) pData.GearPos = (PropertyValue(FGProp::GearPosition) >= 0.5) ? 1 : 0;
+    bool HasCompression = false;
+    bool Compressed = false;
+    for (int i = 0; i < FGProp::GearCount; i++)
+    {
+        const quint16 Id = FGProp::GearCompression + 10 * i;
+        if (!HasProperty(Id)) continue;
+        HasCompression = true;
+        if (PropertyValue(Id) > 0.0) Compressed = true;
+    }
+    if (HasCompression) pData.OnGround = Compressed;
+    // Engines : running while turning. Only the engines of the aircraft, the others
+    // can carry anything (the c172p sends its amphibious gear in engine[3] to [6])
+    int* const States[4] = {&pData.StateEng1, &pData.StateEng2, &pData.StateEng3, &pData.StateEng4};
+    const int Engines = qBound(1, pData.NumEngine, 4);
+    for (int i = 0; i < Engines; i++)
+    {
+        const quint16 Rpm = FGProp::EngineRpm + 10 * i;
+        const quint16 N1 = FGProp::EngineN1 + 10 * i;
+        if (!HasProperty(Rpm) && !HasProperty(N1)) continue;
+        *States[i] = ((PropertyValue(Rpm) > 0.0) || (PropertyValue(N1) > 0.0)) ? 1 : 0;
+    }
+    // Lights : nav lights in the static list, the others in the generic properties
+    if (pMap.NavLight && HasProperty(pMap.NavLight)) pData.NavLight = (PropertyValue(pMap.NavLight) > 0.5) ? 1 : 0;
+    else if (HasProperty(FGProp::NavLights)) pData.NavLight = (PropertyValue(FGProp::NavLights) > 0.5) ? 1 : 0;
+    const std::pair<quint16, int*> Lights[] = {{pMap.LandingLight, &pData.LandingLight}, {pMap.StrobeLight, &pData.StrobeLight},
+                                               {pMap.BeaconLight, &pData.BeaconLight}, {pMap.RecoLight, &pData.RecoLight}};
+    for (const auto& Light : Lights)
+    {
+        if (Light.first && HasProperty(Light.first)) *Light.second = (PropertyValue(Light.first) > 0.5) ? 1 : 0;
+    }
+    // Doors in percent. The canopy when the aircraft has no door
+    int* const Doors[FGGenericMap::DoorCount] = {&pData.Door1Pos, &pData.Door2Pos, &pData.Door3Pos, &pData.Door4Pos};
+    bool HasDoor = false;
+    for (int i = 0; i < FGGenericMap::DoorCount; i++)
+    {
+        if (!pMap.Doors[i] || !HasProperty(pMap.Doors[i])) continue;
+        HasDoor = true;
+        *Doors[i] = qRound(Clamp(PropertyValue(pMap.Doors[i]), 0.0, 1.0) * 100.0);
+    }
+    if (!HasDoor && HasProperty(FGProp::Canopy)) pData.Door1Pos = qRound(Clamp(PropertyValue(FGProp::Canopy), 0.0, 1.0) * 100.0);
+    // Transponder : the code (decimal, as X-Plane) only when it replies
+    if (HasProperty(FGProp::TransponderMode)) pData.SquawkMode = FGToSquawkMode(static_cast<int>(PropertyValue(FGProp::TransponderMode)));
+    if (HasProperty(FGProp::TransponderId) && (PropertyValue(FGProp::TransponderId) >= 0.0))
+        pData.Squawk = static_cast<int>(PropertyValue(FGProp::TransponderId));
+    if (HasProperty(FGProp::TransponderAirspeed) && (PropertyValue(FGProp::TransponderAirspeed) >= 0.0))
+        pData.IASSpeed = PropertyValue(FGProp::TransponderAirspeed);
     return true;
 }
 
 ///
 /// \brief FGDatagram::SetAirData
 /// \param pData
+/// \param pMap generic properties of the lights and doors of the displayed model
 /// \return
 ///
-bool FGDatagram::SetAirData(const CAircraftState& pData)
+bool FGDatagram::SetAirData(const CAircraftState& pData, const FGGenericMap& pMap)
 {
     if (!m_Sane) return false;
     // Time of the sender : FlightGear interpolates the positions with it
@@ -280,171 +516,268 @@ bool FGDatagram::SetAirData(const CAircraftState& pData)
     m_Pos.Lag = 0.1;
     GeodToCart(pData.Longitude, pData.Latitude, pData.Altitude, m_Pos.Position[0], m_Pos.Position[1], m_Pos.Position[2]);
     EulerToFGOrientation(pData.Longitude, pData.Latitude, pData.Heading, pData.Pitch, pData.Bank, m_Pos.Orientation);
-    // Body frame : x forward
-    m_Pos.LinearVelocity[0] = static_cast<float>(pData.TASSpeed * SG_KT_TO_MPS);
-    m_Pos.LinearVelocity[1] = 0;
-    m_Pos.LinearVelocity[2] = 0;
+    // Body frame velocity from the ground speed along the heading and the vertical speed,
+    // FlightGear extrapolates the position with it
+    const double Psi = pData.Heading * SGD_DEGREES_TO_RADIANS;
+    const double GroundSpeed = ((pData.GroundSpeed > 0.0) ? pData.GroundSpeed : pData.TASSpeed) * SG_KT_TO_MPS;
+    const double NED[3] = {GroundSpeed * cos(Psi), GroundSpeed * sin(Psi), -pData.Vario / MPS_TO_FPM};
+    double Body[3];
+    NEDToBody(Psi, -pData.Pitch * SGD_DEGREES_TO_RADIANS, -pData.Bank * SGD_DEGREES_TO_RADIANS, NED, Body);
     for (int i=0; i<3; i++)
     {
+        m_Pos.LinearVelocity[i] = static_cast<float>(Body[i]);
         m_Pos.AngularVelocity[i] = 0;
         m_Pos.LinearAccel[i] = 0;
         m_Pos.AngularAccel[i] = 0;
     }
+
+    // Flight controls
+    const double Aileron = Clamp(pData.AileronPos, -1.0, 1.0);
+    SetProperty(FGProp::LeftAileron, Aileron);
+    SetProperty(FGProp::RightAileron, Aileron);
+    SetProperty(FGProp::Elevator, Clamp(-pData.ElevatorPos, -1.0, 1.0));
+    SetProperty(FGProp::Rudder, Clamp(pData.RudderPos, -1.0, 1.0));
+    SetProperty(FGProp::Flaps, Clamp(pData.FlapsIndex / 3.0, 0.0, 1.0));
+    const double Spoilers = Clamp(pData.SpoilerPos, 0.0, 1.0);
+    SetProperty(FGProp::SpeedbrakePos, Spoilers);
+    SetProperty(FGProp::Speedbrake, Spoilers);
+    SetProperty(FGProp::Spoilers, Spoilers);
+    // Gear
+    const double Gear = pData.GearPos ? 1.0 : 0.0;
+    SetProperty(FGProp::GearDown, Gear);
+    for (int i = 0; i < FGProp::GearCount; i++) SetProperty(FGProp::GearPosition + 10 * i, Gear);
+    // Lights
+    SetProperty(FGProp::NavLights, pData.NavLight ? 1.0 : 0.0);
+    const std::pair<quint16, int> Lights[] = {{pMap.LandingLight, pData.LandingLight}, {pMap.StrobeLight, pData.StrobeLight},
+                                              {pMap.BeaconLight, pData.BeaconLight}, {pMap.NavLight, pData.NavLight},
+                                              {pMap.RecoLight, pData.RecoLight}};
+    for (const auto& Light : Lights)
+    {
+        if (Light.first) SetProperty(Light.first, Light.second ? 1.0 : 0.0);
+    }
+    // Doors
+    const int Doors[FGGenericMap::DoorCount] = {pData.Door1Pos, pData.Door2Pos, pData.Door3Pos, pData.Door4Pos};
+    for (int i = 0; i < FGGenericMap::DoorCount; i++)
+    {
+        if (pMap.Doors[i]) SetProperty(pMap.Doors[i], Clamp(Doors[i] / 100.0, 0.0, 1.0));
+    }
+    // Transponder : code and altitude only when it replies
+    const int Mode = pData.SquawkMode;
+    const bool Replies = (Mode == 2) || (Mode == 3) || (Mode == 5);
+    SetProperty(FGProp::TransponderMode, FGToSquawkMode(Mode));
+    SetProperty(FGProp::TransponderId, Replies ? pData.Squawk : FGProp::TransponderNone);
+    SetProperty(FGProp::TransponderAltitude, (Mode == 3) ? qRound(pData.Altitude) : FGProp::TransponderNone);
+    SetProperty(FGProp::TransponderGround, pData.OnGround ? 1.0 : 0.0);
+    SetProperty(FGProp::TransponderAirspeed, Replies ? qRound(pData.IASSpeed) : FGProp::TransponderNone);
     return true;
 }
 
 ///
-/// \brief FGDatagram::GetProperty
-/// \param pStream
-/// \return true if property was succesfully readed, else false
+/// \brief FGDatagram::HasProperty
+/// \param pId
+/// \return true if the received message has this property
 ///
-bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
+bool FGDatagram::HasProperty(quint16 pId) const
 {
-    quint16 id;
-    bool Decoded=false;
-    bool short_int_encoded = true;
-    pStream >> id;
-    //Detect if we have 4 Byte int ID format
-    if( id == 0)
-    {
-        short_int_encoded =false;
-        pStream >> id;
-    }
-
-    const IdPropertyList* Item = FindProperty(id);
-    if (Item!=nullptr)
-    {
-        pPropData.id=Item->id;
-        pPropData.type = Item->type;
-        switch (pPropData.type)
-        {
-            case BOOL:
-            {
-                if (id >= BOOLARRAY_START_ID && id<= BOOLARRAY_END_ID)
-                {
-                    quint32 val;
-                    pStream >> val;
-                    for (quint16 bitidx = 0; bitidx <= 30; bitidx++)
-                    {
-                        // ensure that this property is in the master list.
-                        const IdPropertyList* plistBool = FindProperty(id + bitidx);
-
-                        if (plistBool)
-                        {
-                            pPropData.id = id + bitidx;
-                            pPropData.int_value = (val & (1 << bitidx)) != 0;
-                            pPropData.type = BOOL;
-                            Decoded=true;;
-                        }
-                    }
-                }
-                break;
-            }
-            case INT:
-            case LONG:
-            {
-                if (short_int_encoded)
-                {
-                    qint16 Value;
-                    pStream >> Value;
-                    pPropData.int_value = Value;
-                    Decoded = true;
-                }
-                else
-                {
-                    pStream >> pPropData.int_value;
-                    Decoded = true;
-                }
-                break;
-            }
-            case FLOAT:
-            case DOUBLE:
-            {
-                if (short_int_encoded)
-                {
-                    qint16 Value;
-                    pStream >> Value;
-                    switch (Item->TransmitAs)
-                    {
-                        case TT_SHORT_FLOAT_1:
-                        {
-                            pPropData.float_value = static_cast<float>(Value / 10.0);
-                            Decoded=true;
-                            break;
-                        }
-                        case TT_SHORT_FLOAT_2:
-                        {
-                            pPropData.float_value = static_cast<float>(Value / 100.0);
-                            Decoded=true;
-                            break;
-                        }
-                        case TT_SHORT_FLOAT_3:
-                        {
-                            pPropData.float_value = static_cast<float>(Value / 1000.0);
-                            Decoded=true;
-                            break;
-                        }
-                        case TT_SHORT_FLOAT_4:
-                        {
-                            pPropData.float_value = static_cast<float>(Value / 10000.0);
-                            Decoded=true;
-                            break;
-                        }
-                        case TT_SHORT_FLOAT_NORM:
-                        {
-                            pPropData.float_value = static_cast<float>(Value / 32767.0);
-                            Decoded=true;
-                            break;
-                        }
-                        default:
-                        {
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
-                    float Value;
-                    pStream >> Value;
-                    pPropData.float_value = Value;
-                    Decoded=true;
-                }
-                break;
-            }
-            case STRING:
-            case UNSPECIFIED:
-            {
-                if (short_int_encoded)
-                {
-                    quint16 Len;
-                    pStream >> Len;
-                    pPropData.string_value = QByteArray(Len, '\0');
-                    pStream.readRawData(pPropData.string_value.data(),Len);
-                }
-                else
-                {
-                    quint32 Len;
-                    pStream >> Len;
-                    if (Len > MAX_TEXT_SIZE)
-                        Len = MAX_TEXT_SIZE;
-                    pPropData.string_value = QByteArray(static_cast<qsizetype>(Len), '\0');
-                    if (Len>0) pStream.readRawData(pPropData.string_value.data(),static_cast<int>(Len));
-                }
-                Decoded=true;
-                break;
-            }
-            default:
-            {
-                pStream >> pPropData.float_value;
-                Decoded=true;
-                break;
-            }
-        }
-    }
-    return Decoded;
+    return m_Props.contains(pId);
 }
 
+///
+/// \brief FGDatagram::PropertyValue
+/// \param pId
+/// \param pDefault value of a missing or text property
+/// \return
+///
+double FGDatagram::PropertyValue(quint16 pId, double pDefault) const
+{
+    const auto it = m_Props.constFind(pId);
+    if (it == m_Props.constEnd()) return pDefault;
+    switch (it->type)
+    {
+    case FLOAT:
+    case DOUBLE:
+        return static_cast<double>(it->float_value);
+    case BOOL:
+    case INT:
+    case LONG:
+        return it->int_value;
+    default:
+        return pDefault;
+    }
+}
+
+///
+/// \brief FGDatagram::SetProperty
+/// Sets a numeric property of the static list with its type
+/// \param pId
+/// \param pValue
+///
+void FGDatagram::SetProperty(quint16 pId, double pValue)
+{
+    const IdPropertyList* Item = FindProperty(pId);
+    if (Item == nullptr) return;
+    FGPropertyData& Prop = m_Props[pId];
+    Prop.id = pId;
+    Prop.type = Item->type;
+    if ((Item->type == FLOAT) || (Item->type == DOUBLE)) Prop.float_value = static_cast<float>(pValue);
+    else Prop.int_value = static_cast<int>(std::lround(pValue));
+}
+
+///
+/// \brief FGDatagram::Properties
+/// \return
+///
+const QMap<quint16, FGPropertyData>& FGDatagram::Properties() const
+{
+    return m_Props;
+}
+
+///
+/// \brief FGDatagram::ReadProperty
+/// Port of FGMultiplayMgr::ProcessPosMsg (FlightGear 2024.1). A 32 bits word with a
+/// non zero upper half holds the id and a 16 bits value (2017.2 protocol), else the
+/// word is the id and the value follows. The 2017.2 strings are not padded : the
+/// next property can start on any byte.
+/// \param pStream
+/// \return false if the property is unknown or the message is truncated
+///
+bool FGDatagram::ReadProperty(QDataStream& pStream)
+{
+    quint32 Word;
+    pStream >> Word;
+    if (pStream.status() != QDataStream::Ok) return false;
+    quint16 Id;
+    int ShortValue = 0;
+    const bool ShortIntEncoded = (Word & 0xffff0000u) != 0;
+    if (ShortIntEncoded)
+    {
+        Id = static_cast<quint16>(Word >> 16);
+        ShortValue = static_cast<qint16>(Word & 0xffffu);
+    }
+    else
+    {
+        if (Word > 0xffffu) return false;
+        Id = static_cast<quint16>(Word);
+    }
+    const IdPropertyList* Item = FindProperty(Id);
+    if (Item == nullptr) return false;
+
+    FGPropertyData Prop;
+    Prop.id = Id;
+    Prop.type = Item->type;
+    // Launchbar state, 2017.2 encoding : property 120 for the string property 108
+    if (Id == 120)
+    {
+        static const char* const States[] = {"Engaged", "Launching", "Completed", "Disengaged"};
+        Prop.id = 108;
+        Prop.type = STRING;
+        if ((ShortValue >= 0) && (ShortValue < 4)) Prop.string_value = States[ShortValue];
+        m_Props.insert(Prop.id, Prop);
+        return true;
+    }
+    switch (Item->type)
+    {
+    case BOOL:
+        if ((Id >= BOOLARRAY_START_ID) && (Id <= BOOLARRAY_END_ID))
+        {
+            quint32 Bits;
+            pStream >> Bits;
+            for (quint16 Bit = 0; Bit <= 30; Bit++)
+            {
+                const IdPropertyList* BoolItem = FindProperty(Id + Bit);
+                if (BoolItem == nullptr) continue;
+                FGPropertyData BoolProp;
+                BoolProp.id = Id + Bit;
+                BoolProp.type = BOOL;
+                BoolProp.int_value = (Bits & (1u << Bit)) != 0;
+                m_Props.insert(BoolProp.id, BoolProp);
+            }
+            return pStream.status() == QDataStream::Ok;
+        }
+        [[fallthrough]];
+    case INT:
+    case LONG:
+        if (ShortIntEncoded)
+        {
+            Prop.int_value = ShortValue;
+        }
+        else
+        {
+            qint32 Value;
+            pStream >> Value;
+            Prop.int_value = Value;
+        }
+        break;
+    case FLOAT:
+    case DOUBLE:
+        if (ShortIntEncoded)
+        {
+            double Scale = 1.0;
+            switch (Item->TransmitAs)
+            {
+            case TT_SHORT_FLOAT_1: Scale = 10.0; break;
+            case TT_SHORT_FLOAT_2: Scale = 100.0; break;
+            case TT_SHORT_FLOAT_3: Scale = 1000.0; break;
+            case TT_SHORT_FLOAT_4: Scale = 10000.0; break;
+            case TT_SHORT_FLOAT_NORM: Scale = 32767.0; break;
+            default: break;
+            }
+            Prop.float_value = static_cast<float>(ShortValue / Scale);
+        }
+        else
+        {
+            pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+            float Value;
+            pStream >> Value;
+            Prop.float_value = Value;
+        }
+        break;
+    case STRING:
+    case UNSPECIFIED:
+        if (ShortIntEncoded)
+        {
+            // Length in the word, then the characters
+            if ((ShortValue < 0) || (ShortValue > MAX_TEXT_SIZE)) return false;
+            Prop.string_value = QByteArray(ShortValue, '\0');
+            if (ShortValue > 0 && pStream.readRawData(Prop.string_value.data(), ShortValue) != ShortValue) return false;
+        }
+        else
+        {
+            // Length, then each character in a 4 bytes word, padded to a multiple of 4 words
+            quint32 Len;
+            pStream >> Len;
+            if (Len > MAX_TEXT_SIZE) Len = MAX_TEXT_SIZE;
+            Prop.string_value.reserve(static_cast<qsizetype>(Len));
+            quint32 Count = Len;
+            while ((Count % 4) != 0) Count++;
+            for (quint32 i = 0; i < Count; i++)
+            {
+                qint32 Char;
+                pStream >> Char;
+                if (i < Len) Prop.string_value.append(static_cast<char>(Char));
+            }
+        }
+        break;
+    default:
+        {
+            pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+            float Value;
+            pStream >> Value;
+            Prop.float_value = Value;
+            Prop.type = FLOAT;
+        }
+        break;
+    }
+    if (pStream.status() != QDataStream::Ok) return false;
+    m_Props.insert(Prop.id, Prop);
+    return true;
+}
+
+///
+/// \brief FGDatagram::FindProperty
+/// \param pId
+/// \return the property of the static list, nullptr if unknown
+///
 const IdPropertyList* FGDatagram::FindProperty(unsigned short pId)
 {
   std::pair<const IdPropertyList*, const IdPropertyList*> result
@@ -455,4 +788,19 @@ const IdPropertyList* FGDatagram::FindProperty(unsigned short pId)
   } else {
     return result.first;
   }
+}
+
+///
+/// \brief FGDatagram::FindPropertyId
+/// \param pName property path, ex "sim/multiplay/generic/int[12]"
+/// \return its id in the static list, 0 if unknown
+///
+quint16 FGDatagram::FindPropertyId(const QString& pName)
+{
+    const QByteArray Name = pName.toLatin1();
+    for (const IdPropertyList& Item : sIdPropertyList)
+    {
+        if (Name == Item.name) return Item.id;
+    }
+    return 0;
 }

@@ -377,15 +377,18 @@ QString AIBaseParser::getAircraftPath(const QString &pTitle)
 /// \param pModel ICAO type of the aircraft
 /// \param pType
 /// \param pCategory
+/// \param pPath if not null, file of the aircraft
+/// \param pNbEngine if not null, number of engines (0 unknown)
 /// \return false if the aircraft is not in the database
 ///
-bool AIBaseParser::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory)
+bool AIBaseParser::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,
+                                   QString* pPath, int* pNbEngine)
 {
     if ((!m_Initialized) || m_Table.isEmpty()) return false;
     QSqlQuery query(m_DB);
     // Several variants can share the title : first one with an ICAO type, then the main
     // file of the aircraft folder (c172p-set.xml rather than c172p-amphibious-set.xml)
-    query.prepare("SELECT Model,Type,Category FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim) ORDER BY (ifnull(Model,'') = ''), length(Path)");
+    query.prepare("SELECT Model,Type,Category,Path,NbEngine FROM Aircrafts WHERE (Title = :Title) and (Sim = :Sim) ORDER BY (ifnull(Model,'') = ''), length(Path)");
     query.bindValue(":Title",pTitle);
     query.bindValue(":Sim",m_Table);
     if (!query.exec())
@@ -399,6 +402,8 @@ bool AIBaseParser::getAircraftInfo(const QString& pTitle, QString& pModel, QStri
     pModel = query.value(0).toString();
     pType = query.value(1).toString();
     pCategory = query.value(2).toString();
+    if (pPath) *pPath = query.value(3).toString();
+    if (pNbEngine) *pNbEngine = query.value(4).toInt();
     return true;
 }
 

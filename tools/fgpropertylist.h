@@ -49,14 +49,17 @@ public:
     bool                    read(const QString& pFile, const QStringList& pRoots = QStringList());
     QString                 value(const QString& pPath) const;
     QStringList             values(const QString& pPath) const;
+    QHash<QString, QString> aliases() const;
 
 private:
     /// Values in reading order : an included value is overridden by the including file
     QHash<QString, QStringList> m_Props;
+    /// Alias attributes : indexed path ("sim/multiplay/generic/int[12]") -> target path
+    QHash<QString, QString> m_Aliases;
     QStringList             m_Roots;
 
-    bool                    readFile(const QString& pFile, const QString& pPrefix, int pDepth);
-    void                    readNode(QXmlStreamReader& pXml, const QString& pFile, const QString& pPath, int pDepth);
+    bool                    readFile(const QString& pFile, const QString& pPrefix, const QString& pIndexedPrefix, int pDepth);
+    void                    readNode(QXmlStreamReader& pXml, const QString& pFile, const QString& pPath, const QString& pIndexedPath, int pDepth);
     QString                 resolveInclude(const QString& pFile, const QString& pInclude) const;
 };
 

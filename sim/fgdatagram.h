@@ -29,10 +29,11 @@
 #ifndef FGDATAGRAM_H
 #define FGDATAGRAM_H
 
-#include <QVector>
+#include <QMap>
 #include <QDataStream>
 
 #include "tools/calculation.h"
+#include "tools/fgpropertylist.h"
 #include "sim/aircraftstate.h"
 #include "tools/clogger.h"
 
@@ -141,6 +142,8 @@ const int EMESARYBRIDGETYPE_BASE = 12200;
 const int EMESARYBRIDGE_BASE = 12000;
 const int V2018_3_BASE = 13000;
 const int FALLBACK_MODEL_ID = 13000;
+const int V2019_3_BASE = 13001;
+const int V2020_4_BASE = 13003;
 
 enum TransmissionType {
     TT_ASIS = 0, // transmit as defined in the property. This is the default
@@ -267,7 +270,7 @@ static const IdPropertyList sIdPropertyList[] = {
     { 903, "sim/hitches/aerotow/tow/dist",                         FLOAT, TT_ASIS},
     { 904, "sim/hitches/aerotow/tow/connected-to-property-node",   BOOL, TT_ASIS},
     { 905, "sim/hitches/aerotow/tow/connected-to-ai-or-mp-callsign",   STRING, TT_ASIS},
-    { 906, "sim/hitches/aerotow/tow/brake-force",                  FLOAT, TT_ASIS},
+    { 906, "sim/hitches/aerotow/tow/break-force",                  FLOAT, TT_ASIS},
     { 907, "sim/hitches/aerotow/tow/end-force-x",                  FLOAT, TT_ASIS},
     { 908, "sim/hitches/aerotow/tow/end-force-y",                  FLOAT, TT_ASIS},
     { 909, "sim/hitches/aerotow/tow/end-force-z",                  FLOAT, TT_ASIS},
@@ -302,7 +305,7 @@ static const IdPropertyList sIdPropertyList[] = {
     { 1504, "instrumentation/transponder/ground-bit", BOOL, TT_SHORTINT},
     { 1505, "instrumentation/transponder/airspeed-kt", INT, TT_SHORTINT},
 
-    { 10001, "sim/multiplay/transmission-freq-hz",  STRING, TT_ASIS},
+    { 10001, "sim/multiplay/transmission-freq-hz",  STRING, TT_NOSEND},
     { 10002, "sim/multiplay/chat",  STRING, TT_ASIS},
 
     { 10100, "sim/multiplay/generic/string[0]", STRING, TT_ASIS},
@@ -638,7 +641,42 @@ static const IdPropertyList sIdPropertyList[] = {
     { EMESARYBRIDGETYPE_BASE + 29, "sim/multiplay/emesary/bridge-type[29]", INT, TT_SHORTINT},
 
     { FALLBACK_MODEL_ID, "sim/model/fallback-model-index", INT, TT_SHORTINT},
+    { V2019_3_BASE,   "sim/multiplay/comm-transmit-frequency-hz", INT, TT_INT},
+    { V2019_3_BASE+1, "sim/multiplay/comm-transmit-power-norm", INT, TT_SHORT_FLOAT_NORM},
+    { V2020_4_BASE, "instrumentation/transponder/mach-number", FLOAT, TT_SHORT_FLOAT_4},
 };
+
+///
+/// Properties of the static list used by FFS2Play (FlightGear 2024.1 multiplaymgr.cxx)
+///
+namespace FGProp
+{
+const quint16 LeftAileron = 100;
+const quint16 RightAileron = 101;
+const quint16 Elevator = 102;
+const quint16 Rudder = 103;
+const quint16 Flaps = 104;
+const quint16 SpeedbrakePos = 105;
+const quint16 Canopy = 110;
+/// gear[n] : + 10 * n, 5 gears
+const quint16 GearCompression = 200;
+const quint16 GearPosition = 201;
+const int     GearCount = 5;
+/// engine[n] : + 10 * n, 10 engines
+const quint16 EngineN1 = 300;
+const quint16 EngineRpm = 302;
+const quint16 Speedbrake = 1002;
+const quint16 Spoilers = 1003;
+const quint16 GearDown = 1004;
+const quint16 NavLights = 1005;
+const quint16 TransponderId = 1500;
+const quint16 TransponderAltitude = 1501;
+const quint16 TransponderMode = 1503;
+const quint16 TransponderGround = 1504;
+const quint16 TransponderAirspeed = 1505;
+/// transmitted-id and altitude of a transponder which does not reply
+const int     TransponderNone = -9999;
+}
 
 /*
  * For the 2017.x version 2 protocol the properties are sent in two partitions,
@@ -707,6 +745,25 @@ struct FGPropertyData
     FGPropertyData() : int_value(0) {}
 };
 
+///
+/// \brief The FGGenericMap struct
+/// Generic multiplayer properties (sim/multiplay/generic/...) that an aircraft uses
+/// for its lights and doors : FlightGear has no standard property for them, each
+/// aircraft declares its own in its -set.xml (alias attributes). 0 = not used.
+///
+struct FGGenericMap
+{
+    static constexpr int DoorCount = 4;
+    quint16                 LandingLight = 0;
+    quint16                 StrobeLight = 0;
+    quint16                 BeaconLight = 0;
+    quint16                 NavLight = 0;
+    quint16                 RecoLight = 0;
+    quint16                 Doors[DoorCount] = {0, 0, 0, 0};
+    static FGGenericMap     fromPropertyList(const CFGPropertyList& pProps);
+    bool                    isEmpty() const;
+};
+
 class FGDatagram
 {
 public:
@@ -719,19 +776,26 @@ public:
     bool                    SetHeader(const FGHeader& pHeader);
     bool                    GetPos(FGPos& pPos);
     bool                    SetPos(FGPos& pPos);
-    bool                    GetAirData(CAircraftState& pData);
-    bool                    SetAirData(const CAircraftState& pData);
+    bool                    GetAirData(CAircraftState& pData, const FGGenericMap& pMap = FGGenericMap());
+    bool                    SetAirData(const CAircraftState& pData, const FGGenericMap& pMap = FGGenericMap());
     void                    SetIdentity(const QString& pCallSign, const QString& pModel);
+    bool                    HasProperty(quint16 pId) const;
+    double                  PropertyValue(quint16 pId, double pDefault = 0.0) const;
+    void                    SetProperty(quint16 pId, double pValue);
+    const QMap<quint16, FGPropertyData>& Properties() const;
+    static const IdPropertyList* FindProperty(unsigned short pID);
+    static quint16          FindPropertyId(const QString& pName);
 
 private:
     FGHeader                m_Header;
     FGPos                   m_Pos;
-    QVector<FGPropertyData> m_Props;
+    QMap<quint16, FGPropertyData> m_Props;
     bool                    m_Sane;
     CLogger&                m_Log = CLogger::instance();
-    bool                    GetProperty(QDataStream& pStream, FGPropertyData& pPropData);
-const   IdPropertyList*         FindProperty(unsigned short pID);
-
+    bool                    ReadProperty(QDataStream& pStream);
+    void                    WriteProperties(QDataStream& pStream) const;
 };
+
+int                         FGToSquawkMode(int pMode);
 } //Namespace SimGear
 #endif // FGDATAGRAM_H

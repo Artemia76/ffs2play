@@ -36,6 +36,7 @@ class FGAIParser : public AIBaseParser
 public:
     FGAIParser(QObject *parent = nullptr);
     ~FGAIParser() override;
+    static QStringList findFGRoots();
 private:
     /// FlightGear data folders (FG_ROOT), used to resolve the includes of the -set.xml files
     QStringList m_FGRoots;
@@ -43,7 +44,6 @@ private:
     void    DBFileUpdate(const QString& pKey,const QString& pPath) override;
     void    searchSimPath() override;
     static QStringList userFolders();
-    static QStringList findFGRoots();
 };
 
 #endif // FGAIPARSER_H

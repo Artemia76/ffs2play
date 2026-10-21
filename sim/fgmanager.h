@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QDateTime>
 #include <QTimer>
+#include <QHash>
 #include <QMap>
 #include <QVector>
 
@@ -44,6 +45,10 @@
 /// FlightGear drops a multiplayer aircraft 10 s after its last message : delay
 /// before a removed callsign can be used again with another model (ms)
 constexpr int FGReleaseDelay = 15000;
+/// Peers only send the gear handle and the flaps index : time of a full travel
+/// shown in FlightGear (s)
+constexpr double FGGearTravelTime = 6.0;
+constexpr double FGFlapsTravelTime = 8.0;
 
 ///
 /// \brief The CFGManager class
@@ -68,6 +73,11 @@ private:
     QString         m_InfoCategory;
     bool            m_InfoFound;
     int             m_InfoRetry;
+    /// Lights and doors in the generic properties of the user aircraft
+    simgear::FGGenericMap m_InfoMap;
+    /// Lights and doors of the models displayed for the peers, by model path
+    QHash<QString, simgear::FGGenericMap> m_ModelMaps;
+    QStringList     m_FGRoots;
 
     /// Peer aircraft displayed in FlightGear as a multiplayer aircraft
     struct FGAIObject
@@ -76,11 +86,17 @@ private:
         /// Callsign in FlightGear, which identifies the aircraft there (7 characters)
         QString         CallSign;
         QString         Model;
+        simgear::FGGenericMap Map;
         CAircraftState  State;
         datetime        LastSend;
         /// Nothing sent before : FlightGear still knows the previous aircraft with this callsign
         datetime        HoldUntil;
         bool            Sent = false;
+        /// Gear and flaps shown (0 to 1), moving to the state of the peer
+        double          GearNorm = 0.0;
+        double          FlapsNorm = 0.0;
+        datetime        RampTime;
+        bool            Ramped = false;
     };
     QMap<uint, FGAIObject> m_AIObjects;
     uint            m_NextObjectID;
@@ -110,6 +126,9 @@ protected:
     void            updateAircraftInfo();
     bool            sendAI(FGAIObject& pObject);
     void            hideAI(FGAIObject& pObject);
+    void            updateRamps(FGAIObject& pObject);
+    simgear::FGGenericMap loadGenericMap(const QString& pFile);
+    simgear::FGGenericMap modelMap(const QString& pModel);
 
 private slots:
     void            OnReceiveDatagram(QNetworkDatagram datagram);
