@@ -59,7 +59,7 @@ simbasemanager::simbasemanager(QObject* parent):
     m_RetryTimer.setSingleShot(true);
     m_RetryTimer.setInterval(5000);
     m_RetryCounter = 0;
-    connect(&m_RetryTimer, SIGNAL(timeout()),this,SLOT(OnRetryTimer()));
+    connect(&m_RetryTimer, &QTimer::timeout, this, &simbasemanager::OnRetryTimer);
     load(m_simType);
 }
 
@@ -130,7 +130,7 @@ void simbasemanager::load(SIM_TYPE pSimType)
     connect(Connector, &SimConnector::fireSimConnected, this, &simbasemanager::OnSimConnected);
     connect(Connector, &SimConnector::fireSimDisconnected, this, &simbasemanager::OnSimDisconnected);
     connect(Connector, &SimConnector::fireSimTimedOut, this, &simbasemanager::OnSimTimedOut);
-    emit(loaded(m_simType));
+    emit loaded(m_simType);
 }
 
 ///
@@ -176,7 +176,7 @@ void simbasemanager::close ()
 {
     // Also releases a connection still waiting for the simulator answer
     if (m_connector!=nullptr) m_connector->close();
-    emit(closed());
+    emit closed();
 }
 
 ///
@@ -334,7 +334,7 @@ void simbasemanager::freezeAI(uint pObjectID, bool pState)
 ///
 void simbasemanager::OnSimVariableEvent(CAircraftState pState)
 {
-    emit(fireSimVariableEvent(pState));
+    emit fireSimVariableEvent(pState);
 }
 
 ///
@@ -343,7 +343,7 @@ void simbasemanager::OnSimVariableEvent(CAircraftState pState)
 ///
 void simbasemanager::OnSimEvent(SimEvent pEvent)
 {
-    emit(fireSimEvent(pEvent));
+    emit fireSimEvent(pEvent);
 }
 
 ///
@@ -353,7 +353,7 @@ void simbasemanager::OnSimEvent(SimEvent pEvent)
 ///
 void simbasemanager::OnSimAICreated(QString pTail, uint pObjectID)
 {
-    emit(fireSimAICreated(pTail,pObjectID));
+    emit fireSimAICreated(pTail,pObjectID);
 }
 
 ///
@@ -363,7 +363,7 @@ void simbasemanager::OnSimAICreated(QString pTail, uint pObjectID)
 ///
 void simbasemanager::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
 {
-    emit(fireSimAIUpdated(pAIData,pObjectID));
+    emit fireSimAIUpdated(pAIData,pObjectID);
 }
 
 ///
@@ -372,7 +372,7 @@ void simbasemanager::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
 ///
 void simbasemanager::OnSimAIRemoved(uint pObjectID)
 {
-    emit(fireSimAIRemoved(pObjectID));
+    emit fireSimAIRemoved(pObjectID);
 }
 
 ///
@@ -382,7 +382,7 @@ void simbasemanager::OnSimAIRemoved(uint pObjectID)
 ///
 void simbasemanager::OnSimEventFrame(float pFramRate, float SimSpeed)
 {
-    emit(fireSimEventFrame(pFramRate, SimSpeed));
+    emit fireSimEventFrame(pFramRate, SimSpeed);
 }
 
 ///
@@ -390,7 +390,7 @@ void simbasemanager::OnSimEventFrame(float pFramRate, float SimSpeed)
 ///
 void simbasemanager::OnSimConnected()
 {
-    emit(opened());
+    emit opened();
 }
 
 ///

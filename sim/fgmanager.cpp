@@ -46,8 +46,8 @@ CFGManager::CFGManager(QObject* parent):
     m_LocalPort=5000;
     m_FGPort=0;
     m_Server = new UDPServer(this);
-    connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
-    connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
+    connect(m_Server, &UDPServer::fireIncomingData, this, &CFGManager::OnReceiveDatagram);
+    connect(&m_PingTimer, &QTimer::timeout, this, &CFGManager::OnPingTimer);
     m_log.log("FGManager : " + tr("FlightGear Module loaded"));
 }
 
@@ -75,7 +75,7 @@ void CFGManager::open ()
         {
             m_connected=true;
             m_log.log(tr("Connected to FlightGear."));
-            emit(fireSimConnected());
+            emit fireSimConnected();
         }
     }
 }
@@ -226,8 +226,8 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
             " , Altitude = " + QString::number(m_state.Altitude)
             , Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-        emit(fireSimVariableEvent(m_state));
-        emit(fireSimEventFrame(20,50));
+        emit fireSimVariableEvent(m_state);
+        emit fireSimEventFrame(20,50);
     }
 }
 
@@ -241,13 +241,13 @@ void CFGManager::OnPingTimer()
         /*if(timespan(Now() - m_LastPong).count()>10000)
         {
             close();
-            emit(fireSimTimedOut());
+            emit fireSimTimedOut();
         }*/
         //else sendPing();
     }
     else
     {
         m_PingTimer.stop();
-        emit(fireSimTimedOut());
+        emit fireSimTimedOut();
     }
 }

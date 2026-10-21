@@ -52,8 +52,8 @@ CXPManager::CXPManager(QObject* parent):
     m_LocalPort=47600;
     m_DestPort=47500;
     m_Server = new UDPServer(this);
-    connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
-    connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
+    connect(m_Server, &UDPServer::fireIncomingData, this, &CXPManager::OnReceiveDatagram);
+    connect(&m_PingTimer, &QTimer::timeout, this, &CXPManager::OnPingTimer);
     m_Server->setPort(m_LocalPort);
     m_Server->start();
     m_log.log("XPManager : " + tr("XPlane Module loaded"));
@@ -338,7 +338,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
 #endif
                 sendCallSignColor();
                 if (getVersion() == SIM_VERSION::XPLANE_CSL) sendAIPaths();
-                emit(fireSimConnected());
+                emit fireSimConnected();
             }
             m_LastPong=Now();
             break;
@@ -357,8 +357,8 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
 #ifdef FFS_DEBUG
                 m_log.log("XPManager : Receive DATA_SEND event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-                emit(fireSimVariableEvent(m_state));
-                emit(fireSimEventFrame(20,50));
+                emit fireSimVariableEvent(m_state);
+                emit fireSimEventFrame(20,50);
             }
             catch (std::exception& e)
             {
@@ -393,7 +393,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
                     , Qt::darkBlue,LEVEL_NORMAL);
 #endif
                 }
-                emit(fireSimAICreated(CallSign,Object_ID));
+                emit fireSimAICreated(CallSign,Object_ID);
             }
             catch (std::exception& e)
             {
@@ -413,7 +413,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
                     QString::number(Object_ID)
                     , Qt::darkBlue,LEVEL_NORMAL);
 #endif
-                emit(fireSimAIRemoved(Object_ID));
+                emit fireSimAIRemoved(Object_ID);
             }
             catch (std::exception& e)
             {
@@ -424,7 +424,7 @@ void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
         case DISC:
         {
             close();
-            emit(fireSimDisconnected());
+            emit fireSimDisconnected();
             break;
         }
         default:
@@ -448,13 +448,13 @@ void CXPManager::OnPingTimer()
         if(timespan(Now() - m_LastPong).count()>10000)
         {
             close();
-            emit(fireSimTimedOut());
+            emit fireSimTimedOut();
         }
         else sendPing();
     }
     else
     {
         m_PingTimer.stop();
-        emit(fireSimTimedOut());
+        emit fireSimTimedOut();
     }
 }

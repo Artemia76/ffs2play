@@ -109,7 +109,7 @@ void CHttpRequest::callback()
 #ifdef FFS_DEBUG
     m_log.log("HttpRequest : Response = " + m_response,Qt::darkRed,LEVEL_VERBOSE );
 #endif
-    emit(finished(this));
+    emit finished(this);
 }
 
 ///

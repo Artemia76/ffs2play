@@ -270,7 +270,7 @@ void AIBaseParser::scanSimObject()
     m_log.log(tr("End of update : ") + QString::number(m_NbAdded) +
                tr(" aircrafts added, ") + QString::number(m_NbUpdated) +
                tr(" updated and ") + QString::number(m_NbDeleted) + tr(" deleted."));
-    emit(fireScanFinished(m_NbAdded, m_NbUpdated, m_NbDeleted));
+    emit fireScanFinished(m_NbAdded, m_NbUpdated, m_NbDeleted);
 }
 
 ///

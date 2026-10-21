@@ -60,8 +60,8 @@ void CPeer::send(const QByteArray &pOutput)
 #endif
                 m_TCPClient = new TCPClient(this);
                 m_TCPClient->connectToHost(m_EP, m_port);
-                connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-                connect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+                connect(m_TCPClient, &TCPClient::fireIncomingData, this, &CPeer::OnReceiveMessage);
+                connect(m_TCPClient, &TCPClient::fireDisconnected, this, &CPeer::OnTCPClientDisconnected);
             }
         }
         else m_TCPClient->send(Output);

@@ -84,12 +84,12 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
 #ifdef FFS_DEBUG
     m_log.log("WEBManager : AES Key generated = " + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
-    connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
+    connect(this, &CWebManager::FireHelloCallback, this, &CWebManager::SendVerify);
 
     m_ATCTimer.setInterval(5000);
     m_liveUpdateTimer.setInterval(30000);
-    connect(&m_ATCTimer, SIGNAL(timeout()),this,SLOT(OnATCUpdate()));
-    connect(&m_liveUpdateTimer, SIGNAL(timeout()),this,SLOT(OnLiveUpdate()));
+    connect(&m_ATCTimer, &QTimer::timeout, this, &CWebManager::OnATCUpdate);
+    connect(&m_liveUpdateTimer, &QTimer::timeout, this, &CWebManager::OnLiveUpdate);
     m_liveUpdateTimer.start();
 }
 

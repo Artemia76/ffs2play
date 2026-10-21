@@ -44,7 +44,7 @@ class CHttpRequest : public QObject
 {
     Q_OBJECT
 public:
-    explicit                    CHttpRequest(QObject *pParent = 0);
+    explicit                    CHttpRequest(QObject *pParent = nullptr);
                                 ~CHttpRequest();
     void                        execute(const QString& pURL, QDomDocument& pDoc);
     void                        execute(const QString& pURL);

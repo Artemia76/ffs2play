@@ -387,7 +387,7 @@ void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
     // Keep connexion status
     m_connected = true;
     m_log.log(tr("Connected to FS."));
-    emit(fireSimConnected());
+    emit fireSimConnected();
 }
 
 ///
@@ -439,7 +439,7 @@ void CSCManager::OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data)
             break;
         }
     }
-    emit(fireSimEvent(Event));
+    emit fireSimEvent(Event);
 }
 
 ///
@@ -500,7 +500,7 @@ void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
             break;
         }
     }
-    emit(fireSimEvent(Event));
+    emit fireSimEvent(Event);
 }
 
 ///
@@ -560,7 +560,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
             m_state.Squawk = Data->Squawk;
             m_state.Type = Data->Type;
             m_state.Vario = Data->Vario*60;
-            emit(fireSimVariableEvent(m_state));
+            emit fireSimVariableEvent(m_state);
             break;
         }
         default:
@@ -576,7 +576,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
                 AIData.GroundAltitude = Data->SolAltitude;
                 AIData.Longitude = Data->Longitude;
                 AIData.Latitude = Data->Latitude;
-                emit(fireSimAIUpdated(AIData,data->dwObjectID));
+                emit fireSimAIUpdated(AIData,data->dwObjectID);
             }
             else
             {
@@ -679,7 +679,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
                         break;
                     }
                 }
-                emit(fireSimEvent(Event));
+                emit fireSimEvent(Event);
             }
             break;
         }
@@ -692,7 +692,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 ///
 void CSCManager::OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data)
 {
-    emit(fireSimEventFrame(data->fFrameRate, data->fSimSpeed));
+    emit fireSimEventFrame(data->fFrameRate, data->fSimSpeed);
 }
 
 ///
@@ -749,7 +749,7 @@ void CSCManager::OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data
         trace("SimConnect_TransmitClientEvent");
         SimConnect_TransmitClientEvent(m_hSimConnect ,data->dwObjectID, static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::FREEZE_ALTITUDE), 1,SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
         trace("SimConnect_TransmitClientEvent");*/
-        emit(fireSimAICreated(it.value(),data->dwObjectID));
+        emit fireSimAICreated(it.value(),data->dwObjectID);
         m_AIProcess.remove(data->dwRequestID);
         SimConnect_RequestDataOnSimObject(m_hSimConnect, static_cast<SIMCONNECT_DATA_REQUEST_ID>(static_cast<uint>(REQUEST_ID::AI_UPDATE) + data->dwObjectID),DEFINITION_ID::AI_UPDATE,data->dwObjectID,SIMCONNECT_PERIOD_SIM_FRAME,SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT,0,0,0);
         trace("SimConnect_RequestDataOnSimObject");

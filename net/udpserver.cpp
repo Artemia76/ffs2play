@@ -42,7 +42,7 @@ UDPServer::UDPServer(QObject *pParent) : QObject(pParent)
     m_running = false;
     m_pListenner = new QUdpSocket(this);
     m_pListenner->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-    connect(m_pListenner, SIGNAL(readyRead()),this, SLOT(OnIncomingData()));
+    connect(m_pListenner, &QUdpSocket::readyRead, this, &UDPServer::OnIncomingData);
     m_port = 0;
 }
 
@@ -112,7 +112,7 @@ void UDPServer::OnIncomingData()
             " port = " + QString::number(datagram.senderPort()) +
             " datagram = " + datagram.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-        emit(fireIncomingData(datagram));
+        emit fireIncomingData(datagram);
     }
 }
 

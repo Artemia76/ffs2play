@@ -59,7 +59,7 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
 #ifdef FFS_DEBUG
             m_log.log("WEBManager : AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
 #endif
-            emit (FireHelloCallback());
+            emit FireHelloCallback();
         }
     }
     else
@@ -130,7 +130,7 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
                     m_P2P.setCallsign(m_users[m_currentUser-1].Login);
                     m_ATCTimer.start();
                     CheckWhazzup(Doc);
-                    emit (FireConnected());
+                    emit FireConnected();
                 }
             }
             else
@@ -345,7 +345,7 @@ void CWebManager::CheckNewVersionCallback(CHttpRequest* pRequest)
                         QDesktopServices::openUrl(URL);
                         compat=false;
                     }
-                    if (!compat) emit(FireExit());
+                    if (!compat) emit FireExit();
                 }
             }
         }

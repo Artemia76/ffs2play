@@ -40,7 +40,7 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
 {
     m_bUPNP=false;
     m_EnforceTCP=false;
-    connect (&m_analyser, SIGNAL(fireTouchSpeed(double)),this,SLOT(onLanding(double)));
+    connect(&m_analyser, &Analyzer::fireTouchSpeed, this, &CP2PManager::onLanding);
     m_UDPServer = new UDPServer(this);
     m_TCPServer = new TCPServer(this);
     m_upnp = new CUPnPClient(this);
@@ -48,7 +48,7 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
     connect(m_upnp, &CUPnPClient::externalAddressFound, this, &CP2PManager::onUPnPExternalAddress);
     connect(m_upnp, &CUPnPClient::portMapped, this, &CP2PManager::onUPnPPortMapped);
     connect(m_upnp, &CUPnPClient::portUnmapped, this, &CP2PManager::onUPnPPortUnmapped);
-    connect (&m_checkAITimer,SIGNAL(timeout()),this,SLOT(onCheckAI()));
+    connect(&m_checkAITimer, &QTimer::timeout, this, &CP2PManager::onCheckAI);
     m_checkAITimer.start(5000);
     m_LastDropRate = Now();
     QList<QHostAddress> InterfaceList = QNetworkInterface::allAddresses();
@@ -139,7 +139,7 @@ void CP2PManager::onCheckAI()
             }
         }
         //Update list quality signal icon
-        emit(firePeerChange(m_peers[i]->CallSign,m_peers[i]->GetSignal()));
+        emit firePeerChange(m_peers[i]->CallSign,m_peers[i]->GetSignal());
 
     }
     // Si on en a plus de visible que la limite alors on en choisi un pour le rendre invisible (les plus lointains)
@@ -356,7 +356,7 @@ QString CP2PManager::getCallsign()
 ///
 void CP2PManager::sendTChat(const QString &pMessage)
 {
-    emit(fireSendTChat(pMessage));
+    emit fireSendTChat(pMessage);
 }
 
 ///
@@ -426,9 +426,9 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
                                       m_AIRadius,
                                       data.Team,
                                       m_EnforceTCP));
-                connect(this, SIGNAL(fireSendTChat(QString)),m_peers.last(),SLOT(OnSendTChat(QString)));
-                connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
-                emit(firePeerAdd(data.CallSign));
+                connect(this, &CP2PManager::fireSendTChat, m_peers.last(), &CPeer::OnSendTChat);
+                connect(m_peers.last(), &CPeer::fireReceiveTChat, this, &CP2PManager::onReceiveTChat);
+                emit firePeerAdd(data.CallSign);
 #ifdef FFS_DEBUG
                 m_log.log("P2PManager : Adding P2P user callsign = "+ data.CallSign + ", IP=" + IP.toString() + ", IPv6=" + IP6.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -513,9 +513,9 @@ void CP2PManager::deleteUser(const QString pCallsign)
 #ifdef FFS_DEBUG
             m_log.log("P2PManager : Remove user " + (*it)->CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
-            disconnect(this, SIGNAL(fireSendTChat(QString)),(*it),SLOT(OnSendTChat(QString)));
-            disconnect((*it), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
-            emit(firePeerRemove((*it)->CallSign));
+            disconnect(this, &CP2PManager::fireSendTChat, (*it), &CPeer::OnSendTChat);
+            disconnect((*it), &CPeer::fireReceiveTChat, this, &CP2PManager::onReceiveTChat);
+            emit firePeerRemove((*it)->CallSign);
             delete (*it);
             it=m_peers.erase(it);
         }
@@ -581,10 +581,10 @@ void CP2PManager::clear ()
 #ifdef FFS_DEBUG
         m_log.log("P2PManager : Remove user " + CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
-        disconnect(this, SIGNAL(fireSendTChat(QString)),*it,SLOT(OnSendTChat(QString)));
-        disconnect(*it, SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
+        disconnect(this, &CP2PManager::fireSendTChat, *it, &CPeer::OnSendTChat);
+        disconnect(*it, &CPeer::fireReceiveTChat, this, &CP2PManager::onReceiveTChat);
         delete (*it);
-        emit(firePeerRemove(CallSign));
+        emit firePeerRemove(CallSign);
     }
     m_peers.clear();
 }
@@ -596,7 +596,7 @@ void CP2PManager::clear ()
 ///
 void CP2PManager::onReceiveTChat(QString pCallSign, QString pMessage)
 {
-    emit (fireReceiveTChat(pCallSign,pMessage));
+    emit fireReceiveTChat(pCallSign,pMessage);
 }
 
 ///

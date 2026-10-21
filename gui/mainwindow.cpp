@@ -86,36 +86,36 @@ MainWindow::MainWindow()
         ui->cb_filter->addItem(m_log.getFilter());
         ui->cb_filter->setCurrentIndex(ui->cb_filter->findText(m_log.getFilter(),Qt::MatchExactly));
     }
-    connect(&m_log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)),Qt::QueuedConnection);
+    connect(&m_log, &CLogger::fireLog, this, &MainWindow::onLog,Qt::QueuedConnection);
     ui->pteLogger->setMaximumBlockCount(m_maxLine);
     m_log.log(tr("Welcome to FFS2Play"),Qt::blue);
     // Simconnect Manager Init
     m_simManager = &simbasemanager::instance();
-    connect(m_simManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
-    connect(m_simManager,  SIGNAL(closed()),this, SLOT(onSCM_Closed()));
-    connect(m_simManager, SIGNAL(loaded(SIM_TYPE)),this, SLOT(onSCM_Loaded(SIM_TYPE)));
+    connect(m_simManager, &simbasemanager::opened, this, &MainWindow::onSCM_Opened);
+    connect(m_simManager, &simbasemanager::closed, this, &MainWindow::onSCM_Closed);
+    connect(m_simManager, &simbasemanager::loaded, this, &MainWindow::onSCM_Loaded);
     onSCM_Loaded(m_simManager->getType());
 
     m_P2PManager = &CP2PManager::instance();
     m_P2PManager->init(true);
-    connect(m_P2PManager, SIGNAL(firePeerAdd(QString)), SLOT(onPeerAdd(QString)));
-    connect(m_P2PManager, SIGNAL(firePeerChange(QString,int)), SLOT(onPeerChange(QString,int)));
-    connect(m_P2PManager, SIGNAL(firePeerRemove(QString)), SLOT(onPeerRemove(QString)));
-    connect(m_P2PManager, SIGNAL(fireReceiveTChat(QString,QString)), SLOT(onPeerReceiveTChat(QString,QString)));
+    connect(m_P2PManager, &CP2PManager::firePeerAdd, this, &MainWindow::onPeerAdd);
+    connect(m_P2PManager, &CP2PManager::firePeerChange, this, &MainWindow::onPeerChange);
+    connect(m_P2PManager, &CP2PManager::firePeerRemove, this, &MainWindow::onPeerRemove);
+    connect(m_P2PManager, &CP2PManager::fireReceiveTChat, this, &MainWindow::onPeerReceiveTChat);
 
     m_webManager = &CWebManager::instance();
 
-    connect(m_webManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
-    connect(m_webManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
-    connect(m_webManager, SIGNAL(FireExit()),this, SLOT(onWM_Exit()));
+    connect(m_webManager, &CWebManager::FireConnected, this, &MainWindow::onWM_Connected);
+    connect(m_webManager, &CWebManager::FireDisconnected, this, &MainWindow::onWM_Disconnected);
+    connect(m_webManager, &CWebManager::FireExit, this, &MainWindow::onWM_Exit);
 
     m_AIMapping = &AIMapping::instance();
-    connect(m_AIMapping, SIGNAL(fireScanFinished(int,int,int)),this, SLOT(onAIScanFinished(int,int,int)));
+    connect(m_AIMapping, &AIMapping::fireScanFinished, this, &MainWindow::onAIScanFinished);
 
     m_Analyzer = &Analyzer::instance();
 
     ui->lwPeer->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->lwPeer, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onPeerShowContextMenu(QPoint)));
+    connect(ui->lwPeer, &QListWidget::customContextMenuRequested, this, &MainWindow::onPeerShowContextMenu);
 #ifdef FFS_DEBUG
     ui->dwDebugOpt->setEnabled(true);
     setWindowTitle("FFS2Play(debug)");
@@ -127,7 +127,7 @@ MainWindow::MainWindow()
     setWindowTitle(windowTitle() + " x64");
 #endif
     //Start timer to updating GUI
-    connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
+    connect(&m_updateTimer, &QTimer::timeout, this, &MainWindow::onUpdate);
     m_updateTimer.start(500);
     m_simManager->open_close();
     m_webManager->CheckNewVersion();

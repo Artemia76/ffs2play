@@ -101,9 +101,9 @@ CPeer::CPeer(UDPServer* pUDPServer,
     }
     if (m_simManager.getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
     else m_disableCalculation = false;
-    connect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
-    connect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
-    connect(m_TCPServer, SIGNAL(fireNewConnexion(TCPClient*)),this,SLOT(OnNewTCPConnection(TCPClient*)));
+    connect(&m_heartBeat, &QTimer::timeout, this, &CPeer::OnHeartBeat);
+    connect(&m_timerCreateAI, &QTimer::timeout, this, &CPeer::OnTimerCreateAI);
+    connect(m_TCPServer, &TCPServer::fireNewConnexion, this, &CPeer::OnNewTCPConnection);
 }
 
 ///
@@ -138,12 +138,12 @@ QHostAddress CPeer::normalized(const QHostAddress& pAddress)
 ///
 CPeer::~CPeer()
 {
-    disconnect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
-    disconnect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
+    disconnect(&m_heartBeat, &QTimer::timeout, this, &CPeer::OnHeartBeat);
+    disconnect(&m_timerCreateAI, &QTimer::timeout, this, &CPeer::OnTimerCreateAI);
     if (m_TCPClient!=nullptr)
     {
-       disconnect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-       disconnect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+       disconnect(m_TCPClient, &TCPClient::fireIncomingData, this, &CPeer::OnReceiveMessage);
+       disconnect(m_TCPClient, &TCPClient::fireDisconnected, this, &CPeer::OnTCPClientDisconnected);
        m_TCPClient=nullptr;
     }
     Stop();
@@ -164,14 +164,14 @@ void CPeer::Disable(bool pFlag)
 void CPeer::Start()
 {
     if (!m_disabled) return;
-    connect(m_UDPServer, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-    connect(&m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
-    connect(&m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)), this, SLOT(OnSimStateChange(CAircraftState)));
-    connect(&m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
-    connect(&m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
-    connect(&m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-    connect(&m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-    connect(&m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
+    connect(m_UDPServer, &UDPServer::fireIncomingData, this, &CPeer::OnReceiveMessage);
+    connect(&m_simManager, &simbasemanager::fireSimEvent, this, &CPeer::OnSimEvent);
+    connect(&m_simManager, &simbasemanager::fireSimVariableEvent, this, &CPeer::OnSimStateChange);
+    connect(&m_simManager, &simbasemanager::fireSimEventFrame, this, &CPeer::OnSimEventFrame);
+    connect(&m_simManager, &simbasemanager::fireSimAICreated, this, &CPeer::OnSimAICreated);
+    connect(&m_simManager, &simbasemanager::fireSimAIUpdated, this, &CPeer::OnSimAIUpdated);
+    connect(&m_simManager, &simbasemanager::fireSimAIRemoved, this, &CPeer::OnSimAIRemoved);
+    connect(&m_simManager, &simbasemanager::closed, this, &CPeer::OnSimClosed);
     m_heartBeat.start(5000);
     m_lastData = Now();
     m_lastStateEvent = m_lastData;
@@ -207,14 +207,14 @@ void CPeer::Stop()
     if (m_disabled) return;
     spawnAI(false);
     m_heartBeat.stop();
-    disconnect(m_UDPServer, SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveMessage(QNetworkDatagram)));
-    disconnect(&m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
-    disconnect(&m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)),this, SLOT(OnSimStateChange(CAircraftState)));
-    disconnect(&m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
-    disconnect(&m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
-    disconnect(&m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-    disconnect(&m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-    disconnect(&m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
+    disconnect(m_UDPServer, &UDPServer::fireIncomingData, this, &CPeer::OnReceiveMessage);
+    disconnect(&m_simManager, &simbasemanager::fireSimEvent, this, &CPeer::OnSimEvent);
+    disconnect(&m_simManager, &simbasemanager::fireSimVariableEvent, this, &CPeer::OnSimStateChange);
+    disconnect(&m_simManager, &simbasemanager::fireSimEventFrame, this, &CPeer::OnSimEventFrame);
+    disconnect(&m_simManager, &simbasemanager::fireSimAICreated, this, &CPeer::OnSimAICreated);
+    disconnect(&m_simManager, &simbasemanager::fireSimAIUpdated, this, &CPeer::OnSimAIUpdated);
+    disconnect(&m_simManager, &simbasemanager::fireSimAIRemoved, this, &CPeer::OnSimAIRemoved);
+    disconnect(&m_simManager, &simbasemanager::closed, this, &CPeer::OnSimClosed);
     m_timerCreateAI.stop();
 
     m_settings.beginGroup("P2P");

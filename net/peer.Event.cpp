@@ -46,8 +46,8 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
             }
             m_TCPClient = pTCPClient;
             m_TCPServer->accept(m_TCPClient);
-            connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-            connect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+            connect(m_TCPClient, &TCPClient::fireIncomingData, this, &CPeer::OnReceiveMessage);
+            connect(m_TCPClient, &TCPClient::fireDisconnected, this, &CPeer::OnTCPClientDisconnected);
             m_PeerMode=TCP_SERVER;
 #ifdef FFS_DEBUG
             m_log.log("Peer [" + m_callSign + "] : received incoming TCP connection, switch to TCPServer mode",Qt::darkBlue,LEVEL_NORMAL);
@@ -66,8 +66,8 @@ void CPeer::OnTCPClientDisconnected(TCPClient* pTCPClient)
     {
         if (m_TCPClient == pTCPClient)
         {
-            disconnect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-            disconnect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+            disconnect(m_TCPClient, &TCPClient::fireIncomingData, this, &CPeer::OnReceiveMessage);
+            disconnect(m_TCPClient, &TCPClient::fireDisconnected, this, &CPeer::OnTCPClientDisconnected);
             m_TCPClient=nullptr;
         }
     }
@@ -147,7 +147,7 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
             stream.readRawData(Buff.data(),Len);
             Message = QString::fromUtf8(Buff);
             m_simManager.sendScrollingText(CallSign + " : " + Message);
-            emit(fireReceiveTChat(m_callSign,Message));
+            emit fireReceiveTChat(m_callSign,Message);
             break;
         }
         case Protocol::DATA:

@@ -38,8 +38,8 @@
 ///
 AIMapping::AIMapping(QObject *parent) : QObject(parent)
 {
-    connect(&m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
-    connect(&m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
+    connect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
+    connect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
     m_Version = SimConnector::SIM_VERSION::UNKNOWN;
 }
 
@@ -48,8 +48,8 @@ AIMapping::AIMapping(QObject *parent) : QObject(parent)
 ///
 AIMapping::~AIMapping()
 {
-    disconnect(&m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
-    disconnect(&m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
+    disconnect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
+    disconnect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
 }
 
 ///
