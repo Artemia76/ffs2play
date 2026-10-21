@@ -33,7 +33,9 @@
 #include "fgmanager.h"
 
 #include "tools/datagram.h"
+#include "tools/fgpropertylist.h"
 #include "disk/aimapping.h"
+#include "disk/fgaiparser.h"
 
 using namespace simgear;
 
@@ -137,6 +139,7 @@ bool CFGManager::createAI(AIResol& pAircraft,const QString& pTail,const CAircraf
     Object.Tail = pTail;
     Object.CallSign = pTail.left(7);
     Object.Model = pAircraft.title();
+    Object.Map = modelMap(Object.Model);
     Object.State = pData;
     // FlightGear identifies a multiplayer aircraft by its callsign only and keeps the
     // model of its first message : after a removal with another model, wait until it
@@ -230,7 +233,10 @@ bool CFGManager::sendAI(FGAIObject& pObject)
     if (Now() < pObject.HoldUntil) return false;
     FGDatagram Datagram;
     Datagram.SetIdentity(pObject.CallSign, pObject.Model);
-    Datagram.SetAirData(pObject.State);
+    Datagram.SetAirData(pObject.State, pObject.Map);
+    updateRamps(pObject);
+    Datagram.SetProperty(FGProp::Flaps, pObject.FlapsNorm);
+    for (int i = 0; i < FGProp::GearCount; i++) Datagram.SetProperty(FGProp::GearPosition + 10 * i, pObject.GearNorm);
     QByteArray Data;
     QDataStream stream(&Data,QIODevice::WriteOnly);
     Datagram.Write(stream);
@@ -239,6 +245,82 @@ bool CFGManager::sendAI(FGAIObject& pObject)
     pObject.LastSend = Now();
     pObject.Sent = true;
     return true;
+}
+
+///
+/// \brief CFGManager::updateRamps
+/// Moves the gear and the flaps shown to the state of the peer, at the speed of a
+/// full travel in FGGearTravelTime and FGFlapsTravelTime. A new aircraft starts there.
+/// \param pObject
+///
+void CFGManager::updateRamps(FGAIObject& pObject)
+{
+    const double GearTarget = pObject.State.GearPos ? 1.0 : 0.0;
+    const double FlapsTarget = qBound(0.0, pObject.State.FlapsIndex / 3.0, 1.0);
+    const datetime Time = Now();
+    if (!pObject.Ramped)
+    {
+        pObject.GearNorm = GearTarget;
+        pObject.FlapsNorm = FlapsTarget;
+        pObject.Ramped = true;
+    }
+    else
+    {
+        const double Elapsed = duration<double>(Time - pObject.RampTime).count();
+        auto Move = [Elapsed](double pValue, double pTarget, double pTravelTime)
+        {
+            const double Step = Elapsed / pTravelTime;
+            if (pValue < pTarget) return qMin(pValue + Step, pTarget);
+            return qMax(pValue - Step, pTarget);
+        };
+        pObject.GearNorm = Move(pObject.GearNorm, GearTarget, FGGearTravelTime);
+        pObject.FlapsNorm = Move(pObject.FlapsNorm, FlapsTarget, FGFlapsTravelTime);
+    }
+    pObject.RampTime = Time;
+}
+
+///
+/// \brief CFGManager::loadGenericMap
+/// \param pFile -set.xml of the aircraft
+/// \return its lights and doors in the generic multiplayer properties
+///
+FGGenericMap CFGManager::loadGenericMap(const QString& pFile)
+{
+    if (pFile.isEmpty()) return FGGenericMap();
+    if (m_FGRoots.isEmpty()) m_FGRoots = FGAIParser::findFGRoots();
+    CFGPropertyList Props;
+    if (!Props.read(pFile, m_FGRoots)) return FGGenericMap();
+    const FGGenericMap Map = FGGenericMap::fromPropertyList(Props);
+#ifdef FFS_DEBUG
+    auto Ids = [](const FGGenericMap& pMap)
+    {
+        return QString::asprintf("landing %d , strobe %d , beacon %d , nav %d , recognition %d , doors %d %d %d %d , rpm relays %d %d",
+                                 pMap.LandingLight, pMap.StrobeLight, pMap.BeaconLight, pMap.NavLight, pMap.RecoLight,
+                                 pMap.Doors[0], pMap.Doors[1], pMap.Doors[2], pMap.Doors[3], pMap.RpmRelays[0], pMap.RpmRelays[1]);
+    };
+    m_log.log("FGManager : Generic properties of " + pFile + " : " + Ids(Map), Qt::darkBlue,LEVEL_NORMAL);
+#endif
+    return Map;
+}
+
+///
+/// \brief CFGManager::modelMap
+/// \param pModel model path displayed for a peer
+/// \return lights and doors of the model, empty if it is not in the AI database
+///
+FGGenericMap CFGManager::modelMap(const QString& pModel)
+{
+    const auto it = m_ModelMaps.constFind(pModel);
+    if (it != m_ModelMaps.constEnd()) return it.value();
+    QString Model, Type, Category, Path;
+    int NbEngine = 0;
+    int EngineType = 4;
+    if (!AIMapping::instance().getAircraftInfo(pModel, Model, Type, Category, &Path, &NbEngine, &EngineType)) return FGGenericMap();
+    FGGenericMap Map = loadGenericMap(Path);
+    Map.EngineCount = NbEngine;
+    Map.EngineType = EngineType;
+    m_ModelMaps.insert(pModel, Map);
+    return Map;
 }
 
 ///
@@ -315,7 +397,7 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
     FGDatagram FGData;
     FGData.Read(stream);
     if (!FGData.IsSane()) return;
-    if (FGData.GetAirData(m_state))
+    if (FGData.GetAirData(m_state, m_InfoMap))
     {
         // Peers drop a DATA not newer than the previous one
         m_state.TimeStamp = Now();
@@ -347,6 +429,8 @@ void CFGManager::updateAircraftInfo()
         m_InfoModel.clear();
         m_InfoType.clear();
         m_InfoCategory.clear();
+        m_InfoMap = FGGenericMap();
+        m_state.NumEngine = 0;
         m_InfoFound = false;
         m_InfoRetry = 0;
     }
@@ -354,11 +438,18 @@ void CFGManager::updateAircraftInfo()
     if ((!m_InfoFound) && (--m_InfoRetry <= 0))
     {
         m_InfoRetry = 100;
-        m_InfoFound = AIMapping::instance().getAircraftInfo(m_InfoTitle, m_InfoModel, m_InfoType, m_InfoCategory);
-#ifdef FFS_DEBUG
+        QString Path;
+        int NbEngine = 0;
+        m_InfoFound = AIMapping::instance().getAircraftInfo(m_InfoTitle, m_InfoModel, m_InfoType, m_InfoCategory, &Path, &NbEngine);
         if (m_InfoFound)
-            m_log.log("FGManager : Aircraft found in AI database : ICAO = " + m_InfoModel + " , Type = " + m_InfoType + " , Category = " + m_InfoCategory, Qt::darkBlue,LEVEL_NORMAL);
+        {
+            m_InfoMap = loadGenericMap(Path);
+            m_state.NumEngine = NbEngine;
+#ifdef FFS_DEBUG
+            m_log.log("FGManager : Aircraft found in AI database : ICAO = " + m_InfoModel + " , Type = " + m_InfoType + " , Category = " + m_InfoCategory +
+                      " , Engines = " + QString::number(NbEngine), Qt::darkBlue,LEVEL_NORMAL);
 #endif
+        }
     }
     m_state.Model = m_InfoModel;
     m_state.Type = m_InfoType;

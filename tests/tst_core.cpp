@@ -82,6 +82,10 @@ private slots:
     void fgOrientationRoundTrip_data();
     void fgOrientationRoundTrip();
     void fgDatagramWriteRead();
+    void fgPropertyListAliases();
+    void fgDatagramProperties();
+    void fgDatagramVelocity();
+    void fgDatagramAirDataRoundTrip();
 };
 
 namespace
@@ -548,6 +552,19 @@ void TestCore::fgPropertyListRealAircraft()
     QVERIFY(!Props.value("sim/description").isEmpty());
     qInfo() << "description =" << Props.value("sim/description") << ", author =" << Props.value("sim/author")
             << ", tags =" << Props.values("sim/tags/tag");
+    // c172p-main.xml : lights in generic int, doors in generic float
+    const simgear::FGGenericMap Map = simgear::FGGenericMap::fromPropertyList(Props);
+    QCOMPARE(Map.LandingLight, quint16(10305));
+    QCOMPARE(Map.BeaconLight, quint16(10312));
+    QCOMPARE(Map.StrobeLight, quint16(10313));
+    QCOMPARE(Map.NavLight, quint16(10314));
+    QCOMPARE(Map.Doors[0], quint16(10200));
+    QCOMPARE(Map.Doors[1], quint16(10201));
+    QCOMPARE(Map.Doors[2], quint16(10202));
+    QCOMPARE(Map.Doors[3], quint16(10218));
+    // Propeller : engine[2]/rpm, not engine[3] to [7] (gear data)
+    QCOMPARE(Map.RpmRelays[0], quint16(322));
+    QCOMPARE(Map.RpmRelays[1], quint16(0));
 }
 
 void TestCore::fgDatagramPosition()
@@ -631,7 +648,6 @@ void TestCore::fgDatagramWriteRead()
     QByteArray Data;
     QDataStream OutStream(&Data, QIODevice::WriteOnly);
     Out.Write(OutStream);
-    QCOMPARE(Data.size(), static_cast<qsizetype>(simgear::POS_MSG_LEN));
 
     QDataStream InStream(&Data, QIODevice::ReadOnly);
     simgear::FGDatagram In;
@@ -640,7 +656,7 @@ void TestCore::fgDatagramWriteRead()
     simgear::FGHeader Header;
     QVERIFY(In.GetHeader(Header));
     QCOMPARE(Header.MsgId, simgear::POS_DATA_ID);
-    QCOMPARE(Header.MsgLen, simgear::POS_MSG_LEN);
+    QCOMPARE(static_cast<qsizetype>(Header.MsgLen), Data.size());
     QCOMPARE(QString(Header.CallSign), QStringLiteral("fgp76-l"));
     CAircraftState Result;
     QVERIFY(In.GetAirData(Result));
@@ -652,6 +668,306 @@ void TestCore::fgDatagramWriteRead()
     QVERIFY(std::abs(Result.Pitch - State.Pitch) < 0.01);
     QVERIFY(std::abs(Result.Bank - State.Bank) < 0.01);
     QVERIFY(std::abs(Result.TASSpeed - State.TASSpeed) < 0.01);
+}
+
+void TestCore::fgPropertyListAliases()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    // As the c172p : generic properties aliased to the aircraft properties
+    const QString SetFile = Dir.filePath("Aircraft/c172p/c172p-set.xml");
+    QVERIFY(writeTextFile(SetFile, R"(<?xml version="1.0"?>
+<PropertyList>
+  <sim>
+    <multiplay>
+      <generic>
+        <float n="0" alias="/sim/model/door-positions/rightDoor/position-norm-effective"/>
+        <float n="1" alias="/sim/model/door-positions/leftDoor/position-norm-effective"/>
+        <float n="3" alias="/sim/model/door-positions/leftWindow/position-norm"/>
+        <int n="4" alias="/sim/model/c172p/lighting/taxi"/>
+        <int n="5" alias="/sim/model/c172p/lighting/landing"/>
+        <int n="12" alias="/sim/model/c172p/lighting/beacon/enabled"/>
+        <int n="13" alias="/sim/model/c172p/lighting/strobes/enabled"/>
+        <bool alias="/controls/lighting/nav-lights"/>
+        <bool alias="/controls/panel/glass"/>
+        <string n="0" alias="/sim/model/immat"/>
+      </generic>
+    </multiplay>
+  </sim>
+  <engines><engine n="2"><rpm alias="/engines/active-engine/rpm"/></engine></engines>
+</PropertyList>
+)"));
+    CFGPropertyList Props;
+    QVERIFY(Props.read(SetFile));
+    const QHash<QString, QString> Aliases = Props.aliases();
+    QCOMPARE(Aliases.value("sim/multiplay/generic/float"), QStringLiteral("sim/model/door-positions/rightDoor/position-norm-effective"));
+    QCOMPARE(Aliases.value("sim/multiplay/generic/int[12]"), QStringLiteral("sim/model/c172p/lighting/beacon/enabled"));
+    // Without n, the rank among the elements of the same name
+    QCOMPARE(Aliases.value("sim/multiplay/generic/bool"), QStringLiteral("controls/lighting/nav-lights"));
+    QCOMPARE(Aliases.value("sim/multiplay/generic/bool[1]"), QStringLiteral("controls/panel/glass"));
+    QCOMPARE(Aliases.value("engines/engine[2]/rpm"), QStringLiteral("engines/active-engine/rpm"));
+
+    const simgear::FGGenericMap Map = simgear::FGGenericMap::fromPropertyList(Props);
+    QCOMPARE(Map.LandingLight, quint16(10305));
+    QCOMPARE(Map.BeaconLight, quint16(10312));
+    QCOMPARE(Map.StrobeLight, quint16(10313));
+    QCOMPARE(Map.NavLight, quint16(simgear::BOOLARRAY_BASE_1));
+    QCOMPARE(Map.RecoLight, quint16(0));
+    // The window is not a door
+    QCOMPARE(Map.Doors[0], quint16(10200));
+    QCOMPARE(Map.Doors[1], quint16(10201));
+    QCOMPARE(Map.Doors[2], quint16(0));
+    // engine[2]/rpm copies the engine rpm : the model reads it
+    QCOMPARE(Map.RpmRelays[0], quint16(322));
+    QCOMPARE(Map.RpmRelays[1], quint16(0));
+    QVERIFY(!Map.isEmpty());
+    QVERIFY(simgear::FGGenericMap().isEmpty());
+}
+
+namespace
+{
+/// Position message of FlightGear without properties : level, at 0 N 0 E
+QByteArray fgPositionMessage(quint32 pPad, const float pVelocity[3] = nullptr, const float pOrientation[3] = nullptr)
+{
+    QByteArray Data;
+    QDataStream Out(&Data, QIODevice::WriteOnly);
+    Out.setByteOrder(QDataStream::BigEndian);
+    Out << quint32(simgear::MSG_MAGIC) << quint32(simgear::PROTO_VER) << quint32(7) << quint32(0) << quint32(100) << quint32(5001);
+    Out.writeRawData("TEST\0\0\0\0", 8);
+    QByteArray Model("Aircraft/c172p/Models/c172p.xml");
+    Model.resize(96, '\0');
+    Out.writeRawData(Model.constData(), Model.size());
+    Out.setFloatingPointPrecision(QDataStream::DoublePrecision);
+    Out << 12.5 << 0.1;
+    double X, Y, Z;
+    GeodToCart(0.0, 0.0, 1000.0, X, Y, Z);
+    Out << X << Y << Z;
+    Out.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    for (int i = 0; i < 3; i++) Out << (pOrientation ? pOrientation[i] : 0.0f);
+    for (int i = 0; i < 3; i++) Out << (pVelocity ? pVelocity[i] : 0.0f);
+    for (int i = 0; i < 9; i++) Out << 0.0f;
+    Out << pPad;
+    return Data;
+}
+
+quint32 fgShortInt(quint16 pId, qint16 pValue)
+{
+    return (quint32(pId) << 16) | quint16(pValue);
+}
+}
+
+void TestCore::fgDatagramProperties()
+{
+    // As FlightGear 2024.1 sends them (captured from fgfs, c172p) : 2017.2 protocol
+    QByteArray Data = fgPositionMessage(simgear::V2_PAD_MAGIC);
+    QDataStream Out(&Data, QIODevice::WriteOnly | QIODevice::Append);
+    Out.setByteOrder(QDataStream::BigEndian);
+    Out.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    Out << fgShortInt(10, 2);                                   // protocol-version
+    Out << fgShortInt(100, 720);                                // left aileron 0.022 (norm)
+    Out << fgShortInt(102, -16384);                             // elevator -0.5 : nose up
+    Out << fgShortInt(104, 21845);                              // flaps 2/3
+    Out << fgShortInt(201, 32767);                              // gear[0] down
+    Out << fgShortInt(210, 5110);                               // gear[1] compressed
+    Out << fgShortInt(302, 23000);                              // engine[0] 2300 rpm
+    Out << quint32(904) << qint32(0);                           // V1 bool (not short encoded)
+    Out << quint32(906) << 12345.0f;                            // V1 float
+    Out << fgShortInt(1005, 1000);                              // nav-lights 1.0
+    Out << fgShortInt(1500, 7000);                              // transponder code
+    Out << fgShortInt(1503, 5);                                 // transponder altitude mode
+    Out << quint32(10200) << 0.82f;                             // generic float[0] : right door
+    Out << quint32(10312) << qint32(1);                         // generic int[12] : beacon
+    Out << fgShortInt(1101, 5);                                 // livery : 5 characters, no padding
+    Out.writeRawData("4X-CH", 5);
+    Out << quint32(10100) << quint32(2);                        // V1 string : one word per character
+    Out << qint32('F') << qint32('G') << qint32(0) << qint32(0);
+    Out << quint32(simgear::BOOLARRAY_BASE_1) << quint32(0x5);  // bool[0] and bool[2]
+    Out << fgShortInt(13000, 1);                                // fallback-model-index
+
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    simgear::FGDatagram Datagram;
+    Datagram.Read(In);
+    QVERIFY(Datagram.IsSane());
+    QVERIFY(In.atEnd());
+    QCOMPARE(Datagram.PropertyValue(10), 2.0);
+    QVERIFY(std::abs(Datagram.PropertyValue(100) - 720.0 / 32767.0) < 1e-6);
+    QCOMPARE(Datagram.PropertyValue(906), 12345.0);
+    QVERIFY(Datagram.HasProperty(904));
+    QCOMPARE(Datagram.Properties().value(1101).string_value, QByteArray("4X-CH"));
+    QCOMPARE(Datagram.Properties().value(10100).string_value, QByteArray("FG"));
+    QCOMPARE(Datagram.PropertyValue(simgear::BOOLARRAY_BASE_1), 1.0);
+    QCOMPARE(Datagram.PropertyValue(simgear::BOOLARRAY_BASE_1 + 1), 0.0);
+    QCOMPARE(Datagram.PropertyValue(simgear::BOOLARRAY_BASE_1 + 2), 1.0);
+    // Read after the unpadded string
+    QCOMPARE(Datagram.PropertyValue(13000), 1.0);
+
+    simgear::FGGenericMap Map;
+    Map.BeaconLight = 10312;
+    Map.Doors[0] = 10200;
+    CAircraftState State;
+    State.NumEngine = 1;
+    QVERIFY(Datagram.GetAirData(State, Map));
+    QVERIFY(std::abs(State.AileronPos - 0.022) < 0.001);
+    QVERIFY(std::abs(State.ElevatorPos - 0.5) < 0.001);
+    QCOMPARE(State.FlapsIndex, 2);
+    QCOMPARE(State.GearPos, 1);
+    QVERIFY(State.OnGround);
+    QCOMPARE(State.StateEng1, 1);
+    QCOMPARE(State.NavLight, 1);
+    QCOMPARE(State.BeaconLight, 1);
+    QCOMPARE(State.LandingLight, 0);
+    QCOMPARE(State.Door1Pos, 82);
+    QCOMPARE(State.Squawk, 7000);
+    QCOMPARE(State.SquawkMode, 3);
+
+    // An unknown property ends the reading, as in FlightGear
+    QByteArray Bad = fgPositionMessage(0);
+    QDataStream BadOut(&Bad, QIODevice::WriteOnly | QIODevice::Append);
+    BadOut.setByteOrder(QDataStream::BigEndian);
+    BadOut.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    BadOut << quint32(102) << 0.25f << quint32(9999) << 1.0f << quint32(103) << 0.5f;
+    QDataStream BadIn(&Bad, QIODevice::ReadOnly);
+    simgear::FGDatagram BadDatagram;
+    BadDatagram.Read(BadIn);
+    QVERIFY(BadDatagram.IsSane());
+    QCOMPARE(BadDatagram.PropertyValue(102), 0.25);
+    QVERIFY(!BadDatagram.HasProperty(103));
+}
+
+void TestCore::fgDatagramVelocity()
+{
+    // At 0 N 0 E, heading north, nose up 10 degrees, 50 m/s forward in the body frame
+    float Orientation[3];
+    EulerToFGOrientation(0.0, 0.0, 0.0, -10.0, 0.0, Orientation);
+    const float Velocity[3] = {50.0f, 0.0f, 0.0f};
+    QByteArray Data = fgPositionMessage(0, Velocity, Orientation);
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    simgear::FGDatagram Datagram;
+    Datagram.Read(In);
+    CAircraftState State;
+    QVERIFY(Datagram.GetAirData(State));
+    QVERIFY2(std::abs(State.Pitch + 10.0) < 0.01, qPrintable(QString::number(State.Pitch)));
+    const double Climb = 50.0 * std::sin(10.0 * M_PI / 180.0) * 196.8503937;
+    QVERIFY2(std::abs(State.Vario - Climb) < 1.0, qPrintable(QString::number(State.Vario)));
+    const double Ground = 50.0 * std::cos(10.0 * M_PI / 180.0) / SG_KT_TO_MPS;
+    QVERIFY2(std::abs(State.GroundSpeed - Ground) < 0.1, qPrintable(QString::number(State.GroundSpeed)));
+    QVERIFY(std::abs(State.TASSpeed - 50.0 / SG_KT_TO_MPS) < 0.1);
+}
+
+void TestCore::fgDatagramAirDataRoundTrip()
+{
+    CAircraftState State;
+    State.Latitude = 49.0097;
+    State.Longitude = 2.5479;
+    State.Altitude = 2500.0;
+    State.Heading = 135.0;
+    State.Pitch = -3.0;
+    State.Bank = 15.0;
+    State.GroundSpeed = 120.0;
+    State.Vario = -700.0;
+    State.IASSpeed = 115.0;
+    State.AileronPos = -0.3;
+    State.ElevatorPos = 0.2;
+    State.RudderPos = 0.1;
+    State.SpoilerPos = 0.5;
+    State.FlapsIndex = 1;
+    State.GearPos = 1;
+    State.OnGround = false;
+    State.LandingLight = 1;
+    State.BeaconLight = 1;
+    State.StrobeLight = 0;
+    State.NavLight = 1;
+    State.Door1Pos = 0;
+    State.Door2Pos = 100;
+    State.Squawk = 4521;
+    State.SquawkMode = 3;
+    simgear::FGGenericMap Map;
+    Map.LandingLight = 10305;
+    Map.BeaconLight = 10312;
+    Map.StrobeLight = 10313;
+    Map.NavLight = simgear::BOOLARRAY_BASE_1 + 3;
+    Map.Doors[0] = 10200;
+    Map.Doors[1] = 10201;
+
+    simgear::FGDatagram Out;
+    Out.SetIdentity("F-GP76", "Aircraft/c172p/Models/c172p.xml");
+    QVERIFY(Out.SetAirData(State, Map));
+    QByteArray Data;
+    QDataStream OutStream(&Data, QIODevice::WriteOnly);
+    Out.Write(OutStream);
+    QVERIFY(Data.size() > static_cast<qsizetype>(simgear::POS_MSG_LEN));
+
+    QDataStream InStream(&Data, QIODevice::ReadOnly);
+    simgear::FGDatagram In;
+    In.Read(InStream);
+    QVERIFY(In.IsSane());
+    QVERIFY(InStream.atEnd());
+    simgear::FGHeader Header;
+    QVERIFY(In.GetHeader(Header));
+    // FlightGear checks the length of the message
+    QCOMPARE(static_cast<qsizetype>(Header.MsgLen), Data.size());
+    for (auto it = Out.Properties().constBegin(); it != Out.Properties().constEnd(); ++it)
+        QVERIFY2(std::abs(In.PropertyValue(it.key(), -1.0) - Out.PropertyValue(it.key())) < 1e-6, qPrintable(QString::number(it.key())));
+    // FlightGear elevator positive nose down
+    QVERIFY(std::abs(In.PropertyValue(simgear::FGProp::Elevator) + 0.2) < 1e-6);
+    QCOMPARE(In.PropertyValue(simgear::FGProp::TransponderAltitude), 2500.0);
+
+    CAircraftState Result;
+    QVERIFY(In.GetAirData(Result, Map));
+    QVERIFY(std::abs(Result.GroundSpeed - State.GroundSpeed) < 0.01);
+    QVERIFY(std::abs(Result.Vario - State.Vario) < 0.5);
+    QVERIFY(std::abs(Result.AileronPos - State.AileronPos) < 1e-6);
+    QVERIFY(std::abs(Result.ElevatorPos - State.ElevatorPos) < 1e-6);
+    QVERIFY(std::abs(Result.RudderPos - State.RudderPos) < 1e-6);
+    QVERIFY(std::abs(Result.SpoilerPos - State.SpoilerPos) < 1e-6);
+    QCOMPARE(Result.FlapsIndex, State.FlapsIndex);
+    QCOMPARE(Result.GearPos, State.GearPos);
+    QCOMPARE(Result.LandingLight, 1);
+    QCOMPARE(Result.BeaconLight, 1);
+    QCOMPARE(Result.StrobeLight, 0);
+    QCOMPARE(Result.NavLight, 1);
+    QCOMPARE(Result.Door1Pos, 0);
+    QCOMPARE(Result.Door2Pos, 100);
+    QCOMPARE(Result.Squawk, 4521);
+    QCOMPARE(Result.SquawkMode, 3);
+    QCOMPARE(Result.IASSpeed, 115.0);
+
+    // Engines : only the engines of the model, and the rpm relays
+    State.StateEng1 = 1;
+    State.ThrottleEng1 = 50;
+    Map.EngineCount = 1;
+    Map.EngineType = 0;
+    Map.RpmRelays[0] = 322;
+    simgear::FGDatagram Piston;
+    Piston.SetIdentity("F-GP76", "Aircraft/c172p/Models/c172p.xml");
+    QVERIFY(Piston.SetAirData(State, Map));
+    QCOMPARE(Piston.PropertyValue(simgear::FGProp::EngineRpm), 1550.0);
+    QCOMPARE(Piston.PropertyValue(322), 1550.0);
+    QVERIFY(!Piston.HasProperty(312));
+    QVERIFY(!Piston.HasProperty(332));
+    State.StateEng1 = 0;
+    QVERIFY(Piston.SetAirData(State, Map));
+    QCOMPARE(Piston.PropertyValue(322), 0.0);
+    State.StateEng1 = 1;
+    State.StateEng2 = 1;
+    State.ThrottleEng2 = 100;
+    simgear::FGGenericMap JetMap;
+    JetMap.EngineCount = 2;
+    JetMap.EngineType = 1;
+    simgear::FGDatagram Jet;
+    Jet.SetIdentity("F-GP76", "Aircraft/A320/Models/a320.xml");
+    QVERIFY(Jet.SetAirData(State, JetMap));
+    QCOMPARE(Jet.PropertyValue(simgear::FGProp::EngineN1), 60.0);
+    QCOMPARE(Jet.PropertyValue(simgear::FGProp::EngineN1 + 10), 100.0);
+    QVERIFY(!Jet.HasProperty(simgear::FGProp::EngineRpm));
+
+    // Transponder in standby : no code, no altitude
+    State.SquawkMode = 1;
+    simgear::FGDatagram Standby;
+    Standby.SetIdentity("F-GP76", "Aircraft/c172p/Models/c172p.xml");
+    QVERIFY(Standby.SetAirData(State));
+    QCOMPARE(Standby.PropertyValue(simgear::FGProp::TransponderId), double(simgear::FGProp::TransponderNone));
+    QCOMPARE(Standby.PropertyValue(simgear::FGProp::TransponderAltitude), double(simgear::FGProp::TransponderNone));
 }
 
 QTEST_GUILESS_MAIN(TestCore)
