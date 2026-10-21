@@ -26,6 +26,9 @@
 ** This is coder/decoder class for FlightGear Datagram
 ****************************************************************************/
 
+#include <QDateTime>
+#include <cstring>
+
 #include "fgdatagram.h"
 
 using namespace simgear;
@@ -90,10 +93,8 @@ void FGDatagram::Read(QDataStream& pStream)
     // xdr_data_t pad of T_PositionMsg (FlightGear mpmessages.hxx) : properties start at byte 232
     char Dummy[4];
     pStream.readRawData(&Dummy[0],sizeof(Dummy));
-    float Roll, Pitch , Yaw;
-    EulerToAngle (m_Pos.Orientation[0],m_Pos.Orientation[1],m_Pos.Orientation[2],Yaw,Pitch,Roll);
 #ifdef FFS_DEBUG
-    m_Log.log(QString::asprintf("FGManager : Yaw=%f , Roll=%f , Pitch=%f",
+    m_Log.log(QString::asprintf("FGManager : Orientation (angle axis) = %f , %f , %f",
         static_cast<double>(m_Pos.Orientation[0]),
         static_cast<double>(m_Pos.Orientation[1]),
         static_cast<double>(m_Pos.Orientation[2])
@@ -142,9 +143,53 @@ void FGDatagram::Read(QDataStream& pStream)
 /// \brief FGDatagram::Write
 /// \param pStream
 ///
-void FGDatagram::Write(QDataStream& /*pStream*/)
+void FGDatagram::Write(QDataStream& pStream)
 {
+    pStream.setByteOrder(QDataStream::BigEndian);
+    pStream << m_Header.Magic;
+    pStream << m_Header.Version;
+    pStream << m_Header.MsgId;
+    pStream << m_Header.MsgLen;
+    pStream << m_Header.Requested_Visibility;
+    pStream << m_Header.Replyport;
+    pStream.writeRawData(&m_Header.CallSign[0],sizeof(m_Header.CallSign));
+    pStream.writeRawData(&m_Pos.ModelName[0],sizeof (m_Pos.ModelName));
+    pStream.setFloatingPointPrecision(QDataStream::DoublePrecision);
+    pStream << m_Pos.Time;
+    pStream << m_Pos.Lag;
+    for (int i=0; i<3; i++) pStream << m_Pos.Position[i];
+    pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    for (int i=0; i<3; i++) pStream << m_Pos.Orientation[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.LinearVelocity[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.AngularVelocity[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.LinearAccel[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.AngularAccel[i];
+    pStream << quint32(0); // pad
+}
 
+///
+/// \brief FGDatagram::SetIdentity
+/// Prepares a position message without properties
+/// \param pCallSign truncated to 7 characters
+/// \param pModel model path, ex "Aircraft/c172p/Models/c172p.xml"
+///
+void FGDatagram::SetIdentity(const QString& pCallSign, const QString& pModel)
+{
+    m_Header = FGHeader();
+    m_Header.Magic = MSG_MAGIC;
+    m_Header.Version = PROTO_VER;
+    m_Header.MsgId = POS_DATA_ID;
+    m_Header.MsgLen = POS_MSG_LEN;
+    m_Header.Requested_Visibility = 100;
+    m_Header.Replyport = 0;
+    const QByteArray CallSign = pCallSign.toLatin1().left(sizeof(m_Header.CallSign) - 1);
+    memset(m_Header.CallSign, 0, sizeof(m_Header.CallSign));
+    memcpy(m_Header.CallSign, CallSign.constData(), static_cast<size_t>(CallSign.size()));
+    const QByteArray Model = pModel.toLatin1().left(sizeof(m_Pos.ModelName) - 1);
+    memset(m_Pos.ModelName, 0, sizeof(m_Pos.ModelName));
+    memcpy(m_Pos.ModelName, Model.constData(), static_cast<size_t>(Model.size()));
+    m_Props.clear();
+    m_Sane = true;
 }
 
 ///
@@ -212,6 +257,12 @@ bool FGDatagram::GetAirData(CAircraftState& pData)
 {
     if (!m_Sane) return false;
     CartToGeod (m_Pos.Position[0],m_Pos.Position[1], m_Pos.Position[2], pData.Longitude,pData.Latitude, pData.Altitude);
+    FGOrientationToEuler(pData.Longitude, pData.Latitude, m_Pos.Orientation, pData.Heading, pData.Pitch, pData.Bank);
+    // Body frame velocity (m/s)
+    const double Speed = sqrt(static_cast<double>(m_Pos.LinearVelocity[0]*m_Pos.LinearVelocity[0] +
+                                                  m_Pos.LinearVelocity[1]*m_Pos.LinearVelocity[1] +
+                                                  m_Pos.LinearVelocity[2]*m_Pos.LinearVelocity[2]));
+    pData.TASSpeed = Speed / SG_KT_TO_MPS;
     pData.Title = m_Pos.ModelName;
     return true;
 }
@@ -221,9 +272,24 @@ bool FGDatagram::GetAirData(CAircraftState& pData)
 /// \param pData
 /// \return
 ///
-bool FGDatagram::SetAirData(const CAircraftState& /*pData*/)
+bool FGDatagram::SetAirData(const CAircraftState& pData)
 {
     if (!m_Sane) return false;
+    // Time of the sender : FlightGear interpolates the positions with it
+    m_Pos.Time = static_cast<double>(QDateTime::currentMSecsSinceEpoch()) / 1000.0;
+    m_Pos.Lag = 0.1;
+    GeodToCart(pData.Longitude, pData.Latitude, pData.Altitude, m_Pos.Position[0], m_Pos.Position[1], m_Pos.Position[2]);
+    EulerToFGOrientation(pData.Longitude, pData.Latitude, pData.Heading, pData.Pitch, pData.Bank, m_Pos.Orientation);
+    // Body frame : x forward
+    m_Pos.LinearVelocity[0] = static_cast<float>(pData.TASSpeed * SG_KT_TO_MPS);
+    m_Pos.LinearVelocity[1] = 0;
+    m_Pos.LinearVelocity[2] = 0;
+    for (int i=0; i<3; i++)
+    {
+        m_Pos.AngularVelocity[i] = 0;
+        m_Pos.LinearAccel[i] = 0;
+        m_Pos.AngularAccel[i] = 0;
+    }
     return true;
 }
 

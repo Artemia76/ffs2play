@@ -116,6 +116,10 @@ enum Type {
 
 // magic value for messages
 const uint32_t MSG_MAGIC = 0x46474653;  // "FGFS"
+// position message (mpmessages.hxx)
+const uint32_t POS_DATA_ID = 7;
+// header (32 bytes) + T_PositionMsg (200 bytes), without properties
+const uint32_t POS_MSG_LEN = 232;
 // protocoll version
 const uint32_t PROTO_VER = 0x00010001;  // 1.1
 
@@ -717,6 +721,7 @@ public:
     bool                    SetPos(FGPos& pPos);
     bool                    GetAirData(CAircraftState& pData);
     bool                    SetAirData(const CAircraftState& pData);
+    void                    SetIdentity(const QString& pCallSign, const QString& pModel);
 
 private:
     FGHeader                m_Header;

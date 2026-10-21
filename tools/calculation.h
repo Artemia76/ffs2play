@@ -40,6 +40,9 @@
 /** Feet to Meters */
 #define SG_FEET_TO_METER    0.3048
 
+/** Knots to meters per second */
+#define SG_KT_TO_MPS        0.5144444444444444444
+
 /** Meters to Feet */
 #define SG_METER_TO_FEET    3.28083989501312335958
 
@@ -99,6 +102,7 @@ double Average(QVector<double>& Array);
 int ConvertToBinaryCodedDecimal(int Code);
 void CartToGeod(const double pX, const double pY, const double pZ, double& pLon, double& pLat, double& pAlt);
 void GeodToCart(const double pLon, const double pLat, const double pAlt, double& pX, double& pY, double& pZ);
-void EulerToAngle(const float pX,  const float pY, const float pZ, float& pYaw, float& pPitch, float& pRoll );
+void FGOrientationToEuler(double pLon, double pLat, const float pAngleAxis[3], double& pHeading, double& pPitch, double& pBank);
+void EulerToFGOrientation(double pLon, double pLat, double pHeading, double pPitch, double pBank, float pAngleAxis[3]);
 
 #endif

@@ -29,6 +29,7 @@
 #include "calculation.h"
 #include <QDataStream>
 #include <QIODevice>
+#include <algorithm>
 #include <limits>
 
 using namespace std;
@@ -165,9 +166,130 @@ void GeodToCart(const double pLon, const double pLat, const double pAlt, double&
     pZ = (h+n-e2*n)*sphi;
 }
 
-void EulerToAngle(const float pX,  const float pY, const float /*pZ*/, float& pYaw, float& pPitch, float& pRoll )
+namespace
 {
-    pPitch = asin(pX / cos(asin(pY)));
-    pYaw = asin(pY);
-    pRoll = 0;
+///
+/// \brief Quaternion with the conventions of SimGear (simgear/math/SGQuat.hxx)
+///
+struct SGQuat
+{
+    double w, x, y, z;
+
+    SGQuat operator*(const SGQuat& v) const
+    {
+        return { w*v.w - x*v.x - y*v.y - z*v.z,
+                 w*v.x + x*v.w + y*v.z - z*v.y,
+                 w*v.y - x*v.z + y*v.w + z*v.x,
+                 w*v.z + x*v.y - y*v.x + z*v.w };
+    }
+    SGQuat conj() const { return { w, -x, -y, -z }; }
+
+    /// Rotation from the ECEF frame to the local horizontal frame
+    static SGQuat fromLonLatRad(double pLon, double pLat)
+    {
+        const double zd2 = 0.5*pLon;
+        const double yd2 = -0.25*SGD_PI - 0.5*pLat;
+        const double Szd2 = sin(zd2), Czd2 = cos(zd2);
+        const double Syd2 = sin(yd2), Cyd2 = cos(yd2);
+        return { Czd2*Cyd2, -Szd2*Syd2, Czd2*Syd2, Szd2*Cyd2 };
+    }
+    static SGQuat fromYawPitchRollRad(double pZ, double pY, double pX)
+    {
+        const double Szd2 = sin(0.5*pZ), Czd2 = cos(0.5*pZ);
+        const double Syd2 = sin(0.5*pY), Cyd2 = cos(0.5*pY);
+        const double Sxd2 = sin(0.5*pX), Cxd2 = cos(0.5*pX);
+        const double cxd2czd2 = Cxd2*Czd2, cxd2szd2 = Cxd2*Szd2;
+        const double sxd2szd2 = Sxd2*Szd2, sxd2czd2 = Sxd2*Czd2;
+        return { cxd2czd2*Cyd2 + sxd2szd2*Syd2,
+                 sxd2czd2*Cyd2 - cxd2szd2*Syd2,
+                 cxd2czd2*Syd2 + sxd2szd2*Cyd2,
+                 cxd2szd2*Cyd2 - sxd2czd2*Syd2 };
+    }
+    /// \param pAxis rotation axis multiplied by the angle (radians)
+    static SGQuat fromAngleAxis(const double pAxis[3])
+    {
+        const double Angle = sqrt(pAxis[0]*pAxis[0] + pAxis[1]*pAxis[1] + pAxis[2]*pAxis[2]);
+        if (Angle <= std::numeric_limits<double>::min()) return { 1, 0, 0, 0 };
+        const double S = sin(0.5*Angle)/Angle;
+        return { cos(0.5*Angle), S*pAxis[0], S*pAxis[1], S*pAxis[2] };
+    }
+    void getAngleAxis(double pAxis[3]) const
+    {
+        const double Nrm = sqrt(w*w + x*x + y*y + z*z);
+        if (Nrm <= std::numeric_limits<double>::min())
+        {
+            pAxis[0] = pAxis[1] = pAxis[2] = 0;
+            return;
+        }
+        const double rNrm = 1/Nrm;
+        const double Angle = acos(std::max(-1.0, std::min(1.0, rNrm*w)));
+        const double sAng = sin(Angle);
+        if (fabs(sAng) <= std::numeric_limits<double>::min())
+        {
+            pAxis[0] = 2*Angle;
+            pAxis[1] = pAxis[2] = 0;
+            return;
+        }
+        const double Coef = 2*Angle*rNrm/sAng;
+        pAxis[0] = Coef*x;
+        pAxis[1] = Coef*y;
+        pAxis[2] = Coef*z;
+    }
+    void getEulerRad(double& pZ, double& pY, double& pX) const
+    {
+        const double sqrQW = w*w, sqrQX = x*x, sqrQY = y*y, sqrQZ = z*z;
+        double num = 2*(y*z + w*x);
+        double den = sqrQW - sqrQX - sqrQY + sqrQZ;
+        pX = ((fabs(den) <= std::numeric_limits<double>::min()) && (fabs(num) <= std::numeric_limits<double>::min())) ? 0 : atan2(num, den);
+        const double tmp = 2*(x*z - w*y);
+        if (tmp <= -1) pY = 0.5*SGD_PI;
+        else if (1 <= tmp) pY = -0.5*SGD_PI;
+        else pY = -asin(tmp);
+        num = 2*(x*y + w*z);
+        den = sqrQW + sqrQX - sqrQY - sqrQZ;
+        if ((fabs(den) <= std::numeric_limits<double>::min()) && (fabs(num) <= std::numeric_limits<double>::min())) pZ = 0;
+        else
+        {
+            pZ = atan2(num, den);
+            if (pZ < 0) pZ += SGD_2PI;
+        }
+    }
+};
+}
+
+///
+/// \brief FGOrientationToEuler
+/// Attitude of a FlightGear multiplayer position message
+/// \param pLon , pLat position (degrees)
+/// \param pAngleAxis orientation of the body in the ECEF frame (angle axis, radians)
+/// \param pHeading true heading (degrees)
+/// \param pPitch , pBank ffs2play convention (SimConnect) : positive nose down, left wing down (degrees)
+///
+void FGOrientationToEuler(double pLon, double pLat, const float pAngleAxis[3], double& pHeading, double& pPitch, double& pBank)
+{
+    const double Axis[3] = { pAngleAxis[0], pAngleAxis[1], pAngleAxis[2] };
+    // FlightGear sends qEc2Hl * hlOr : the orientation in the local horizontal frame is qEc2Hl^-1 * q
+    const SGQuat HlOr = SGQuat::fromLonLatRad(pLon*SGD_DEGREES_TO_RADIANS, pLat*SGD_DEGREES_TO_RADIANS).conj() * SGQuat::fromAngleAxis(Axis);
+    double Yaw, Pitch, Roll;
+    HlOr.getEulerRad(Yaw, Pitch, Roll);
+    pHeading = Yaw*SGD_RADIANS_TO_DEGREES;
+    pPitch = -Pitch*SGD_RADIANS_TO_DEGREES;
+    pBank = -Roll*SGD_RADIANS_TO_DEGREES;
+}
+
+///
+/// \brief EulerToFGOrientation
+/// Orientation of a FlightGear multiplayer position message
+/// \param pLon , pLat position (degrees)
+/// \param pHeading true heading (degrees)
+/// \param pPitch , pBank ffs2play convention (SimConnect) : positive nose down, left wing down (degrees)
+/// \param pAngleAxis orientation of the body in the ECEF frame (angle axis, radians)
+///
+void EulerToFGOrientation(double pLon, double pLat, double pHeading, double pPitch, double pBank, float pAngleAxis[3])
+{
+    const SGQuat Q = SGQuat::fromLonLatRad(pLon*SGD_DEGREES_TO_RADIANS, pLat*SGD_DEGREES_TO_RADIANS)
+                   * SGQuat::fromYawPitchRollRad(pHeading*SGD_DEGREES_TO_RADIANS, -pPitch*SGD_DEGREES_TO_RADIANS, -pBank*SGD_DEGREES_TO_RADIANS);
+    double Axis[3];
+    Q.getAngleAxis(Axis);
+    for (int i = 0; i < 3; i++) pAngleAxis[i] = static_cast<float>(Axis[i]);
 }

@@ -44,6 +44,7 @@
 #include "tools/datagram.h"
 #include "tools/fgpropertylist.h"
 #include "sim/fgdatagram.h"
+#include "tools/calculation.h"
 
 class TestCore : public QObject
 {
@@ -78,6 +79,9 @@ private slots:
     void fgPropertyListInvalid();
     void fgPropertyListRealAircraft();
     void fgDatagramPosition();
+    void fgOrientationRoundTrip_data();
+    void fgOrientationRoundTrip();
+    void fgDatagramWriteRead();
 };
 
 namespace
@@ -579,6 +583,75 @@ void TestCore::fgDatagramPosition()
     QCOMPARE(Pos.AngularAccel[2], 1.5f);
     QVERIFY(In.atEnd());
     QCOMPARE(In.status(), QDataStream::Ok);
+}
+
+void TestCore::fgOrientationRoundTrip_data()
+{
+    QTest::addColumn<double>("Lon");
+    QTest::addColumn<double>("Lat");
+    QTest::addColumn<double>("Heading");
+    QTest::addColumn<double>("Pitch");
+    QTest::addColumn<double>("Bank");
+    QTest::newRow("LFPG level north") << 2.55 << 49.01 << 0.0 << 0.0 << 0.0;
+    QTest::newRow("LFPG climbing turn") << 2.55 << 49.01 << 265.0 << -8.0 << 25.0;
+    QTest::newRow("southern hemisphere") << -70.6 << -33.4 << 123.0 << 4.0 << -30.0;
+    QTest::newRow("date line") << 179.5 << 10.0 << 359.0 << -15.0 << 60.0;
+}
+
+void TestCore::fgOrientationRoundTrip()
+{
+    QFETCH(double, Lon);
+    QFETCH(double, Lat);
+    QFETCH(double, Heading);
+    QFETCH(double, Pitch);
+    QFETCH(double, Bank);
+    float AngleAxis[3];
+    EulerToFGOrientation(Lon, Lat, Heading, Pitch, Bank, AngleAxis);
+    double H, P, B;
+    FGOrientationToEuler(Lon, Lat, AngleAxis, H, P, B);
+    double DeltaH = std::fmod(H - Heading + 540.0, 360.0) - 180.0;
+    QVERIFY2(std::abs(DeltaH) < 0.01, qPrintable(QString::number(H)));
+    QVERIFY2(std::abs(P - Pitch) < 0.01, qPrintable(QString::number(P)));
+    QVERIFY2(std::abs(B - Bank) < 0.01, qPrintable(QString::number(B)));
+}
+
+void TestCore::fgDatagramWriteRead()
+{
+    CAircraftState State;
+    State.Latitude = 49.0097;
+    State.Longitude = 2.5479;
+    State.Altitude = 1500.0;
+    State.Heading = 90.0;
+    State.Pitch = -5.0;  // nose up
+    State.Bank = -20.0;  // right wing down
+    State.TASSpeed = 110.0;
+    simgear::FGDatagram Out;
+    Out.SetIdentity("fgp76-long-callsign", "Aircraft/c172p/Models/c172p.xml");
+    QVERIFY(Out.SetAirData(State));
+    QByteArray Data;
+    QDataStream OutStream(&Data, QIODevice::WriteOnly);
+    Out.Write(OutStream);
+    QCOMPARE(Data.size(), static_cast<qsizetype>(simgear::POS_MSG_LEN));
+
+    QDataStream InStream(&Data, QIODevice::ReadOnly);
+    simgear::FGDatagram In;
+    In.Read(InStream);
+    QVERIFY(In.IsSane());
+    simgear::FGHeader Header;
+    QVERIFY(In.GetHeader(Header));
+    QCOMPARE(Header.MsgId, simgear::POS_DATA_ID);
+    QCOMPARE(Header.MsgLen, simgear::POS_MSG_LEN);
+    QCOMPARE(QString(Header.CallSign), QStringLiteral("fgp76-l"));
+    CAircraftState Result;
+    QVERIFY(In.GetAirData(Result));
+    QCOMPARE(Result.Title, QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QVERIFY(std::abs(Result.Latitude - State.Latitude) < 1e-6);
+    QVERIFY(std::abs(Result.Longitude - State.Longitude) < 1e-6);
+    QVERIFY(std::abs(Result.Altitude - State.Altitude) < 0.1);
+    QVERIFY(std::abs(Result.Heading - State.Heading) < 0.01);
+    QVERIFY(std::abs(Result.Pitch - State.Pitch) < 0.01);
+    QVERIFY(std::abs(Result.Bank - State.Bank) < 0.01);
+    QVERIFY(std::abs(Result.TASSpeed - State.TASSpeed) < 0.01);
 }
 
 QTEST_GUILESS_MAIN(TestCore)
