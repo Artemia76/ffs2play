@@ -100,18 +100,13 @@ QStringList FGAIParser::findFGRoots()
 
 ///
 /// \brief FGAIParser::searchSimPath
-/// Registers the aircraft folders of FlightGear the first time
+/// Registers the aircraft folders of FlightGear not yet in the list : a new version
+/// of FlightGear downloads its data to a new folder (fgdata_2024_1, fgdata_2024_2...)
 ///
 void FGAIParser::searchSimPath()
 {
     if (!m_Initialized) return;
-    if (!getPathList().isEmpty())
-    {
-#ifdef FFS_DEBUG
-        m_log.log("AIMapping : " + m_Table + " Path list already contains some path", Qt::darkYellow,LEVEL_NORMAL);
-#endif
-        return;
-    }
+    const QStringList Known = getPathList();
     QStringList Candidates;
     for (const QString& Root : std::as_const(m_FGRoots)) Candidates << Root + "/Aircraft";
     // Additional aircraft folders given to FlightGear
@@ -127,7 +122,7 @@ void FGAIParser::searchSimPath()
     for (const QString& Candidate : std::as_const(Candidates))
     {
         const QString Path = QDir::fromNativeSeparators(QDir::cleanPath(Candidate));
-        if (!QDir(Path).exists() || Added.contains(Path)) continue;
+        if (!QDir(Path).exists() || Added.contains(Path) || Known.contains(Path, Qt::CaseInsensitive)) continue;
         if (addPath(Path))
         {
             Added << Path;
@@ -137,7 +132,7 @@ void FGAIParser::searchSimPath()
         }
     }
 #ifdef FFS_DEBUG
-    if (Added.isEmpty()) m_log.log("AIMapping : No path found for " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
+    if (Added.isEmpty()) m_log.log("AIMapping : No new path found for " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
 #endif
 }
 
