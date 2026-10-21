@@ -48,6 +48,7 @@ CFGManager::CFGManager(QObject* parent):
     m_FGPort=0;
     m_InfoFound=false;
     m_InfoRetry=0;
+    m_NextObjectID=1;
     m_Server = new UDPServer(this);
     connect(m_Server, &UDPServer::fireIncomingData, this, &CFGManager::OnReceiveDatagram);
     connect(&m_PingTimer, &QTimer::timeout, this, &CFGManager::OnPingTimer);
@@ -92,6 +93,8 @@ void CFGManager::close ()
     if (m_connected)
     {
         sendDisc();
+        // FlightGear removes them 10 s after their last position
+        m_AIObjects.clear();
         m_Server->stop();
         m_connected=false;
         m_log.log(tr("Disconnected from FlightGear."));
@@ -118,26 +121,48 @@ void CFGManager::sendScrollingText(const QString& /*pMessage*/)
 
 ///
 /// \brief CFGManager::createAI
-/// \return
+/// FlightGear creates a multiplayer aircraft when it receives a position message
+/// with a new callsign : the object ID is given by the connector
+/// \param pAircraft model path of the aircraft to display (AIMapping::SolveTitle)
+/// \param pTail callsign of the peer, truncated to 7 characters by FlightGear
+/// \param pData
+/// \return false while FlightGear has not sent its first packet (the peer retries)
 ///
-bool CFGManager::createAI(AIResol& /*pAircraft*/,const QString& /*pTail*/,const CAircraftState& /*pData*/,bool /*pNonAIObject*/)
+bool CFGManager::createAI(AIResol& pAircraft,const QString& pTail,const CAircraftState& pData,bool /*pNonAIObject*/)
 {
+    if ((!m_connected) || (m_FGPort == 0)) return false;
+    const uint ObjectID = m_NextObjectID++;
+    FGAIObject& Object = m_AIObjects[ObjectID];
+    Object.Tail = pTail;
+    Object.Model = pAircraft.title();
+    Object.State = pData;
+    sendAI(Object);
 #ifdef FFS_DEBUG
-        m_log.log("FGManager : Send createAI", Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("FGManager : Send createAI " + pTail + " , Model = " + Object.Model + " , Object ID = " + QString::number(ObjectID), Qt::darkBlue,LEVEL_NORMAL);
 #endif
-    return false;
+    // Answered after the return, like the X-Plane plugin, when the peer is waiting for it
+    QTimer::singleShot(0, this, [this, pTail, ObjectID]()
+    {
+        if (m_AIObjects.contains(ObjectID)) emit fireSimAICreated(pTail, ObjectID);
+    });
+    return true;
 }
 
 ///
 /// \brief CFGManager::removeAI
+/// There is no remove message : FlightGear removes a multiplayer aircraft
+/// 10 s after its last position message
+/// \param pObjectID set to 0
 /// \return
 ///
-bool CFGManager::removeAI(uint& /*pObjectID*/)
+bool CFGManager::removeAI(uint& pObjectID)
 {
 #ifdef FFS_DEBUG
-        m_log.log("FGManager : Send removeAI", Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("FGManager : Send removeAI " + QString::number(pObjectID), Qt::darkBlue,LEVEL_NORMAL);
 #endif
-    return false;
+    m_AIObjects.remove(pObjectID);
+    pObjectID = 0;
+    return true;
 }
 
 ///
@@ -146,12 +171,36 @@ bool CFGManager::removeAI(uint& /*pObjectID*/)
 /// \param pData
 /// \return
 ///
-bool CFGManager::updateAI(uint /*pObjectID*/, const CAircraftState& /*pData*/)
+bool CFGManager::updateAI(uint pObjectID, const CAircraftState& pData)
 {
+    auto it = m_AIObjects.find(pObjectID);
+    if (it == m_AIObjects.end()) return false;
 #ifdef FFS_DEBUG
-        m_log.log("FGManager : Send updateAI", Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("FGManager : Send updateAI " + it->Tail, Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-    return false;
+    it->State = pData;
+    return sendAI(*it);
+}
+
+///
+/// \brief CFGManager::sendAI
+/// Sends the position message of a peer aircraft to FlightGear
+/// \param pObject
+/// \return
+///
+bool CFGManager::sendAI(FGAIObject& pObject)
+{
+    if ((!m_connected) || (m_FGPort == 0)) return false;
+    FGDatagram Datagram;
+    Datagram.SetIdentity(pObject.Tail, pObject.Model);
+    Datagram.SetAirData(pObject.State);
+    QByteArray Data;
+    QDataStream stream(&Data,QIODevice::WriteOnly);
+    Datagram.Write(stream);
+    // FlightGear receives on the socket it sends from
+    m_Server->send(QNetworkDatagram(Data, m_FGAddress, m_FGPort));
+    pObject.LastSend = Now();
+    return true;
 }
 
 ///
@@ -285,6 +334,12 @@ void CFGManager::OnPingTimer()
 {
     if (m_connected)
     {
+        // Keeps the peer aircraft alive in FlightGear between two DATA of the peer
+        const datetime Time = Now();
+        for (FGAIObject& Object : m_AIObjects)
+        {
+            if ((Time - Object.LastSend) > milliseconds(1000)) sendAI(Object);
+        }
         /*if(timespan(Now() - m_LastPong).count()>10000)
         {
             close();

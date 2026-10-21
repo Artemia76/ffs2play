@@ -417,6 +417,13 @@ void CPeer::OnTimerCreateAI()
                     m_AIResolution.setCgHeight(0.0);
                     m_AIResolution.setPitch(0.0);
                     break;
+                case SimConnector::SIM_VERSION::FLIGHTGEAR:
+                    m_AIResolution.setTitle("Aircraft/c172p/Models/c172p.xml");
+                    m_AIResolution.setCgHeight(0.0);
+                    m_AIResolution.setPitch(0.0);
+                    break;
+                default:
+                    break;
             }
 #ifdef FFS_DEBUG
             m_log.log("Peer [" + m_callSign + "] : Simulator have not created the requested AI, we are trying with default simulator aircraft" ,Qt::darkBlue,LEVEL_NORMAL);

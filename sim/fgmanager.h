@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QDateTime>
 #include <QTimer>
+#include <QMap>
 #include <QVector>
 
 #include "sim/simconnector.h"
@@ -64,6 +65,17 @@ private:
     bool            m_InfoFound;
     int             m_InfoRetry;
 
+    /// Peer aircraft displayed in FlightGear as a multiplayer aircraft
+    struct FGAIObject
+    {
+        QString         Tail;
+        QString         Model;
+        CAircraftState  State;
+        datetime        LastSend;
+    };
+    QMap<uint, FGAIObject> m_AIObjects;
+    uint            m_NextObjectID;
+
 protected:
     void            open() override;
     void            close() override;
@@ -80,6 +92,7 @@ protected:
     void            sendData();
     void            sendDisc();
     void            updateAircraftInfo();
+    bool            sendAI(FGAIObject& pObject);
 
 private slots:
     void            OnReceiveDatagram(QNetworkDatagram datagram);
