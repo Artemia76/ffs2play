@@ -40,7 +40,6 @@ simbasemanager::simbasemanager(QObject* parent):
     qRegisterMetaType<SimEvent>("SimEvent");
     qRegisterMetaType<CAircraftState>("CAircraftState");
     qRegisterMetaType<SIM_TYPE>("SIM_TYPE");
-    m_log = CLogger::instance();
     m_initialized = false;
 #ifdef SIMCONNECT_BUILD
     m_simAvailable.append(SIM_TYPE::FSX);
@@ -85,7 +84,7 @@ simbasemanager::~simbasemanager()
 /// \brief CSCManager::instance
 /// \return
 ///
-simbasemanager* simbasemanager::instance()
+simbasemanager& simbasemanager::instance()
 {
     return Singleton<simbasemanager>::instance(simbasemanager::createInstance);
 }
@@ -399,7 +398,7 @@ void simbasemanager::OnSimConnected()
 ///
 void simbasemanager::OnSimDisconnected()
 {
-    m_log->log(tr("Disconnected from simulator."),Qt::darkMagenta);
+    m_log.log(tr("Disconnected from simulator."),Qt::darkMagenta);
     close();
 }
 
@@ -408,7 +407,7 @@ void simbasemanager::OnSimDisconnected()
 ///
 void simbasemanager::OnSimTimedOut()
 {
-    m_log->log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
+    m_log.log(tr("Connexion to simulator timed out."),Qt::darkMagenta);
     close();
     if (++m_RetryCounter<3)
     {

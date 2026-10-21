@@ -62,21 +62,21 @@ private:
     std::unique_ptr<Ui::DialogP2P> ui;
 
     // Logger singleton instance
-    CLogger*            m_log;
+    CLogger&            m_log = CLogger::instance();
 
     // Web Manager singleton instance
-    CP2PManager*        m_P2PManager;
+    CP2PManager&        m_P2PManager = CP2PManager::instance();
 
     // Simulator Manager singleton instance
-    simbasemanager*     m_SimManager;
+    simbasemanager&     m_SimManager = simbasemanager::instance();
 
     // Web manager singleton instance
-    CWebManager*        m_WebManager;
+    CWebManager&        m_WebManager = CWebManager::instance();
 
     // Configuration file Access
     QSettings           m_settings;
 
-    AIMapping*          m_AIMapping;
+    AIMapping&          m_AIMapping = AIMapping::instance();
 
     // Flag to memorize if something is changed on current profil edition
     bool                m_changed;

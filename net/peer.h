@@ -159,8 +159,8 @@ private:
     bool                    m_onLine;
     QString                 m_callSign;
     QString                 m_tail;
-    simbasemanager*         m_simManager;
-    AIMapping*              m_AIMapping;
+    simbasemanager&         m_simManager = simbasemanager::instance();
+    AIMapping&              m_AIMapping = AIMapping::instance();
     QHostAddress            m_EP;
     QVector<QHostAddress>   m_internalIP;
     QHostAddress            m_externalIP;
@@ -183,7 +183,7 @@ private:
     UDPServer*              m_UDPServer;
     TCPServer*              m_TCPServer;
     TCPClient*              m_TCPClient;
-    CLogger*                m_log;
+    CLogger&                m_log = CLogger::instance();
     timespan                m_latence;
     double                  m_distance;
     timespan                m_refreshRate;

@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     if (FFS2PlayTS.load(QLocale(), "ffs2play", "_", ":/i18n"))
         app.installTranslator(&FFS2PlayTS);
     // Light or dark theme (palette and style sheet)
-    CTheme::instance()->init();
+    CTheme::instance().init();
     MainWindow mainWindow;
     mainWindow.show();
     return app.exec();

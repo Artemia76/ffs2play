@@ -61,10 +61,10 @@ private:
     std::unique_ptr<Ui::DialogProfils> ui;
 
     // Logger singleton instance
-    CLogger*            m_log;
+    CLogger&            m_log = CLogger::instance();
 
     // Web Manager singleton instance
-    CWebManager*        m_webManager;
+    CWebManager&        m_webManager = CWebManager::instance();
 
     // Configuration file Access
     QSettings           m_settings;

@@ -59,7 +59,7 @@ class simbasemanager : public QObject
 private:
 static	simbasemanager*         createInstance();
     explicit                    simbasemanager(QObject *parent = nullptr);
-    CLogger*                    m_log;
+    CLogger&                    m_log = CLogger::instance();
     QSettings                   m_settings;
     bool                        m_initialized;
     std::unique_ptr<SimConnector> m_connector;
@@ -70,7 +70,7 @@ static	simbasemanager*         createInstance();
     int                         m_RetryCounter;
 
 public:
-static simbasemanager*          instance();
+static simbasemanager&          instance();
                                 ~simbasemanager();
     void                        load(SIM_TYPE pSimType);
     void                        unload();

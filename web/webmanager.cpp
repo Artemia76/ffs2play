@@ -48,10 +48,6 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
 
     // Keep the Qt5 type name as alias : it is stored in existing settings files
     qRegisterMetaType<QVector<SUser> >("QVector<SUser>");
-    m_log = CLogger::instance();
-    m_P2P = CP2PManager::instance();
-    m_simManager = simbasemanager::instance();
-    m_Analyzer = Analyzer::instance();
     m_settings.beginGroup("Web");
     QByteArray Profils = QByteArray::fromBase64(m_settings.value("Profils","").toByteArray());
     QByteArray Check = QByteArray::fromBase64(m_settings.value("Hash","").toByteArray());
@@ -61,7 +57,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     int num = m_settings.value("Default",0).toInt();
     if(Profils.isEmpty() && (num>0))
     {
-        m_log->log("WEBManager : " + tr("Users Profils Settings is empty but default user is set. Reset of default user"),Qt::darkMagenta);
+        m_log.log("WEBManager : " + tr("Users Profils Settings is empty but default user is set. Reset of default user"),Qt::darkMagenta);
         m_settings.setValue("Default",0);
     }
     else if (result == Check)
@@ -78,7 +74,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     }
     else if (!Check.isEmpty())
     {
-        m_log->log("WEBManager : " + tr("Users Profils Settings checkum error, repair setting datas"),Qt::darkMagenta);
+        m_log.log("WEBManager : " + tr("Users Profils Settings checkum error, repair setting datas"),Qt::darkMagenta);
         m_settings.setValue("Default",0);
         m_settings.setValue("Profils","");
         m_settings.setValue("Hash","");
@@ -86,7 +82,7 @@ CWebManager::CWebManager(QObject *parent) : QObject(parent)
     m_settings.endGroup();
     m_currentUser = num;
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : AES Key generated = " + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("WEBManager : AES Key generated = " + QString(m_crypto.EncryptionKeyString()),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     connect(this, SIGNAL(FireHelloCallback()),this, SLOT( SendVerify()));
 
@@ -118,7 +114,7 @@ CWebManager* CWebManager::createInstance()
 /// \brief CWebManager::instance
 /// \return
 ///
-CWebManager* CWebManager::instance()
+CWebManager& CWebManager::instance()
 {
     return Singleton<CWebManager>::instance(CWebManager::createInstance);
 }
@@ -222,18 +218,18 @@ void CWebManager::XmlBuild (QDomDocument& pDoc, XmlCode pCode)
             xmlPassword.appendChild(pDoc.createTextNode(m_crypto.EncryptToBase64(m_users[m_currentUser-1].Password)));
             xmlVerify.appendChild(xmlPassword);
             QDomElement xmlPort = pDoc.createElement("port");
-            xmlPort.appendChild(pDoc.createTextNode(QString::number(m_P2P->getPort())));
+            xmlPort.appendChild(pDoc.createTextNode(QString::number(m_P2P.getPort())));
             xmlVerify.appendChild(xmlPort);
             QDomElement xmlLocalIP = pDoc.createElement("local_ip");
-            xmlLocalIP.appendChild(pDoc.createTextNode(m_P2P->getLocalIPs()));
+            xmlLocalIP.appendChild(pDoc.createTextNode(m_P2P.getLocalIPs()));
             xmlVerify.appendChild(xmlLocalIP);
             break;
         }
         case XmlCode::liveupdate:
         {
             // without simulator : keep-alive only (slot kept, Whazzup received), no position
-            if (!m_simManager->isConnected()) break;
-            CAircraftState State = m_simManager->getAircraftState();
+            if (!m_simManager.isConnected()) break;
+            CAircraftState State = m_simManager.getAircraftState();
             QDomElement xmlLiveUpdate = pDoc.createElement("liveupdate");
             xmlRoot.appendChild(xmlLiveUpdate);
             QDomElement xmlRegistration = pDoc.createElement("registration");
@@ -258,7 +254,7 @@ void CWebManager::XmlBuild (QDomDocument& pDoc, XmlCode pCode)
             xmlIASpeed.appendChild(pDoc.createTextNode(QString::number(State.IASSpeed,'f',0)));
             xmlLiveUpdate.appendChild(xmlIASpeed);
             QDomElement xmlStatus = pDoc.createElement("status");
-            xmlStatus.appendChild(pDoc.createTextNode(m_Analyzer->getPhaseName()));
+            xmlStatus.appendChild(pDoc.createTextNode(m_Analyzer.getPhaseName()));
             xmlLiveUpdate.appendChild(xmlStatus);
             QDomElement xmlCategory = pDoc.createElement("category");
             xmlCategory.appendChild(pDoc.createTextNode(State.Category));
@@ -271,13 +267,13 @@ void CWebManager::XmlBuild (QDomDocument& pDoc, XmlCode pCode)
             xmlLiveUpdate.appendChild(xmlOnGround);
             QMetaEnum version = QMetaEnum::fromType<SimConnector::SIM_VERSION>();
             QDomElement xmlSim = pDoc.createElement("sim");
-            xmlSim.appendChild(pDoc.createTextNode( version.valueToKey(m_simManager->getVersion())));
+            xmlSim.appendChild(pDoc.createTextNode( version.valueToKey(m_simManager.getVersion())));
             xmlLiveUpdate.appendChild(xmlSim);
             break;
         }
         case XmlCode::atc:
         {
-            CAircraftState State = m_simManager->getAircraftState();
+            CAircraftState State = m_simManager.getAircraftState();
             QDomElement xmlAtc = pDoc.createElement("atc");
             xmlRoot.appendChild(xmlAtc);
             QDomElement xmlLatitude = pDoc.createElement("latitude");

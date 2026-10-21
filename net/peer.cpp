@@ -60,9 +60,6 @@ CPeer::CPeer(UDPServer* pUDPServer,
             CallSign(m_callSign),
             Disabled(m_disabled)
 {
-    m_log = CLogger::instance();
-    m_AIMapping = AIMapping::instance();
-    m_simManager = simbasemanager::instance();
     m_callSign = pCallSign;
     m_UDPServer = pUDPServer;
     m_TCPServer = pTCPServer;
@@ -102,7 +99,7 @@ CPeer::CPeer(UDPServer* pUDPServer,
         // TCP needs one address : IPv6 if both peers have it, else IPv4
         if (m_EP.isNull() && !m_candidates.isEmpty()) m_EP = m_candidates.first();
     }
-    if (m_simManager->getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
+    if (m_simManager.getType()!=SIM_TYPE::FSX) m_disableCalculation = true;
     else m_disableCalculation = false;
     connect(&m_heartBeat,SIGNAL(timeout()),this,SLOT(OnHeartBeat()));
     connect(&m_timerCreateAI,SIGNAL(timeout()),this,SLOT(OnTimerCreateAI()));
@@ -168,13 +165,13 @@ void CPeer::Start()
 {
     if (!m_disabled) return;
     connect(m_UDPServer, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-    connect(m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
-    connect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)), this, SLOT(OnSimStateChange(CAircraftState)));
-    connect(m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
-    connect(m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
-    connect(m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-    connect(m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-    connect(m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
+    connect(&m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
+    connect(&m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)), this, SLOT(OnSimStateChange(CAircraftState)));
+    connect(&m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
+    connect(&m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
+    connect(&m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
+    connect(&m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+    connect(&m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
     m_heartBeat.start(5000);
     m_lastData = Now();
     m_lastStateEvent = m_lastData;
@@ -194,8 +191,8 @@ void CPeer::Start()
     m_settings.beginGroup("P2P");
     if (m_settings.value("P2PInfoEnable", true).toBool())
     {
-        if (m_simManager->getVersion()!=SimConnector::SIM_VERSION::XPLANE)
-            m_simManager->sendScrollingText(CallSign + tr(" is connected on P2P Network"));
+        if (m_simManager.getVersion()!=SimConnector::SIM_VERSION::XPLANE)
+            m_simManager.sendScrollingText(CallSign + tr(" is connected on P2P Network"));
     }
     m_settings.endGroup();
     m_disabled = false;
@@ -211,20 +208,20 @@ void CPeer::Stop()
     spawnAI(false);
     m_heartBeat.stop();
     disconnect(m_UDPServer, SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveMessage(QNetworkDatagram)));
-    disconnect(m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
-    disconnect(m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)),this, SLOT(OnSimStateChange(CAircraftState)));
-    disconnect(m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
-    disconnect(m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
-    disconnect(m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-    disconnect(m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-    disconnect(m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
+    disconnect(&m_simManager, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(OnSimEvent(SimEvent)));
+    disconnect(&m_simManager, SIGNAL(fireSimVariableEvent(CAircraftState)),this, SLOT(OnSimStateChange(CAircraftState)));
+    disconnect(&m_simManager, SIGNAL(fireSimEventFrame(float,float)), this, SLOT(OnSimEventFrame(float,float)));
+    disconnect(&m_simManager, SIGNAL(fireSimAICreated(QString,uint)),this, SLOT(OnSimAICreated(QString,uint)));
+    disconnect(&m_simManager, SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
+    disconnect(&m_simManager, SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
+    disconnect(&m_simManager, SIGNAL(closed()),this,SLOT(OnSimClosed()));
     m_timerCreateAI.stop();
 
     m_settings.beginGroup("P2P");
     if (m_settings.value("P2PInfoEnable", true).toBool())
     {
-        if (m_simManager->getVersion()!=SimConnector::SIM_VERSION::XPLANE)
-            m_simManager->sendScrollingText(CallSign + tr(" leave from P2P Network"));
+        if (m_simManager.getVersion()!=SimConnector::SIM_VERSION::XPLANE)
+            m_simManager.sendScrollingText(CallSign + tr(" leave from P2P Network"));
     }
     m_settings.endGroup();
     m_disabled = true;
@@ -241,11 +238,11 @@ void CPeer::spawnAI(bool pFlag)
     if (pFlag && (m_objectID == 0) && (m_spawned == 0))
     {
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] : Local request for Title solve = " + m_data.Title +
+        m_log.log("Peer [" + m_callSign + "] : Local request for Title solve = " + m_data.Title +
                 " , Model = " + m_data.Model ,
                 Qt::darkBlue,LEVEL_NORMAL);
 #endif
-        m_AIResolution = m_AIMapping->SolveTitle(m_data.Title,m_data.Model, m_data.Type);
+        m_AIResolution = m_AIMapping.SolveTitle(m_data.Title,m_data.Model, m_data.Type);
         m_spawned = 2;
         createAI();
     }
@@ -255,13 +252,13 @@ void CPeer::spawnAI(bool pFlag)
         m_timerCreateAI.stop();
         if (m_objectID != 0)
         {
-            if (m_simManager->removeAI(m_objectID))
+            if (m_simManager.removeAI(m_objectID))
             {
 #ifdef FFS_DEBUG
-                m_log->log("Peer [" + m_callSign + "] : Remove aircraft", Qt::darkBlue,LEVEL_NORMAL);
+                m_log.log("Peer [" + m_callSign + "] : Remove aircraft", Qt::darkBlue,LEVEL_NORMAL);
 #endif
             }
-            else m_log->log("Peer [" + m_callSign + "] : Error during removing of the aircraft", Qt::darkMagenta);
+            else m_log.log("Peer [" + m_callSign + "] : Error during removing of the aircraft", Qt::darkMagenta);
         }
     }
 }
@@ -275,18 +272,18 @@ void CPeer::createAI()
     {
         if (m_objectID != 0)
         {
-            m_simManager->removeAI(m_objectID);
+            m_simManager.removeAI(m_objectID);
         }
         if (m_callSign.length()>12) m_tail = m_callSign.left(12);
         else m_tail = m_callSign;
         if (m_data.Category == "Helicopter") m_trySimpleAI = true;
         m_timerCreateAI.start(5000);
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] : Requesting creation of aircraft with Title = " + m_AIResolution.title()
+        m_log.log("Peer [" + m_callSign + "] : Requesting creation of aircraft with Title = " + m_AIResolution.title()
             + " Model = " + m_AIResolution.model()
             , Qt::darkBlue,LEVEL_NORMAL);
 #endif
-        m_simManager->createAI(m_AIResolution, m_tail,m_data, m_trySimpleAI);
+        m_simManager.createAI(m_AIResolution, m_tail,m_data, m_trySimpleAI);
     }
 }
 
@@ -301,7 +298,7 @@ void CPeer::refreshData()
         if (m_spawned >= 5)
         {
             m_spawned = 7;
-            m_simManager->updateAI(m_objectID, m_AIData);
+            m_simManager.updateAI(m_objectID, m_AIData);
         }
         return;
     }
@@ -310,7 +307,7 @@ void CPeer::refreshData()
     if (m_spawned == 5)
     {
         m_AIData = m_data;
-        m_simManager->freezeAI(m_objectID, m_data.OnGround);
+        m_simManager.freezeAI(m_objectID, m_data.OnGround);
         m_lastRender = Now();
         if (m_spawned==5) m_spawned=6;
     }
@@ -373,7 +370,7 @@ void CPeer::refreshData()
         }
         m_spawned = 7;
         m_actualPos.Pitch = m_AIData.Pitch;
-        if (m_data.OnGround != m_oldData.OnGround) m_simManager->freezeAI(m_objectID,m_data.OnGround);
+        if (m_data.OnGround != m_oldData.OnGround) m_simManager.freezeAI(m_objectID,m_data.OnGround);
     }
 }
 
@@ -447,7 +444,7 @@ void CPeer::updateAI(datetime pTime, float pFPS)
                 if (m_AIData.Bank < -180) m_AIData.Bank += 360;
                 if (m_AIData.Bank >= 180) m_AIData.Bank -= 360;
             }
-            if (m_data.OnGround && (!m_simManager->getOption(DisableAltCorr)))
+            if (m_data.OnGround && (!m_simManager.getOption(DisableAltCorr)))
             {
                 // Mise à jour de l'altitude sol de référence
                 m_old_GND_AI = m_AISimData.GroundAltitude;
@@ -455,7 +452,7 @@ void CPeer::updateAI(datetime pTime, float pFPS)
             }
             if (m_spawned >= 7)
             {
-                m_simManager->updateAI(m_objectID, m_AIData);
+                m_simManager.updateAI(m_objectID, m_AIData);
             }
         }
     }

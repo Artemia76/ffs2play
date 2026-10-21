@@ -60,7 +60,7 @@ private:
 
 public:
                             ~CLogger();
-    static CLogger*         instance();
+    static CLogger&         instance();
     CL_DEBUG_LEVEL          debugLevel() const;
     void                    setDebugLevel (CL_DEBUG_LEVEL pLevel=LEVEL_NONE);
     void                    log (const QString& pMessage="", QColor pColor = Qt::black,CL_DEBUG_LEVEL pLevel=LEVEL_NONE);

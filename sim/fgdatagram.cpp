@@ -34,7 +34,6 @@ using namespace simgear;
 ///
 FGDatagram::FGDatagram()
 {
-    m_Log = CLogger::instance();
     m_Sane = false;
 }
 
@@ -65,7 +64,7 @@ void FGDatagram::Read(QDataStream& pStream)
     if (m_Header.Magic != MSG_MAGIC) return;
     m_Sane = true;
 #ifdef FFS_DEBUG
-    m_Log->log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
+    m_Log.log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
         m_Header.Magic,
         m_Header.Version,
         m_Header.MsgId,
@@ -89,7 +88,7 @@ void FGDatagram::Read(QDataStream& pStream)
     float Roll, Pitch , Yaw;
     EulerToAngle (m_Pos.Orientation[0],m_Pos.Orientation[1],m_Pos.Orientation[2],Yaw,Pitch,Roll);
 #ifdef FFS_DEBUG
-    m_Log->log(QString::asprintf("FGManager : Yaw=%f , Roll=%f , Pitch=%f",
+    m_Log.log(QString::asprintf("FGManager : Yaw=%f , Roll=%f , Pitch=%f",
         static_cast<double>(m_Pos.Orientation[0]),
         static_cast<double>(m_Pos.Orientation[1]),
         static_cast<double>(m_Pos.Orientation[2])
@@ -128,7 +127,7 @@ void FGDatagram::Read(QDataStream& pStream)
             Value = QString::fromUtf8(prop.string_value);
             break;
         }
-        m_Log->log(QString::asprintf("FGManager : Property Id=%d , Value = ", prop.id)+Value,Qt::darkBlue,LEVEL_VERBOSE);
+        m_Log.log(QString::asprintf("FGManager : Property Id=%d , Value = ", prop.id)+Value,Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         //break;
     }

@@ -38,11 +38,9 @@
 ///
 CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
 {
-    m_log=CLogger::instance();
-    m_analyser = Analyzer::instance();
     m_bUPNP=false;
     m_EnforceTCP=false;
-    connect (m_analyser, SIGNAL(fireTouchSpeed(double)),this,SLOT(onLanding(double)));
+    connect (&m_analyser, SIGNAL(fireTouchSpeed(double)),this,SLOT(onLanding(double)));
     m_UDPServer = new UDPServer(this);
     m_TCPServer = new TCPServer(this);
     m_upnp = new CUPnPClient(this);
@@ -63,10 +61,10 @@ CP2PManager::CP2PManager(QObject *parent) : QObject(parent)
             m_HasIPv6 = true;
     }
 #ifdef FFS_DEBUG
-    m_log->log("P2PManager : Local LAN IP address : ",Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("P2PManager : Local LAN IP address : ",Qt::darkBlue,LEVEL_NORMAL);
     for (const QString& IP : std::as_const(m_InternalIP))
     {
-        m_log->log("P2PManager : IP address = " + IP,Qt::darkBlue,LEVEL_NORMAL);
+        m_log.log("P2PManager : IP address = " + IP,Qt::darkBlue,LEVEL_NORMAL);
     }
 #endif
 }
@@ -92,7 +90,7 @@ CP2PManager::~CP2PManager()
 /// \brief CP2PManager::instance
 /// \return
 ///
-CP2PManager* CP2PManager::instance()
+CP2PManager& CP2PManager::instance()
 {
     return Singleton<CP2PManager>::instance(CP2PManager::createInstance);
 }
@@ -150,7 +148,7 @@ void CP2PManager::onCheckAI()
         //On rend le plus lointain invisible
         m_peers[PosLointain]->m_visible = false;
 #ifdef FFS_DEBUG
-        m_log->log("P2PManager : Peer " + m_peers[PosLointain]->m_callSign + " become unvisible",Qt::darkBlue);
+        m_log.log("P2PManager : Peer " + m_peers[PosLointain]->m_callSign + " become unvisible",Qt::darkBlue);
 #endif
     }
     //Sinon , si on a des invisibles et que le nombre de visibles est inférieur à la limite
@@ -159,7 +157,7 @@ void CP2PManager::onCheckAI()
     {
         m_peers[PosPret]->m_visible = true;
 #ifdef FFS_DEBUG
-        m_log->log("P2PManager : Peer " + m_peers[PosPret]->m_callSign + " become visible",Qt::darkBlue);
+        m_log.log("P2PManager : Peer " + m_peers[PosPret]->m_callSign + " become visible",Qt::darkBlue);
 #endif
     }
 }
@@ -224,9 +222,9 @@ void CP2PManager::initUPNP(bool flag)
 void CP2PManager::onUPnPFailed(CUPnPClient::Error pError)
 {
     if (pError == CUPnPClient::Error::NoDevice)
-        m_log->log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
+        m_log.log("P2PManager : " + tr("No IGD UPNP Device found on the network !"),Qt::red);
     else
-        m_log->log("P2PManager : " + tr("No valid Internet Gateway Device found."));
+        m_log.log("P2PManager : " + tr("No valid Internet Gateway Device found."));
 }
 
 ///
@@ -237,7 +235,7 @@ void CP2PManager::onUPnPExternalAddress(QHostAddress pAddress)
 {
     m_UPnPIPv4 = pAddress;
 #ifdef FFS_DEBUG
-    m_log->log("P2PManager : UPnP Internet IP address = " + m_UPnPIPv4.toString(),Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("P2PManager : UPnP Internet IP address = " + m_UPnPIPv4.toString(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     updateExternalIP();
 }
@@ -295,9 +293,9 @@ void CP2PManager::onUPnPPortMapped(QString pProtocol, int pErrorCode)
         return;
     }
     if (pProtocol == "UDP")
-        m_log->log("P2PManager : " + tr("Adding UDP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
+        m_log.log("P2PManager : " + tr("Adding UDP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
     else
-        m_log->log("P2PManager : " + tr("Adding TCP port mappping failed with code ") + QString::number(pErrorCode),Qt::magenta);
+        m_log.log("P2PManager : " + tr("Adding TCP port mappping failed with code ") + QString::number(pErrorCode),Qt::magenta);
 }
 
 ///
@@ -309,9 +307,9 @@ void CP2PManager::onUPnPPortUnmapped(QString pProtocol, int pErrorCode)
 {
     if (pErrorCode == 0) return;
     if (pProtocol == "UDP")
-        m_log->log("P2PManager : " + tr("Delete UDP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
+        m_log.log("P2PManager : " + tr("Delete UDP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
     else
-        m_log->log("P2PManager : " + tr("Delete TCP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
+        m_log.log("P2PManager : " + tr("Delete TCP port mapping failed with code ") + QString::number(pErrorCode),Qt::magenta);
 }
 
 ///
@@ -408,7 +406,7 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
                 IP = QHostAddress(data.externalIP);
                 if (IP.isNull() && IP6.isNull())
                 {
-                    m_log->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
+                    m_log.log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
                 }
             }
             if (((!IP.isNull()) || (!IP6.isNull())) && (data.Port>0))
@@ -432,12 +430,12 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
                 connect(m_peers.last(), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
                 emit(firePeerAdd(data.CallSign));
 #ifdef FFS_DEBUG
-                m_log->log("P2PManager : Adding P2P user callsign = "+ data.CallSign + ", IP=" + IP.toString() + ", IPv6=" + IP6.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
+                m_log.log("P2PManager : Adding P2P user callsign = "+ data.CallSign + ", IP=" + IP.toString() + ", IPv6=" + IP6.toString() + ", Port=" + QString::number(data.Port),Qt::darkBlue,LEVEL_NORMAL);
 #endif
             }
             else
             {
-                m_log->log("P2PManager : " + tr("User ") + data.CallSign + " discarded", Qt::darkMagenta);
+                m_log.log("P2PManager : " + tr("User ") + data.CallSign + " discarded", Qt::darkMagenta);
             }
         }
         // if user already exist, we update it
@@ -451,21 +449,21 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
                 IP = QHostAddress(data.externalIP);
                 if (IP.isNull() && IP6.isNull())
                 {
-                    m_log->log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
+                    m_log.log("P2PManager : " + tr("Bad IP Address"),Qt::darkMagenta);
                     user_change=true;
                 }
             }
             if ((!Peer->m_externalIP.isEqual(IP)) || (!Peer->m_externalIP6.isEqual(IP6)))
             {
 #ifdef FFS_DEBUG
-                m_log->log("P2PManager : Change IP for user " + Peer->CallSign + ", IP=" + Peer->m_externalIP.toString(),Qt::blue, LEVEL_NORMAL);
+                m_log.log("P2PManager : Change IP for user " + Peer->CallSign + ", IP=" + Peer->m_externalIP.toString(),Qt::blue, LEVEL_NORMAL);
 #endif
                 user_change=true;
             }
             if (Peer->m_port != data.Port)
             {
 #ifdef FFS_DEBUG
-                m_log->log("P2PManager : Change port for user " + Peer->CallSign + ", Port=" + QString::number(data.Port) ,Qt::blue, LEVEL_NORMAL);
+                m_log.log("P2PManager : Change port for user " + Peer->CallSign + ", Port=" + QString::number(data.Port) ,Qt::blue, LEVEL_NORMAL);
 #endif
                 user_change=true;
             }
@@ -473,7 +471,7 @@ void CP2PManager::whazzup_Update(QVector<PeerData>& pWhazzup)
             {
                 Peer->m_team = data.Team;
 #ifdef FFS_DEBUG
-                m_log->log("P2PManager : Change team for user " + Peer->CallSign + ", Team=" + data.Team ,Qt::blue, LEVEL_NORMAL);
+                m_log.log("P2PManager : Change team for user " + Peer->CallSign + ", Team=" + data.Team ,Qt::blue, LEVEL_NORMAL);
 #endif
             }
             if (user_change) deleteUser(Peer->CallSign);
@@ -513,7 +511,7 @@ void CP2PManager::deleteUser(const QString pCallsign)
         if ((*it)->CallSign == pCallsign)
         {
 #ifdef FFS_DEBUG
-            m_log->log("P2PManager : Remove user " + (*it)->CallSign, Qt::blue, LEVEL_NORMAL);
+            m_log.log("P2PManager : Remove user " + (*it)->CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
             disconnect(this, SIGNAL(fireSendTChat(QString)),(*it),SLOT(OnSendTChat(QString)));
             disconnect((*it), SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
@@ -581,7 +579,7 @@ void CP2PManager::clear ()
     {
         QString CallSign = (*it)->CallSign;
 #ifdef FFS_DEBUG
-        m_log->log("P2PManager : Remove user " + CallSign, Qt::blue, LEVEL_NORMAL);
+        m_log.log("P2PManager : Remove user " + CallSign, Qt::blue, LEVEL_NORMAL);
 #endif
         disconnect(this, SIGNAL(fireSendTChat(QString)),*it,SLOT(OnSendTChat(QString)));
         disconnect(*it, SIGNAL(fireReceiveTChat(QString,QString)),this,SLOT(onReceiveTChat(QString,QString)));
@@ -825,7 +823,7 @@ void CP2PManager::onLanding(double pVSpeed)
     {
         if ( duration_cast<milliseconds> (Now() - m_LastDropRate).count() < 2000) return;
         QString Message = tr("Drop rate : ") + QString::number(static_cast<int>(pVSpeed)) + tr(" ft/min");
-        m_log->log(Message);
+        m_log.log(Message);
         if (m_SendDropRate)
         {
             sendTChat(Message);

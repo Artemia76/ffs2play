@@ -55,7 +55,7 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
         if (!query.next())
         {
 #ifdef FFS_DEBUG
-            m_log->log("AIMapping : No record was found for " + pKey, Qt::darkYellow,LEVEL_VERBOSE);
+            m_log.log("AIMapping : No record was found for " + pKey, Qt::darkYellow,LEVEL_VERBOSE);
 #endif
             try
             {
@@ -138,16 +138,16 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 nb_moteur = s.value("properties","acf/_num_engn").toInt();
 
 #if FFS_DEBUG
-                m_log->log("AIMapping : Path = " + Path,Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : Editor = " + Editor,Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : ATCModel = " + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : ATCType = " + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : Airline = " + Airline, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : Category = " + Category, Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : EngineType = " + QString::number(Engine_Type), Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : CG Height = " +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : Pitch = " +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
-                m_log->log("AIMapping : NBEngine = " + QString::number(nb_moteur), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : Path = " + Path,Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : Editor = " + Editor,Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : ATCModel = " + Atc_model, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : ATCType = " + Atc_type, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : Airline = " + Airline, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : Category = " + Category, Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : EngineType = " + QString::number(Engine_Type), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : CG Height = " +  QString::number(Static_CG_Height), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : Pitch = " +  QString::number(Static_Pitch), Qt::darkYellow,LEVEL_VERBOSE);
+                m_log.log("AIMapping : NBEngine = " + QString::number(nb_moteur), Qt::darkYellow,LEVEL_VERBOSE);
 #endif
                 int nb_title = 0;
                 while (true)
@@ -155,7 +155,7 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                     if (Title != "")
                     {
 #if FFS_DEBUG
-                        m_log->log("AIMapping : livery found Title = " + Title,Qt::darkYellow,LEVEL_VERBOSE);
+                        m_log.log("AIMapping : livery found Title = " + Title,Qt::darkYellow,LEVEL_VERBOSE);
 #endif
                         nb_title++;
                         query.prepare("SELECT * FROM Aircrafts WHERE (Title = :Title) AND (checksum = :checksum) AND (Sim = :Sim)" );
@@ -211,10 +211,10 @@ void XPAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
             }
             catch (IniParserException& ex)
             {
-                m_log->log(tr("AIMapping : IniParser error = ") + ex.Message,Qt::magenta,LEVEL_NORMAL);
+                m_log.log(tr("AIMapping : IniParser error = ") + ex.Message,Qt::magenta,LEVEL_NORMAL);
             }
         }
     }
-    else m_log->log(tr("AIMapping : Error = ") + query.lastError().text(), Qt::darkYellow,LEVEL_VERBOSE);
+    else m_log.log(tr("AIMapping : Error = ") + query.lastError().text(), Qt::darkYellow,LEVEL_VERBOSE);
 
 }

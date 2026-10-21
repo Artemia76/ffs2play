@@ -126,7 +126,7 @@ CTheme* CTheme::createInstance()
 /// \brief CTheme::instance
 /// \return
 ///
-CTheme* CTheme::instance()
+CTheme& CTheme::instance()
 {
     return Singleton<CTheme>::instance(CTheme::createInstance);
 }

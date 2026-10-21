@@ -36,9 +36,8 @@
 UDPServer::UDPServer(QObject *pParent) : QObject(pParent)
 {
     qRegisterMetaType<QNetworkDatagram>("QNetworkDatagram");
-    m_log = CLogger::instance();
 #ifdef FFS_DEBUG
-    m_log->log("UPDServer : constructor", Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("UPDServer : constructor", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     m_running = false;
     m_pListenner = new QUdpSocket(this);
@@ -76,12 +75,12 @@ bool UDPServer::start ()
         if (m_running)
         {
 #ifdef FFS_DEBUG
-            m_log->log("UPDServer : listenning on port " + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("UPDServer : listenning on port " + QString::number(m_port), Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
         else
         {
-            m_log->log("UDPServer : Failed to open UDP port " + QString::number(m_port) + ",Reason = " + m_pListenner->errorString(), Qt::darkMagenta);
+            m_log.log("UDPServer : Failed to open UDP port " + QString::number(m_port) + ",Reason = " + m_pListenner->errorString(), Qt::darkMagenta);
         }
     }
     return m_running;
@@ -108,7 +107,7 @@ void UDPServer::OnIncomingData()
     {
         QNetworkDatagram datagram = m_pListenner->receiveDatagram();
 #ifdef FFS_DEBUG
-        m_log->log("UDPServer : receive data from " +
+        m_log.log("UDPServer : receive data from " +
             datagram.senderAddress().toString() +
             " port = " + QString::number(datagram.senderPort()) +
             " datagram = " + datagram.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);
@@ -126,7 +125,7 @@ void UDPServer::send(const QNetworkDatagram& pData)
     if ((m_running) && (m_pListenner !=nullptr))
     {
 #ifdef FFS_DEBUG
-        m_log->log("UDPServer : send data to " +
+        m_log.log("UDPServer : send data to " +
             pData.destinationAddress().toString() +
             " port = " + QString::number(pData.destinationPort()) +
             " datagram = " + pData.data().toHex(), Qt::darkBlue,LEVEL_VERBOSE);

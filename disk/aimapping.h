@@ -49,15 +49,15 @@ class AIMapping : public QObject
 private:
     explicit                AIMapping(QObject *parent = nullptr);
     static  AIMapping*      createInstance();
-    CLogger*                m_log;
-    simbasemanager*         m_simManager;
+    CLogger&                m_log = CLogger::instance();
+    simbasemanager&         m_simManager = simbasemanager::instance();
     SimConnector::SIM_VERSION m_Version;
     /// Parser of the connected simulator, null when no simulator is connected
     std::unique_ptr<AIBaseParser> m_AIParser;
 
 public:
                             ~AIMapping();
-    static	AIMapping*      instance();
+    static	AIMapping&      instance();
 
     void                    startScanSimObject();
     AIResol                 SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );

@@ -94,11 +94,10 @@ namespace
 ///
 CCrypto::CCrypto(QObject *parent) : QObject(parent)
 {
-    m_log = CLogger::instance();
     m_key.resize(AES_KEY_SIZE);
     if (RAND_bytes(reinterpret_cast<unsigned char*>(m_key.data()), AES_KEY_SIZE) != 1)
     {
-        m_log->log("CCrypto : unable to generate AES key");
+        m_log.log("CCrypto : unable to generate AES key");
     }
 }
 
@@ -131,14 +130,14 @@ QString CCrypto::EncryptToBase64(const QString& Data)
     QByteArray iv(AES_IV_SIZE, '\0');
     if (RAND_bytes(reinterpret_cast<unsigned char*>(iv.data()), AES_IV_SIZE) != 1)
     {
-        m_log->log("CCrypto encode error : unable to generate IV");
+        m_log.log("CCrypto encode error : unable to generate IV");
         return QString("");
     }
     bool ok;
     QByteArray Output = aes256Cfb(true, m_key, iv, Data.toUtf8(), ok);
     if (!ok)
     {
-        m_log->log("CCrypto encode error : AES encryption failed");
+        m_log.log("CCrypto encode error : AES encryption failed");
         return QString("");
     }
     Output.append(IV_SEPARATOR);
@@ -159,7 +158,7 @@ QString CCrypto::DecryptFromBase64(const QString& Data)
     const qsizetype pos = chaine.size() - AES_IV_SIZE - IV_SEPARATOR.size();
     if ((pos < 0) || (QByteArrayView(chaine).sliced(pos, IV_SEPARATOR.size()) != IV_SEPARATOR))
     {
-        m_log->log("CCrypto decode error : IV not found");
+        m_log.log("CCrypto decode error : IV not found");
         return QString("");
     }
     QByteArray iv = chaine.right(AES_IV_SIZE);
@@ -167,7 +166,7 @@ QString CCrypto::DecryptFromBase64(const QString& Data)
     QByteArray Decoded = aes256Cfb(false, m_key, iv, chaine.left(pos), ok);
     if (!ok)
     {
-        m_log->log("CCrypto decode error : AES decryption failed");
+        m_log.log("CCrypto decode error : AES decryption failed");
         return QString("");
     }
     return QString::fromUtf8(Decoded);
@@ -187,7 +186,7 @@ QString CCrypto::RSA_EncryptToBase64(const QString& Cert, const QByteArray& Data
     X509Ptr x509(PEM_read_bio_X509(bio.get(), nullptr, nullptr, nullptr));
     if (!x509)
     {
-        m_log->log("CCrypto RSA error : invalid certificate");
+        m_log.log("CCrypto RSA error : invalid certificate");
         return QString();
     }
     EVP_PKEY* pkey = X509_get0_pubkey(x509.get());
@@ -197,7 +196,7 @@ QString CCrypto::RSA_EncryptToBase64(const QString& Cert, const QByteArray& Data
         || (EVP_PKEY_encrypt_init(ctx.get()) <= 0)
         || (EVP_PKEY_CTX_set_rsa_padding(ctx.get(), RSA_PKCS1_PADDING) <= 0))
     {
-        m_log->log("CCrypto RSA error : unable to init encryption");
+        m_log.log("CCrypto RSA error : unable to init encryption");
         return QString();
     }
     size_t outLen = 0;
@@ -208,7 +207,7 @@ QString CCrypto::RSA_EncryptToBase64(const QString& Cert, const QByteArray& Data
     if (EVP_PKEY_encrypt(ctx.get(), reinterpret_cast<unsigned char*>(encrypt.data()), &outLen,
                          in, static_cast<size_t>(Data.size())) <= 0)
     {
-        m_log->log("CCrypto RSA error : encryption failed");
+        m_log.log("CCrypto RSA error : encryption failed");
         return QString();
     }
     encrypt.resize(static_cast<qsizetype>(outLen));

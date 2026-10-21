@@ -69,7 +69,7 @@ CLogger::~CLogger()
 /// \brief CLogger::instance
 /// \return
 ///
-CLogger* CLogger::instance()
+CLogger& CLogger::instance()
 {
     return Singleton<CLogger>::instance(CLogger::createInstance);
 }

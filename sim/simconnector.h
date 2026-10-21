@@ -126,7 +126,7 @@ public:
 
     bool            isConnected();
 protected:
-    CLogger*        m_log;
+    CLogger&        m_log = CLogger::instance();
     bool            m_connected;
     CAircraftState  m_state;
     QSettings       m_settings;

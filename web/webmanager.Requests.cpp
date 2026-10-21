@@ -39,7 +39,7 @@ void CWebManager::Connect()
     QDomDocument SendHello;
     XmlBuild(SendHello, XmlCode::hello);
     CHttpRequest* Request = new CHttpRequest(this);
-    m_log->log(tr("Connecting to server ..."));
+    m_log.log(tr("Connecting to server ..."));
     connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( HelloCallback (CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendHello);
 }
@@ -55,10 +55,10 @@ void CWebManager::Disconnect()
     QDomDocument SendLogout;
     XmlBuild(SendLogout, XmlCode::logout);
     CHttpRequest* Request = new CHttpRequest(this);
-    m_log->log(tr("Disconnecting from server ..."));
+    m_log.log(tr("Disconnecting from server ..."));
     connect(Request, SIGNAL(finished(CHttpRequest*)),this, SLOT( LogoutCallback(CHttpRequest*)),Qt::QueuedConnection);
     Request->execute(m_users[m_currentUser-1].URL+"/action.php",SendLogout);
-    m_P2P->clear();
+    m_P2P.clear();
     m_bConnected = false;
     m_portalURL.clear();
     m_publicIPv4.clear();

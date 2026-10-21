@@ -48,7 +48,7 @@ CFGManager::CFGManager(QObject* parent):
     m_Server = new UDPServer(this);
     connect (m_Server,SIGNAL(fireIncomingData(QNetworkDatagram)), this,SLOT(OnReceiveDatagram(QNetworkDatagram)));
     connect (&m_PingTimer,SIGNAL(timeout()), this, SLOT(OnPingTimer()));
-    m_log->log("FGManager : " + tr("FlightGear Module loaded"));
+    m_log.log("FGManager : " + tr("FlightGear Module loaded"));
 }
 
 ///
@@ -58,7 +58,7 @@ CFGManager::~CFGManager()
 {
     close();
     m_Server->stop();
-    m_log->log("FGManager : " + tr("FlightGear Module unloaded"));
+    m_log.log("FGManager : " + tr("FlightGear Module unloaded"));
 }
 
 ///
@@ -68,13 +68,13 @@ void CFGManager::open ()
 {
     if (!m_connected)
     {
-        m_log->log(tr("Connecting to FlightGear ..."));
+        m_log.log(tr("Connecting to FlightGear ..."));
         m_Server->setPort(m_LocalPort);
         m_PingTimer.start(500);
         if (m_Server->start())
         {
             m_connected=true;
-            m_log->log(tr("Connected to FlightGear."));
+            m_log.log(tr("Connected to FlightGear."));
             emit(fireSimConnected());
         }
     }
@@ -91,7 +91,7 @@ void CFGManager::close ()
         sendDisc();
         m_Server->stop();
         m_connected=false;
-        m_log->log(tr("Disconnected from FlightGear."));
+        m_log.log(tr("Disconnected from FlightGear."));
     }
 }
 
@@ -150,7 +150,7 @@ void CFGManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("FGManager : Send freezeAI", Qt::darkBlue,LEVEL_NORMAL);
+        m_log.log("FGManager : Send freezeAI", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
 }
@@ -161,7 +161,7 @@ void CFGManager::freezeAI(uint /*pObjectID*/, bool /*pState*/)
 void CFGManager::sendPing()
 {
 #ifdef FFS_DEBUG
-    m_log->log("FGManager : Send PING", Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("FGManager : Send PING", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     /*QByteArray Data;
     QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -180,7 +180,7 @@ void CFGManager::sendData()
     if (m_connected)
     {
 #ifdef FFS_DEBUG
-        m_log->log("FGManager : Send DATA", Qt::darkBlue,LEVEL_NORMAL);
+        m_log.log("FGManager : Send DATA", Qt::darkBlue,LEVEL_NORMAL);
 #endif
         /*QByteArray Data;
         QDataStream stream(&Data,QIODevice::WriteOnly);
@@ -219,7 +219,7 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
     if (FGData.GetAirData(m_state))
     {
 #ifdef FFS_DEBUG
-        m_log->log("FGManager : Received Data from FG : Model = " +
+        m_log.log("FGManager : Received Data from FG : Model = " +
             m_state.Title +
             " , Latitude = " + QString::number(m_state.Latitude) +
             " , Longitude = " + QString::number(m_state.Longitude) +

@@ -38,10 +38,8 @@
 ///
 AIMapping::AIMapping(QObject *parent) : QObject(parent)
 {
-    m_log = CLogger::instance();
-    m_simManager = simbasemanager::instance();
-    connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
-    connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
+    connect(&m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
+    connect(&m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
     m_Version = SimConnector::SIM_VERSION::UNKNOWN;
 }
 
@@ -50,8 +48,8 @@ AIMapping::AIMapping(QObject *parent) : QObject(parent)
 ///
 AIMapping::~AIMapping()
 {
-    disconnect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
-    disconnect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
+    disconnect(&m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
+    disconnect(&m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
 }
 
 ///
@@ -67,7 +65,7 @@ AIMapping* AIMapping::createInstance()
 /// \brief AIMapping::instance
 /// \return
 ///
-AIMapping* AIMapping::instance()
+AIMapping& AIMapping::instance()
 {
     return Singleton<AIMapping>::instance(AIMapping::createInstance);
 }
@@ -77,8 +75,7 @@ AIMapping* AIMapping::instance()
 ///
 void AIMapping::onSimReceiveOpen()
 {
-    if (m_simManager==nullptr) return;
-    m_Version = m_simManager->getVersion();
+    m_Version = m_simManager.getVersion();
     switch (m_Version)
     {
 #ifdef SIMCONNECT_BUILD
@@ -113,7 +110,7 @@ void AIMapping::onSimReceiveOpen()
     // Forwarded to the main window (connection lost in 2019, see docs/audit-2026-10.md F1)
     connect(m_AIParser.get(), &AIBaseParser::fireScanFinished, this, &AIMapping::fireScanFinished);
     m_AIParser->startScanSimObject();
-    m_simManager->setPathList(getPathList());
+    m_simManager.setPathList(getPathList());
 }
 
 ///

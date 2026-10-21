@@ -723,7 +723,7 @@ private:
     FGPos                   m_Pos;
     QVector<FGPropertyData> m_Props;
     bool                    m_Sane;
-    CLogger*                m_Log;
+    CLogger&                m_Log = CLogger::instance();
     bool                    GetProperty(QDataStream& pStream, FGPropertyData& pPropData);
 const   IdPropertyList*         FindProperty(unsigned short pID);
 

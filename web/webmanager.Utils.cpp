@@ -99,7 +99,7 @@ bool CWebManager::CheckError(QDomDocument& pDoc)
                 //Disconnect();
                 break;
         }
-        m_log->log(tr("Server : ") + Element.firstChild().nodeValue(),Couleur);
+        m_log.log(tr("Server : ") + Element.firstChild().nodeValue(),Couleur);
         if (Level >= 2) return true;
     }
     return false;
@@ -129,7 +129,7 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                 const QString IP6 = Player.attribute("ip6");
                 if (!IP6.isEmpty()) item.externalIP6=QHostAddress(m_crypto.DecryptFromBase64(IP6));
 #ifdef FFS_DEBUG
-                m_log->log("WEBManager : CallSign = " + item.CallSign
+                m_log.log("WEBManager : CallSign = " + item.CallSign
                             + " IP = " + item.externalIP.toString()
                             + " IPv6 = " + item.externalIP6.toString()
                             + " Port = " + QString::number(item.Port),Qt::darkBlue,LEVEL_VERBOSE);
@@ -140,7 +140,7 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
                 {
                     item.localIPs.append(QHostAddress(IP));
 #ifdef FFS_DEBUG
-                    m_log->log("WEBManager : Local IP = " + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
+                    m_log.log("WEBManager : Local IP = " + item.localIPs.last().toString() ,Qt::darkBlue,LEVEL_VERBOSE);
 #endif
                 }
                 //Check for team membership
@@ -150,7 +150,7 @@ void CWebManager::CheckWhazzup(QDomDocument& pDoc)
         }
         if (whazzup.count()>0)
         {
-            m_P2P->whazzup_Update(whazzup);
+            m_P2P.whazzup_Update(whazzup);
         }
     }
 }

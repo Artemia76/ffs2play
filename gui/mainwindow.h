@@ -100,7 +100,7 @@ private slots:
 
 private:
     std::unique_ptr<Ui::MainWindow> ui;
-    CLogger*        m_log;
+    CLogger&        m_log = CLogger::instance();
     simbasemanager* m_simManager;
     CP2PManager*    m_P2PManager;
     CWebManager*    m_webManager;

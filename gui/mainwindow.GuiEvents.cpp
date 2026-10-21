@@ -106,7 +106,7 @@ void MainWindow::on_afP2P_triggered()
 ///
 void MainWindow::on_rb_filterNone_toggled(bool checked)
 {
-    if (checked) m_log->setDebugLevel(LEVEL_NONE);
+    if (checked) m_log.setDebugLevel(LEVEL_NONE);
 }
 
 ///
@@ -115,7 +115,7 @@ void MainWindow::on_rb_filterNone_toggled(bool checked)
 ///
 void MainWindow::on_rb_filterNormal_toggled(bool checked)
 {
-    if (checked) m_log->setDebugLevel(LEVEL_NORMAL);
+    if (checked) m_log.setDebugLevel(LEVEL_NORMAL);
 }
 
 ///
@@ -124,7 +124,7 @@ void MainWindow::on_rb_filterNormal_toggled(bool checked)
 ///
 void MainWindow::on_rb_filterVerbose_toggled(bool checked)
 {
-    if (checked) m_log->setDebugLevel(LEVEL_VERBOSE);
+    if (checked) m_log.setDebugLevel(LEVEL_VERBOSE);
 }
 
 ///
@@ -133,7 +133,7 @@ void MainWindow::on_rb_filterVerbose_toggled(bool checked)
 ///
 void MainWindow::on_cb_filter_currentIndexChanged(const QString &arg1)
 {
-    m_log->setFilter(arg1);
+    m_log.setFilter(arg1);
 }
 
 ///
@@ -293,7 +293,7 @@ void MainWindow::saveLog()
             QFile document (File);
             if(!document.open(QFile::WriteOnly | QFile::Text))
             {
-                m_log->log(tr("An Error occur while opening ") + document.fileName(),Qt::darkMagenta);
+                m_log.log(tr("An Error occur while opening ") + document.fileName(),Qt::darkMagenta);
                 return;
             }
             QTextStream writer (&document);

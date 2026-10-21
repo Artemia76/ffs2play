@@ -41,7 +41,7 @@ class UDPServer : public QObject
     Q_OBJECT
 private:
     QUdpSocket* m_pListenner;
-    CLogger*    m_log;
+    CLogger&    m_log = CLogger::instance();
     bool        m_running;
     quint16     m_port;
 public:

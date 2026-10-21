@@ -56,7 +56,7 @@ void CPeer::send(const QByteArray &pOutput)
             if (m_PeerMode==TCP_CLIENT)
             {
 #ifdef FFS_DEBUG
-                m_log->log("Peer [" + m_callSign + "] : Creating TCPClient socket",Qt::darkBlue,LEVEL_NORMAL);
+                m_log.log("Peer [" + m_callSign + "] : Creating TCPClient socket",Qt::darkBlue,LEVEL_NORMAL);
 #endif
                 m_TCPClient = new TCPClient(this);
                 m_TCPClient->connectToHost(m_EP, m_port);
@@ -104,9 +104,9 @@ void CPeer::sendPing()
     {
 #ifdef FFS_DEBUG
         if (m_counter > 2)
-            m_log->log("Peer [" + m_callSign + "] : go offline = Timeout",Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : go offline = Timeout",Qt::darkBlue,LEVEL_NORMAL);
         else
-            m_log->log("Peer [" + m_callSign + "] : go offline = Diconnected",Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : go offline = Diconnected",Qt::darkBlue,LEVEL_NORMAL);
 #endif
         m_onLine = false;
         m_version = 0;

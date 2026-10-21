@@ -59,10 +59,10 @@ protected:
     QAtomicInt              m_NbAdded;
     QAtomicInt              m_NbUpdated;
     QAtomicInt              m_NbDeleted;
-    CLogger*                m_log;
+    CLogger&                m_log = CLogger::instance();
     QStringList             m_AircraftPaths;
     QString                 m_BaseFile;
-    simbasemanager*         m_simManager;
+    simbasemanager&         m_simManager = simbasemanager::instance();
     QStringList             m_AIFileFilter;
     /// Simulator type of the scan, read by the scan thread instead of simbasemanager
     SIM_TYPE                m_ScanSim;

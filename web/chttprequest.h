@@ -53,7 +53,7 @@ public:
     QUrl                        finalUrl() const;
 private:
     QString                     m_response;
-    CLogger*                    m_log;
+    CLogger&                    m_log = CLogger::instance();
     QNetworkRequest             m_request;
     QNetworkReply*              m_reply;
 static  QNetworkAccessManager*  m_ptNetworkManager;
