@@ -691,23 +691,16 @@ struct FGPos
 
 struct FGPropertyData
 {
-    quint16 id;
-    // While the type isn't transmitted, it is needed for the destructor
-    Type type;
+    quint16 id = 0;
+    Type type = UNSPECIFIED;
     union
     {
         int int_value;
         float float_value;
-        char* string_value;
     };
-    FGPropertyData() : string_value(nullptr) {}
-    ~FGPropertyData()
-    {
-        if ((type == STRING) || (type == UNSPECIFIED))
-        {
-            delete [] string_value;
-        }
-    }
+    /// Value of STRING and UNSPECIFIED properties (owned, copyable)
+    QByteArray string_value;
+    FGPropertyData() : int_value(0) {}
 };
 
 class FGDatagram

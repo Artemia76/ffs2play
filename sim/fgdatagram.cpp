@@ -125,7 +125,7 @@ void FGDatagram::Read(QDataStream& pStream)
             break;
         case STRING:
         case UNSPECIFIED:
-            Value = prop.string_value;
+            Value = QString::fromUtf8(prop.string_value);
             break;
         }
         m_Log->log(QString::asprintf("FGManager : Property Id=%d , Value = ", prop.id)+Value,Qt::darkBlue,LEVEL_VERBOSE);
@@ -349,9 +349,8 @@ bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
                 {
                     quint16 Len;
                     pStream >> Len;
-                    pPropData.string_value = new char [Len +1];
-                    pStream.readRawData(pPropData.string_value,Len);
-                    pPropData.string_value[Len]='\0'; // Null Ended String for C Compatibility
+                    pPropData.string_value = QByteArray(Len, '\0');
+                    pStream.readRawData(pPropData.string_value.data(),Len);
                 }
                 else
                 {
@@ -359,9 +358,8 @@ bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
                     pStream >> Len;
                     if (Len > MAX_TEXT_SIZE)
                         Len = MAX_TEXT_SIZE;
-                    pPropData.string_value = new char [Len +1];
-                    if (Len>0) pStream.readRawData(pPropData.string_value,static_cast<int>(Len));
-                    pPropData.string_value[Len]='\0'; // Null Ended String for C Compatibility
+                    pPropData.string_value = QByteArray(static_cast<qsizetype>(Len), '\0');
+                    if (Len>0) pStream.readRawData(pPropData.string_value.data(),static_cast<int>(Len));
                 }
                 Decoded=true;
                 break;

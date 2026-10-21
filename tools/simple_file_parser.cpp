@@ -32,22 +32,12 @@ using namespace std;
 
 #define MYDEBUG(msg) cout << "DEBUG:" << __FILE__ << ":" << __LINE__ << ": " << msg << endl
 
-simple_file_parser::simple_file_parser(const simple_file_parser& /*obj*/)
-{
-}
-
-simple_file_parser& simple_file_parser::operator=(const simple_file_parser& /*obj*/)
-{
-  return *this;
-}
-
 simple_file_parser::simple_file_parser()
-  : m_ifs(0),
-    m_lineno(0),
+  : m_lineno(0),
     m_bufsz(65536),
+    m_buf(m_bufsz),
     m_in_comment(false)
 {
-  m_buf = new char[m_bufsz];
   size_t sz = sizeof(m_single_char_tokens)/sizeof(bool);
   for(size_t i=0;i<sz;++i)
     m_single_char_tokens[i] = false;
@@ -56,8 +46,6 @@ simple_file_parser::simple_file_parser()
 simple_file_parser::~simple_file_parser()
 {
   close();
-  delete [] m_buf;
-  m_bufsz = 0;
 }
 
 bool simple_file_parser::file_exists(const char* fn)
@@ -77,7 +65,7 @@ bool simple_file_parser::open(const string& fn)
   if (!file_exists(fn))
     return false;
   close();
-  m_ifs = new ifstream(fn.c_str());
+  m_ifs = std::make_unique<ifstream>(fn);
   if (!*m_ifs || m_ifs->bad()) {
     close();
     return false;
@@ -90,8 +78,7 @@ void simple_file_parser::close()
 {
   if (m_ifs) {
     m_lineno = 0;
-    delete m_ifs;
-    m_ifs = 0;
+    m_ifs.reset();
     m_tokens.clear();
     m_fn = "";
   }
@@ -248,15 +235,15 @@ size_t simple_file_parser::get_next_line()
   // Parsing happens here.
   m_buf[0] = 0;
   m_tokens.clear();
-  char *p = m_buf;
-  while (!m_ifs->eof() && m_ifs->getline(m_buf,m_bufsz)) {
+  char *p = m_buf.data();
+  while (!m_ifs->eof() && m_ifs->getline(m_buf.data(),m_bufsz)) {
     m_lineno++;
 
     // Check to see whether there is a backslash with preceding
     // whitespace at the end of the line, if so it is a continuation
     // line so data from the next line must be concatenated before
     // processing the tokens. All of the data is stored in m_buf.
-    p = m_buf;
+    p = m_buf.data();
     char* eol = is_continuation_line(p);
     streamsize sz = m_ifs->gcount();
     while (eol && !m_ifs->eof()) {
@@ -289,7 +276,7 @@ size_t simple_file_parser::get_next_line()
 
     // Process the line.
     // This loop skips w/s only lines.
-    p = skip_whitespace(m_buf);
+    p = skip_whitespace(m_buf.data());
     if (*p) {
       while (*p) {
         char* end = p;

@@ -31,6 +31,7 @@
 #define AIREPLACE_H
 
 #include <QDialog>
+#include <memory>
 #include <QSettings>
 #include <QPushButton>
 
@@ -56,7 +57,7 @@ public:
 
 private:
     // UI Designer GUI
-    Ui::AIReplace*      m_UI;
+    std::unique_ptr<Ui::AIReplace> m_UI;
 
     // Logger singleton instance
     CLogger*            m_Log;

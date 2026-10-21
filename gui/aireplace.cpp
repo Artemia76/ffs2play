@@ -103,10 +103,7 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
 ///
 /// Destructor
 ///
-AIReplace::~AIReplace()
-{
-    delete m_UI;
-}
+AIReplace::~AIReplace() = default;
 
 void AIReplace::refreshReplacelist()
 {

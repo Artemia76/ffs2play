@@ -31,6 +31,7 @@
 #define DIALOGP2P_H
 
 #include <QDialog>
+#include <memory>
 #include <QSettings>
 #include <QPushButton>
 
@@ -58,7 +59,7 @@ public:
 private:
 
     // UI Designer GUI
-    Ui::DialogP2P*      ui;
+    std::unique_ptr<Ui::DialogP2P> ui;
 
     // Logger singleton instance
     CLogger*            m_log;

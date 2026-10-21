@@ -145,10 +145,7 @@ MainWindow::MainWindow()
 ///
 /// \brief MainWindow::~MainWindow
 ///
-MainWindow::~MainWindow()
-{
-    //delete ui;
-}
+MainWindow::~MainWindow() = default;
 
 ///
 /// \brief MainWindow::onLog

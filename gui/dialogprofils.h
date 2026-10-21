@@ -31,6 +31,7 @@
 #define DIALOGPROFILS_H
 
 #include <QDialog>
+#include <memory>
 #include <QListWidgetItem>
 #include <QSettings>
 #include <QAbstractButton>
@@ -57,7 +58,7 @@ public:
 private:
 
     // UI Designer GUI
-    Ui::DialogProfils*  ui;
+    std::unique_ptr<Ui::DialogProfils> ui;
 
     // Logger singleton instance
     CLogger*            m_log;

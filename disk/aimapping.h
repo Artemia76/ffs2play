@@ -32,6 +32,7 @@
 
 #include <QObject>
 #include <QtSql>
+#include <memory>
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 #include "ffs2play.qpb.h"
@@ -51,7 +52,8 @@ private:
     CLogger*                m_log;
     simbasemanager*         m_simManager;
     SimConnector::SIM_VERSION m_Version;
-    AIBaseParser*           m_AIParser;
+    /// Parser of the connected simulator, null when no simulator is connected
+    std::unique_ptr<AIBaseParser> m_AIParser;
 
 public:
                             ~AIMapping();

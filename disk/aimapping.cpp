@@ -42,7 +42,6 @@ AIMapping::AIMapping(QObject *parent) : QObject(parent)
     m_simManager = simbasemanager::instance();
     connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
     connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
-    m_AIParser = nullptr;
     m_Version = SimConnector::SIM_VERSION::UNKNOWN;
 }
 
@@ -90,17 +89,17 @@ void AIMapping::onSimReceiveOpen()
         case SimConnector::SIM_VERSION::P3D_V4:
         case SimConnector::SIM_VERSION::P3D_V5:
         case SimConnector::SIM_VERSION::FS2020:
-        m_AIParser = new SCAIParser(this);
+        m_AIParser = std::make_unique<SCAIParser>();
         break;
 #endif
         case SimConnector::SIM_VERSION::XPLANE:
         {
-            m_AIParser = new XPAIParser(this);
+            m_AIParser = std::make_unique<XPAIParser>();
             break;
         }
         case SimConnector::SIM_VERSION::XPLANE_CSL:
         {
-            m_AIParser = new XPCSLParser(this);
+            m_AIParser = std::make_unique<XPCSLParser>();
             break;
         }
         /*case SimConnector::SIM_VERSION::FLIGHTGEAR:
@@ -111,6 +110,8 @@ void AIMapping::onSimReceiveOpen()
             return;
         }
     }
+    // Forwarded to the main window (connection lost in 2019, see docs/audit-2026-10.md F1)
+    connect(m_AIParser.get(), &AIBaseParser::fireScanFinished, this, &AIMapping::fireScanFinished);
     m_AIParser->startScanSimObject();
     m_simManager->setPathList(getPathList());
 }
@@ -120,8 +121,8 @@ void AIMapping::onSimReceiveOpen()
 ///
 void AIMapping::onSimReceiveClose()
 {
-    if (isInit()) delete m_AIParser;
-    m_AIParser = nullptr;
+    // Waits for the end of a running scan (AIBaseParser destructor)
+    m_AIParser.reset();
 }
 
 ///

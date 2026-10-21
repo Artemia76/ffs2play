@@ -30,6 +30,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <memory>
 #include <QSettings>
 #include <QTimer>
 #include <QListWidget>
@@ -98,7 +99,7 @@ private slots:
     void        on_pteLogger_customContextMenuRequested(const QPoint &pos);
 
 private:
-    Ui::MainWindow* ui;
+    std::unique_ptr<Ui::MainWindow> ui;
     CLogger*        m_log;
     simbasemanager* m_simManager;
     CP2PManager*    m_P2PManager;

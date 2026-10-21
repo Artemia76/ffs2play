@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QApplication>
 #include <QSettings>
+#include <memory>
 #include "tools/clogger.h"
 
 #ifdef SIMCONNECT_BUILD
@@ -61,7 +62,7 @@ static	simbasemanager*         createInstance();
     CLogger*                    m_log;
     QSettings                   m_settings;
     bool                        m_initialized;
-    SimConnector*               m_connector;
+    std::unique_ptr<SimConnector> m_connector;
     bool                        m_bEnaDispCallSign;
     SIM_TYPE                    m_simType;
     QList<SIM_TYPE>             m_simAvailable;

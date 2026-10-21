@@ -83,10 +83,7 @@ DialogProfils::DialogProfils(QWidget *parent)
 ///
 /// Destructor
 ///
-DialogProfils::~DialogProfils()
-{
-    delete ui;
-}
+DialogProfils::~DialogProfils() = default;
 
 
 ///

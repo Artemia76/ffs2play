@@ -58,6 +58,11 @@ private slots:
     void airDataGoogleWireFormat();
     void stringArrayBase64();
 
+    // Strings of the X-Plane link and peer datagrams (tools/datagram)
+    void streamStringRoundTrip();
+    void streamStringTruncatedUtf8();
+    void streamCStringFixedField();
+
     void ssdpLocation();
     void igdDescription();
     void soapParsing();
@@ -298,6 +303,45 @@ void TestCore::stringArrayBase64()
     StringArray decoded;
     QVERIFY(ProtobufParse(decoded, QByteArray::fromBase64(encoded)));
     QCOMPARE(decoded.values(), ips.values());
+}
+
+void TestCore::streamStringRoundTrip()
+{
+    const QString Text = QStringLiteral("F-GABC é 飞机");
+    QByteArray Data;
+    {
+        QDataStream Out(&Data, QIODevice::WriteOnly);
+        StringToStream(Out, Text);
+    }
+    QCOMPARE(static_cast<quint8>(Data.at(0)), static_cast<quint8>(Text.toUtf8().size()));
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    QCOMPARE(StringFromStream(In), Text);
+    QVERIFY(In.atEnd());
+}
+
+void TestCore::streamStringTruncatedUtf8()
+{
+    // 254 ASCII bytes + a 2 bytes character : 256 bytes, beyond the one byte length
+    const QString Text = QString(254, QLatin1Char('a')) + QStringLiteral("é");
+    QByteArray Data;
+    {
+        QDataStream Out(&Data, QIODevice::WriteOnly);
+        StringToStream(Out, Text);
+    }
+    // The length byte matches the written bytes and the UTF-8 sequence is not cut
+    QCOMPARE(static_cast<quint8>(Data.at(0)), quint8(254));
+    QCOMPARE(Data.size(), 1 + 254);
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    QCOMPARE(StringFromStream(In), QString(254, QLatin1Char('a')));
+}
+
+void TestCore::streamCStringFixedField()
+{
+    // Null padded field and full field without terminator
+    QByteArray Data("ABC\0\0\0\0\0WXYZ", 12);
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    QCOMPARE(CStringFromStream(In, 8), QStringLiteral("ABC"));
+    QCOMPARE(CStringFromStream(In, 4), QStringLiteral("WXYZ"));
 }
 
 void TestCore::ssdpLocation()

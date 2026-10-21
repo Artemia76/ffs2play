@@ -41,7 +41,6 @@ simbasemanager::simbasemanager(QObject* parent):
     qRegisterMetaType<CAircraftState>("CAircraftState");
     qRegisterMetaType<SIM_TYPE>("SIM_TYPE");
     m_log = CLogger::instance();
-    m_connector =nullptr;
     m_initialized = false;
 #ifdef SIMCONNECT_BUILD
     m_simAvailable.append(SIM_TYPE::FSX);
@@ -103,33 +102,35 @@ void simbasemanager::load(SIM_TYPE pSimType)
         case SIM_TYPE::FSX:
         {
 #ifdef SIMCONNECT_BUILD
-            m_connector = new CSCManager(this);
+            m_connector = std::make_unique<CSCManager>();
 #endif
             break;
         }
         case SIM_TYPE::XPLANE:
         {
-            m_connector = new CXPManager(this);
+            m_connector = std::make_unique<CXPManager>();
             break;
         }
 #ifdef FFS_DEBUG
         case SIM_TYPE::FLIGHTGEAR:
         {
-            m_connector = new CFGManager(this);
+            m_connector = std::make_unique<CFGManager>();
             break;
         }
 #endif
     }
+    if (!m_connector) return;
     m_initialized=true;
-    connect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
-    connect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
-    connect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
-    connect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
-    connect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-    connect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-    connect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
-    connect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
-    connect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
+    SimConnector* Connector = m_connector.get();
+    connect(Connector, &SimConnector::fireSimEvent, this, &simbasemanager::OnSimEvent);
+    connect(Connector, &SimConnector::fireSimVariableEvent, this, &simbasemanager::OnSimVariableEvent);
+    connect(Connector, &SimConnector::fireSimEventFrame, this, &simbasemanager::OnSimEventFrame);
+    connect(Connector, &SimConnector::fireSimAICreated, this, &simbasemanager::OnSimAICreated);
+    connect(Connector, &SimConnector::fireSimAIUpdated, this, &simbasemanager::OnSimAIUpdated);
+    connect(Connector, &SimConnector::fireSimAIRemoved, this, &simbasemanager::OnSimAIRemoved);
+    connect(Connector, &SimConnector::fireSimConnected, this, &simbasemanager::OnSimConnected);
+    connect(Connector, &SimConnector::fireSimDisconnected, this, &simbasemanager::OnSimDisconnected);
+    connect(Connector, &SimConnector::fireSimTimedOut, this, &simbasemanager::OnSimTimedOut);
     emit(loaded(m_simType));
 }
 
@@ -142,17 +143,8 @@ void simbasemanager::unload()
     if (m_connector!=nullptr)
     {
         close();
-        disconnect(m_connector,SIGNAL(fireSimEvent(SimEvent)),this,SLOT(OnSimEvent(SimEvent)));
-        disconnect(m_connector,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(OnSimVariableEvent(CAircraftState)));
-        disconnect(m_connector,SIGNAL(fireSimEventFrame(float,float)),this,SLOT(OnSimEventFrame(float,float)));
-        disconnect(m_connector,SIGNAL(fireSimAICreated(QString,uint)),this,SLOT(OnSimAICreated(QString,uint)));
-        disconnect(m_connector,SIGNAL(fireSimAIUpdated(CAircraftState,uint)),this,SLOT(OnSimAIUpdated(CAircraftState,uint)));
-        disconnect(m_connector,SIGNAL(fireSimAIRemoved(uint)),this,SLOT(OnSimAIRemoved(uint)));
-        disconnect(m_connector,SIGNAL(fireSimConnected()),this,SLOT(OnSimConnected()));
-        disconnect(m_connector,SIGNAL(fireSimDisconnected()),this,SLOT(OnSimDisconnected()));
-        disconnect(m_connector,SIGNAL(fireSimTimedOut()),this,SLOT(OnSimTimedOut()));
-        delete m_connector;
-        m_connector=nullptr;
+        // Destroying the connector also removes its connections
+        m_connector.reset();
     }
 }
 

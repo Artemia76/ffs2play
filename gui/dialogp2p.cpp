@@ -143,10 +143,7 @@ DialogP2P::DialogP2P(QWidget *parent)
 ///
 /// Destructor
 ///
-DialogP2P::~DialogP2P()
-{
-    delete ui;
-}
+DialogP2P::~DialogP2P() = default;
 
 ///
 /// \brief DialogP2P::applyChangedItem

@@ -143,10 +143,9 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
             QString Message;
             quint8 Len;
             stream >> Len;
-            char* Buff = new char[Len];
-            stream.readRawData(Buff,Len);
-            Message = QByteArray::fromRawData(Buff,Len);
-            delete[] Buff;
+            QByteArray Buff(Len, '\0');
+            stream.readRawData(Buff.data(),Len);
+            Message = QString::fromUtf8(Buff);
             m_simManager->sendScrollingText(CallSign + " : " + Message);
             emit(fireReceiveTChat(m_callSign,Message));
             break;
