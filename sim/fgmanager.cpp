@@ -119,6 +119,9 @@ void CFGManager::sendScrollingText(const QString& /*pMessage*/)
 ///
 bool CFGManager::createAI(AIResol& /*pAircraft*/,const QString& /*pTail*/,const CAircraftState& /*pData*/,bool /*pNonAIObject*/)
 {
+#ifdef FFS_DEBUG
+        m_log.log("FGManager : Send createAI", Qt::darkBlue,LEVEL_NORMAL);
+#endif
     return false;
 }
 
@@ -128,6 +131,9 @@ bool CFGManager::createAI(AIResol& /*pAircraft*/,const QString& /*pTail*/,const 
 ///
 bool CFGManager::removeAI(uint& /*pObjectID*/)
 {
+#ifdef FFS_DEBUG
+        m_log.log("FGManager : Send removeAI", Qt::darkBlue,LEVEL_NORMAL);
+#endif
     return false;
 }
 
@@ -139,6 +145,9 @@ bool CFGManager::removeAI(uint& /*pObjectID*/)
 ///
 bool CFGManager::updateAI(uint /*pObjectID*/, const CAircraftState& /*pData*/)
 {
+#ifdef FFS_DEBUG
+        m_log.log("FGManager : Send updateAI", Qt::darkBlue,LEVEL_NORMAL);
+#endif
     return false;
 }
 
