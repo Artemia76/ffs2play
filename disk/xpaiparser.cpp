@@ -34,7 +34,10 @@ XPAIParser::XPAIParser(QObject *parent) : AIBaseParser(parent)
     m_AIFileFilter << "*.acf";
 }
 
-XPAIParser::~XPAIParser() = default;
+XPAIParser::~XPAIParser()
+{
+    stopScan();
+}
 
 ///
 /// \brief AIMapping::DBFileUpdate

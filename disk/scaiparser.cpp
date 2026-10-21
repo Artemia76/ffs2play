@@ -36,7 +36,10 @@ SCAIParser::SCAIParser(QObject *parent) : AIBaseParser(parent)
     searchSimPath();
 }
 
-SCAIParser::~SCAIParser() = default;
+SCAIParser::~SCAIParser()
+{
+    stopScan();
+}
 
 ///
 /// \brief AIMapping::DBFileUpdate

@@ -106,6 +106,7 @@ protected:
 virtual void                DBFileUpdate(const QString& pKey,const QString& pPath)=0;
     void                    DBFilePurge ();
 
+    void                    stopScan();
     bool                    isScanInterrupted() const;
 
 signals:

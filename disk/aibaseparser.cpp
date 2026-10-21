@@ -44,12 +44,8 @@ AIBaseParser::AIBaseParser(QObject *parent) : QObject(parent)
 
 AIBaseParser::~AIBaseParser()
 {
-    // The scan thread uses this object : stop it before destruction
-    if (m_thread)
-    {
-        m_thread->requestInterruption();
-        m_thread->wait();
-    }
+    // Already done by the derived destructors : the scan calls their DBFileUpdate()
+    stopScan();
     m_DB.close();
 #ifdef FFS_DEBUG
     m_log.log("AIMapping : aibaseparser destructor : " + m_Table, Qt::darkYellow,LEVEL_NORMAL);
@@ -184,6 +180,20 @@ void AIBaseParser::startScanSimObject()
     m_ScanSim = m_simManager.getType();
     m_thread.reset(QThread::create([this]() { scanSimObject(); }));
     m_thread->start(QThread::IdlePriority);
+}
+
+///
+/// \brief AIBaseParser::stopScan
+/// Interrupts a running scan and waits for its end. Must be called by the destructor
+/// of each derived class, before its part of the object is destroyed.
+///
+void AIBaseParser::stopScan()
+{
+    if (m_thread)
+    {
+        m_thread->requestInterruption();
+        m_thread->wait();
+    }
 }
 
 ///

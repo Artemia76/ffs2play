@@ -6,7 +6,10 @@ XPCSLParser::XPCSLParser(QObject *parent) : AIBaseParser(parent)
     m_AIFileFilter << "xsb_aircraft.txt";
 }
 
-XPCSLParser::~XPCSLParser() =default;
+XPCSLParser::~XPCSLParser()
+{
+    stopScan();
+}
 
 ///
 /// \brief AIMapping::DBFileUpdate
