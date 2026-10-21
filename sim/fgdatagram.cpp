@@ -107,9 +107,22 @@ FGGenericMap FGGenericMap::fromPropertyList(const CFGPropertyList& pProps)
     static const QRegularExpression Generic("^sim/multiplay/generic/(float|int|short|bool)(\\[\\d+\\])?$");
     // Sorted by property id : the first declared light wins, the doors keep their order
     QMap<quint16, QString> Targets;
+    // An engine rpm of the static list copying the rpm of an engine (not the gear data
+    // that the c172p puts in engine[3] to [7])
+    static const QRegularExpression EngineRpm("^engines/engine(?:\\[(\\d+)\\])?/rpm$");
+    QMap<quint16, bool> Relays;
     const QHash<QString, QString> Aliases = pProps.aliases();
     for (auto it = Aliases.constBegin(); it != Aliases.constEnd(); ++it)
     {
+        const QRegularExpressionMatch RpmMatch = EngineRpm.match(it.key());
+        if (RpmMatch.hasMatch())
+        {
+            const QString Target = it.value().toLower();
+            const int Engine = RpmMatch.captured(1).toInt();
+            if (Target.contains("engine") && Target.endsWith("rpm") && (Engine < FGProp::EngineCount))
+                Relays.insert(FGProp::EngineRpm + 10 * Engine, true);
+            continue;
+        }
         const QRegularExpressionMatch Match = Generic.match(it.key());
         if (!Match.hasMatch()) continue;
         // FlightGear names the index 0 of the generic properties
@@ -143,6 +156,8 @@ FGGenericMap FGGenericMap::fromPropertyList(const CFGPropertyList& pProps)
         else if (Target.contains("recognition")) Light = &Map.RecoLight;
         if (Light && (*Light == 0)) *Light = Id;
     }
+    int Relay = 0;
+    for (auto it = Relays.constBegin(); (it != Relays.constEnd()) && (Relay < RpmRelayCount); ++it) Map.RpmRelays[Relay++] = it.key();
     return Map;
 }
 
@@ -155,6 +170,10 @@ bool FGGenericMap::isEmpty() const
     for (quint16 Door : Doors)
     {
         if (Door != 0) return false;
+    }
+    for (quint16 Relay : RpmRelays)
+    {
+        if (Relay != 0) return false;
     }
     return (LandingLight == 0) && (StrobeLight == 0) && (BeaconLight == 0) && (NavLight == 0) && (RecoLight == 0);
 }
@@ -560,6 +579,38 @@ bool FGDatagram::SetAirData(const CAircraftState& pData, const FGGenericMap& pMa
     for (int i = 0; i < FGGenericMap::DoorCount; i++)
     {
         if (pMap.Doors[i]) SetProperty(pMap.Doors[i], Clamp(Doors[i] / 100.0, 0.0, 1.0));
+    }
+    // Engines : peers send running and throttle, not the rpm. Display values, only for the
+    // engines of the model (other engine slots can carry anything) : piston and propeller
+    // rpm from 700 (idle) to 2400, jet N1 from 20 to 100 % and N2 from 60 to 100 %.
+    const int States[4] = {pData.StateEng1, pData.StateEng2, pData.StateEng3, pData.StateEng4};
+    const int Throttles[4] = {pData.ThrottleEng1, pData.ThrottleEng2, pData.ThrottleEng3, pData.ThrottleEng4};
+    const bool Propeller = (pMap.EngineType == 0) || (pMap.EngineType == 4) || (pMap.EngineType == 5) || (pMap.EngineType == 6);
+    const bool Jet = (pMap.EngineType == 1);
+    double FirstRpm = 0.0;
+    for (int i = 0; i < qMin(pMap.EngineCount, FGProp::EngineCount); i++)
+    {
+        const int Peer = qMin(i, 3);
+        const double Throttle = Clamp(Throttles[Peer], 0.0, 100.0);
+        const bool Running = States[Peer] != 0;
+        if (Propeller)
+        {
+            const double Rpm = Running ? 700.0 + 17.0 * Throttle : 0.0;
+            if (i == 0) FirstRpm = Rpm;
+            SetProperty(FGProp::EngineRpm + 10 * i, Rpm);
+        }
+        else if (Jet)
+        {
+            SetProperty(FGProp::EngineN1 + 10 * i, Running ? 20.0 + 0.8 * Throttle : 0.0);
+            SetProperty(FGProp::EngineN2 + 10 * i, Running ? 60.0 + 0.4 * Throttle : 0.0);
+        }
+    }
+    if (Propeller && (pMap.EngineCount > 0))
+    {
+        for (quint16 Relay : pMap.RpmRelays)
+        {
+            if (Relay) SetProperty(Relay, FirstRpm);
+        }
     }
     // Transponder : code and altitude only when it replies
     const int Mode = pData.SquawkMode;

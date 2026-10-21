@@ -70,7 +70,7 @@ protected:
     void                    startScanSimObject();
     QString                 getAircraftPath(const QString& pTitle);
     bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,
-                                            QString* pPath = nullptr, int* pNbEngine = nullptr);
+                                            QString* pPath = nullptr, int* pNbEngine = nullptr, int* pEngineType = nullptr);
     AIResol                 SolveTitle(
                     const QString& pTitle,
                     const QString& pModel,

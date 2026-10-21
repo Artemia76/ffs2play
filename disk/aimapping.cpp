@@ -334,13 +334,14 @@ QString AIMapping::getAircraftPath(const QString &pTitle)
 /// \param pCategory
 /// \param pPath if not null, file of the aircraft
 /// \param pNbEngine if not null, number of engines (0 unknown)
+/// \param pEngineType if not null, engine type (FGAIParser codes, 4 undefined)
 /// \return false if the aircraft is not in the database
 ///
 bool AIMapping::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,
-                                QString* pPath, int* pNbEngine)
+                                QString* pPath, int* pNbEngine, int* pEngineType)
 {
     if (!isInit()) return false;
-    return m_AIParser->getAircraftInfo(pTitle, pModel, pType, pCategory, pPath, pNbEngine);
+    return m_AIParser->getAircraftInfo(pTitle, pModel, pType, pCategory, pPath, pNbEngine, pEngineType);
 }
 
 ///

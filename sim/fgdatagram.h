@@ -664,7 +664,9 @@ const quint16 GearPosition = 201;
 const int     GearCount = 5;
 /// engine[n] : + 10 * n, 10 engines
 const quint16 EngineN1 = 300;
+const quint16 EngineN2 = 301;
 const quint16 EngineRpm = 302;
+const int     EngineCount = 10;
 const quint16 Speedbrake = 1002;
 const quint16 Spoilers = 1003;
 const quint16 GearDown = 1004;
@@ -760,6 +762,14 @@ struct FGGenericMap
     quint16                 NavLight = 0;
     quint16                 RecoLight = 0;
     quint16                 Doors[DoorCount] = {0, 0, 0, 0};
+    /// engines/engine[n]/rpm declared as a copy of the engine rpm, read by the model
+    /// (c172p : engine[2] = active engine)
+    static constexpr int    RpmRelayCount = 4;
+    quint16                 RpmRelays[RpmRelayCount] = {0, 0, 0, 0};
+    /// Engines of the model, from the AI database (FGAIParser codes : 0 piston,
+    /// 1 jet, 2 none, 3 helicopter, 4 undefined, 5 turboprop, 6 electric)
+    int                     EngineCount = 0;
+    int                     EngineType = 4;
     static FGGenericMap     fromPropertyList(const CFGPropertyList& pProps);
     bool                    isEmpty() const;
 };

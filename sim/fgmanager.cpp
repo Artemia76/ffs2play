@@ -294,9 +294,9 @@ FGGenericMap CFGManager::loadGenericMap(const QString& pFile)
 #ifdef FFS_DEBUG
     auto Ids = [](const FGGenericMap& pMap)
     {
-        return QString::asprintf("landing %d , strobe %d , beacon %d , nav %d , recognition %d , doors %d %d %d %d",
+        return QString::asprintf("landing %d , strobe %d , beacon %d , nav %d , recognition %d , doors %d %d %d %d , rpm relays %d %d",
                                  pMap.LandingLight, pMap.StrobeLight, pMap.BeaconLight, pMap.NavLight, pMap.RecoLight,
-                                 pMap.Doors[0], pMap.Doors[1], pMap.Doors[2], pMap.Doors[3]);
+                                 pMap.Doors[0], pMap.Doors[1], pMap.Doors[2], pMap.Doors[3], pMap.RpmRelays[0], pMap.RpmRelays[1]);
     };
     m_log.log("FGManager : Generic properties of " + pFile + " : " + Ids(Map), Qt::darkBlue,LEVEL_NORMAL);
 #endif
@@ -313,8 +313,12 @@ FGGenericMap CFGManager::modelMap(const QString& pModel)
     const auto it = m_ModelMaps.constFind(pModel);
     if (it != m_ModelMaps.constEnd()) return it.value();
     QString Model, Type, Category, Path;
-    if (!AIMapping::instance().getAircraftInfo(pModel, Model, Type, Category, &Path)) return FGGenericMap();
-    const FGGenericMap Map = loadGenericMap(Path);
+    int NbEngine = 0;
+    int EngineType = 4;
+    if (!AIMapping::instance().getAircraftInfo(pModel, Model, Type, Category, &Path, &NbEngine, &EngineType)) return FGGenericMap();
+    FGGenericMap Map = loadGenericMap(Path);
+    Map.EngineCount = NbEngine;
+    Map.EngineType = EngineType;
     m_ModelMaps.insert(pModel, Map);
     return Map;
 }

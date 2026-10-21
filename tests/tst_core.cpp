@@ -562,6 +562,9 @@ void TestCore::fgPropertyListRealAircraft()
     QCOMPARE(Map.Doors[1], quint16(10201));
     QCOMPARE(Map.Doors[2], quint16(10202));
     QCOMPARE(Map.Doors[3], quint16(10218));
+    // Propeller : engine[2]/rpm, not engine[3] to [7] (gear data)
+    QCOMPARE(Map.RpmRelays[0], quint16(322));
+    QCOMPARE(Map.RpmRelays[1], quint16(0));
 }
 
 void TestCore::fgDatagramPosition()
@@ -714,6 +717,9 @@ void TestCore::fgPropertyListAliases()
     QCOMPARE(Map.Doors[0], quint16(10200));
     QCOMPARE(Map.Doors[1], quint16(10201));
     QCOMPARE(Map.Doors[2], quint16(0));
+    // engine[2]/rpm copies the engine rpm : the model reads it
+    QCOMPARE(Map.RpmRelays[0], quint16(322));
+    QCOMPARE(Map.RpmRelays[1], quint16(0));
     QVERIFY(!Map.isEmpty());
     QVERIFY(simgear::FGGenericMap().isEmpty());
 }
@@ -925,6 +931,35 @@ void TestCore::fgDatagramAirDataRoundTrip()
     QCOMPARE(Result.Squawk, 4521);
     QCOMPARE(Result.SquawkMode, 3);
     QCOMPARE(Result.IASSpeed, 115.0);
+
+    // Engines : only the engines of the model, and the rpm relays
+    State.StateEng1 = 1;
+    State.ThrottleEng1 = 50;
+    Map.EngineCount = 1;
+    Map.EngineType = 0;
+    Map.RpmRelays[0] = 322;
+    simgear::FGDatagram Piston;
+    Piston.SetIdentity("F-GP76", "Aircraft/c172p/Models/c172p.xml");
+    QVERIFY(Piston.SetAirData(State, Map));
+    QCOMPARE(Piston.PropertyValue(simgear::FGProp::EngineRpm), 1550.0);
+    QCOMPARE(Piston.PropertyValue(322), 1550.0);
+    QVERIFY(!Piston.HasProperty(312));
+    QVERIFY(!Piston.HasProperty(332));
+    State.StateEng1 = 0;
+    QVERIFY(Piston.SetAirData(State, Map));
+    QCOMPARE(Piston.PropertyValue(322), 0.0);
+    State.StateEng1 = 1;
+    State.StateEng2 = 1;
+    State.ThrottleEng2 = 100;
+    simgear::FGGenericMap JetMap;
+    JetMap.EngineCount = 2;
+    JetMap.EngineType = 1;
+    simgear::FGDatagram Jet;
+    Jet.SetIdentity("F-GP76", "Aircraft/A320/Models/a320.xml");
+    QVERIFY(Jet.SetAirData(State, JetMap));
+    QCOMPARE(Jet.PropertyValue(simgear::FGProp::EngineN1), 60.0);
+    QCOMPARE(Jet.PropertyValue(simgear::FGProp::EngineN1 + 10), 100.0);
+    QVERIFY(!Jet.HasProperty(simgear::FGProp::EngineRpm));
 
     // Transponder in standby : no code, no altitude
     State.SquawkMode = 1;
