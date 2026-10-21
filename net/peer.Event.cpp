@@ -326,16 +326,23 @@ void CPeer::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
 ///
 void CPeer::OnSimStateChange(CAircraftState pState)
 {
-    bool Title_Changed = false;
-    if (m_sendData.title() != pState.Title)
+    // Kept until sent : the change can happen between two DATA (FlightGear resolves
+    // the type and model after the first packet, see docs/contracts/p2p-peer.md)
+    if ((m_sendData.title() != pState.Title) ||
+        (m_sendData.type() != pState.Type) ||
+        (m_sendData.model() != pState.Model))
     {
-        Title_Changed = true;
+        m_versionPending = true;
     }
     pState.toAirData(m_sendData);
     if ((pState.TimeStamp - m_lastStateEvent) < m_sendInterval) return;
     if ((!m_onLine) || (m_EP.isNull()) || (m_version < 1)) return;
     sendData();
-    if (Title_Changed) sendVersion();
+    if (m_versionPending)
+    {
+        sendVersion();
+        m_versionPending = false;
+    }
     m_lastStateEvent = pState.TimeStamp;
     // AI Display Management
     m_spawnable = (m_distance < P2PRadius) && (m_distance >=0);

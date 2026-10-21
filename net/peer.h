@@ -172,6 +172,8 @@ private:
     CAircraftState          m_data;
     CAircraftState          m_oldData;
     AirData                 m_sendData;
+    /// Title, type or model of the local aircraft changed : VERSION to send with the next DATA
+    bool                    m_versionPending;
     CAircraftState          m_futurData;
     CAircraftState          m_actualPos;
     CAircraftState          m_AIData;

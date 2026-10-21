@@ -180,6 +180,7 @@ void CPeer::Start()
     m_counter_Out = 0;
     m_distance = -1;
     m_onLine = false;
+    m_versionPending = false;
     m_sendInterval = milliseconds(5000);
     m_ecart = 0;
     m_objectID = 0;
