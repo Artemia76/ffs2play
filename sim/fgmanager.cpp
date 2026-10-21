@@ -33,6 +33,7 @@
 #include "fgmanager.h"
 
 #include "tools/datagram.h"
+#include "disk/aimapping.h"
 
 using namespace simgear;
 
@@ -45,6 +46,8 @@ CFGManager::CFGManager(QObject* parent):
 {
     m_LocalPort=5000;
     m_FGPort=0;
+    m_InfoFound=false;
+    m_InfoRetry=0;
     m_Server = new UDPServer(this);
     connect(m_Server, &UDPServer::fireIncomingData, this, &CFGManager::OnReceiveDatagram);
     connect(&m_PingTimer, &QTimer::timeout, this, &CFGManager::OnPingTimer);
@@ -227,6 +230,7 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
     if (!FGData.IsSane()) return;
     if (FGData.GetAirData(m_state))
     {
+        updateAircraftInfo();
 #ifdef FFS_DEBUG
         m_log.log("FGManager : Received Data from FG : Model = " +
             m_state.Title +
@@ -238,6 +242,36 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
         emit fireSimVariableEvent(m_state);
         emit fireSimEventFrame(20,50);
     }
+}
+
+///
+/// \brief CFGManager::updateAircraftInfo
+/// FlightGear only sends the model path : the ICAO type and the type come from
+/// the AI database (FGAIParser). Not called from the constructor : AIMapping
+/// needs simbasemanager, which is creating this connector.
+///
+void CFGManager::updateAircraftInfo()
+{
+    if (m_state.Title != m_InfoTitle)
+    {
+        m_InfoTitle = m_state.Title;
+        m_InfoModel.clear();
+        m_InfoType.clear();
+        m_InfoFound = false;
+        m_InfoRetry = 0;
+    }
+    // While the aircraft is not found (scan running), retry every 100 packets
+    if ((!m_InfoFound) && (--m_InfoRetry <= 0))
+    {
+        m_InfoRetry = 100;
+        m_InfoFound = AIMapping::instance().getAircraftInfo(m_InfoTitle, m_InfoModel, m_InfoType);
+#ifdef FFS_DEBUG
+        if (m_InfoFound)
+            m_log.log("FGManager : Aircraft found in AI database : ICAO = " + m_InfoModel + " , Type = " + m_InfoType, Qt::darkBlue,LEVEL_NORMAL);
+#endif
+    }
+    m_state.Model = m_InfoModel;
+    m_state.Type = m_InfoType;
 }
 
 ///
