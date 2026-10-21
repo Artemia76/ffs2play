@@ -230,6 +230,8 @@ void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
     if (!FGData.IsSane()) return;
     if (FGData.GetAirData(m_state))
     {
+        // Peers drop a DATA not newer than the previous one
+        m_state.TimeStamp = Now();
         updateAircraftInfo();
 #ifdef FFS_DEBUG
         m_log.log("FGManager : Received Data from FG : Model = " +
