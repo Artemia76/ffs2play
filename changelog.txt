@@ -1,5 +1,11 @@
 ChangeLog:
 
+2.4.1 : FlightGear support in release builds
+        FlightGear : ICAO type, type and category of the aircraft from the installed aircraft (-set.xml)
+        FlightGear : attitude of the aircraft, peers displayed as multiplayer aircraft
+        Peers receive the type and ICAO type again when they change
+        Thread safety and C++20 review (no more simulator polling thread)
+
 2.4.0 : Migration to Qt 6 (>= 6.8) and CMake (Windows / Linux / macOS presets, CPack installers)
         Qt Protobuf replaces Google Protobuf, OpenSSL 3 replaces Crypto++
         Built-in UPnP port mapping replaces miniupnpc (no more UI freeze at startup)
