@@ -89,23 +89,16 @@ void CXPManager::open ()
 ///
 void CXPManager::close ()
 {
+    // Also stops a connection attempt still waiting for the plugin answer
+    m_PingTimer.stop();
     if (m_connected)
     {
-        m_PingTimer.stop();
         sendDisc();
         m_connected=false;
         m_log->log(tr("Disconnected from XPlane."));
     }
 }
 
-
-///
-/// \brief CXPManager::main_loop()
-///
-void CXPManager::main_loop()
-{
-
-}
 
 ///
 /// \brief CXPManager::getVersion
@@ -314,7 +307,6 @@ void CXPManager::sendAIPaths()
 ///
 void CXPManager::OnReceiveDatagram(QNetworkDatagram datagram)
 {
-    QMutexLocker locker(&m_Mutex);
     QByteArray data(datagram.data());
     QDataStream stream(&data,QIODevice::ReadOnly);
     quint8 Code;

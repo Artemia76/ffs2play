@@ -85,9 +85,9 @@ void CFGManager::open ()
 ///
 void CFGManager::close ()
 {
+    m_PingTimer.stop();
     if (m_connected)
     {
-        m_PingTimer.stop();
         sendDisc();
         m_Server->stop();
         m_connected=false;
@@ -95,14 +95,6 @@ void CFGManager::close ()
     }
 }
 
-
-///
-/// \brief CFGManager::main_loop()
-///
-void CFGManager::main_loop()
-{
-
-}
 
 ///
 /// \brief CFGManager::getVersion
@@ -216,7 +208,6 @@ void CFGManager::sendDisc()
 ///
 void CFGManager::OnReceiveDatagram(QNetworkDatagram datagram)
 {
-    QMutexLocker locker(&m_Mutex);
     m_FGAddress = datagram.senderAddress();
     m_FGPort = datagram.senderPort();
     QByteArray data(datagram.data());

@@ -62,7 +62,7 @@ class CXPManager : public SimConnector
     Q_OBJECT
 public:
     explicit CXPManager(QObject *parent = nullptr);
-    ~CXPManager();
+    ~CXPManager() override;
 private:
     qint64          m_SimRate;
     qint64          m_VariableRate;
@@ -76,17 +76,16 @@ private:
     AirData         m_SendData;
 
 protected:
-    void            open();
-    void            close();
-    void            main_loop();
-    SIM_VERSION     getVersion();
-    void            sendScrollingText(const QString&);
-    bool            createAI(AIResol&, const QString&, const CAircraftState&, bool);
-    bool            removeAI(uint&);
-    bool            updateAI(uint, const CAircraftState&);
-    void            freezeAI(uint, bool);
-    void            sendOptions(){}
-    void            sendCallSignColor();
+    void            open() override;
+    void            close() override;
+    SIM_VERSION     getVersion() override;
+    void            sendScrollingText(const QString&) override;
+    bool            createAI(AIResol&, const QString&, const CAircraftState&, bool) override;
+    bool            removeAI(uint&) override;
+    bool            updateAI(uint, const CAircraftState&) override;
+    void            freezeAI(uint, bool) override;
+    void            sendOptions() override {}
+    void            sendCallSignColor() override;
     void            sendAIPaths();
 
     void            sendPing();

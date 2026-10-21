@@ -53,14 +53,6 @@ SimConnector::SimConnector(QObject *parent) : QObject(parent)
 }
 
 ///
-/// \brief SimConnector::~SimConnector
-///
-SimConnector::~SimConnector()
-{
-
-}
-
-///
 /// \brief SimConnector::isConnected
 /// \return
 ///
@@ -107,10 +99,7 @@ bool SimConnector::getOption(SimOption pOption)
 ///
 CAircraftState SimConnector::getState()
 {
-    CAircraftState state;
-    QMutexLocker locker(&m_Mutex);
-    state=m_state;
-    return state;
+    return m_state;
 }
 
 void SimConnector::setCallSignColor(const QColor& pColor)
@@ -120,6 +109,15 @@ void SimConnector::setCallSignColor(const QColor& pColor)
     m_settings.endGroup();
     m_CallSignColor = pColor;
     sendCallSignColor();
+}
+
+///
+/// \brief SimConnector::setAIPaths
+/// \param pPaths AI or CSL packages folders
+///
+void SimConnector::setAIPaths(const QStringList& pPaths)
+{
+    m_AIPaths = pPaths;
 }
 
 QColor SimConnector::getCallSignColor()

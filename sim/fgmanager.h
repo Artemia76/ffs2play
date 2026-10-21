@@ -47,8 +47,8 @@ class CFGManager : public SimConnector
 {
     Q_OBJECT
 public:
-    explicit CFGManager(QObject *parent = 0);
-    ~CFGManager();
+    explicit CFGManager(QObject *parent = nullptr);
+    ~CFGManager() override;
 private:
     QTimer          m_PingTimer;
     datetime        m_LastPong;
@@ -58,17 +58,16 @@ private:
     UDPServer*      m_Server;
 
 protected:
-    void            open();
-    void            close();
-    void            main_loop();
-    SIM_VERSION     getVersion();
-    void            sendScrollingText(const QString&);
-    bool            createAI(AIResol&, const QString&, const CAircraftState&, bool);
-    bool            removeAI(uint&);
-    bool            updateAI(uint, const CAircraftState&);
-    void            freezeAI(uint, bool);
-    void            sendOptions(){}
-    void            sendCallSignColor(){}
+    void            open() override;
+    void            close() override;
+    SIM_VERSION     getVersion() override;
+    void            sendScrollingText(const QString&) override;
+    bool            createAI(AIResol&, const QString&, const CAircraftState&, bool) override;
+    bool            removeAI(uint&) override;
+    bool            updateAI(uint, const CAircraftState&) override;
+    void            freezeAI(uint, bool) override;
+    void            sendOptions() override {}
+    void            sendCallSignColor() override {}
 
     void            sendPing();
     void            sendData();

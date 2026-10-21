@@ -31,7 +31,6 @@
 #define SIMBASEMANAGER_H
 
 #include <QObject>
-#include <QThread>
 #include <QApplication>
 #include <QSettings>
 #include "tools/clogger.h"
@@ -63,8 +62,6 @@ static	simbasemanager*         createInstance();
     QSettings                   m_settings;
     bool                        m_initialized;
     SimConnector*               m_connector;
-    QThread*                    m_thread;
-    bool                        m_bRunning;
     bool                        m_bEnaDispCallSign;
     SIM_TYPE                    m_simType;
     QList<SIM_TYPE>             m_simAvailable;
@@ -99,7 +96,6 @@ static simbasemanager*          instance();
     void                        setPathList(const QStringList& pPaths);
 
 private slots:
-    void                        mainThread();
     void                        OnSimVariableEvent(CAircraftState);
     void                        OnSimEvent(SimEvent);
     void                        OnSimAICreated(QString,uint);
@@ -115,7 +111,6 @@ public slots:
     void                        open_close();
 
 signals:
-    void                        finished();
     void                        loaded(SIM_TYPE);
     void                        opened();
     void                        closed();

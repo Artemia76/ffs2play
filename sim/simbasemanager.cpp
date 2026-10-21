@@ -43,7 +43,6 @@ simbasemanager::simbasemanager(QObject* parent):
     m_log = CLogger::instance();
     m_connector =nullptr;
     m_initialized = false;
-    m_bRunning = false;
 #ifdef SIMCONNECT_BUILD
     m_simAvailable.append(SIM_TYPE::FSX);
 #endif
@@ -58,14 +57,10 @@ simbasemanager::simbasemanager(QObject* parent):
     {
         m_simType=m_simAvailable.first();
     }
-    m_thread = new QThread();
     // Retry Connexion in case of lost connexion from simulator
     m_RetryTimer.setSingleShot(true);
     m_RetryTimer.setInterval(5000);
     m_RetryCounter = 0;
-    //this->moveToThread(m_thread);
-    connect(m_thread, SIGNAL(started()), this, SLOT(mainThread()),Qt::DirectConnection);
-    connect(this, SIGNAL(finished()), m_thread, SLOT(quit()), Qt::DirectConnection );
     connect(&m_RetryTimer, SIGNAL(timeout()),this,SLOT(OnRetryTimer()));
     load(m_simType);
 }
@@ -180,8 +175,6 @@ void simbasemanager::open ()
     {
         m_connector->open();
         if (m_RetryCounter>2) m_RetryCounter=0;
-        // Thread starting
-        m_thread->start(QThread::TimeCriticalPriority);
     }
 }
 
@@ -190,15 +183,8 @@ void simbasemanager::open ()
 ///
 void simbasemanager::close ()
 {
-    if (m_bRunning)
-    {
-        m_bRunning=false;
-        m_thread->wait(0);
-    }
-    if (m_connector->isConnected())
-    {
-        m_connector->close();
-    }
+    // Also releases a connection still waiting for the simulator answer
+    if (m_connector!=nullptr) m_connector->close();
     emit(closed());
 }
 
@@ -220,21 +206,6 @@ bool simbasemanager::isConnected()
 {
     if (m_connector==nullptr) return false;
     return m_connector->isConnected();
-}
-
-///
-/// \brief CSCManager::mainThread
-///
-void simbasemanager::mainThread()
-{
-    m_bRunning=true;
-    while (m_bRunning)
-    {
-        m_connector->main_loop();
-        //QApplication::processEvents();
-        m_thread->msleep(1);
-    }
-    emit(finished());
 }
 
 ///
@@ -517,6 +488,6 @@ void simbasemanager::setPathList(const QStringList &pPaths)
 {
     if (m_initialized && (m_connector!=nullptr))
     {
-        m_connector->m_AIPaths = pPaths;
+        m_connector->setAIPaths(pPaths);
     }
 }

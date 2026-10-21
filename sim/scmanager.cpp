@@ -37,10 +37,9 @@
 /// \param parent
 ///
 CSCManager::CSCManager(QObject* parent):
-    SimConnector(parent)
+    SimConnector(parent),
+    m_nextAIRequest(static_cast<quint32>(REQUEST_ID::AI_CREATE))
 {
-    // Initialisation de l'état de connexion avec le simulateur
-    m_hSimConnect = nullptr;
     m_log->log("SCManager : " + tr("FSX/Prepar3D Module loaded"));
 }
 
@@ -55,18 +54,27 @@ CSCManager::~CSCManager()
 
 ///
 /// \brief CSCManager::open
+/// SimConnect signals m_hEvent when messages are waiting: they are read by dispatch()
+/// in the GUI thread, so no SimConnect call nor member of this class is shared between threads.
 ///
 void CSCManager::open ()
 {
-    if (!m_connected)
+    if (m_hSimConnect != nullptr) return;
+    m_hEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    if ((m_hEvent == nullptr) ||
+        (SimConnect_Open (&m_hSimConnect,QCoreApplication::applicationName().toStdString().c_str(),nullptr,0, m_hEvent,0)<0))
     {
-        HRESULT hr;
-        if ((hr = SimConnect_Open (&m_hSimConnect,QCoreApplication::applicationName().toStdString().c_str(),nullptr,0, nullptr,0))<0)
-        {
-            m_log->log(tr("Connexion to FS failed."),Qt::darkMagenta);
-            emit(fireSimTimedOut());
-        }
+        m_hSimConnect = nullptr;
+        if (m_hEvent != nullptr) CloseHandle(m_hEvent);
+        m_hEvent = nullptr;
+        m_log->log(tr("Connexion to FS failed."),Qt::darkMagenta);
+        emit fireSimTimedOut();
+        return;
     }
+    m_notifier = std::make_unique<QWinEventNotifier>(m_hEvent);
+    connect(m_notifier.get(), &QWinEventNotifier::activated, this, &CSCManager::dispatch);
+    // Messages already waiting before the notifier was armed
+    dispatch();
 }
 
 ///
@@ -74,36 +82,45 @@ void CSCManager::open ()
 ///
 void CSCManager::close ()
 {
+    if (m_notifier)
+    {
+        // close() may run inside the notifier activated() signal: destroy it later
+        m_notifier->setEnabled(false);
+        m_notifier.release()->deleteLater();
+    }
+    if (m_hSimConnect != nullptr)
+    {
+        SimConnect_Close(m_hSimConnect);
+        m_hSimConnect = nullptr;
+    }
+    if (m_hEvent != nullptr)
+    {
+        CloseHandle(m_hEvent);
+        m_hEvent = nullptr;
+    }
+    m_messageBuffer.clear();
+    m_AIProcess.clear();
+    m_record.clear();
     if (m_connected)
     {
         m_connected = false;
-        SimConnect_Close(m_hSimConnect);
         m_log->log(tr("Disconnected from FS."));
-        emit(fireSimDisconnected());
+        emit fireSimDisconnected();
     }
 }
 
 ///
-/// \brief CSCManager::DispatchCallback
-/// \param pData
-/// \param cbData
-/// \param pContext
+/// \brief CSCManager::dispatch
+/// Read all the waiting SimConnect messages
 ///
-void CALLBACK CSCManager::DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext)
+void CSCManager::dispatch()
 {
-    CSCManager *pThis = reinterpret_cast<CSCManager*>(pContext);
-    pThis->process(pData, cbData);
-}
-
-///
-/// \brief CSCManager::main_loop()
-///
-void CSCManager::main_loop()
-{
-    HRESULT hr;
-    if (m_hSimConnect!=nullptr)
+    SIMCONNECT_RECV* pData = nullptr;
+    DWORD cbData = 0;
+    // close() may be called while processing a message (simulator exit, slot connected to a signal)
+    while ((m_hSimConnect != nullptr) && SUCCEEDED(SimConnect_GetNextDispatch(m_hSimConnect, &pData, &cbData)))
     {
-        hr=SimConnect_CallDispatch(m_hSimConnect,CSCManager::DispatchCallback,this);
+        process(pData, cbData);
     }
 }
 
@@ -382,8 +399,8 @@ void CSCManager::OnRecvQuit(SIMCONNECT_RECV*)
 #ifdef FFS_DEBUG
     m_log->log("SCManager : Receive SIMCONNECT_RECV event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
+    // close() emits fireSimDisconnected
     close();
-    emit(fireSimDisconnected());
 }
 
 ///
@@ -392,7 +409,6 @@ void CSCManager::OnRecvQuit(SIMCONNECT_RECV*)
 ///
 void CSCManager::OnRecvSystemState(SIMCONNECT_RECV_SYSTEM_STATE* data)
 {
-    QMutexLocker locker(&m_Mutex);
 #ifdef FFS_DEBUG
     m_log->log("SCManager : Receive SIMCONNECT_RECV_SYSTEM_STATE event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
@@ -435,7 +451,7 @@ void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
     m_log->log("SCManager : "+ tr("Get a SimConnect exception = ") + QString::number(data->dwException) +
                tr(" Related method invoked = ") + m_record.value(data->dwSendID),
                Qt::red,LEVEL_NORMAL);
-    m_record.erase(m_record.find(data->dwSendID));
+    m_record.remove(data->dwSendID);
 }
 
 ///
@@ -444,7 +460,6 @@ void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
 ///
 void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 {
-    QMutexLocker locker(&m_Mutex);
 #ifdef FFS_DEBUG
     m_log->log("SCManager : Receive SIMCONNECT_RECV_EVENT event", Qt::darkBlue,LEVEL_VERBOSE);
 #endif
@@ -474,8 +489,8 @@ void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
         {
             if(static_cast<SIMCONNECT_TEXT_RESULT>(data->dwData) == SIMCONNECT_TEXT_RESULT_TIMEOUT)
             {
-                m_messageBuffer.removeAt(0);
-                if (m_messageBuffer.count()>0) sendText(m_messageBuffer[0]);
+                if (!m_messageBuffer.isEmpty()) m_messageBuffer.removeFirst();
+                if (!m_messageBuffer.isEmpty()) sendText(m_messageBuffer.first());
             }
             break;
         }
@@ -494,7 +509,6 @@ void CSCManager::OnRecvEvent(SIMCONNECT_RECV_EVENT* data)
 ///
 void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
 {
-    QMutexLocker locker(&m_Mutex);
     switch (data->dwRequestID)
     {
         case static_cast<DWORD>(REQUEST_ID::PERIODIQUE):
@@ -705,7 +719,7 @@ void CSCManager::OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMO
                     + " with n°" + QString::number(data->dwData)
                    ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
-            fireSimAIRemoved(data->dwData);
+            emit fireSimAIRemoved(data->dwData);
             break;
         }
     }
@@ -768,8 +782,8 @@ void CSCManager::sendText(const QString &pMessage)
     if(m_connected)
     {
         QByteArray array = pMessage.toLocal8Bit();
-        char* Text = array.data();
-        HRESULT result = SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::TEXT_SCROLL), static_cast<DWORD>(pMessage.length()+1),reinterpret_cast<void*>(Text));
+        // Size in bytes of the local 8 bit string, null terminator included
+        HRESULT result = SimConnect_Text(m_hSimConnect,SIMCONNECT_TEXT_TYPE_SCROLL_WHITE,m_timeToScroll,static_cast<SIMCONNECT_CLIENT_EVENT_ID>(EVENT_ID::TEXT_SCROLL), static_cast<DWORD>(array.size()+1),array.data());
         trace("SimConnect_Text");
         if (result < 0)
         {
@@ -802,7 +816,10 @@ bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircr
         data.Bank = pData.Bank;
         data.OnGround = pData.OnGround;
         data.Airspeed = static_cast<unsigned long>(pData.IASSpeed);
-        quint32 index = static_cast<quint32>(m_AIProcess.count())+ static_cast<quint32>(REQUEST_ID::AI_CREATE);
+        // Monotonic request ID: an ID still waiting for its object must not be reused
+        const quint32 index = m_nextAIRequest;
+        if (++m_nextAIRequest >= static_cast<quint32>(REQUEST_ID::AI_UPDATE))
+            m_nextAIRequest = static_cast<quint32>(REQUEST_ID::AI_CREATE);
         m_AIProcess.insert(index,pTail);
         HRESULT result;
         if (!pNonAIObject)
