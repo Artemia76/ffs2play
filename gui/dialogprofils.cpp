@@ -49,13 +49,11 @@ DialogProfils::DialogProfils(QWidget *parent)
     ui->setupUi(this);
 
     // Get Logger instance
-    m_log = CLogger::instance();
 
     // Get WebManage instance to access profils list
-    m_webManager = CWebManager::instance();
 
     // Profil list widget is filled with each User in Profil List content
-    for (const SUser& User : m_webManager->m_users)
+    for (const SUser& User : m_webManager.m_users)
     {
         // List item creation with profil name of current
         ui->listWidget->addItem(new QListWidgetItem(User.Profil));
@@ -83,10 +81,7 @@ DialogProfils::DialogProfils(QWidget *parent)
 ///
 /// Destructor
 ///
-DialogProfils::~DialogProfils()
-{
-    delete ui;
-}
+DialogProfils::~DialogProfils() = default;
 
 
 ///
@@ -110,7 +105,7 @@ void DialogProfils::on_btnAdd_pressed()
     SUser User;
     User.Profil = "Profil";
     int Row = ui->listWidget->currentRow();
-    m_webManager->m_users.insert(Row+1,User);
+    m_webManager.m_users.insert(Row+1,User);
     QListWidgetItem* item = new QListWidgetItem("Profil");
     ui->listWidget->insertItem(Row+1,item);
     ui->listWidget->setCurrentRow(Row+1);
@@ -123,10 +118,10 @@ void DialogProfils::on_btnAdd_pressed()
 void DialogProfils::on_btnDelete_pressed()
 {
     int row = ui->listWidget->currentRow();
-    m_webManager->m_users.removeAt(row);
+    m_webManager.m_users.removeAt(row);
     QListWidgetItem *item = ui->listWidget->takeItem(row);
     delete item;
-    m_webManager->SaveConfig();
+    m_webManager.SaveConfig();
 }
 
 
@@ -153,7 +148,7 @@ void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem* pCurrent, 
         }
         if ((ui->listWidget->count() >0) && (pCurrent!=nullptr))
         {
-            SUser user = m_webManager->m_users.at(getCurrentRow());
+            SUser user = m_webManager.m_users.at(getCurrentRow());
             ui->lineEdit_Login->setText(user.Login);
             ui->lineEdit_Password->setText(user.Password);
             ui->lineEdit_ProfilName->setText(user.Profil);
@@ -179,7 +174,7 @@ void DialogProfils::applyChangedItem()
 {
     if (m_currentProfil != NULL)
     {
-        SUser& user = m_webManager->m_users[ui->listWidget->row(m_currentProfil)];
+        SUser& user = m_webManager.m_users[ui->listWidget->row(m_currentProfil)];
         if (!ui->lineEdit_ProfilName->text().isEmpty())
         {
             user.Profil = ui->lineEdit_ProfilName->text();
@@ -200,7 +195,7 @@ void DialogProfils::applyChangedItem()
             ui->lineEdit_URL->setText(user.URL);
         }
         m_changed = false;
-        m_webManager->SaveConfig();
+        m_webManager.SaveConfig();
     }
 }
 
@@ -218,8 +213,8 @@ void DialogProfils::on_buttonBox_clicked(QAbstractButton *button)
     if (button == ui->buttonBox->button(QDialogButtonBox::Ok))
     {
         applyChangedItem();
-        m_webManager->SetCurrentUser(ui->listWidget->currentRow()+1);
-        m_webManager->SaveConfig();
+        m_webManager.SetCurrentUser(ui->listWidget->currentRow()+1);
+        m_webManager.SaveConfig();
         this->close();
     }
     if (button == ui->buttonBox->button(QDialogButtonBox::Cancel))
@@ -236,7 +231,7 @@ void DialogProfils::on_buttonBox_clicked(QAbstractButton *button)
 int DialogProfils::getCurrentRow()
 {
     int row = ui->listWidget->currentRow();
-    if (row >= m_webManager->m_users.count()) row = m_webManager->m_users.count()-1;
+    if (row >= m_webManager.m_users.count()) row = m_webManager.m_users.count()-1;
     return row;
 }
 
@@ -246,7 +241,7 @@ int DialogProfils::getCurrentRow()
 void DialogProfils::checkIfChanged()
 {
     m_changed = false;
-    SUser User = m_webManager->m_users.at(getCurrentRow());
+    SUser User = m_webManager.m_users.at(getCurrentRow());
     if (ui->lineEdit_ProfilName->text() != User.Profil) m_changed =true;
     if (ui->lineEdit_Login->text() != User.Login) m_changed =true;
     if (ui->lineEdit_Password->text() != User.Password) m_changed =true;

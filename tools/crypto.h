@@ -37,7 +37,7 @@
 class CCrypto : public QObject
 {
     QByteArray          m_key;
-    CLogger*            m_log;
+    CLogger&            m_log = CLogger::instance();
     Q_OBJECT
 public:
     explicit            CCrypto(QObject *pParent = nullptr);

@@ -31,9 +31,9 @@
 #define SIMBASEMANAGER_H
 
 #include <QObject>
-#include <QThread>
 #include <QApplication>
 #include <QSettings>
+#include <memory>
 #include "tools/clogger.h"
 
 #ifdef SIMCONNECT_BUILD
@@ -48,9 +48,7 @@ enum class SIM_TYPE
 {
     FSX,
     XPLANE,
-#ifdef FFS_DEBUG
     FLIGHTGEAR
-#endif
 };
 
 class simbasemanager : public QObject
@@ -59,12 +57,10 @@ class simbasemanager : public QObject
 private:
 static	simbasemanager*         createInstance();
     explicit                    simbasemanager(QObject *parent = nullptr);
-    CLogger*                    m_log;
+    CLogger&                    m_log = CLogger::instance();
     QSettings                   m_settings;
     bool                        m_initialized;
-    SimConnector*               m_connector;
-    QThread*                    m_thread;
-    bool                        m_bRunning;
+    std::unique_ptr<SimConnector> m_connector;
     bool                        m_bEnaDispCallSign;
     SIM_TYPE                    m_simType;
     QList<SIM_TYPE>             m_simAvailable;
@@ -72,7 +68,7 @@ static	simbasemanager*         createInstance();
     int                         m_RetryCounter;
 
 public:
-static simbasemanager*          instance();
+static simbasemanager&          instance();
                                 ~simbasemanager();
     void                        load(SIM_TYPE pSimType);
     void                        unload();
@@ -99,7 +95,6 @@ static simbasemanager*          instance();
     void                        setPathList(const QStringList& pPaths);
 
 private slots:
-    void                        mainThread();
     void                        OnSimVariableEvent(CAircraftState);
     void                        OnSimEvent(SimEvent);
     void                        OnSimAICreated(QString,uint);
@@ -115,7 +110,6 @@ public slots:
     void                        open_close();
 
 signals:
-    void                        finished();
     void                        loaded(SIM_TYPE);
     void                        opened();
     void                        closed();

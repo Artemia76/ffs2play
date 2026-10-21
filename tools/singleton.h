@@ -30,26 +30,23 @@
 #define SINGLETON_H
 #include <QtGlobal>
 
+#include <memory>
+
 ///
 /// Lazily created instance, destroyed at program exit.
 /// Initialization of the function local static is thread safe since C++11.
+/// The instance is returned by reference : it always exists and cannot be reassigned.
 ///
 template <class T>
 class Singleton
 {
 private:
-    typedef T* (*CreateInstanceFunction)();
-    struct Holder
-    {
-        T* instance;
-        explicit Holder(CreateInstanceFunction pCreate) : instance(pCreate()) {}
-        ~Holder() { delete instance; }
-    };
+    using CreateInstanceFunction = T* (*)();
 public:
-    static T* instance(CreateInstanceFunction pCreate)
+    static T& instance(CreateInstanceFunction pCreate)
     {
-        static Holder holder(pCreate);
-        return holder.instance;
+        static const std::unique_ptr<T> holder(pCreate());
+        return *holder;
     }
 private:
     Singleton() = delete;

@@ -57,9 +57,8 @@ MainWindow::MainWindow()
     m_settings.beginGroup("log");
     m_maxLine = m_settings.value("MaxLine",200).toInt();
     m_settings.endGroup();
-    m_log = CLogger::instance();
 
-    switch (m_log->DebugLevel)
+    switch (m_log.debugLevel())
     {
         case LEVEL_NONE:
         {
@@ -77,46 +76,46 @@ MainWindow::MainWindow()
             break;
         }
     }
-    int id=ui->cb_filter->findText(m_log->getFilter(),Qt::MatchExactly);
+    int id=ui->cb_filter->findText(m_log.getFilter(),Qt::MatchExactly);
     if (id >=0)
     {
         ui->cb_filter->setCurrentIndex(id);
     }
     else
     {
-        ui->cb_filter->addItem(m_log->getFilter());
-        ui->cb_filter->setCurrentIndex(ui->cb_filter->findText(m_log->getFilter(),Qt::MatchExactly));
+        ui->cb_filter->addItem(m_log.getFilter());
+        ui->cb_filter->setCurrentIndex(ui->cb_filter->findText(m_log.getFilter(),Qt::MatchExactly));
     }
-    connect(m_log, SIGNAL(fireLog(QString,QColor,CL_DEBUG_LEVEL)),this,SLOT(onLog(QString,QColor,CL_DEBUG_LEVEL)),Qt::QueuedConnection);
+    connect(&m_log, &CLogger::fireLog, this, &MainWindow::onLog,Qt::QueuedConnection);
     ui->pteLogger->setMaximumBlockCount(m_maxLine);
-    m_log->log(tr("Welcome to FFS2Play"),Qt::blue);
+    m_log.log(tr("Welcome to FFS2Play"),Qt::blue);
     // Simconnect Manager Init
-    m_simManager = simbasemanager::instance();
-    connect(m_simManager, SIGNAL(opened()),this, SLOT(onSCM_Opened()));
-    connect(m_simManager,  SIGNAL(closed()),this, SLOT(onSCM_Closed()));
-    connect(m_simManager, SIGNAL(loaded(SIM_TYPE)),this, SLOT(onSCM_Loaded(SIM_TYPE)));
+    m_simManager = &simbasemanager::instance();
+    connect(m_simManager, &simbasemanager::opened, this, &MainWindow::onSCM_Opened);
+    connect(m_simManager, &simbasemanager::closed, this, &MainWindow::onSCM_Closed);
+    connect(m_simManager, &simbasemanager::loaded, this, &MainWindow::onSCM_Loaded);
     onSCM_Loaded(m_simManager->getType());
 
-    m_P2PManager = CP2PManager::instance();
+    m_P2PManager = &CP2PManager::instance();
     m_P2PManager->init(true);
-    connect(m_P2PManager, SIGNAL(firePeerAdd(QString)), SLOT(onPeerAdd(QString)));
-    connect(m_P2PManager, SIGNAL(firePeerChange(QString,int)), SLOT(onPeerChange(QString,int)));
-    connect(m_P2PManager, SIGNAL(firePeerRemove(QString)), SLOT(onPeerRemove(QString)));
-    connect(m_P2PManager, SIGNAL(fireReceiveTChat(QString,QString)), SLOT(onPeerReceiveTChat(QString,QString)));
+    connect(m_P2PManager, &CP2PManager::firePeerAdd, this, &MainWindow::onPeerAdd);
+    connect(m_P2PManager, &CP2PManager::firePeerChange, this, &MainWindow::onPeerChange);
+    connect(m_P2PManager, &CP2PManager::firePeerRemove, this, &MainWindow::onPeerRemove);
+    connect(m_P2PManager, &CP2PManager::fireReceiveTChat, this, &MainWindow::onPeerReceiveTChat);
 
-    m_webManager = CWebManager::instance();
+    m_webManager = &CWebManager::instance();
 
-    connect(m_webManager, SIGNAL(FireConnected()),this, SLOT(onWM_Connected()));
-    connect(m_webManager, SIGNAL(FireDisconnected()),this, SLOT(onWM_Disconnected()));
-    connect(m_webManager, SIGNAL(FireExit()),this, SLOT(onWM_Exit()));
+    connect(m_webManager, &CWebManager::FireConnected, this, &MainWindow::onWM_Connected);
+    connect(m_webManager, &CWebManager::FireDisconnected, this, &MainWindow::onWM_Disconnected);
+    connect(m_webManager, &CWebManager::FireExit, this, &MainWindow::onWM_Exit);
 
-    m_AIMapping = AIMapping::instance();
-    connect(m_AIMapping, SIGNAL(fireScanFinished(int,int,int)),this, SLOT(onAIScanFinished(int,int,int)));
+    m_AIMapping = &AIMapping::instance();
+    connect(m_AIMapping, &AIMapping::fireScanFinished, this, &MainWindow::onAIScanFinished);
 
-    m_Analyzer = Analyzer::instance();
+    m_Analyzer = &Analyzer::instance();
 
     ui->lwPeer->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->lwPeer, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onPeerShowContextMenu(QPoint)));
+    connect(ui->lwPeer, &QListWidget::customContextMenuRequested, this, &MainWindow::onPeerShowContextMenu);
 #ifdef FFS_DEBUG
     ui->dwDebugOpt->setEnabled(true);
     setWindowTitle("FFS2Play(debug)");
@@ -128,12 +127,12 @@ MainWindow::MainWindow()
     setWindowTitle(windowTitle() + " x64");
 #endif
     //Start timer to updating GUI
-    connect(&m_updateTimer,SIGNAL(timeout()),this,SLOT(onUpdate()));
+    connect(&m_updateTimer, &QTimer::timeout, this, &MainWindow::onUpdate);
     m_updateTimer.start(500);
     m_simManager->open_close();
     m_webManager->CheckNewVersion();
     m_webManager->Connect();
-    m_Theme = CTheme::instance();
+    m_Theme = &CTheme::instance();
     ui->afTheme->setMenu(m_Theme->createMenu(this));
     if (QToolButton* button = qobject_cast<QToolButton*>(ui->mainToolBar->widgetForAction(ui->afTheme)))
         button->setPopupMode(QToolButton::InstantPopup);
@@ -145,10 +144,7 @@ MainWindow::MainWindow()
 ///
 /// \brief MainWindow::~MainWindow
 ///
-MainWindow::~MainWindow()
-{
-    //delete ui;
-}
+MainWindow::~MainWindow() = default;
 
 ///
 /// \brief MainWindow::onLog
@@ -161,7 +157,7 @@ MainWindow::~MainWindow()
 void MainWindow::onLog (const QString& pMessage, QColor pColor, CL_DEBUG_LEVEL)
 {
     QTextCharFormat fmt;
-    fmt.setForeground(QBrush(CTheme::instance()->logColor(pColor)));
+    fmt.setForeground(QBrush(CTheme::instance().logColor(pColor)));
     // Original color kept to adapt the line when the theme changes
     fmt.setProperty(QTextFormat::UserProperty, pColor);
     ui->pteLogger->mergeCurrentCharFormat(fmt);
@@ -187,13 +183,13 @@ void MainWindow::onThemeChanged()
             if (color.isValid()) fragments.append({fragment.position(), fragment.length(), color});
         }
     }
-    CTheme* theme = CTheme::instance();
+    CTheme& theme = CTheme::instance();
     QTextCursor cursor(doc);
     cursor.beginEditBlock();
     for (const Fragment& fragment : fragments)
     {
         QTextCharFormat fmt;
-        fmt.setForeground(QBrush(theme->logColor(fragment.color)));
+        fmt.setForeground(QBrush(theme.logColor(fragment.color)));
         cursor.setPosition(fragment.position);
         cursor.setPosition(fragment.position + fragment.length, QTextCursor::KeepAnchor);
         cursor.mergeCharFormat(fmt);
@@ -236,13 +232,11 @@ void MainWindow::onSCM_Loaded(SIM_TYPE pSimType)
             ui->afFSType->setIcon(QIcon(":/gfx/xplane.png"));
             break;
         }
-#ifdef FFS_DEBUG
         case SIM_TYPE::FLIGHTGEAR:
         {
             ui->afFSType->setIcon(QIcon(":/gfx/flightgear.png"));
             break;
         }
-#endif
     }
 }
 
@@ -308,7 +302,7 @@ void MainWindow::onPeerAdd(QString pCallSign)
     }
     else
     {
-        m_log->log("Try to add existing peer in the list, ignore it",Qt::darkMagenta);
+        m_log.log("Try to add existing peer in the list, ignore it",Qt::darkMagenta);
     }
 }
 
@@ -365,7 +359,7 @@ void MainWindow::onPeerRemove(QString pCallSign)
             return;
         }
     }
-    m_log->log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
+    m_log.log("Try to remove unexisting peer in the list, ignore it",Qt::darkMagenta);
 }
 
 ///

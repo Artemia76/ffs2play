@@ -52,7 +52,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(GNUInstallDirs)
@@ -109,6 +109,7 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     main.cpp
     disk/aibaseparser.cpp disk/aibaseparser.h
     disk/aimapping.cpp disk/aimapping.h
+    disk/fgaiparser.cpp disk/fgaiparser.h
     disk/xpaiparser.cpp disk/xpaiparser.h
     disk/xpcslparser.cpp disk/xpcslparser.h
     gui/aireplace.cpp gui/aireplace.h gui/aireplace.ui
@@ -134,6 +135,7 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     tools/crypto.cpp tools/crypto.h
     tools/datagram.cpp tools/datagram.h
     tools/datetime.cpp tools/datetime.h
+    tools/fgpropertylist.cpp tools/fgpropertylist.h
     tools/getappversion.cpp tools/getappversion.h
     tools/iniparser.cpp tools/iniparser.h
     tools/simple_file_parser.cpp tools/simple_file_parser.h

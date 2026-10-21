@@ -33,7 +33,6 @@
 #include <QObject>
 #include <QTimer>
 #include <QHostAddress>
-#include <QMutex>
 #include <QDataStream>
 #include <QNetworkDatagram>
 #include <cstddef>
@@ -160,8 +159,8 @@ private:
     bool                    m_onLine;
     QString                 m_callSign;
     QString                 m_tail;
-    simbasemanager*         m_simManager;
-    AIMapping*              m_AIMapping;
+    simbasemanager&         m_simManager = simbasemanager::instance();
+    AIMapping&              m_AIMapping = AIMapping::instance();
     QHostAddress            m_EP;
     QVector<QHostAddress>   m_internalIP;
     QHostAddress            m_externalIP;
@@ -173,6 +172,8 @@ private:
     CAircraftState          m_data;
     CAircraftState          m_oldData;
     AirData                 m_sendData;
+    /// Title, type or model of the local aircraft changed : VERSION to send with the next DATA
+    bool                    m_versionPending;
     CAircraftState          m_futurData;
     CAircraftState          m_actualPos;
     CAircraftState          m_AIData;
@@ -184,7 +185,7 @@ private:
     UDPServer*              m_UDPServer;
     TCPServer*              m_TCPServer;
     TCPClient*              m_TCPClient;
-    CLogger*                m_log;
+    CLogger&                m_log = CLogger::instance();
     timespan                m_latence;
     double                  m_distance;
     timespan                m_refreshRate;
@@ -204,7 +205,6 @@ private:
     datetime                m_lastAIUpdate;
     bool                    m_disabled;
     bool                    m_disableCalculation;
-    QMutex                  m_mutex;
     bool                    m_selected;
     bool                    m_local;
     int                     m_sel_iplocal;

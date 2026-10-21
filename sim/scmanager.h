@@ -31,8 +31,9 @@
 #define SIMCONNECT_H
 
 #include <QObject>
-#include <QThread>
 #include <QDateTime>
+#include <QWinEventNotifier>
+#include <memory>
 
 #include <windows.h>
 #include <WinDef.h>
@@ -282,10 +283,16 @@ class CSCManager : public SimConnector
 {
     Q_OBJECT
 public:
-    explicit CSCManager(QObject *parent = 0);
-    ~CSCManager();
+    explicit CSCManager(QObject *parent = nullptr);
+    ~CSCManager() override;
 private:
-    HANDLE                  m_hSimConnect;
+    HANDLE                  m_hSimConnect = nullptr;
+    /// Windows event signaled by SimConnect when messages are waiting
+    HANDLE                  m_hEvent = nullptr;
+    /// Runs dispatch() in the GUI thread when m_hEvent is signaled
+    std::unique_ptr<QWinEventNotifier> m_notifier;
+    /// Next request ID used to create an AI, in [AI_CREATE, AI_UPDATE)
+    quint32                 m_nextAIRequest;
     qint64                  m_SimRate;
     qint64                  m_VariableRate;
     QDateTime               m_LastVariable;
@@ -305,23 +312,22 @@ private:
     void                    OnRecvEventFrame(SIMCONNECT_RECV_EVENT_FRAME* data);
     void                    OnRecvEventObjectAddremove(SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE* data);
     void                    OnRecvAssignedObjectId(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID* data);
-static	void                    CALLBACK DispatchCallback(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
+    void                    dispatch();
     void                    process(SIMCONNECT_RECV *pData, DWORD cbData);
     void                    sendText (const QString& pMessage);
     void                    trace(const QString& pMessage);
 protected:
-    void                    open();
-    void                    close();
-    void                    main_loop();
-    SIM_VERSION             getVersion();
+    void                    open() override;
+    void                    close() override;
+    SIM_VERSION             getVersion() override;
 
-    void                    sendScrollingText(const QString& pMessage);
-    bool                    createAI(AIResol &pAircraft, const QString &Tail, const CAircraftState &pData,bool pNonAIObject);
-    bool                    updateAI(uint pObjectID, const CAircraftState& pData);
-    bool                    removeAI(uint& pObjectID);
-    void                    freezeAI(uint pObjectID,bool pState);
-    void                    sendOptions(){}
-    void                    sendCallSignColor(){}
+    void                    sendScrollingText(const QString& pMessage) override;
+    bool                    createAI(AIResol &pAircraft, const QString &Tail, const CAircraftState &pData,bool pNonAIObject) override;
+    bool                    updateAI(uint pObjectID, const CAircraftState& pData) override;
+    bool                    removeAI(uint& pObjectID) override;
+    void                    freezeAI(uint pObjectID,bool pState) override;
+    void                    sendOptions() override {}
+    void                    sendCallSignColor() override {}
 };
 
 #endif // SIMCONNECT_H

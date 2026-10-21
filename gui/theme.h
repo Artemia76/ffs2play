@@ -47,7 +47,7 @@ public:
         Dark
     };
 
-    static CTheme*  instance();
+    static CTheme&  instance();
     void            init();
     Mode            mode() const { return m_mode; }
     void            setMode(Mode pMode);

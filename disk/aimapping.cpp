@@ -38,11 +38,8 @@
 ///
 AIMapping::AIMapping(QObject *parent) : QObject(parent)
 {
-    m_log = CLogger::instance();
-    m_simManager = simbasemanager::instance();
-    connect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
-    connect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
-    m_AIParser = nullptr;
+    connect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
+    connect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
     m_Version = SimConnector::SIM_VERSION::UNKNOWN;
 }
 
@@ -51,8 +48,8 @@ AIMapping::AIMapping(QObject *parent) : QObject(parent)
 ///
 AIMapping::~AIMapping()
 {
-    disconnect(m_simManager,SIGNAL(opened()),this,SLOT(onSimReceiveOpen()));
-    disconnect(m_simManager,SIGNAL(closed()),this,SLOT(onSimReceiveClose()));
+    disconnect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
+    disconnect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
 }
 
 ///
@@ -68,7 +65,7 @@ AIMapping* AIMapping::createInstance()
 /// \brief AIMapping::instance
 /// \return
 ///
-AIMapping* AIMapping::instance()
+AIMapping& AIMapping::instance()
 {
     return Singleton<AIMapping>::instance(AIMapping::createInstance);
 }
@@ -78,8 +75,7 @@ AIMapping* AIMapping::instance()
 ///
 void AIMapping::onSimReceiveOpen()
 {
-    if (m_simManager==nullptr) return;
-    m_Version = m_simManager->getVersion();
+    m_Version = m_simManager.getVersion();
     switch (m_Version)
     {
 #ifdef SIMCONNECT_BUILD
@@ -90,29 +86,33 @@ void AIMapping::onSimReceiveOpen()
         case SimConnector::SIM_VERSION::P3D_V4:
         case SimConnector::SIM_VERSION::P3D_V5:
         case SimConnector::SIM_VERSION::FS2020:
-        m_AIParser = new SCAIParser(this);
+        m_AIParser = std::make_unique<SCAIParser>();
         break;
 #endif
         case SimConnector::SIM_VERSION::XPLANE:
         {
-            m_AIParser = new XPAIParser(this);
+            m_AIParser = std::make_unique<XPAIParser>();
             break;
         }
         case SimConnector::SIM_VERSION::XPLANE_CSL:
         {
-            m_AIParser = new XPCSLParser(this);
+            m_AIParser = std::make_unique<XPCSLParser>();
             break;
         }
-        /*case SimConnector::SIM_VERSION::FLIGHTGEAR:
-        m_AIParser = new FGAIParser(this);
-        break;*/
+        case SimConnector::SIM_VERSION::FLIGHTGEAR:
+        {
+            m_AIParser = std::make_unique<FGAIParser>();
+            break;
+        }
         default:
         {
             return;
         }
     }
+    // Forwarded to the main window (connection lost in 2019, see docs/audit-2026-10.md F1)
+    connect(m_AIParser.get(), &AIBaseParser::fireScanFinished, this, &AIMapping::fireScanFinished);
     m_AIParser->startScanSimObject();
-    m_simManager->setPathList(getPathList());
+    m_simManager.setPathList(getPathList());
 }
 
 ///
@@ -120,8 +120,8 @@ void AIMapping::onSimReceiveOpen()
 ///
 void AIMapping::onSimReceiveClose()
 {
-    if (isInit()) delete m_AIParser;
-    m_AIParser = nullptr;
+    // Waits for the end of a running scan (AIBaseParser destructor)
+    m_AIParser.reset();
 }
 
 ///
@@ -324,6 +324,20 @@ QString AIMapping::getAircraftPath(const QString &pTitle)
     if (isInit())
         Response  = m_AIParser->getAircraftPath(pTitle);
     return Response;
+}
+
+///
+/// \brief AIMapping::getAircraftInfo
+/// \param pTitle
+/// \param pModel ICAO type of the aircraft
+/// \param pType
+/// \param pCategory
+/// \return false if the aircraft is not in the database
+///
+bool AIMapping::getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory)
+{
+    if (!isInit()) return false;
+    return m_AIParser->getAircraftInfo(pTitle, pModel, pType, pCategory);
 }
 
 ///

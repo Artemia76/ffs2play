@@ -33,7 +33,7 @@
 void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
 {
 #ifdef FFS_DEBUG
-    m_log->log("Peer [" + m_callSign + "] : OnNewTCPCOnnection", Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("Peer [" + m_callSign + "] : OnNewTCPCOnnection", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     if (pTCPClient!=nullptr)
     {
@@ -46,11 +46,11 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
             }
             m_TCPClient = pTCPClient;
             m_TCPServer->accept(m_TCPClient);
-            connect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-            connect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+            connect(m_TCPClient, &TCPClient::fireIncomingData, this, &CPeer::OnReceiveMessage);
+            connect(m_TCPClient, &TCPClient::fireDisconnected, this, &CPeer::OnTCPClientDisconnected);
             m_PeerMode=TCP_SERVER;
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : received incoming TCP connection, switch to TCPServer mode",Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : received incoming TCP connection, switch to TCPServer mode",Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
         else return;
@@ -60,14 +60,14 @@ void CPeer::OnNewTCPConnection(TCPClient* pTCPClient)
 void CPeer::OnTCPClientDisconnected(TCPClient* pTCPClient)
 {
 #ifdef FFS_DEBUG
-    m_log->log("Peer [" + m_callSign + "] : OnTCPClientDisconnected", Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("Peer [" + m_callSign + "] : OnTCPClientDisconnected", Qt::darkBlue,LEVEL_NORMAL);
 #endif
     if (pTCPClient!=nullptr)
     {
         if (m_TCPClient == pTCPClient)
         {
-            disconnect(m_TCPClient, SIGNAL(fireIncomingData(QNetworkDatagram)), this, SLOT(OnReceiveMessage(QNetworkDatagram)));
-            disconnect(m_TCPClient, SIGNAL(fireDisconnected(TCPClient*)), this, SLOT(OnTCPClientDisconnected(TCPClient*)));
+            disconnect(m_TCPClient, &TCPClient::fireIncomingData, this, &CPeer::OnReceiveMessage);
+            disconnect(m_TCPClient, &TCPClient::fireDisconnected, this, &CPeer::OnTCPClientDisconnected);
             m_TCPClient=nullptr;
         }
     }
@@ -87,7 +87,7 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
         {
             m_EP = normalized(pDatagram.senderAddress());
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : answers on " + m_EP.toString(),Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : answers on " + m_EP.toString(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
     }
@@ -127,7 +127,7 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
             if (!m_onLine)
             {
 #ifdef FFS_DEBUG
-                m_log->log("Peer [" + m_callSign + "] : go online",Qt::darkBlue,LEVEL_NORMAL);
+                m_log.log("Peer [" + m_callSign + "] : go online",Qt::darkBlue,LEVEL_NORMAL);
 #endif
                 m_onLine = true;
                 m_distance = -1;
@@ -143,12 +143,11 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
             QString Message;
             quint8 Len;
             stream >> Len;
-            char* Buff = new char[Len];
-            stream.readRawData(Buff,Len);
-            Message = QByteArray::fromRawData(Buff,Len);
-            delete[] Buff;
-            m_simManager->sendScrollingText(CallSign + " : " + Message);
-            emit(fireReceiveTChat(m_callSign,Message));
+            QByteArray Buff(Len, '\0');
+            stream.readRawData(Buff.data(),Len);
+            Message = QString::fromUtf8(Buff);
+            m_simManager.sendScrollingText(CallSign + " : " + Message);
+            emit fireReceiveTChat(m_callSign,Message);
             break;
         }
         case Protocol::DATA:
@@ -162,17 +161,16 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
                 AirData ReceivedData;
                 if (!ProtobufParse(ReceivedData, data))
                 {
-                    m_log->log("Peer [" + m_callSign + "] : Bad AirData datagram dropped",Qt::magenta,LEVEL_NORMAL);
+                    m_log.log("Peer [" + m_callSign + "] : Bad AirData datagram dropped",Qt::magenta,LEVEL_NORMAL);
                     return;
                 }
-                m_mutex.lock();
                 m_oldData=m_data;
                 m_data.fromAirData(ReceivedData);
                 m_data.TimeStamp += m_decalage;
                 if (m_data.TimeStamp<= m_oldData.TimeStamp)
                 {
 #ifdef FFS_DEBUG
-                    m_log->log("Peer [" + m_callSign + "] : UDP Datagram dropped because too late" +
+                    m_log.log("Peer [" + m_callSign + "] : UDP Datagram dropped because too late" +
                                 " Shift mSec=" + QString::number(m_decalage.count()) +
                                " OldTime = " + QString::number(toTimeStamp(m_oldData.TimeStamp)) +
                                " NewTime = " + QString::number(toTimeStamp(m_data.TimeStamp))
@@ -187,13 +185,12 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
                     m_remoteRefreshRate = m_data.TimeStamp - m_oldData.TimeStamp;
                     m_distance = distance(m_data.Latitude,m_data.Longitude,m_sendData.latitude(),m_sendData.longitude(), 'N');
 #ifdef FFS_DEBUG
-                    if ((CounterIn - m_counter_In) > 1) m_log->log("Peer [" + m_callSign + "] : UDP Datagram missing quantity = " + QString::number(CounterIn - m_counter_In - 1),Qt::darkBlue,LEVEL_NORMAL);
+                    if ((CounterIn - m_counter_In) > 1) m_log.log("Peer [" + m_callSign + "] : UDP Datagram missing quantity = " + QString::number(CounterIn - m_counter_In - 1),Qt::darkBlue,LEVEL_NORMAL);
 #endif
                     m_counter = 0;
                     if (m_spawned >=5) refreshData();
                 }
                 m_counter_In = CounterIn;
-                m_mutex.unlock();
             }
             break;
         }
@@ -212,7 +209,7 @@ void CPeer::OnReceiveMessage(QNetworkDatagram pDatagram)
                 m_data.Category=StringFromStream(stream);
             }
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : received version number = " + QString::number(m_version) +
+            m_log.log("Peer [" + m_callSign + "] : received version number = " + QString::number(m_version) +
                        " Title = " + m_data.Title,Qt::darkBlue,LEVEL_NORMAL);
 #endif
             break;
@@ -262,16 +259,16 @@ void CPeer::OnSimAICreated(QString pTail,uint pObjectID)
         {
             m_objectID = pObjectID;
             m_spawned = 4;
-            m_simManager->freezeAI(m_objectID, m_data.OnGround);
+            m_simManager.freezeAI(m_objectID, m_data.OnGround);
             m_lastAIUpdate = Now();
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : Receive Object_ID = " + QString::number(m_objectID),Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : Receive Object_ID = " + QString::number(m_objectID),Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
         else
         {
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : Receive an unwanted object" + QString::number(m_objectID),Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : Receive an unwanted object" + QString::number(m_objectID),Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
     }
@@ -288,7 +285,7 @@ void CPeer::OnSimAIRemoved(uint pObjectID)
         m_objectID = 0;
         m_spawned = 0;
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : Receive a removed Object from sim ID = " + QString::number(pObjectID),Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : Receive a removed Object from sim ID = " + QString::number(pObjectID),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
 }
@@ -306,7 +303,7 @@ void CPeer::OnSimClosed()
     m_objectID = 0;
     m_spawned = 0;
 #ifdef FFS_DEBUG
-    m_log->log("Peer [" + m_callSign + "] : Receive a SimClosed Event",Qt::darkBlue,LEVEL_NORMAL);
+    m_log.log("Peer [" + m_callSign + "] : Receive a SimClosed Event",Qt::darkBlue,LEVEL_NORMAL);
 #endif
 }
 
@@ -329,16 +326,23 @@ void CPeer::OnSimAIUpdated(CAircraftState pAIData, uint pObjectID)
 ///
 void CPeer::OnSimStateChange(CAircraftState pState)
 {
-    bool Title_Changed = false;
-    if (m_sendData.title() != pState.Title)
+    // Kept until sent : the change can happen between two DATA (FlightGear resolves
+    // the type and model after the first packet, see docs/contracts/p2p-peer.md)
+    if ((m_sendData.title() != pState.Title) ||
+        (m_sendData.type() != pState.Type) ||
+        (m_sendData.model() != pState.Model))
     {
-        Title_Changed = true;
+        m_versionPending = true;
     }
     pState.toAirData(m_sendData);
     if ((pState.TimeStamp - m_lastStateEvent) < m_sendInterval) return;
     if ((!m_onLine) || (m_EP.isNull()) || (m_version < 1)) return;
     sendData();
-    if (Title_Changed) sendVersion();
+    if (m_versionPending)
+    {
+        sendVersion();
+        m_versionPending = false;
+    }
     m_lastStateEvent = pState.TimeStamp;
     // AI Display Management
     m_spawnable = (m_distance < P2PRadius) && (m_distance >=0);
@@ -354,14 +358,14 @@ void CPeer::OnSimStateChange(CAircraftState pState)
     {
         spawnAI(true);
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] : Build AI Object" ,Qt::darkBlue,LEVEL_NORMAL);
+        m_log.log("Peer [" + m_callSign + "] : Build AI Object" ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
     if (((!m_spawnable) || (!m_visible)) && (m_spawned > 0))
     {
         spawnAI(false);
 #ifdef FFS_DEBUG
-        m_log->log("Peer [" + m_callSign + "] : Destruct AI Object Visible = " + QString::number(m_visible) + " Spawnable = " + QString::number(m_spawnable),Qt::darkBlue,LEVEL_NORMAL);
+        m_log.log("Peer [" + m_callSign + "] : Destruct AI Object Visible = " + QString::number(m_visible) + " Spawnable = " + QString::number(m_spawnable),Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
 }
@@ -379,12 +383,12 @@ void CPeer::OnTimerCreateAI()
         {
             m_trySimpleAI = true;
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : Simulator have not created the requested AI, Let's try with simple object..." ,Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : Simulator have not created the requested AI, Let's try with simple object..." ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
         else
         {
-            switch (m_simManager->getVersion())
+            switch (m_simManager.getVersion())
             {
 #ifdef SIMCONNECT_BUILD
                 case SimConnector::SIM_VERSION::FSX:
@@ -413,9 +417,16 @@ void CPeer::OnTimerCreateAI()
                     m_AIResolution.setCgHeight(0.0);
                     m_AIResolution.setPitch(0.0);
                     break;
+                case SimConnector::SIM_VERSION::FLIGHTGEAR:
+                    m_AIResolution.setTitle("Aircraft/c172p/Models/c172p.xml");
+                    m_AIResolution.setCgHeight(0.0);
+                    m_AIResolution.setPitch(0.0);
+                    break;
+                default:
+                    break;
             }
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : Simulator have not created the requested AI, we are trying with default simulator aircraft" ,Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : Simulator have not created the requested AI, we are trying with default simulator aircraft" ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
         createAI();
@@ -423,7 +434,7 @@ void CPeer::OnTimerCreateAI()
     else
     {
 #ifdef FFS_DEBUG
-            m_log->log("Peer [" + m_callSign + "] : Simulator has been created the requested AI" ,Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("Peer [" + m_callSign + "] : Simulator has been created the requested AI" ,Qt::darkBlue,LEVEL_NORMAL);
 #endif
     }
 }

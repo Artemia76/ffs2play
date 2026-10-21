@@ -109,12 +109,12 @@ private:
     bool                m_bFlyInProgress;
     QMetaEnum           m_metaPhases;
 
-    CLogger*            m_log;
-    simbasemanager*     m_sim;
+    CLogger&            m_log = CLogger::instance();
+    simbasemanager&     m_sim = simbasemanager::instance();
 
 public:
                         ~Analyzer();
-    static  Analyzer*   instance();
+    static  Analyzer&   instance();
     QString             getPhaseName();
     AircraftSituation   getLastState();
 

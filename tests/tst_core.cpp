@@ -42,6 +42,9 @@
 #include "web/caddrrequest.h"
 #include "tools/crypto.h"
 #include "tools/datagram.h"
+#include "tools/fgpropertylist.h"
+#include "sim/fgdatagram.h"
+#include "tools/calculation.h"
 
 class TestCore : public QObject
 {
@@ -58,6 +61,11 @@ private slots:
     void airDataGoogleWireFormat();
     void stringArrayBase64();
 
+    // Strings of the X-Plane link and peer datagrams (tools/datagram)
+    void streamStringRoundTrip();
+    void streamStringTruncatedUtf8();
+    void streamCStringFixedField();
+
     void ssdpLocation();
     void igdDescription();
     void soapParsing();
@@ -65,6 +73,15 @@ private slots:
     void addrRequestForcedLayer_data();
     void addrRequestForcedLayer();
     void addrRequestHttpError();
+
+    void fgPropertyList();
+    void fgPropertyListInclude();
+    void fgPropertyListInvalid();
+    void fgPropertyListRealAircraft();
+    void fgDatagramPosition();
+    void fgOrientationRoundTrip_data();
+    void fgOrientationRoundTrip();
+    void fgDatagramWriteRead();
 };
 
 namespace
@@ -300,6 +317,45 @@ void TestCore::stringArrayBase64()
     QCOMPARE(decoded.values(), ips.values());
 }
 
+void TestCore::streamStringRoundTrip()
+{
+    const QString Text = QStringLiteral("F-GABC é 飞机");
+    QByteArray Data;
+    {
+        QDataStream Out(&Data, QIODevice::WriteOnly);
+        StringToStream(Out, Text);
+    }
+    QCOMPARE(static_cast<quint8>(Data.at(0)), static_cast<quint8>(Text.toUtf8().size()));
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    QCOMPARE(StringFromStream(In), Text);
+    QVERIFY(In.atEnd());
+}
+
+void TestCore::streamStringTruncatedUtf8()
+{
+    // 254 ASCII bytes + a 2 bytes character : 256 bytes, beyond the one byte length
+    const QString Text = QString(254, QLatin1Char('a')) + QStringLiteral("é");
+    QByteArray Data;
+    {
+        QDataStream Out(&Data, QIODevice::WriteOnly);
+        StringToStream(Out, Text);
+    }
+    // The length byte matches the written bytes and the UTF-8 sequence is not cut
+    QCOMPARE(static_cast<quint8>(Data.at(0)), quint8(254));
+    QCOMPARE(Data.size(), 1 + 254);
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    QCOMPARE(StringFromStream(In), QString(254, QLatin1Char('a')));
+}
+
+void TestCore::streamCStringFixedField()
+{
+    // Null padded field and full field without terminator
+    QByteArray Data("ABC\0\0\0\0\0WXYZ", 12);
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    QCOMPARE(CStringFromStream(In, 8), QStringLiteral("ABC"));
+    QCOMPARE(CStringFromStream(In, 4), QStringLiteral("WXYZ"));
+}
+
 void TestCore::ssdpLocation()
 {
     const QByteArray answer =
@@ -385,6 +441,217 @@ void TestCore::soapParsing()
 <errorCode>718</errorCode><errorDescription>ConflictInMappingEntry</errorDescription>
 </UPnPError></detail></s:Fault></s:Body></s:Envelope>)";
     QCOMPARE(CUPnPClient::soapValue(fault, "errorCode").toInt(), 718);
+}
+
+namespace
+{
+bool writeTextFile(const QString& pPath, const QByteArray& pContent)
+{
+    QDir().mkpath(QFileInfo(pPath).absolutePath());
+    QFile File(pPath);
+    return File.open(QIODevice::WriteOnly) && File.write(pContent) == pContent.size();
+}
+}
+
+void TestCore::fgPropertyList()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    const QString SetFile = Dir.filePath("Aircraft/dr400/dr400-set.xml");
+    QVERIFY(writeTextFile(SetFile, R"(<?xml version="1.0"?>
+<PropertyList>
+  <sim>
+    <description>Robin DR400</description>
+    <author>Someone</author>
+    <model><path>Aircraft/dr400/Models/dr400.xml</path></model>
+    <tags>
+      <tag>ga</tag>
+      <tag>piston</tag>
+      <tag>single-engine</tag>
+    </tags>
+  </sim>
+  <aircraft><icao><type>DR40</type></icao></aircraft>
+</PropertyList>
+)"));
+    CFGPropertyList Props;
+    QVERIFY(Props.read(SetFile));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Aircraft/dr400/Models/dr400.xml"));
+    QCOMPARE(Props.value("aircraft/icao/type"), QStringLiteral("DR40"));
+    QCOMPARE(Props.value("sim/description"), QStringLiteral("Robin DR400"));
+    QCOMPARE(Props.values("sim/tags/tag"), QStringList({"ga", "piston", "single-engine"}));
+    QVERIFY(Props.value("sim/missing").isEmpty());
+}
+
+void TestCore::fgPropertyListInclude()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    // Root include relative to the file, node include relative to a parent folder
+    const QString SetFile = Dir.filePath("Aircraft/c172p/c172p-set.xml");
+    QVERIFY(writeTextFile(SetFile, R"(<?xml version="1.0"?>
+<PropertyList include="c172p-common.xml">
+  <sim>
+    <description>Cessna 172P floats</description>
+    <tags include="Aircraft/Generic/tags.xml"/>
+  </sim>
+</PropertyList>
+)"));
+    QVERIFY(writeTextFile(Dir.filePath("Aircraft/c172p/c172p-common.xml"), R"(<?xml version="1.0"?>
+<PropertyList>
+  <sim>
+    <description>Cessna 172P</description>
+    <model><path>Aircraft/c172p/Models/c172p.xml</path></model>
+  </sim>
+  <aircraft><icao><type>C172</type></icao></aircraft>
+</PropertyList>
+)"));
+    QVERIFY(writeTextFile(Dir.filePath("Aircraft/Generic/tags.xml"), R"(<?xml version="1.0"?>
+<PropertyList><tag>seaplane</tag></PropertyList>
+)"));
+    CFGPropertyList Props;
+    QVERIFY(Props.read(SetFile));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QCOMPARE(Props.value("aircraft/icao/type"), QStringLiteral("C172"));
+    // The including file overrides the included one
+    QCOMPARE(Props.value("sim/description"), QStringLiteral("Cessna 172P floats"));
+    QCOMPARE(Props.values("sim/tags/tag"), QStringList({"seaplane"}));
+}
+
+void TestCore::fgPropertyListInvalid()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    CFGPropertyList Props;
+    QVERIFY(!Props.read(Dir.filePath("missing-set.xml")));
+    const QString Other = Dir.filePath("other-set.xml");
+    QVERIFY(writeTextFile(Other, "<?xml version=\"1.0\"?><root><a>1</a></root>"));
+    QVERIFY(!Props.read(Other));
+    // A file including itself stops at the maximum depth
+    const QString Loop = Dir.filePath("loop-set.xml");
+    QVERIFY(writeTextFile(Loop, R"(<?xml version="1.0"?>
+<PropertyList include="loop-set.xml"><sim><model><path>Loop.xml</path></model></sim></PropertyList>
+)"));
+    QVERIFY(Props.read(Loop));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Loop.xml"));
+    QCOMPARE(Props.values("sim/model/path").size(), CFGPropertyList::MaxIncludeDepth + 1);
+}
+
+void TestCore::fgPropertyListRealAircraft()
+{
+    // Only with a FlightGear installation : FG_ROOT=<...>/fgdata_2024_1
+    const QString Root = qEnvironmentVariable("FG_ROOT");
+    if (Root.isEmpty()) QSKIP("FG_ROOT not set");
+    CFGPropertyList Props;
+    QVERIFY(Props.read(Root + "/Aircraft/c172p/c172p-set.xml", {Root}));
+    QCOMPARE(Props.value("sim/model/path"), QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QCOMPARE(Props.value("aircraft/icao/type"), QStringLiteral("C172"));
+    QVERIFY(!Props.value("sim/description").isEmpty());
+    qInfo() << "description =" << Props.value("sim/description") << ", author =" << Props.value("sim/author")
+            << ", tags =" << Props.values("sim/tags/tag");
+}
+
+void TestCore::fgDatagramPosition()
+{
+    // Multiplayer position message as sent by FlightGear (mpmessages.hxx), XDR big endian
+    QByteArray Data;
+    QDataStream Out(&Data, QIODevice::WriteOnly);
+    Out.setByteOrder(QDataStream::BigEndian);
+    Out << quint32(simgear::MSG_MAGIC) << quint32(simgear::PROTO_VER) << quint32(7) << quint32(0) << quint32(100) << quint32(5001);
+    Out.writeRawData("TEST\0\0\0\0", 8);
+    QByteArray Model("Aircraft/c172p/Models/c172p.xml");
+    Model.resize(96, '\0');
+    Out.writeRawData(Model.constData(), Model.size());
+    Out.setFloatingPointPrecision(QDataStream::DoublePrecision);
+    Out << 12.5 << 0.25 << 4201000.0 << 187000.0 << 4790000.0;
+    Out.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    for (int i = 1; i <= 15; i++) Out << static_cast<float>(i) / 10.0f;
+    Out << quint32(0); // pad
+    QCOMPARE(Data.size(), 232);
+    // A V1 property (4 bytes id) : surface-positions/elevator-pos-norm
+    Out << quint16(0) << quint16(102) << 0.5f;
+
+    QDataStream In(&Data, QIODevice::ReadOnly);
+    simgear::FGDatagram Datagram;
+    Datagram.Read(In);
+    QVERIFY(Datagram.IsSane());
+    simgear::FGPos Pos;
+    QVERIFY(Datagram.GetPos(Pos));
+    QCOMPARE(QString(Pos.ModelName), QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QCOMPARE(Pos.Time, 12.5);
+    QCOMPARE(Pos.Position[2], 4790000.0);
+    QCOMPARE(Pos.Orientation[0], 0.1f);
+    QCOMPARE(Pos.AngularAccel[2], 1.5f);
+    QVERIFY(In.atEnd());
+    QCOMPARE(In.status(), QDataStream::Ok);
+}
+
+void TestCore::fgOrientationRoundTrip_data()
+{
+    QTest::addColumn<double>("Lon");
+    QTest::addColumn<double>("Lat");
+    QTest::addColumn<double>("Heading");
+    QTest::addColumn<double>("Pitch");
+    QTest::addColumn<double>("Bank");
+    QTest::newRow("LFPG level north") << 2.55 << 49.01 << 0.0 << 0.0 << 0.0;
+    QTest::newRow("LFPG climbing turn") << 2.55 << 49.01 << 265.0 << -8.0 << 25.0;
+    QTest::newRow("southern hemisphere") << -70.6 << -33.4 << 123.0 << 4.0 << -30.0;
+    QTest::newRow("date line") << 179.5 << 10.0 << 359.0 << -15.0 << 60.0;
+}
+
+void TestCore::fgOrientationRoundTrip()
+{
+    QFETCH(double, Lon);
+    QFETCH(double, Lat);
+    QFETCH(double, Heading);
+    QFETCH(double, Pitch);
+    QFETCH(double, Bank);
+    float AngleAxis[3];
+    EulerToFGOrientation(Lon, Lat, Heading, Pitch, Bank, AngleAxis);
+    double H, P, B;
+    FGOrientationToEuler(Lon, Lat, AngleAxis, H, P, B);
+    double DeltaH = std::fmod(H - Heading + 540.0, 360.0) - 180.0;
+    QVERIFY2(std::abs(DeltaH) < 0.01, qPrintable(QString::number(H)));
+    QVERIFY2(std::abs(P - Pitch) < 0.01, qPrintable(QString::number(P)));
+    QVERIFY2(std::abs(B - Bank) < 0.01, qPrintable(QString::number(B)));
+}
+
+void TestCore::fgDatagramWriteRead()
+{
+    CAircraftState State;
+    State.Latitude = 49.0097;
+    State.Longitude = 2.5479;
+    State.Altitude = 1500.0;
+    State.Heading = 90.0;
+    State.Pitch = -5.0;  // nose up
+    State.Bank = -20.0;  // right wing down
+    State.TASSpeed = 110.0;
+    simgear::FGDatagram Out;
+    Out.SetIdentity("fgp76-long-callsign", "Aircraft/c172p/Models/c172p.xml");
+    QVERIFY(Out.SetAirData(State));
+    QByteArray Data;
+    QDataStream OutStream(&Data, QIODevice::WriteOnly);
+    Out.Write(OutStream);
+    QCOMPARE(Data.size(), static_cast<qsizetype>(simgear::POS_MSG_LEN));
+
+    QDataStream InStream(&Data, QIODevice::ReadOnly);
+    simgear::FGDatagram In;
+    In.Read(InStream);
+    QVERIFY(In.IsSane());
+    simgear::FGHeader Header;
+    QVERIFY(In.GetHeader(Header));
+    QCOMPARE(Header.MsgId, simgear::POS_DATA_ID);
+    QCOMPARE(Header.MsgLen, simgear::POS_MSG_LEN);
+    QCOMPARE(QString(Header.CallSign), QStringLiteral("fgp76-l"));
+    CAircraftState Result;
+    QVERIFY(In.GetAirData(Result));
+    QCOMPARE(Result.Title, QStringLiteral("Aircraft/c172p/Models/c172p.xml"));
+    QVERIFY(std::abs(Result.Latitude - State.Latitude) < 1e-6);
+    QVERIFY(std::abs(Result.Longitude - State.Longitude) < 1e-6);
+    QVERIFY(std::abs(Result.Altitude - State.Altitude) < 0.1);
+    QVERIFY(std::abs(Result.Heading - State.Heading) < 0.01);
+    QVERIFY(std::abs(Result.Pitch - State.Pitch) < 0.01);
+    QVERIFY(std::abs(Result.Bank - State.Bank) < 0.01);
+    QVERIFY(std::abs(Result.TASSpeed - State.TASSpeed) < 0.01);
 }
 
 QTEST_GUILESS_MAIN(TestCore)

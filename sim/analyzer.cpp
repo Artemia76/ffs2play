@@ -38,16 +38,14 @@ Analyzer::Analyzer(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<Phases>("Phases");
     m_metaPhases = QMetaEnum::fromType<Analyzer::Phases>();
-    m_log = CLogger::instance();
-    m_sim = simbasemanager::instance();
     m_bFlyInProgress = false;
     m_phase = Phases::IDLE;
     m_currentState.OnGround=true;
 
-    connect(m_sim,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(onSimVariableEvent(CAircraftState)));
-    connect(m_sim, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(onSimEvent(SimEvent)));
-    connect(m_sim,SIGNAL(opened()),this,SLOT(onSimOpened()));
-    connect(m_sim, SIGNAL(closed()), this, SLOT(onSimClosed()));
+    connect(&m_sim, &simbasemanager::fireSimVariableEvent, this, &Analyzer::onSimVariableEvent);
+    connect(&m_sim, &simbasemanager::fireSimEvent, this, &Analyzer::onSimEvent);
+    connect(&m_sim, &simbasemanager::opened, this, &Analyzer::onSimOpened);
+    connect(&m_sim, &simbasemanager::closed, this, &Analyzer::onSimClosed);
 }
 
 ///
@@ -55,10 +53,10 @@ Analyzer::Analyzer(QObject *parent) : QObject(parent)
 ///
 Analyzer::~Analyzer()
 {
-    disconnect(m_sim,SIGNAL(fireSimVariableEvent(CAircraftState)),this,SLOT(onSimVariableEvent(CAircraftState)));
-    disconnect(m_sim, SIGNAL(fireSimEvent(SimEvent)), this, SLOT(onSimEvent(SimEvent)));
-    disconnect(m_sim,SIGNAL(opened()),this,SLOT(onSimOpened()));
-    disconnect(m_sim, SIGNAL(closed()), this, SLOT(onSimClosed()));
+    disconnect(&m_sim, &simbasemanager::fireSimVariableEvent, this, &Analyzer::onSimVariableEvent);
+    disconnect(&m_sim, &simbasemanager::fireSimEvent, this, &Analyzer::onSimEvent);
+    disconnect(&m_sim, &simbasemanager::opened, this, &Analyzer::onSimOpened);
+    disconnect(&m_sim, &simbasemanager::closed, this, &Analyzer::onSimClosed);
 }
 
 ///
@@ -74,7 +72,7 @@ Analyzer* Analyzer::createInstance()
 /// \brief Analyzer::instance
 /// \return
 ///
-Analyzer* Analyzer::instance()
+Analyzer& Analyzer::instance()
 {
     return Singleton<Analyzer>::instance(Analyzer::createInstance);
 }
@@ -96,9 +94,9 @@ void Analyzer::onSimVariableEvent(CAircraftState pState)
     if (m_currentState.OnGround && (!m_lastState.OnGround))
     {
         double TouchSpeed = (m_lastState.VSpeed + m_currentState.VSpeed) /2;
-        emit(fireTouchSpeed(TouchSpeed));
+        emit fireTouchSpeed(TouchSpeed);
     }
-    if (m_sim->isConnected()) analyze();
+    if (m_sim.isConnected()) analyze();
     m_lastState = m_currentState;
 }
 
@@ -329,7 +327,7 @@ void Analyzer::analyze()
         {
             if (m_currentState.OnGround && (!m_lastState.OnGround))
             {
-                emit(fireTouchSpeed((m_lastState.VSpeed + m_currentState.VSpeed)/2));
+                emit fireTouchSpeed((m_lastState.VSpeed + m_currentState.VSpeed)/2);
             }
             if (m_currentState.GAltitude > 100)
             {
@@ -512,7 +510,7 @@ void Analyzer::setPhase(Phases pPhase)
     m_phase = pPhase;
 
 #ifdef FFS_DEBUG
-    m_log->log("Analyzer : Change Phase = " +  getPhaseName(), Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("Analyzer : Change Phase = " +  getPhaseName(), Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     firePhaseChange(pPhase);
 }

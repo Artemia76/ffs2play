@@ -41,7 +41,7 @@
 void CWebManager::HelloCallback (CHttpRequest* Request)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : Get HelloCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("WEBManager : Get HelloCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QDomDocument Doc;
     if (Request->getAsXml(Doc))
@@ -51,20 +51,20 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
         QString SCert = Doc.elementsByTagName("certificat").at(0).toElement().text();
         if (SCert.isEmpty())
         {
-            m_log->log(tr("Connection to server failed : no certificate received"),Qt::darkRed);
+            m_log.log(tr("Connection to server failed : no certificate received"),Qt::darkRed);
         }
         else
         {
             m_sCrypted_AESKey = m_crypto.RSA_EncryptToBase64(SCert, m_crypto.EncryptionKey());
 #ifdef FFS_DEBUG
-            m_log->log("WEBManager : AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("WEBManager : AES Key encrypted with RSA = " + m_sCrypted_AESKey,Qt::darkBlue,LEVEL_NORMAL);
 #endif
-            emit (FireHelloCallback());
+            emit FireHelloCallback();
         }
     }
     else
     {
-        m_log->log(tr("Connection to server failed : no response"),Qt::darkRed);
+        m_log.log(tr("Connection to server failed : no response"),Qt::darkRed);
     }
     Request->deleteLater();
 }
@@ -76,7 +76,7 @@ void CWebManager::HelloCallback (CHttpRequest* Request)
 void CWebManager::ConnectCallback(CHttpRequest *pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : Get ConnectCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("WEBManager : Get ConnectCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     QDomDocument Doc;
     try
@@ -90,7 +90,7 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
                 m_bConnected = Element.firstChild().nodeValue().toInt()==1;
                 if (m_bConnected && (!bError))
                 {
-                    m_log->log(tr("FFS2Play is connected on server"));
+                    m_log.log(tr("FFS2Play is connected on server"));
                     QDomElement xmlExternalIP = Doc.elementsByTagName("your_ip").at(0).toElement();
                     if (!xmlExternalIP.isNull())
                     {
@@ -99,11 +99,11 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
     #ifdef FFS_DEBUG
                         if (ExternalIP.isNull())
                         {
-                            m_log->log("WEBManager : Get invalid external IP",Qt::darkMagenta,LEVEL_VERBOSE);
+                            m_log.log("WEBManager : Get invalid external IP",Qt::darkMagenta,LEVEL_VERBOSE);
                         }
                         else
                         {
-                            m_log->log("WEBManager : Get external IP = " + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
+                            m_log.log("WEBManager : Get external IP = " + ExternalIP.toString(),Qt::darkMagenta,LEVEL_VERBOSE);
                         }
     #endif
                     }
@@ -127,10 +127,10 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
                     {
                         m_AIManagement = (AIManagement.firstChild().nodeValue().toInt()==1);
                     }
-                    m_P2P->setCallsign(m_users[m_currentUser-1].Login);
+                    m_P2P.setCallsign(m_users[m_currentUser-1].Login);
                     m_ATCTimer.start();
                     CheckWhazzup(Doc);
-                    emit (FireConnected());
+                    emit FireConnected();
                 }
             }
             else
@@ -145,7 +145,7 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
     }
     catch (std::exception& /*e*/)
     {
-        m_log->log(tr("Connexion to server failed."),Qt::darkMagenta);
+        m_log.log(tr("Connexion to server failed."),Qt::darkMagenta);
     }
     pRequest->deleteLater();
 }
@@ -157,7 +157,7 @@ void CWebManager::ConnectCallback(CHttpRequest *pRequest)
 void CWebManager::LiveUpdateCallback(CHttpRequest* pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : Get LiveUpdateCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("WEBManager : Get LiveUpdateCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     if (m_bConnected)
     {
@@ -190,7 +190,7 @@ void CWebManager::LiveUpdateCallback(CHttpRequest* pRequest)
 void CWebManager::ATCCallback(CHttpRequest *pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : Get ATCCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("WEBManager : Get ATCCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     pRequest->deleteLater();
 }
@@ -202,7 +202,7 @@ void CWebManager::ATCCallback(CHttpRequest *pRequest)
 void CWebManager::LogoutCallback(CHttpRequest* 	pRequest)
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : Get LogoutCallback",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("WEBManager : Get LogoutCallback",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     pRequest->deleteLater();
 }
@@ -213,21 +213,21 @@ void CWebManager::LogoutCallback(CHttpRequest* 	pRequest)
 void CWebManager::OnATCUpdate()
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : Get ATCUpdate",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("WEBManager : Get ATCUpdate",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
-    if (isConnected() && m_simManager->isConnected())
+    if (isConnected() && m_simManager.isConnected())
     {
-        switch (m_simManager->getType())
+        switch (m_simManager.getType())
         {
             case SIM_TYPE::FSX:
             {
-                int Transponder = ConvertToBinaryCodedDecimal(m_simManager->getAircraftState().Squawk);
+                int Transponder = ConvertToBinaryCodedDecimal(m_simManager.getAircraftState().Squawk);
                 if ((Transponder == 1200) || (Transponder == 7000) || (Transponder == 4700)) return;
                 break;
             }
             case SIM_TYPE::XPLANE:
             {
-                if (m_simManager->getAircraftState().SquawkMode<2) return;
+                if (m_simManager.getAircraftState().SquawkMode<2) return;
                 break;
             }
             default:
@@ -245,7 +245,7 @@ void CWebManager::OnATCUpdate()
 void CWebManager::OnLiveUpdate()
 {
 #ifdef FFS_DEBUG
-    m_log->log("WEBManager : Get OnLiveUpdate",Qt::darkBlue,LEVEL_VERBOSE);
+    m_log.log("WEBManager : Get OnLiveUpdate",Qt::darkBlue,LEVEL_VERBOSE);
 #endif
     SendAddr();
     // also sent without simulator : it keeps the slot alive on the portal
@@ -268,7 +268,7 @@ void CWebManager::AddrCallback(CAddrRequest* pRequest)
 #ifdef FFS_DEBUG
     else
     {
-        m_log->log(QString("WEBManager : addr over %1 failed : %2")
+        m_log.log(QString("WEBManager : addr over %1 failed : %2")
                    .arg(pRequest->protocol() == QAbstractSocket::IPv6Protocol ? "IPv6" : "IPv4", pRequest->errorString()),
                    Qt::darkMagenta,LEVEL_VERBOSE);
     }
@@ -289,15 +289,15 @@ void CWebManager::UpdatePublicAddress(QHostAddress pAddress)
         pAddress = QHostAddress(IPv4);
         if (pAddress.isEqual(m_publicIPv4)) return;
         m_publicIPv4 = pAddress;
-        m_log->log(tr("Public IPv4 address : ") + pAddress.toString());
-        m_P2P->setPublicIPv4(pAddress);
+        m_log.log(tr("Public IPv4 address : ") + pAddress.toString());
+        m_P2P.setPublicIPv4(pAddress);
     }
     else if (pAddress.protocol() == QAbstractSocket::IPv6Protocol)
     {
         if (pAddress.isEqual(m_publicIPv6)) return;
         m_publicIPv6 = pAddress;
-        m_log->log(tr("Public IPv6 address : ") + pAddress.toString());
-        m_P2P->setPublicIPv6(pAddress);
+        m_log.log(tr("Public IPv6 address : ") + pAddress.toString());
+        m_P2P.setPublicIPv6(pAddress);
     }
 }
 
@@ -345,14 +345,14 @@ void CWebManager::CheckNewVersionCallback(CHttpRequest* pRequest)
                         QDesktopServices::openUrl(URL);
                         compat=false;
                     }
-                    if (!compat) emit(FireExit());
+                    if (!compat) emit FireExit();
                 }
             }
         }
         else
         {
 #ifdef FFS_DEBUG
-            m_log->log("WEBManager : Error on Version checking : " + xmlError.text(),Qt::darkBlue,LEVEL_NORMAL);
+            m_log.log("WEBManager : Error on Version checking : " + xmlError.text(),Qt::darkBlue,LEVEL_NORMAL);
 #endif
         }
     }
@@ -365,7 +365,7 @@ void CWebManager::CheckNewVersionCallback(CHttpRequest* pRequest)
 ///
 void CWebManager::CheckXPPluginVersionCallback(CHttpRequest* pRequest)
 {
-    sVersion Actual = m_simManager->getPlugVersion();
+    sVersion Actual = m_simManager.getPlugVersion();
     QDomDocument Doc;
     if (pRequest->getAsXml(Doc))
     {

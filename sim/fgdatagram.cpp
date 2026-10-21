@@ -26,6 +26,9 @@
 ** This is coder/decoder class for FlightGear Datagram
 ****************************************************************************/
 
+#include <QDateTime>
+#include <cstring>
+
 #include "fgdatagram.h"
 
 using namespace simgear;
@@ -34,7 +37,6 @@ using namespace simgear;
 ///
 FGDatagram::FGDatagram()
 {
-    m_Log = CLogger::instance();
     m_Sane = false;
 }
 
@@ -65,7 +67,7 @@ void FGDatagram::Read(QDataStream& pStream)
     if (m_Header.Magic != MSG_MAGIC) return;
     m_Sane = true;
 #ifdef FFS_DEBUG
-    m_Log->log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
+    m_Log.log("FGManager : " + QString::asprintf("Receive FlightGear Header Magic= %0X, Version= %08X, MsgId = %d, MsgLen = %d, Requested Visibility = %d, Reply Port = %d, CallSign = ",
         m_Header.Magic,
         m_Header.Version,
         m_Header.MsgId,
@@ -76,20 +78,23 @@ void FGDatagram::Read(QDataStream& pStream)
 #endif
     //Reading Position Data
     pStream.readRawData(&m_Pos.ModelName[0],sizeof (m_Pos.ModelName));
+    // Time, lag and position are 8 bytes XDR doubles, all the following values 4 bytes
+    // XDR floats : QDataStream reads float and double with the same precision setting
+    pStream.setFloatingPointPrecision(QDataStream::DoublePrecision);
     pStream >> m_Pos.Time;
     pStream >> m_Pos.Lag;
     for (int i=0; i<3; i++) pStream >> m_Pos.Position[i];
+    pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
     for (int i=0; i<3; i++) pStream >> m_Pos.Orientation[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.LinearVelocity[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.AngularVelocity[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.LinearAccel[i];
     for (int i=0; i<3; i++) pStream >> m_Pos.AngularAccel[i];
-    char Dummy[8];
-    pStream.readRawData(&Dummy[0],8);
-    float Roll, Pitch , Yaw;
-    EulerToAngle (m_Pos.Orientation[0],m_Pos.Orientation[1],m_Pos.Orientation[2],Yaw,Pitch,Roll);
+    // xdr_data_t pad of T_PositionMsg (FlightGear mpmessages.hxx) : properties start at byte 232
+    char Dummy[4];
+    pStream.readRawData(&Dummy[0],sizeof(Dummy));
 #ifdef FFS_DEBUG
-    m_Log->log(QString::asprintf("FGManager : Yaw=%f , Roll=%f , Pitch=%f",
+    m_Log.log(QString::asprintf("FGManager : Orientation (angle axis) = %f , %f , %f",
         static_cast<double>(m_Pos.Orientation[0]),
         static_cast<double>(m_Pos.Orientation[1]),
         static_cast<double>(m_Pos.Orientation[2])
@@ -125,10 +130,10 @@ void FGDatagram::Read(QDataStream& pStream)
             break;
         case STRING:
         case UNSPECIFIED:
-            Value = prop.string_value;
+            Value = QString::fromUtf8(prop.string_value);
             break;
         }
-        m_Log->log(QString::asprintf("FGManager : Property Id=%d , Value = ", prop.id)+Value,Qt::darkBlue,LEVEL_VERBOSE);
+        m_Log.log(QString::asprintf("FGManager : Property Id=%d , Value = ", prop.id)+Value,Qt::darkBlue,LEVEL_VERBOSE);
 #endif
         //break;
     }
@@ -138,9 +143,53 @@ void FGDatagram::Read(QDataStream& pStream)
 /// \brief FGDatagram::Write
 /// \param pStream
 ///
-void FGDatagram::Write(QDataStream& /*pStream*/)
+void FGDatagram::Write(QDataStream& pStream)
 {
+    pStream.setByteOrder(QDataStream::BigEndian);
+    pStream << m_Header.Magic;
+    pStream << m_Header.Version;
+    pStream << m_Header.MsgId;
+    pStream << m_Header.MsgLen;
+    pStream << m_Header.Requested_Visibility;
+    pStream << m_Header.Replyport;
+    pStream.writeRawData(&m_Header.CallSign[0],sizeof(m_Header.CallSign));
+    pStream.writeRawData(&m_Pos.ModelName[0],sizeof (m_Pos.ModelName));
+    pStream.setFloatingPointPrecision(QDataStream::DoublePrecision);
+    pStream << m_Pos.Time;
+    pStream << m_Pos.Lag;
+    for (int i=0; i<3; i++) pStream << m_Pos.Position[i];
+    pStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    for (int i=0; i<3; i++) pStream << m_Pos.Orientation[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.LinearVelocity[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.AngularVelocity[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.LinearAccel[i];
+    for (int i=0; i<3; i++) pStream << m_Pos.AngularAccel[i];
+    pStream << quint32(0); // pad
+}
 
+///
+/// \brief FGDatagram::SetIdentity
+/// Prepares a position message without properties
+/// \param pCallSign truncated to 7 characters
+/// \param pModel model path, ex "Aircraft/c172p/Models/c172p.xml"
+///
+void FGDatagram::SetIdentity(const QString& pCallSign, const QString& pModel)
+{
+    m_Header = FGHeader();
+    m_Header.Magic = MSG_MAGIC;
+    m_Header.Version = PROTO_VER;
+    m_Header.MsgId = POS_DATA_ID;
+    m_Header.MsgLen = POS_MSG_LEN;
+    m_Header.Requested_Visibility = 100;
+    m_Header.Replyport = 0;
+    const QByteArray CallSign = pCallSign.toLatin1().left(sizeof(m_Header.CallSign) - 1);
+    memset(m_Header.CallSign, 0, sizeof(m_Header.CallSign));
+    memcpy(m_Header.CallSign, CallSign.constData(), static_cast<size_t>(CallSign.size()));
+    const QByteArray Model = pModel.toLatin1().left(sizeof(m_Pos.ModelName) - 1);
+    memset(m_Pos.ModelName, 0, sizeof(m_Pos.ModelName));
+    memcpy(m_Pos.ModelName, Model.constData(), static_cast<size_t>(Model.size()));
+    m_Props.clear();
+    m_Sane = true;
 }
 
 ///
@@ -208,6 +257,12 @@ bool FGDatagram::GetAirData(CAircraftState& pData)
 {
     if (!m_Sane) return false;
     CartToGeod (m_Pos.Position[0],m_Pos.Position[1], m_Pos.Position[2], pData.Longitude,pData.Latitude, pData.Altitude);
+    FGOrientationToEuler(pData.Longitude, pData.Latitude, m_Pos.Orientation, pData.Heading, pData.Pitch, pData.Bank);
+    // Body frame velocity (m/s)
+    const double Speed = sqrt(static_cast<double>(m_Pos.LinearVelocity[0]*m_Pos.LinearVelocity[0] +
+                                                  m_Pos.LinearVelocity[1]*m_Pos.LinearVelocity[1] +
+                                                  m_Pos.LinearVelocity[2]*m_Pos.LinearVelocity[2]));
+    pData.TASSpeed = Speed / SG_KT_TO_MPS;
     pData.Title = m_Pos.ModelName;
     return true;
 }
@@ -217,9 +272,24 @@ bool FGDatagram::GetAirData(CAircraftState& pData)
 /// \param pData
 /// \return
 ///
-bool FGDatagram::SetAirData(const CAircraftState& /*pData*/)
+bool FGDatagram::SetAirData(const CAircraftState& pData)
 {
     if (!m_Sane) return false;
+    // Time of the sender : FlightGear interpolates the positions with it
+    m_Pos.Time = static_cast<double>(QDateTime::currentMSecsSinceEpoch()) / 1000.0;
+    m_Pos.Lag = 0.1;
+    GeodToCart(pData.Longitude, pData.Latitude, pData.Altitude, m_Pos.Position[0], m_Pos.Position[1], m_Pos.Position[2]);
+    EulerToFGOrientation(pData.Longitude, pData.Latitude, pData.Heading, pData.Pitch, pData.Bank, m_Pos.Orientation);
+    // Body frame : x forward
+    m_Pos.LinearVelocity[0] = static_cast<float>(pData.TASSpeed * SG_KT_TO_MPS);
+    m_Pos.LinearVelocity[1] = 0;
+    m_Pos.LinearVelocity[2] = 0;
+    for (int i=0; i<3; i++)
+    {
+        m_Pos.AngularVelocity[i] = 0;
+        m_Pos.LinearAccel[i] = 0;
+        m_Pos.AngularAccel[i] = 0;
+    }
     return true;
 }
 
@@ -349,9 +419,8 @@ bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
                 {
                     quint16 Len;
                     pStream >> Len;
-                    pPropData.string_value = new char [Len +1];
-                    pStream.readRawData(pPropData.string_value,Len);
-                    pPropData.string_value[Len]='\0'; // Null Ended String for C Compatibility
+                    pPropData.string_value = QByteArray(Len, '\0');
+                    pStream.readRawData(pPropData.string_value.data(),Len);
                 }
                 else
                 {
@@ -359,9 +428,8 @@ bool FGDatagram::GetProperty(QDataStream& pStream, FGPropertyData& pPropData)
                     pStream >> Len;
                     if (Len > MAX_TEXT_SIZE)
                         Len = MAX_TEXT_SIZE;
-                    pPropData.string_value = new char [Len +1];
-                    if (Len>0) pStream.readRawData(pPropData.string_value,static_cast<int>(Len));
-                    pPropData.string_value[Len]='\0'; // Null Ended String for C Compatibility
+                    pPropData.string_value = QByteArray(static_cast<qsizetype>(Len), '\0');
+                    if (Len>0) pStream.readRawData(pPropData.string_value.data(),static_cast<int>(Len));
                 }
                 Decoded=true;
                 break;

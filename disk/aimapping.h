@@ -32,6 +32,7 @@
 
 #include <QObject>
 #include <QtSql>
+#include <memory>
 #include "tools/clogger.h"
 #include "sim/simbasemanager.h"
 #include "ffs2play.qpb.h"
@@ -39,6 +40,7 @@
 #include "scaiparser.h"
 #endif
 #include "xpaiparser.h"
+#include "fgaiparser.h"
 #include "xpcslparser.h"
 
 class AIMapping : public QObject
@@ -48,14 +50,15 @@ class AIMapping : public QObject
 private:
     explicit                AIMapping(QObject *parent = nullptr);
     static  AIMapping*      createInstance();
-    CLogger*                m_log;
-    simbasemanager*         m_simManager;
+    CLogger&                m_log = CLogger::instance();
+    simbasemanager&         m_simManager = simbasemanager::instance();
     SimConnector::SIM_VERSION m_Version;
-    AIBaseParser*           m_AIParser;
+    /// Parser of the connected simulator, null when no simulator is connected
+    std::unique_ptr<AIBaseParser> m_AIParser;
 
 public:
                             ~AIMapping();
-    static	AIMapping*      instance();
+    static	AIMapping&      instance();
 
     void                    startScanSimObject();
     AIResol                 SolveTitle(const QString& pTitle, const QString& pModel, const QString& pType );
@@ -80,6 +83,7 @@ public:
     void                    cleanAIDB();
     QMap<QString,QString>   getRulesList();
     QString                 getAircraftPath(const QString& pTitle);
+    bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory);
     QString                 getFileData(const QString& pKey);
 
     bool                    addPath(const QString& pPath, const QString& pSim="");

@@ -30,6 +30,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <memory>
 #include <QSettings>
 #include <QTimer>
 #include <QListWidget>
@@ -84,7 +85,7 @@ private slots:
     void        on_rb_filterNone_toggled(bool checked);
     void        on_rb_filterNormal_toggled(bool checked);
     void        on_rb_filterVerbose_toggled(bool checked);
-    void        on_cb_filter_currentIndexChanged(const QString &arg1);
+    void        on_cb_filter_currentTextChanged(const QString &arg1);
     void        on_afFSType_triggered();
     void        on_leTchatSend_returnPressed();
     void        onPeerShowContextMenu(const QPoint&);
@@ -98,8 +99,8 @@ private slots:
     void        on_pteLogger_customContextMenuRequested(const QPoint &pos);
 
 private:
-    Ui::MainWindow* ui;
-    CLogger*        m_log;
+    std::unique_ptr<Ui::MainWindow> ui;
+    CLogger&        m_log = CLogger::instance();
     simbasemanager* m_simManager;
     CP2PManager*    m_P2PManager;
     CWebManager*    m_webManager;

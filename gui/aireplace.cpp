@@ -49,47 +49,43 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
     // Init GUI Part
     m_UI->setupUi(this);
     // Get Logger instance
-    m_Log = CLogger::instance();
 
     // Get P2PManager instance
-    m_P2PManager = CP2PManager::instance();
 
     // Get AIMapping instance
-    m_AIMapping = AIMapping::instance();
 
     // Get SimManager instance
-    m_SimManager = simbasemanager::instance();
 
     m_Peer = pPeer;
-    m_UI->leOriginal->setText(m_P2PManager->getTitle(m_Peer));
+    m_UI->leOriginal->setText(m_P2PManager.getTitle(m_Peer));
 
     // Fill Category List
-    m_UI->cbCategory->addItems(m_AIMapping->getCategoryList());
+    m_UI->cbCategory->addItems(m_AIMapping.getCategoryList());
     m_UI->cbCategory->insertItem(0,"*");
     m_UI->cbCategory->setCurrentIndex(0);
 
     // Fill Editor List
-    m_UI->cbEditor->addItems(m_AIMapping->getEditorList());
+    m_UI->cbEditor->addItems(m_AIMapping.getEditorList());
     m_UI->cbEditor->insertItem(0,"*");
     m_UI->cbEditor->setCurrentIndex(0);
 
     // Fill Type List
-    m_UI->cbType->addItems(m_AIMapping->getATCTypeList());
+    m_UI->cbType->addItems(m_AIMapping.getATCTypeList());
     m_UI->cbType->insertItem(0,"*");
     m_UI->cbType->setCurrentIndex(0);
 
     // Fill Model List
-    m_UI->cbModel->addItems(m_AIMapping->getATCModelList());
+    m_UI->cbModel->addItems(m_AIMapping.getATCModelList());
     m_UI->cbModel->insertItem(0,"*");
     m_UI->cbModel->setCurrentIndex(0);
 
     // Fill Engine Type
-    m_UI->cbEngineType->addItems(m_AIMapping->getEngineTypeList());
+    m_UI->cbEngineType->addItems(m_AIMapping.getEngineTypeList());
     m_UI->cbEngineType->insertItem(0,"*");
     m_UI->cbEngineType->setCurrentIndex(0);
 
     // Fill Number of Engine
-    m_UI->cbEngineNB->addItems(m_AIMapping->getNbEngineList());
+    m_UI->cbEngineNB->addItems(m_AIMapping.getNbEngineList());
     m_UI->cbEngineNB->insertItem(0,"*");
     m_UI->cbEngineNB->setCurrentIndex(0);
     m_dialog_initialized=true;
@@ -103,10 +99,7 @@ AIReplace::AIReplace(const QString& pPeer, QWidget *parent) :
 ///
 /// Destructor
 ///
-AIReplace::~AIReplace()
-{
-    delete m_UI;
-}
+AIReplace::~AIReplace() = default;
 
 void AIReplace::refreshReplacelist()
 {
@@ -118,15 +111,15 @@ void AIReplace::refreshReplacelist()
     QString EngineType = m_UI->cbEngineType->currentText();
     QString NbEngine = m_UI->cbEngineNB->currentText();
     m_UI->cbReplacement->clear();
-    m_UI->cbReplacement->addItems(m_AIMapping->getAITitleDispo(
+    m_UI->cbReplacement->addItems(m_AIMapping.getAITitleDispo(
                                       Category,
                                       Editor,
                                       Type,
                                       Model,
                                       EngineType,
                                       NbEngine));
-    QString RemoteAI = m_P2PManager->getTitle(m_Peer);
-    m_ExistingRule = m_AIMapping->getRule(RemoteAI);
+    QString RemoteAI = m_P2PManager.getTitle(m_Peer);
+    m_ExistingRule = m_AIMapping.getRule(RemoteAI);
     if (m_ExistingRule != "")
     {
         m_UI->cbReplacement->setCurrentIndex(m_UI->cbReplacement->findText(m_ExistingRule));
@@ -139,10 +132,10 @@ void AIReplace::refreshReplacelist()
     }
     else
     {
-        AIResol Solve =m_AIMapping->SolveTitle(
-                    m_P2PManager->getTitle(m_Peer),
-                    m_P2PManager->getModel(m_Peer),
-                    m_P2PManager->getType(m_Peer));
+        AIResol Solve =m_AIMapping.SolveTitle(
+                    m_P2PManager.getTitle(m_Peer),
+                    m_P2PManager.getModel(m_Peer),
+                    m_P2PManager.getType(m_Peer));
         int index =m_UI->cbReplacement->findText(Solve.title());
         if (index>-1)
         {
@@ -162,9 +155,9 @@ void AIReplace::on_btnDeleteRule_clicked()
     if (Selection.count()>0)
     {
         QString Source = Selection[0]->text();
-        m_AIMapping->delRule(Source);
+        m_AIMapping.delRule(Source);
         updateRulesTable();
-        m_P2PManager->ResetAI(m_Peer);
+        m_P2PManager.ResetAI(m_Peer);
     }
 }
 
@@ -175,8 +168,8 @@ void AIReplace::on_btnBox_accepted()
 {
     if (m_ExistingRule != m_UI->cbReplacement->currentText())
     {
-        m_AIMapping->addRule(m_UI->leOriginal->text(),m_UI->cbReplacement->currentText());
-        m_P2PManager->ResetAI(m_Peer);
+        m_AIMapping.addRule(m_UI->leOriginal->text(),m_UI->cbReplacement->currentText());
+        m_P2PManager.ResetAI(m_Peer);
     }
     close();
 }
@@ -190,55 +183,55 @@ void AIReplace::on_btnBox_rejected()
 }
 
 ///
-/// \brief AIReplace::on_cbCategory_currentIndexChanged
+/// \brief AIReplace::on_cbCategory_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbCategory_currentIndexChanged(const QString&)
+void AIReplace::on_cbCategory_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbEngineNB_currentIndexChanged
+/// \brief AIReplace::on_cbEngineNB_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbEngineNB_currentIndexChanged(const QString&)
+void AIReplace::on_cbEngineNB_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbEngineType_currentIndexChanged
+/// \brief AIReplace::on_cbEngineType_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbEngineType_currentIndexChanged(const QString&)
+void AIReplace::on_cbEngineType_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbType_currentIndexChanged
+/// \brief AIReplace::on_cbType_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbType_currentIndexChanged(const QString&)
+void AIReplace::on_cbType_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbModel_currentIndexChanged
+/// \brief AIReplace::on_cbModel_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbModel_currentIndexChanged(const QString&)
+void AIReplace::on_cbModel_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
 
 ///
-/// \brief AIReplace::on_cbEditor_currentIndexChanged
+/// \brief AIReplace::on_cbEditor_currentTextChanged
 /// \param arg1
 ///
-void AIReplace::on_cbEditor_currentIndexChanged(const QString&)
+void AIReplace::on_cbEditor_currentTextChanged(const QString&)
 {
     refreshReplacelist();
 }
@@ -246,7 +239,7 @@ void AIReplace::on_cbEditor_currentIndexChanged(const QString&)
 void AIReplace::updateRulesTable()
 {
     QMap<QString,QString> RulesList;
-    RulesList = m_AIMapping->getRulesList();
+    RulesList = m_AIMapping.getRulesList();
     for (int i=m_UI->twRules->rowCount(); i>0;i--)
     {
         m_UI->twRules->removeRow(i-1);

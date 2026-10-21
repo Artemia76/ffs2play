@@ -106,7 +106,7 @@ void MainWindow::on_afP2P_triggered()
 ///
 void MainWindow::on_rb_filterNone_toggled(bool checked)
 {
-    if (checked) m_log->setDebugLevel(LEVEL_NONE);
+    if (checked) m_log.setDebugLevel(LEVEL_NONE);
 }
 
 ///
@@ -115,7 +115,7 @@ void MainWindow::on_rb_filterNone_toggled(bool checked)
 ///
 void MainWindow::on_rb_filterNormal_toggled(bool checked)
 {
-    if (checked) m_log->setDebugLevel(LEVEL_NORMAL);
+    if (checked) m_log.setDebugLevel(LEVEL_NORMAL);
 }
 
 ///
@@ -124,16 +124,16 @@ void MainWindow::on_rb_filterNormal_toggled(bool checked)
 ///
 void MainWindow::on_rb_filterVerbose_toggled(bool checked)
 {
-    if (checked) m_log->setDebugLevel(LEVEL_VERBOSE);
+    if (checked) m_log.setDebugLevel(LEVEL_VERBOSE);
 }
 
 ///
-/// \brief MainWindow::on_cb_filter_currentIndexChanged
+/// \brief MainWindow::on_cb_filter_currentTextChanged
 /// \param arg1
 ///
-void MainWindow::on_cb_filter_currentIndexChanged(const QString &arg1)
+void MainWindow::on_cb_filter_currentTextChanged(const QString &arg1)
 {
-    m_log->setFilter(arg1);
+    m_log.setFilter(arg1);
 }
 
 ///
@@ -182,7 +182,7 @@ void MainWindow::onPeerShowContextMenu(const QPoint&pos)
         // If Title is available on the peer, we enable AI replacement tool
         if (m_P2PManager->getTitle(temp->text()) !=  "")
         {
-            myMenu.addAction("Mapping", this, SLOT(openMappingBox()));
+            myMenu.addAction("Mapping", this, &MainWindow::openMappingBox);
         }
 #ifdef FFS_DEBUG
         //Block data
@@ -190,17 +190,17 @@ void MainWindow::onPeerShowContextMenu(const QPoint&pos)
         if (m_P2PManager->getBlockedData(temp->text()))
         {
             QAction* BlockMenu;
-            BlockMenu = myMenu.addAction("Unblock Data", this, SLOT(unblockData()));
+            BlockMenu = myMenu.addAction("Unblock Data", this, &MainWindow::unblockData);
             BlockMenu->setCheckable(true);
             BlockMenu->setChecked(true);
         }
         else
         {
-            myMenu.addAction("Block Data", this, SLOT(blockData()));
+            myMenu.addAction("Block Data", this, &MainWindow::blockData);
         }
 #endif
         // Mask IA
-        QAction* MaskMenu = myMenu.addAction("Mask", this, SLOT(maskIA()));
+        QAction* MaskMenu = myMenu.addAction("Mask", this, &MainWindow::maskIA);
         MaskMenu->setCheckable(true);
         MaskMenu->setChecked(m_P2PManager->isDisabled(temp->text()));
         // Show context menu at handling position
@@ -260,8 +260,8 @@ void MainWindow::on_pteLogger_customContextMenuRequested(const QPoint &pos)
     QMenu *menu = ui->pteLogger->createStandardContextMenu();
     // Handle global position
     QPoint globalPos = ui->pteLogger->mapToGlobal(pos);
-    menu->addAction(tr("Clear"),this,SLOT(clearLog()));
-    menu->addAction(tr("Save"),this,SLOT(saveLog()));
+    menu->addAction(tr("Clear"),this, &MainWindow::clearLog);
+    menu->addAction(tr("Save"),this, &MainWindow::saveLog);
     menu->exec(globalPos);
     delete menu;
 }
@@ -293,7 +293,7 @@ void MainWindow::saveLog()
             QFile document (File);
             if(!document.open(QFile::WriteOnly | QFile::Text))
             {
-                m_log->log(tr("An Error occur while opening ") + document.fileName(),Qt::darkMagenta);
+                m_log.log(tr("An Error occur while opening ") + document.fileName(),Qt::darkMagenta);
                 return;
             }
             QTextStream writer (&document);

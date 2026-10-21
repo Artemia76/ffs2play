@@ -40,12 +40,10 @@ QString StringFromStream(QDataStream& pStream)
 {
     quint8 Len;
     pStream >> Len;
-    char* Buffer = new char[Len+1];
-    pStream.readRawData(Buffer,Len);
-    Buffer[Len]='\0';
-    QString Result(Buffer);
-    delete[] Buffer;
-    return Result;
+    QByteArray Buffer(Len, '\0');
+    pStream.readRawData(Buffer.data(),Len);
+    // As the former C string conversion : stops at the first null byte
+    return QString::fromUtf8(Buffer.constData(), qstrnlen(Buffer.constData(), Buffer.size()));
 }
 
 ///
@@ -55,8 +53,16 @@ QString StringFromStream(QDataStream& pStream)
 ///
 void StringToStream(QDataStream& pStream,const QString& pString)
 {
-    pStream << (quint8)pString.toStdString().length();
-    pStream.writeRawData(pString.toStdString().c_str(),(int)pString.toStdString().length());
+    QByteArray Utf8 = pString.toUtf8();
+    // The length is one byte : truncate to 255 bytes without cutting a UTF-8 sequence
+    if (Utf8.size() > 255)
+    {
+        qsizetype Len = 255;
+        while ((Len > 0) && ((static_cast<quint8>(Utf8[Len]) & 0xC0) == 0x80)) --Len;
+        Utf8.truncate(Len);
+    }
+    pStream << static_cast<quint8>(Utf8.size());
+    pStream.writeRawData(Utf8.constData(),static_cast<int>(Utf8.size()));
 }
 
 ///
@@ -95,10 +101,8 @@ bool ProtobufParse(QProtobufMessage& pMessage, QByteArrayView pData)
 
 QString CStringFromStream(QDataStream& pStream, size_t pLen)
 {
-    QString Response;
-    char* str = new char[pLen];
-    pStream.readRawData(str,static_cast<int>(pLen));
-    Response = QString::fromLocal8Bit(str);
-    delete[] str;
-    return Response;
+    QByteArray Buffer(static_cast<qsizetype>(pLen), '\0');
+    pStream.readRawData(Buffer.data(),static_cast<int>(pLen));
+    // Fixed size field : the string may fill it without null terminator
+    return QString::fromLocal8Bit(Buffer.constData(), qstrnlen(Buffer.constData(), Buffer.size()));
 }

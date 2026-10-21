@@ -44,7 +44,7 @@ class CHttpRequest : public QObject
 {
     Q_OBJECT
 public:
-    explicit                    CHttpRequest(QObject *pParent = 0);
+    explicit                    CHttpRequest(QObject *pParent = nullptr);
                                 ~CHttpRequest();
     void                        execute(const QString& pURL, QDomDocument& pDoc);
     void                        execute(const QString& pURL);
@@ -53,7 +53,7 @@ public:
     QUrl                        finalUrl() const;
 private:
     QString                     m_response;
-    CLogger*                    m_log;
+    CLogger&                    m_log = CLogger::instance();
     QNetworkRequest             m_request;
     QNetworkReply*              m_reply;
 static  QNetworkAccessManager*  m_ptNetworkManager;

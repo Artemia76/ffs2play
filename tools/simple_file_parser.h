@@ -31,6 +31,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <memory>
 #include <cstdlib>
 
 /**
@@ -157,18 +158,17 @@ public:
    */
   typedef std::vector<std::string> tokens_t;
 private:
+public:
   /**
-   * Private copy constructor.
    * Not copyable.
    */
-  simple_file_parser(const simple_file_parser& obj);
+  simple_file_parser(const simple_file_parser& obj) = delete;
 
   /**
-   * Private assignment operator.
    * Not assignable.
    */
-  simple_file_parser& operator=(const simple_file_parser& obj);
-public:
+  simple_file_parser& operator=(const simple_file_parser& obj) = delete;
+
   /**
    * Default constructor.
    */
@@ -401,11 +401,11 @@ private:
   void add_token(char* token);
 private:
   std::string    m_fn;
-  std::ifstream* m_ifs;
+  std::unique_ptr<std::ifstream> m_ifs;
   tokens_t       m_tokens;
   unsigned       m_lineno;
-  char*          m_buf;
   unsigned       m_bufsz;
+  std::vector<char> m_buf;
   bool           m_single_char_tokens[256];
   bool           m_in_comment;
 };
