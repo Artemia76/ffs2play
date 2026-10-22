@@ -41,6 +41,7 @@ protected:
     void    searchSimPath() override;
     QString findInstallationPath (const QString& pKey,QSettings::Format pFormat = QSettings::NativeFormat) override;
     void    DBFileUpdate(const QString& pKey,const QString& pPath) override;
+    QString findMSFS2020Packages();
 };
 
 #endif // SCAIPARSER_H

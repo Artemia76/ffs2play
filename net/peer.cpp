@@ -449,7 +449,9 @@ void CPeer::updateAI(datetime pTime, float pFPS)
             {
                 // Mise à jour de l'altitude sol de référence
                 m_old_GND_AI = m_AISimData.GroundAltitude;
-                m_AIData.Altitude = m_AISimData.GroundAltitude + m_AIResolution.cgHeight();
+                // MSFS 2024 lists no height for its models : the AI gives its own
+                const double CGHeight = (m_AIResolution.cgHeight() == 0.0) ? m_AISimData.StaticCGHeight : m_AIResolution.cgHeight();
+                m_AIData.Altitude = m_AISimData.GroundAltitude + CGHeight;
             }
             if (m_spawned >= 7)
             {

@@ -4,7 +4,9 @@
 #
 # Search hints, in order :
 #   SIMCONNECT_PATH (CMake or environment variable) : root of the "SimConnect SDK" folder
-#   MSFS_SDK / MSFS2024_SDK (environment, set by the MSFS SDK installer)
+#   MSFS2024_SDK, C:/MSFS 2024 SDK, then MSFS_SDK (MSFS 2020 SDK installer)
+# The MSFS 2024 SDK comes first : it also builds clients for MSFS 2020, and adds the
+# aircraft enumeration (SIMCONNECT_MSFS2024 is defined by CMakeLists.txt when present).
 #
 # Imported target :
 #   SimConnect::SimConnect
@@ -18,13 +20,14 @@ foreach(_root IN ITEMS "${SIMCONNECT_PATH}" "$ENV{SIMCONNECT_PATH}")
         list(APPEND _simconnect_hints "${_root}")
     endif()
 endforeach()
-foreach(_sdk IN ITEMS "$ENV{MSFS2024_SDK}" "$ENV{MSFS_SDK}")
-    if(_sdk)
-        list(APPEND _simconnect_hints "${_sdk}/SimConnect SDK")
-    endif()
-endforeach()
+if(DEFINED ENV{MSFS2024_SDK})
+    list(APPEND _simconnect_hints "$ENV{MSFS2024_SDK}/SimConnect SDK")
+endif()
+list(APPEND _simconnect_hints "C:/MSFS 2024 SDK/SimConnect SDK")
+if(DEFINED ENV{MSFS_SDK})
+    list(APPEND _simconnect_hints "$ENV{MSFS_SDK}/SimConnect SDK")
+endif()
 list(APPEND _simconnect_hints
-    "C:/MSFS 2024 SDK/SimConnect SDK"
     "C:/MSFS SDK/SimConnect SDK"
     "D:/MSFS SDK/SimConnect SDK")
 

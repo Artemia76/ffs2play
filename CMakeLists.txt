@@ -130,6 +130,7 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     sim/simbasemanager.cpp sim/simbasemanager.h
     sim/simconnector.cpp sim/simconnector.h
     sim/xpmanager.cpp sim/xpmanager.h
+    tools/atcname.cpp tools/atcname.h
     tools/calculation.cpp tools/calculation.h
     tools/clogger.cpp tools/clogger.h
     tools/crypto.cpp tools/crypto.h
@@ -177,8 +178,17 @@ endif()
 if(FFS2PLAY_WITH_SIMCONNECT)
     target_sources(ffs2play PRIVATE
         disk/scaiparser.cpp disk/scaiparser.h
+        disk/msfs2024aiparser.cpp disk/msfs2024aiparser.h
         sim/scmanager.cpp sim/scmanager.h)
     target_compile_definitions(ffs2play PRIVATE SIMCONNECT_BUILD)
+    # MSFS 2024 SDK : list of the aircraft and liveries the simulator can create
+    file(STRINGS "${SimConnect_INCLUDE_DIR}/SimConnect.h" _simconnect_enum
+         REGEX "SimConnect_EnumerateSimObjectsAndLiveries")
+    if(_simconnect_enum)
+        target_compile_definitions(ffs2play PRIVATE SIMCONNECT_MSFS2024)
+    else()
+        message(STATUS "SimConnect SDK without MSFS 2024 API : no aircraft list for MSFS 2024")
+    endif()
     target_link_libraries(ffs2play PRIVATE SimConnect::SimConnect)
     # The SDK ships SimConnect_debug.lib without its .pdb
     target_link_options(ffs2play PRIVATE $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/IGNORE:4099>)
