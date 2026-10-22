@@ -141,6 +141,18 @@ void AIMapping::onSimReceiveClose()
 }
 
 ///
+/// \brief AIMapping::rebuild
+/// After cleanAIDB : creates the parser again, it finds the simulator folders and scans them
+///
+void AIMapping::rebuild()
+{
+    if (!m_AIParser) return;
+    // The old parser and its SQLite connection are gone before the new one opens its own
+    m_AIParser.reset();
+    onSimReceiveOpen();
+}
+
+///
 /// \brief AIMapping::startScanSimObject
 ///
 void AIMapping::startScanSimObject()

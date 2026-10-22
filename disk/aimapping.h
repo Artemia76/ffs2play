@@ -83,6 +83,7 @@ public:
     void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
     void                    delRule(const QString& pRemoteTitle);
     void                    cleanAIDB();
+    void                    rebuild();
     QMap<QString,QString>   getRulesList();
     QString                 getAircraftPath(const QString& pTitle);
     bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,

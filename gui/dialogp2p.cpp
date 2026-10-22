@@ -488,7 +488,13 @@ void DialogP2P::on_pushButton_released()
     if (ret == QMessageBox::Yes)
     {
         m_AIMapping.cleanAIDB();
+        // Folders found again and new scan, without waiting for the next connection
+        m_AIMapping.rebuild();
         ui->lvItems->clear();
+        for (const QString& Item : m_AIMapping.getPathList())
+        {
+            ui->lvItems->addItem(Item);
+        }
     }
 }
 
