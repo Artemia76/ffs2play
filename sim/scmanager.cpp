@@ -348,6 +348,9 @@ void CSCManager::InitSimConnect()
     hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "GROUND ALTITUDE", "feet", SIMCONNECT_DATATYPE_FLOAT64);
     hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "Plane Longitude", "degrees", SIMCONNECT_DATATYPE_FLOAT64);
     hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "Plane Latitude", "degrees", SIMCONNECT_DATATYPE_FLOAT64);
+    // MSFS 2024 : no aircraft.cfg gives the height of the model, the AI tells it
+    if (m_version.Major == 12)
+        hr = SimConnect_AddToDataDefinition(m_hSimConnect,DEFINITION_ID::AI_UPDATE, "STATIC CG TO GROUND", "feet", SIMCONNECT_DATATYPE_FLOAT64);
 
 
     // Data events on change
@@ -684,6 +687,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
                 AIData.GroundAltitude = Data->SolAltitude;
                 AIData.Longitude = Data->Longitude;
                 AIData.Latitude = Data->Latitude;
+                if (m_version.Major == 12) AIData.StaticCGHeight = Data->StaticCGHeight;
                 emit fireSimAIUpdated(AIData,data->dwObjectID);
             }
             else

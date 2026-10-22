@@ -51,6 +51,7 @@ CAircraftState::CAircraftState ()
     SpoilerPos=0;
     ParkingBrakePos=0;
     GroundAltitude = 0;
+    StaticCGHeight = 0;
     Weight = 0;
     TotalFuelCapacity = 0;
     Vario = 0;

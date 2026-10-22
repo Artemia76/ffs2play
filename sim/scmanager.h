@@ -277,6 +277,8 @@ struct AIUpdateStruct
     double  SolAltitude;
     double  Longitude;
     double  Latitude;
+    /// MSFS 2024 only : not requested from the other simulators
+    double  StaticCGHeight;
 };
 #pragma pack()
 
