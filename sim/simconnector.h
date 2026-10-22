@@ -120,6 +120,7 @@ public:
         XPLANE_CSL,
         FLIGHTGEAR,
         FS2020,
+        FS2024,
         UNKNOWN
     };
     Q_ENUM(SIM_VERSION)

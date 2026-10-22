@@ -145,6 +145,8 @@ SimConnector::SIM_VERSION CSCManager::getVersion()
             return SimConnector::SIM_VERSION::FSX;
         case 11:
             return SimConnector::SIM_VERSION::FS2020;
+        case 12:
+            return SimConnector::SIM_VERSION::FS2024;
         default:
             return SimConnector::SIM_VERSION::UNKNOWN;
     }
@@ -383,6 +385,11 @@ void CSCManager::OnRecvOpen (SIMCONNECT_RECV_OPEN* data)
     m_log.log(tr("Connected to simulator."));
     m_version.Major = static_cast<int>(data->dwApplicationVersionMajor);
     m_version.Minor = static_cast<int>(data->dwApplicationVersionMinor);
+#ifdef FFS_DEBUG
+    m_log.log("SCManager : Application = " + QString::fromLocal8Bit(data->szApplicationName) +
+              " Major = " + QString::number(m_version.Major) +
+              " Minor = " + QString::number(m_version.Minor), Qt::darkBlue,LEVEL_NORMAL);
+#endif
     InitSimConnect();
     // Keep connexion status
     m_connected = true;
