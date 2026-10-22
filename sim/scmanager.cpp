@@ -41,6 +41,15 @@ CSCManager::CSCManager(QObject* parent):
     m_nextAIRequest(static_cast<quint32>(REQUEST_ID::AI_CREATE))
 {
     m_log.log("SCManager : " + tr("FSX/Prepar3D Module loaded"));
+#ifdef SIMCONNECT_MSFS2024
+    m_listTimer.setSingleShot(true);
+    m_listTimer.setInterval(30000);
+    connect(&m_listTimer, &QTimer::timeout, this, [this]()
+    {
+        m_log.log("SCManager : aircraft list timed out", Qt::darkMagenta,LEVEL_NORMAL);
+        endAircraftList(false);
+    });
+#endif
 }
 
 ///
@@ -101,6 +110,12 @@ void CSCManager::close ()
     m_messageBuffer.clear();
     m_AIProcess.clear();
     m_record.clear();
+#ifdef SIMCONNECT_MSFS2024
+    m_listTimer.stop();
+    m_objectList.clear();
+    m_listPending.clear();
+    m_listSendID.clear();
+#endif
     if (m_connected)
     {
         m_connected = false;
@@ -207,6 +222,13 @@ void CSCManager::process(SIMCONNECT_RECV *pData, DWORD)
             OnRecvAssignedObjectId(reinterpret_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID*>(pData));
             break;
         }
+#ifdef SIMCONNECT_MSFS2024
+        case SIMCONNECT_RECV_ID_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST:
+        {
+            OnRecvSimObjectLiveryList(reinterpret_cast<SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST*>(pData));
+            break;
+        }
+#endif
         default:
         {
 #ifdef FFS_DEBUG
@@ -459,7 +481,86 @@ void CSCManager::OnRecvException (SIMCONNECT_RECV_EXCEPTION* data)
                tr(" Related method invoked = ") + m_record.value(data->dwSendID),
                Qt::red,LEVEL_NORMAL);
     m_record.remove(data->dwSendID);
+#ifdef SIMCONNECT_MSFS2024
+    // The simulator failed to build the aircraft list : keep what was received
+    if (m_listSendID.contains(data->dwSendID)) endAircraftList(false);
+#endif
 }
+
+///
+/// \brief CSCManager::requestAircraftList
+/// Only MSFS 2024 lists its aircraft : its files are packed, they cannot be parsed
+/// \return false if the simulator does not provide the list
+///
+bool CSCManager::requestAircraftList()
+{
+#ifdef SIMCONNECT_MSFS2024
+    if (getVersion() != SIM_VERSION::FS2024) return false;
+    // A list is already on its way
+    if (!m_listPending.isEmpty()) return true;
+    m_objectList.clear();
+    m_listSendID.clear();
+    const QList<QPair<REQUEST_ID, SIMCONNECT_SIMOBJECT_TYPE>> Requests =
+    {
+        {REQUEST_ID::AIRCRAFT_LIST, SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT},
+        {REQUEST_ID::HELICOPTER_LIST, SIMCONNECT_SIMOBJECT_TYPE_HELICOPTER}
+    };
+    for (const auto& Request : Requests)
+    {
+        const DWORD RequestID = static_cast<DWORD>(Request.first);
+        if (FAILED(SimConnect_EnumerateSimObjectsAndLiveries(m_hSimConnect, RequestID, Request.second))) continue;
+        trace("SimConnect_EnumerateSimObjectsAndLiveries");
+        DWORD SendID;
+        SimConnect_GetLastSentPacketID(m_hSimConnect, &SendID);
+        m_listSendID.insert(SendID);
+        m_listPending.insert(RequestID);
+    }
+    if (m_listPending.isEmpty()) return false;
+    m_listTimer.start();
+    return true;
+#else
+    return false;
+#endif
+}
+
+#ifdef SIMCONNECT_MSFS2024
+///
+/// \brief CSCManager::OnRecvSimObjectLiveryList
+/// One page of the aircraft list
+/// \param data
+///
+void CSCManager::OnRecvSimObjectLiveryList(SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST* data)
+{
+    if (!m_listPending.contains(data->dwRequestID)) return;
+    for (DWORD i = 0; i < data->dwArraySize; i++)
+    {
+        m_objectList.append(qMakePair(QString::fromUtf8(data->rgData[i].AircraftTitle),
+                                      QString::fromUtf8(data->rgData[i].LiveryName)));
+    }
+#ifdef FFS_DEBUG
+    m_log.log("SCManager : aircraft list " + QString::number(data->dwRequestID) + " page " +
+              QString::number(data->dwEntryNumber + 1) + "/" + QString::number(data->dwOutOf) + " : " +
+              QString::number(data->dwArraySize) + " entries", Qt::darkBlue,LEVEL_VERBOSE);
+#endif
+    if (data->dwEntryNumber + 1 >= data->dwOutOf) m_listPending.remove(data->dwRequestID);
+    if (m_listPending.isEmpty()) endAircraftList(true);
+    else m_listTimer.start();
+}
+
+///
+/// \brief CSCManager::endAircraftList
+/// \param pComplete false if some pages are missing
+///
+void CSCManager::endAircraftList(bool pComplete)
+{
+    m_listTimer.stop();
+    m_listPending.clear();
+    m_listSendID.clear();
+    QList<QPair<QString,QString>> List;
+    List.swap(m_objectList);
+    emit fireSimObjectList(List, pComplete);
+}
+#endif
 
 ///
 /// \brief CSCManager::OnRecvEvent
@@ -829,6 +930,32 @@ bool CSCManager::createAI(AIResol &pAircraft, const QString &pTail, const CAircr
             m_nextAIRequest = static_cast<quint32>(REQUEST_ID::AI_CREATE);
         m_AIProcess.insert(index,pTail);
         HRESULT result;
+#ifdef SIMCONNECT_MSFS2024
+        // MSFS 2024 : the livery listed with the title is kept in the path of the resolution
+        if (getVersion() == SIM_VERSION::FS2024)
+        {
+            if (!pNonAIObject)
+            {
+                result = SimConnect_AICreateNonATCAircraft_EX1(m_hSimConnect,
+                                                               pAircraft.title().toUtf8().constData(),
+                                                               pAircraft.path().toUtf8().constData(),
+                                                               pTail.toStdString().c_str(),
+                                                               data,
+                                                               static_cast<SIMCONNECT_DATA_REQUEST_ID>(index));
+                trace("SimConnect_AICreateNonATCAircraft_EX1");
+            }
+            else
+            {
+                result = SimConnect_AICreateSimulatedObject_EX1(m_hSimConnect,
+                                                                pAircraft.title().toUtf8().constData(),
+                                                                pAircraft.path().toUtf8().constData(),
+                                                                data,
+                                                                static_cast<SIMCONNECT_DATA_REQUEST_ID>(index));
+                trace("SimConnect_AICreateSimulatedObject_EX1");
+            }
+            return result>=0;
+        }
+#endif
         if (!pNonAIObject)
         {
             result = SimConnect_AICreateNonATCAircraft(m_hSimConnect,

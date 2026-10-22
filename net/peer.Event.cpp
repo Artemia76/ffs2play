@@ -417,6 +417,10 @@ void CPeer::OnTimerCreateAI()
                     m_AIResolution.setCgHeight(0.0);
                     m_AIResolution.setPitch(0.0);
                     break;
+                case SimConnector::SIM_VERSION::FS2024:
+                    // Default aircraft chosen in the list of the simulator
+                    m_AIResolution = m_AIMapping.SolveTitle(QString(), QString(), QString());
+                    break;
                 case SimConnector::SIM_VERSION::FLIGHTGEAR:
                     m_AIResolution.setTitle("Aircraft/c172p/Models/c172p.xml");
                     m_AIResolution.setCgHeight(0.0);

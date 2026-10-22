@@ -88,6 +88,9 @@ void AIMapping::onSimReceiveOpen()
         case SimConnector::SIM_VERSION::FS2020:
         m_AIParser = std::make_unique<SCAIParser>();
         break;
+        case SimConnector::SIM_VERSION::FS2024:
+        m_AIParser = std::make_unique<MSFS2024AIParser>();
+        break;
 #endif
         case SimConnector::SIM_VERSION::XPLANE:
         {

@@ -67,7 +67,8 @@ protected:
     /// Simulator type of the scan, read by the scan thread instead of simbasemanager
     SIM_TYPE                m_ScanSim;
 
-    void                    startScanSimObject();
+virtual void                startScanSimObject();
+    void                    finishScan();
     QString                 getAircraftPath(const QString& pTitle);
     bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,
                                             QString* pPath = nullptr, int* pNbEngine = nullptr, int* pEngineType = nullptr);

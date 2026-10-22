@@ -93,6 +93,7 @@ static simbasemanager&          instance();
     void                        setCallSignColor(const QColor& pColor);
     QColor                      getCallSignColor();
     void                        setPathList(const QStringList& pPaths);
+    bool                        requestAircraftList();
 
 private slots:
     void                        OnSimVariableEvent(CAircraftState);
@@ -119,6 +120,7 @@ signals:
     void                        fireSimAIUpdated(CAircraftState, uint);
     void                        fireSimAIRemoved(uint);
     void                        fireSimEventFrame(float,float);
+    void                        fireSimObjectList(QList<QPair<QString,QString>> pList, bool pComplete);
 };
 
 #endif // SIMBASEMANAGER_H

@@ -33,6 +33,8 @@
 #include <QObject>
 #include <QDateTime>
 #include <QWinEventNotifier>
+#include <QTimer>
+#include <QSet>
 #include <memory>
 
 #include <windows.h>
@@ -143,6 +145,8 @@ enum class REQUEST_ID
     SYSTEM,
     JOY_INFO,
     AI_RELEASE,
+    AIRCRAFT_LIST,
+    HELICOPTER_LIST,
     AI_CREATE = 0x100000,
     AI_UPDATE = 0x200000,
 };
@@ -301,6 +305,19 @@ private:
     const float             m_timeToScroll=10.0;
     QHash<uint, QString>    m_AIProcess;
     QHash<DWORD, QString>   m_record;
+#ifdef SIMCONNECT_MSFS2024
+    /// Aircraft list being received (MSFS 2024), sent in several pages per request
+    QList<QPair<QString,QString>> m_objectList;
+    /// Requests of the list not finished yet
+    QSet<DWORD>             m_listPending;
+    /// Packets of the list requests, to recognize their exceptions
+    QSet<DWORD>             m_listSendID;
+    /// Gives up if the simulator stops sending pages
+    QTimer                  m_listTimer;
+
+    void                    OnRecvSimObjectLiveryList(SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST* data);
+    void                    endAircraftList(bool pComplete);
+#endif
 
     void                    InitSimConnect();
     void                    OnRecvOpen (SIMCONNECT_RECV_OPEN* data);
@@ -328,6 +345,7 @@ protected:
     void                    freezeAI(uint pObjectID,bool pState) override;
     void                    sendOptions() override {}
     void                    sendCallSignColor() override {}
+    bool                    requestAircraftList() override;
 };
 
 #endif // SIMCONNECT_H

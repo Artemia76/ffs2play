@@ -38,6 +38,7 @@
 #include "ffs2play.qpb.h"
 #ifdef SIMCONNECT_BUILD
 #include "scaiparser.h"
+#include "msfs2024aiparser.h"
 #endif
 #include "xpaiparser.h"
 #include "fgaiparser.h"

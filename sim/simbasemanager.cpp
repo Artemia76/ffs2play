@@ -126,6 +126,7 @@ void simbasemanager::load(SIM_TYPE pSimType)
     connect(Connector, &SimConnector::fireSimConnected, this, &simbasemanager::OnSimConnected);
     connect(Connector, &SimConnector::fireSimDisconnected, this, &simbasemanager::OnSimDisconnected);
     connect(Connector, &SimConnector::fireSimTimedOut, this, &simbasemanager::OnSimTimedOut);
+    connect(Connector, &SimConnector::fireSimObjectList, this, &simbasemanager::fireSimObjectList);
     emit loaded(m_simType);
 }
 
@@ -231,6 +232,17 @@ SimConnector::SIM_VERSION simbasemanager::getVersion()
         Version = m_connector->getVersion();
     }
     return Version;
+}
+
+///
+/// \brief simbasemanager::requestAircraftList
+/// \return false if the simulator does not provide the list of its aircraft
+///
+bool simbasemanager::requestAircraftList()
+{
+    if (m_initialized && (m_connector!=nullptr))
+        return m_connector->requestAircraftList();
+    return false;
 }
 
 ///
