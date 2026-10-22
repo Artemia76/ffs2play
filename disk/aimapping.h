@@ -98,6 +98,7 @@ signals:
 private slots:
     void                    onSimReceiveOpen();
     void                    onSimReceiveClose();
+    void                    onSimEvent(SimEvent pEvent);
 public slots:
 };
 

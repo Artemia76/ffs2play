@@ -40,6 +40,7 @@ AIMapping::AIMapping(QObject *parent) : QObject(parent)
 {
     connect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
     connect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
+    connect(&m_simManager, &simbasemanager::fireSimEvent, this, &AIMapping::onSimEvent);
     m_Version = SimConnector::SIM_VERSION::UNKNOWN;
 }
 
@@ -50,6 +51,7 @@ AIMapping::~AIMapping()
 {
     disconnect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
     disconnect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
+    disconnect(&m_simManager, &simbasemanager::fireSimEvent, this, &AIMapping::onSimEvent);
 }
 
 ///
@@ -116,6 +118,17 @@ void AIMapping::onSimReceiveOpen()
     connect(m_AIParser.get(), &AIBaseParser::fireScanFinished, this, &AIMapping::fireScanFinished);
     m_AIParser->startScanSimObject();
     m_simManager.setPathList(getPathList());
+}
+
+///
+/// \brief AIMapping::onSimEvent
+/// MSFS 2024 can install aircraft while running : its list is read again at each flight
+/// \param pEvent
+///
+void AIMapping::onSimEvent(SimEvent pEvent)
+{
+    if ((pEvent.Evt_Id == SIM_EVENT_ID::SIMSTART) && (m_Version == SimConnector::SIM_VERSION::FS2024) && isInit())
+        m_AIParser->startScanSimObject();
 }
 
 ///
