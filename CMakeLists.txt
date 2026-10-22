@@ -130,6 +130,7 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     sim/simbasemanager.cpp sim/simbasemanager.h
     sim/simconnector.cpp sim/simconnector.h
     sim/xpmanager.cpp sim/xpmanager.h
+    tools/atcname.cpp tools/atcname.h
     tools/calculation.cpp tools/calculation.h
     tools/clogger.cpp tools/clogger.h
     tools/crypto.cpp tools/crypto.h

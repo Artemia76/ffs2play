@@ -29,6 +29,7 @@
 
 #include "scmanager.h"
 #include "tools/singleton.h"
+#include "tools/atcname.h"
 
 #include <QCoreApplication>
 
@@ -647,7 +648,8 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
             m_state.IASSpeed = Data->IASSpeed;
             m_state.Latitude = Data->Latitude;
             m_state.Longitude = Data->Longitude;
-            m_state.Model = Data->Model;
+            // MSFS : "TT:ATCCOM.AC_MODEL C172.0.text" -> "C172"
+            m_state.Model = atcName(QString::fromUtf8(Data->Model));
             m_state.NumEngine = Data->NumEngine;
             m_state.Altitude = Data->PlaneAltitude;
             m_state.Bank = Data->PlaneBank;
@@ -670,7 +672,7 @@ void CSCManager::OnRecvSimObjectData (SIMCONNECT_RECV_SIMOBJECT_DATA* data)
             m_state.Title = Data->Title;
             m_state.TotalFuelCapacity = Data->TotalFuelCapacity;
             m_state.Squawk = Data->Squawk;
-            m_state.Type = Data->Type;
+            m_state.Type = atcName(QString::fromUtf8(Data->Type));
             m_state.Vario = Data->Vario*60;
             emit fireSimVariableEvent(m_state);
             break;

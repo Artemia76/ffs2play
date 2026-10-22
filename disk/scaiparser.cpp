@@ -28,6 +28,7 @@
 
 #include "scaiparser.h"
 #include "tools/iniparser.h"
+#include "tools/atcname.h"
 
 SCAIParser::SCAIParser(QObject *parent) : AIBaseParser(parent)
 {
@@ -77,8 +78,9 @@ void SCAIParser::DBFileUpdate(const QString &pKey, const QString &pPath)
                 double Static_CG_Height=0.0;
                 double Static_Pitch = 0.0;
                 Editor = s.value("fltsim.0", "ui_createdby").toString();
-                Atc_model = s.value("General","icao_model").toString();
-                Atc_type =  s.value("General","icao_type_designator").toString();
+                // MSFS 2020 may write localization keys ("TT:ATCCOM.AC_MODEL C172.0.text")
+                Atc_model = atcName(s.value("General","icao_model").toString());
+                Atc_type =  atcName(s.value("General","icao_type_designator").toString());
                 Category =  s.value("General","Category").toString().toLower();
                 Category = Category.remove(' ');
                 Engine_Type =  s.value("General","icao_engine_type").toInt();
