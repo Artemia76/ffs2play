@@ -277,6 +277,15 @@ void AIBaseParser::scanSimObject()
     m_Thread_DB.close();
     m_Thread_DB = QSqlDatabase();
     QSqlDatabase::removeDatabase(thread_address);
+    finishScan();
+}
+
+///
+/// \brief AIBaseParser::finishScan
+/// Reports the counters of the update
+///
+void AIBaseParser::finishScan()
+{
     m_log.log(tr("End of update : ") + QString::number(m_NbAdded) +
                tr(" aircrafts added, ") + QString::number(m_NbUpdated) +
                tr(" updated and ") + QString::number(m_NbDeleted) + tr(" deleted."));
@@ -449,6 +458,25 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             Resol.setCgHeight(0.0);
             Resol.setPitch(0.0);
             break;
+        case SimConnector::SIM_VERSION::FS2024:
+        {
+            // No title is sure to exist : one of the listed aircraft, the 172 if possible
+            if (m_Initialized)
+            {
+                QSqlQuery query(m_DB);
+                query.prepare("SELECT Title, Path FROM Aircrafts WHERE Sim = :Sim "
+                              "ORDER BY (Title <> 'C172SP G1000 Passengers'), (Title NOT LIKE '%172%'), Title LIMIT 1");
+                query.bindValue(":Sim",m_Table);
+                if (query.exec() && query.next())
+                {
+                    Resol.setTitle(query.value(0).toString());
+                    Resol.setPath(query.value(1).toString());
+                }
+            }
+            Resol.setCgHeight(0.0);
+            Resol.setPitch(0.0);
+            break;
+        }
         case SimConnector::SIM_VERSION::FLIGHTGEAR:
             // Delivered with FlightGear
             Resol.setTitle("Aircraft/c172p/Models/c172p.xml");

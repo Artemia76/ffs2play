@@ -40,6 +40,7 @@ AIMapping::AIMapping(QObject *parent) : QObject(parent)
 {
     connect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
     connect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
+    connect(&m_simManager, &simbasemanager::fireSimEvent, this, &AIMapping::onSimEvent);
     m_Version = SimConnector::SIM_VERSION::UNKNOWN;
 }
 
@@ -50,6 +51,7 @@ AIMapping::~AIMapping()
 {
     disconnect(&m_simManager, &simbasemanager::opened, this, &AIMapping::onSimReceiveOpen);
     disconnect(&m_simManager, &simbasemanager::closed, this, &AIMapping::onSimReceiveClose);
+    disconnect(&m_simManager, &simbasemanager::fireSimEvent, this, &AIMapping::onSimEvent);
 }
 
 ///
@@ -88,6 +90,9 @@ void AIMapping::onSimReceiveOpen()
         case SimConnector::SIM_VERSION::FS2020:
         m_AIParser = std::make_unique<SCAIParser>();
         break;
+        case SimConnector::SIM_VERSION::FS2024:
+        m_AIParser = std::make_unique<MSFS2024AIParser>();
+        break;
 #endif
         case SimConnector::SIM_VERSION::XPLANE:
         {
@@ -116,12 +121,35 @@ void AIMapping::onSimReceiveOpen()
 }
 
 ///
+/// \brief AIMapping::onSimEvent
+/// MSFS 2024 can install aircraft while running : its list is read again at each flight
+/// \param pEvent
+///
+void AIMapping::onSimEvent(SimEvent pEvent)
+{
+    if ((pEvent.Evt_Id == SIM_EVENT_ID::SIMSTART) && (m_Version == SimConnector::SIM_VERSION::FS2024) && isInit())
+        m_AIParser->startScanSimObject();
+}
+
+///
 /// \brief AIMapping::onSimReceiveClose
 ///
 void AIMapping::onSimReceiveClose()
 {
     // Waits for the end of a running scan (AIBaseParser destructor)
     m_AIParser.reset();
+}
+
+///
+/// \brief AIMapping::rebuild
+/// After cleanAIDB : creates the parser again, it finds the simulator folders and scans them
+///
+void AIMapping::rebuild()
+{
+    if (!m_AIParser) return;
+    // The old parser and its SQLite connection are gone before the new one opens its own
+    m_AIParser.reset();
+    onSimReceiveOpen();
 }
 
 ///
@@ -369,6 +397,15 @@ QStringList AIMapping::getPathList()
     if (isInit())
         List = m_AIParser->getPathList();
     return List;
+}
+
+///
+/// \brief AIMapping::needPaths
+/// \return false if the simulator gives its aircraft list (MSFS 2024) : no folder to configure
+///
+bool AIMapping::needPaths()
+{
+    return isInit() && m_AIParser->needPaths();
 }
 
 ///

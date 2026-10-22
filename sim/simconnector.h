@@ -120,6 +120,7 @@ public:
         XPLANE_CSL,
         FLIGHTGEAR,
         FS2020,
+        FS2024,
         UNKNOWN
     };
     Q_ENUM(SIM_VERSION)
@@ -152,6 +153,9 @@ virtual bool            removeAI(uint& pObjectID)=0;
 virtual bool            updateAI(uint pObjectID, const CAircraftState& data)=0;
 virtual void            freezeAI(uint pObjectID, bool pState)=0;
 virtual void            sendCallSignColor()=0;
+    /// Asks the simulator for the aircraft it can create (answer : fireSimObjectList)
+    /// \return false if the simulator does not provide this list
+virtual bool            requestAircraftList() { return false; }
 
 
 signals:
@@ -165,6 +169,8 @@ signals:
     void            fireSimConnected();
     void            fireSimDisconnected();
     void            fireSimTimedOut();
+    /// Aircraft (title, livery) the simulator can create ; pComplete is false if the list is partial
+    void            fireSimObjectList(QList<QPair<QString,QString>> pList, bool pComplete);
 
 public slots:
 };

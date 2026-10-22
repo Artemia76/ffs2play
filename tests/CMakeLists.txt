@@ -2,6 +2,7 @@ find_package(Qt6 REQUIRED COMPONENTS Test)
 
 qt_add_executable(tst_core
     tst_core.cpp
+    ${PROJECT_SOURCE_DIR}/tools/atcname.cpp ${PROJECT_SOURCE_DIR}/tools/atcname.h
     ${PROJECT_SOURCE_DIR}/tools/clogger.cpp ${PROJECT_SOURCE_DIR}/tools/clogger.h
     ${PROJECT_SOURCE_DIR}/tools/crypto.cpp ${PROJECT_SOURCE_DIR}/tools/crypto.h
     ${PROJECT_SOURCE_DIR}/tools/datagram.cpp ${PROJECT_SOURCE_DIR}/tools/datagram.h

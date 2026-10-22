@@ -45,6 +45,7 @@
 #include "tools/fgpropertylist.h"
 #include "sim/fgdatagram.h"
 #include "tools/calculation.h"
+#include "tools/atcname.h"
 
 class TestCore : public QObject
 {
@@ -86,6 +87,10 @@ private slots:
     void fgDatagramProperties();
     void fgDatagramVelocity();
     void fgDatagramAirDataRoundTrip();
+
+    // ATC type / model of MSFS (tools/atcname)
+    void atcName_data();
+    void atcName();
 };
 
 namespace
@@ -968,6 +973,27 @@ void TestCore::fgDatagramAirDataRoundTrip()
     QVERIFY(Standby.SetAirData(State));
     QCOMPARE(Standby.PropertyValue(simgear::FGProp::TransponderId), double(simgear::FGProp::TransponderNone));
     QCOMPARE(Standby.PropertyValue(simgear::FGProp::TransponderAltitude), double(simgear::FGProp::TransponderNone));
+}
+
+void TestCore::atcName_data()
+{
+    QTest::addColumn<QString>("value");
+    QTest::addColumn<QString>("expected");
+    QTest::newRow("type key") << "TT:ATCCOM.ATC_NAME CESSNA.0.text" << "CESSNA";
+    QTest::newRow("model key") << "TT:ATCCOM.AC_MODEL C172.0.text" << "C172";
+    QTest::newRow("model key underscore") << "TT:ATCCOM.AC_MODEL_B738.0.text" << "B738";
+    QTest::newRow("key without TT") << "ATCCOM.AC_MODEL A320.0.text" << "A320";
+    QTest::newRow("literal") << "$$:Cessna" << "Cessna";
+    QTest::newRow("plain") << " C172 " << "C172";
+    QTest::newRow("plain with dot") << "Cessna 172P (160 hp)" << "Cessna 172P (160 hp)";
+    QTest::newRow("empty") << "" << "";
+}
+
+void TestCore::atcName()
+{
+    QFETCH(QString, value);
+    QFETCH(QString, expected);
+    QCOMPARE(::atcName(value), expected);
 }
 
 QTEST_GUILESS_MAIN(TestCore)

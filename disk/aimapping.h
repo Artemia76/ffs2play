@@ -38,6 +38,7 @@
 #include "ffs2play.qpb.h"
 #ifdef SIMCONNECT_BUILD
 #include "scaiparser.h"
+#include "msfs2024aiparser.h"
 #endif
 #include "xpaiparser.h"
 #include "fgaiparser.h"
@@ -77,10 +78,12 @@ public:
     QStringList             getNbEngineList();
 
     QStringList             getPathList();
+    bool                    needPaths();
     QString                 getRule(const QString& pTitle);
     void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
     void                    delRule(const QString& pRemoteTitle);
     void                    cleanAIDB();
+    void                    rebuild();
     QMap<QString,QString>   getRulesList();
     QString                 getAircraftPath(const QString& pTitle);
     bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,
@@ -96,6 +99,7 @@ signals:
 private slots:
     void                    onSimReceiveOpen();
     void                    onSimReceiveClose();
+    void                    onSimEvent(SimEvent pEvent);
 public slots:
 };
 

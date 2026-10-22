@@ -67,7 +67,8 @@ protected:
     /// Simulator type of the scan, read by the scan thread instead of simbasemanager
     SIM_TYPE                m_ScanSim;
 
-    void                    startScanSimObject();
+virtual void                startScanSimObject();
+    void                    finishScan();
     QString                 getAircraftPath(const QString& pTitle);
     bool                    getAircraftInfo(const QString& pTitle, QString& pModel, QString& pType, QString& pCategory,
                                             QString* pPath = nullptr, int* pNbEngine = nullptr, int* pEngineType = nullptr);
@@ -101,6 +102,8 @@ protected:
     virtual void            searchSimPath(){}
     virtual QString         findInstallationPath (const QString&,QSettings::Format){return "";}
     QStringList             getPathList();
+    /// false if the aircraft list does not come from folders
+virtual bool                needPaths() const { return true; }
     QString                 MD5Hash(const QString& pFileName);
     void                    initSQLite();
     void                    DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);

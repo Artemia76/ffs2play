@@ -269,7 +269,8 @@ void MainWindow::onWM_Exit()
 ///
 void MainWindow::onAIScanFinished(int pNbAdded, int pNbUpdated, int pNBDeleted)
 {
-    if (m_simManager->isConnected()&& (m_AIMapping->getPathList().count()==0) && (!m_P2PDialogVisible))
+    if (m_simManager->isConnected() && m_AIMapping->needPaths() &&
+        (m_AIMapping->getPathList().count()==0) && (!m_P2PDialogVisible))
     {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, tr("Simulator Aircraft Folder"),tr("at least one folder is not configured for your simulator. Do you want add the path location now?"),QMessageBox::Yes|QMessageBox::No);

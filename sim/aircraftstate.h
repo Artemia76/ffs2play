@@ -58,6 +58,8 @@ public:
     double      SpoilerPos;
     double      ParkingBrakePos;
     double      GroundAltitude;
+    /// Height of the CG above the ground at rest (feet), given by MSFS 2024 for its AIs ; 0 if unknown
+    double      StaticCGHeight;
     double      Weight;
     double      TotalFuelCapacity;
     double      Vario;

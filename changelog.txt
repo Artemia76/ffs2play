@@ -1,5 +1,15 @@
 ChangeLog:
 
+2.4.2 : Microsoft Flight Simulator 2024 support
+        MSFS 2024 : aircraft list asked to the simulator (title and livery), no folder to configure,
+                    read again at each flight ; AIs created with their livery
+        MSFS 2020 / 2024 : plain ATC type and model (CESSNA, C172) sent to the peers
+        MSFS 2020 : aircraft folders found automatically (UserCfg.opt)
+        AI database rebuilt right after its reset
+        FlightGear : peers animations (gear, flaps, lights, doors, propellers) through multiplayer properties
+        Known limits : MSFS 2024 gives no ICAO type for its aircraft (no AI match by model),
+                       AIs sit about 10 cm too high on the ground
+
 2.4.1 : FlightGear support in release builds
         FlightGear : ICAO type, type and category of the aircraft from the installed aircraft (-set.xml)
         FlightGear : attitude of the aircraft, peers displayed as multiplayer aircraft
