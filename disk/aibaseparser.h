@@ -102,6 +102,8 @@ virtual void                startScanSimObject();
     virtual void            searchSimPath(){}
     virtual QString         findInstallationPath (const QString&,QSettings::Format){return "";}
     QStringList             getPathList();
+    /// false if the aircraft list does not come from folders
+virtual bool                needPaths() const { return true; }
     QString                 MD5Hash(const QString& pFileName);
     void                    initSQLite();
     void                    DBTableVersionCheck(const QString& pTable, int pVersion, bool pForceClean = false);

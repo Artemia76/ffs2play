@@ -375,6 +375,15 @@ QStringList AIMapping::getPathList()
 }
 
 ///
+/// \brief AIMapping::needPaths
+/// \return false if the simulator gives its aircraft list (MSFS 2024) : no folder to configure
+///
+bool AIMapping::needPaths()
+{
+    return isInit() && m_AIParser->needPaths();
+}
+
+///
 /// \brief AIMapping::addPath
 /// \param pPath
 /// \return

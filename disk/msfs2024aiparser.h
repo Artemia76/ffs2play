@@ -46,6 +46,7 @@ public:
 protected:
     void    startScanSimObject() override;
     void    DBFileUpdate(const QString&, const QString&) override {}
+    bool    needPaths() const override { return false; }
 
 private:
     void    onSimObjectList(const QList<QPair<QString,QString>>& pList, bool pComplete);

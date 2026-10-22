@@ -460,11 +460,12 @@ AIResol AIBaseParser::SolveTitle(const QString& pTitle, const QString& pModel, c
             break;
         case SimConnector::SIM_VERSION::FS2024:
         {
-            // No title is sure to exist : one of the listed aircraft, a 172 if possible
+            // No title is sure to exist : one of the listed aircraft, the 172 if possible
             if (m_Initialized)
             {
                 QSqlQuery query(m_DB);
-                query.prepare("SELECT Title, Path FROM Aircrafts WHERE Sim = :Sim ORDER BY (Title NOT LIKE '%172%'), Title LIMIT 1");
+                query.prepare("SELECT Title, Path FROM Aircrafts WHERE Sim = :Sim "
+                              "ORDER BY (Title <> 'C172SP G1000 Passengers'), (Title NOT LIKE '%172%'), Title LIMIT 1");
                 query.bindValue(":Sim",m_Table);
                 if (query.exec() && query.next())
                 {

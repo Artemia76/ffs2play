@@ -78,6 +78,7 @@ public:
     QStringList             getNbEngineList();
 
     QStringList             getPathList();
+    bool                    needPaths();
     QString                 getRule(const QString& pTitle);
     void                    addRule(const QString& pRemoteTitle, const QString& pLocalTitle);
     void                    delRule(const QString& pRemoteTitle);
