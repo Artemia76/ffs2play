@@ -125,11 +125,14 @@ DialogP2P::DialogP2P(QWidget *parent)
     if (CWebManager::instance().isConnected()) ui->numPort->setEnabled(false);
 
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
-    if (m_SimManager.getVersion()==SimConnector::SIM_VERSION::UNKNOWN)
+    // No simulator, or a simulator giving its aircraft list (MSFS 2024) : no folder to configure.
+    // The reset button of the group stays enabled.
+    if ((m_SimManager.getVersion()==SimConnector::SIM_VERSION::UNKNOWN) || (!m_AIMapping.needPaths()))
     {
         ui->btnAddItem->setEnabled(false);
         ui->btnDelItem->setEnabled(false);
         ui->lvItems->setEnabled(false);
+        ui->label_7->setEnabled(false);
     }
 }
 
