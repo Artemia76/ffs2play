@@ -231,6 +231,61 @@ void SCAIParser::searchSimPath()
 #endif
         }
     }
+
+    // MSFS 2020 is not in the registry : its packages folder is written in UserCfg.opt
+    const QString FS2020 = version.valueToKey(SimConnector::SIM_VERSION::FS2020);
+    query.prepare("SELECT Path FROM SimPaths WHERE Sim = :Sim;");
+    query.bindValue(":Sim",FS2020);
+    if (query.exec() && !query.next())
+    {
+        const QString Packages = findMSFS2020Packages();
+        if (!Packages.isEmpty())
+        {
+#ifdef FFS_DEBUG
+            m_log.log("AIMapping : Path found for " + FS2020 + " = " + Packages, Qt::darkYellow,LEVEL_NORMAL);
+#endif
+            // Steam or Microsoft Store edition
+            for (const QString& Official : {QString("/Official/Steam"), QString("/Official/OneStore")})
+            {
+                if (QDir(Packages + Official).exists()) addPath(Packages + Official, FS2020);
+            }
+            if (QDir(Packages + "/Community").exists()) addPath(Packages + "/Community", FS2020);
+        }
+    }
+}
+
+///
+/// \brief SCAIParser::findMSFS2020Packages
+/// \return packages folder of MSFS 2020 (InstalledPackagesPath of UserCfg.opt), empty if not installed
+///
+QString SCAIParser::findMSFS2020Packages()
+{
+    const QStringList UserCfgs =
+    {
+        // Steam edition
+        QDir::fromNativeSeparators(qEnvironmentVariable("APPDATA")) + "/Microsoft Flight Simulator/UserCfg.opt",
+        // Microsoft Store edition
+        QDir::fromNativeSeparators(qEnvironmentVariable("LOCALAPPDATA")) +
+            "/Packages/Microsoft.FlightSimulator_8wekyb3d8bbwe/LocalCache/UserCfg.opt"
+    };
+    for (const QString& UserCfg : UserCfgs)
+    {
+        QFile File(UserCfg);
+        if (!File.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
+        while (!File.atEnd())
+        {
+            // InstalledPackagesPath "D:\MSFS\Packages"
+            const QString Line = QString::fromUtf8(File.readLine()).trimmed();
+            if (!Line.startsWith("InstalledPackagesPath")) continue;
+            const qsizetype First = Line.indexOf('"');
+            const qsizetype Last = Line.lastIndexOf('"');
+            if ((First < 0) || (Last <= First)) break;
+            const QString Path = QDir::fromNativeSeparators(Line.mid(First + 1, Last - First - 1));
+            if (QDir(Path).exists()) return Path;
+            break;
+        }
+    }
+    return QString();
 }
 
 ///
