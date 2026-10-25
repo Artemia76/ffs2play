@@ -144,7 +144,7 @@ install_deps() {
         suse)
             $SUDO zypper --non-interactive install \
                 gcc-c++ cmake ninja git rpm-build libopenssl-devel protobuf-devel \
-                qt6-base-devel qt6-base-private-devel qt6-tools-devel qt6-linguist-devel qt6-protobuf-devel \
+                qt6-base-devel qt6-gui-private-devel qt6-core-private-devel qt6-tools-devel qt6-linguist-devel qt6-protobuf-devel \
                 qt6-sql-sqlite ;;
         arch)
             $SUDO pacman -S --needed --noconfirm \
