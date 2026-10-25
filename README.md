@@ -36,9 +36,16 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 	UPnP port mapping is built in (Qt Network), miniupnpc, Crypto++ and libprotobuf are no longer needed.
 
 1. Build on Linux
-	1. UBUNTU (24.04 or newer)
+	1. Native package for the running distribution (.deb, .rpm or Arch package), built against the distribution Qt
+	   (Qt >= 6.8 : Debian 13, Ubuntu 25.04, Fedora 41, openSUSE Tumbleweed, Arch Linux or newer) :
 
-			sudo apt-get install build-essential cmake ninja-build libssl-dev protobuf-compiler qt6-base-dev qt6-tools-dev qt6-l10n-tools libqt6sql6-sqlite qt6-protobuf-dev qt6-protobuf-tools
+			packaging/linux/build-package.sh --install-deps
+
+		The package is written to out/packages/ ; `--help` lists the options (forced format, build folder, no tests).
+
+	1. Debian (13 or newer) / Ubuntu (25.04 or newer)
+
+			sudo apt-get install build-essential cmake ninja-build libssl-dev protobuf-compiler qt6-base-dev qt6-tools-dev qt6-l10n-tools libqt6sql6-sqlite qt6-grpc-dev qt6-grpc-tools
 
 	1. Arch Linux
 
