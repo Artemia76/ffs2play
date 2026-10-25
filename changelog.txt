@@ -1,6 +1,6 @@
 ChangeLog:
 
-2.5.0 : Updates from the FFS2Play portal
+2.5.1 : Updates from the FFS2Play portal (2.5.0 was tagged but never released)
         Update check through https://ffs2play.fr (packages published on GitHub), stable or beta channel
         FFS2Play downloads the update, checks its SHA-256 and installs it : Windows installer, macOS disk image,
                  AppImage replaced in place, .deb / .rpm / Arch package through the distribution package manager
