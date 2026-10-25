@@ -72,9 +72,10 @@ private:
     // Flag to memorize if something is changed on current profil edition
     bool                m_changed;
 
-    QListWidgetItem*    m_currentProfil;
+    QListWidgetItem*    m_currentProfil = nullptr;
     // Method to enable or disable all texts entries
     void                lineEditEnable(bool pFlag);
+    void                showProfil(QListWidgetItem* pItem);
 
     void                checkIfChanged();
 
