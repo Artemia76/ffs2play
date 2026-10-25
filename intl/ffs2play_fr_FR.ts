@@ -611,6 +611,10 @@
 <context>
     <name>DialogProfils</name>
     <message>
+        <source>This profile is connected to the server. Disconnect before deleting it.</source>
+        <translation>Ce profil est connecté au serveur. Se déconnecter avant de le supprimer.</translation>
+    </message>
+    <message>
         <location filename="../gui/dialogprofils.ui" line="20"/>
         <source>Users Profils</source>
         <translation>Profils Utilisateurs</translation>
