@@ -118,10 +118,23 @@ void DialogProfils::on_btnAdd_pressed()
 void DialogProfils::on_btnDelete_pressed()
 {
     int row = ui->listWidget->currentRow();
-    m_webManager.m_users.removeAt(row);
-    QListWidgetItem *item = ui->listWidget->takeItem(row);
-    delete item;
-    m_webManager.SaveConfig();
+    if ((row < 0) || (row >= m_webManager.m_users.count())) return;
+    // The portal requests use the current profile until the logout
+    if (m_webManager.isConnected() && (row+1 == m_webManager.m_currentUser))
+    {
+        QMessageBox::warning(this,tr("Warning"),tr("This profile is connected to the server. Disconnect before deleting it."));
+        return;
+    }
+    // The edits of the deleted profile are dropped, without question
+    m_changed = false;
+    m_currentProfil = nullptr;
+    m_webManager.RemoveUser(row);
+    {
+        // currentItemChanged would be sent while the item is still in the list
+        const QSignalBlocker Blocker(ui->listWidget);
+        delete ui->listWidget->takeItem(row);
+    }
+    showProfil(ui->listWidget->currentItem());
 }
 
 
@@ -146,25 +159,35 @@ void DialogProfils::on_listWidget_currentItemChanged(QListWidgetItem* pCurrent, 
                 applyChangedItem();
             }
         }
-        if ((ui->listWidget->count() >0) && (pCurrent!=nullptr))
-        {
-            SUser user = m_webManager.m_users.at(getCurrentRow());
-            ui->lineEdit_Login->setText(user.Login);
-            ui->lineEdit_Password->setText(user.Password);
-            ui->lineEdit_ProfilName->setText(user.Profil);
-            ui->lineEdit_URL->setText(user.URL);
-            lineEditEnable(true);
-        }
-        else
-        {
-            ui->lineEdit_Login->clear();
-            ui->lineEdit_Password->clear();
-            ui->lineEdit_ProfilName->clear();
-            ui->lineEdit_URL->clear();
-            lineEditEnable(false);
-        }
-        m_currentProfil = pCurrent;
+        showProfil(pCurrent);
     }
+}
+
+///
+/// \brief DialogProfils::showProfil
+/// \param pItem profile to edit, nullptr to clear and disable the fields
+///
+void DialogProfils::showProfil(QListWidgetItem* pItem)
+{
+    const int row = (pItem != nullptr) ? ui->listWidget->row(pItem) : -1;
+    if ((row >= 0) && (row < m_webManager.m_users.count()))
+    {
+        SUser user = m_webManager.m_users.at(row);
+        ui->lineEdit_Login->setText(user.Login);
+        ui->lineEdit_Password->setText(user.Password);
+        ui->lineEdit_ProfilName->setText(user.Profil);
+        ui->lineEdit_URL->setText(user.URL);
+        lineEditEnable(true);
+    }
+    else
+    {
+        ui->lineEdit_Login->clear();
+        ui->lineEdit_Password->clear();
+        ui->lineEdit_ProfilName->clear();
+        ui->lineEdit_URL->clear();
+        lineEditEnable(false);
+    }
+    m_currentProfil = pItem;
 }
 
 ///
@@ -241,7 +264,14 @@ int DialogProfils::getCurrentRow()
 void DialogProfils::checkIfChanged()
 {
     m_changed = false;
-    SUser User = m_webManager.m_users.at(getCurrentRow());
+    const int row = getCurrentRow();
+    // No profile selected (empty list) : nothing to apply
+    if (row < 0)
+    {
+        ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+        return;
+    }
+    SUser User = m_webManager.m_users.at(row);
     if (ui->lineEdit_ProfilName->text() != User.Profil) m_changed =true;
     if (ui->lineEdit_Login->text() != User.Login) m_changed =true;
     if (ui->lineEdit_Password->text() != User.Password) m_changed =true;
