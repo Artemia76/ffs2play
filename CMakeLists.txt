@@ -308,10 +308,32 @@ if(WIN32)
 elseif(APPLE)
     set(CPACK_GENERATOR DragNDrop)
 else()
+    # Native packages built against the distribution Qt (packaging/linux/build-package.sh)
+    set(FFS2PLAY_PACKAGE_RELEASE "1" CACHE STRING "Linux package release (e.g. 1+debian13, 1.fc42)")
+    set(FFS2PLAY_PACKAGE_DEPENDS "" CACHE STRING
+        "Extra runtime dependencies of the Linux package (Qt plugins the linker can not see)")
     set(CPACK_GENERATOR DEB)
+    set(CPACK_DEBIAN_PACKAGE_NAME ffs2play)
+    set(CPACK_DEBIAN_PACKAGE_RELEASE "${FFS2PLAY_PACKAGE_RELEASE}")
     set(CPACK_DEBIAN_PACKAGE_SECTION games)
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "${FFS2PLAY_PACKAGE_DEPENDS}")
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+    set(CPACK_RPM_PACKAGE_NAME ffs2play)
+    set(CPACK_RPM_PACKAGE_RELEASE "${FFS2PLAY_PACKAGE_RELEASE}")
+    set(CPACK_RPM_PACKAGE_LICENSE "GPL-3.0-or-later")
+    set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
+    set(CPACK_RPM_PACKAGE_URL "${PROJECT_HOMEPAGE_URL}")
+    set(CPACK_RPM_PACKAGE_AUTOREQ ON)
+    set(CPACK_RPM_PACKAGE_REQUIRES "${FFS2PLAY_PACKAGE_DEPENDS}")
+    set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
+    # Directories owned by the filesystem / hicolor-icon-theme packages
+    set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+        /usr/share/applications
+        /usr/share/icons
+        /usr/share/icons/hicolor
+        /usr/share/icons/hicolor/72x72
+        /usr/share/icons/hicolor/72x72/apps)
 endif()
 
 include(CPack)
