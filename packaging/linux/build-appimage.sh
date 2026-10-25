@@ -108,13 +108,32 @@ for _lib in libssl.so.3 libcrypto.so.3; do
     _ssl_libs+=(--library "$_path")
 done
 
+# Qt plugins seen by linuxdeploy-plugin-qt : all of them, but only the SQLite driver
+# (the other drivers of the Qt installer need client libraries such as libmimerapi, absent here).
+# A qmake wrapper points QT_INSTALL_PLUGINS to this filtered view ; the Qt installation is unchanged.
+QT_PLUGINS="$("$QMAKE" -query QT_INSTALL_PLUGINS)"
+PLUGINS_VIEW="$BUILD_DIR/qt-plugins"
+rm -rf "$PLUGINS_VIEW"
+mkdir -p "$PLUGINS_VIEW/sqldrivers"
+for _dir in "$QT_PLUGINS"/*; do
+    [[ "$(basename "$_dir")" == sqldrivers ]] || ln -s "$_dir" "$PLUGINS_VIEW/"
+done
+ln -s "$QT_PLUGINS/sqldrivers/libqsqlite.so" "$PLUGINS_VIEW/sqldrivers/"
+{
+    echo '#!/bin/sh'
+    echo "if [ \"\$*\" = \"-query QT_INSTALL_PLUGINS\" ]; then echo \"$PLUGINS_VIEW\"; exit 0; fi"
+    echo "\"$QMAKE\" \"\$@\" | sed 's|^QT_INSTALL_PLUGINS:.*|QT_INSTALL_PLUGINS:$PLUGINS_VIEW|'"
+} > "$BUILD_DIR/qmake"
+chmod +x "$BUILD_DIR/qmake"
+QMAKE="$BUILD_DIR/qmake"
+
 info "Bundling Qt in the AppImage"
 # containers have no FUSE : run the tools extracted
 export APPIMAGE_EXTRACT_AND_RUN=1
 export QMAKE
 export LDAI_OUTPUT="$OUTPUT_DIR/ffs2play-$VERSION-$ARCH.AppImage"
 # Wayland support when the Qt build provides it
-if [[ -d "$("$QMAKE" -query QT_INSTALL_PLUGINS)/wayland-shell-integration" ]]; then
+if [[ -d "$QT_PLUGINS/wayland-shell-integration" ]]; then
     export EXTRA_PLATFORM_PLUGINS="libqwayland-generic.so;libqwayland-egl.so"
 fi
 rm -f "$LDAI_OUTPUT"

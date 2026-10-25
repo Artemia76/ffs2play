@@ -113,7 +113,8 @@ jobs:
         run: |
           if command -v apt-get >/dev/null; then apt-get update && apt-get install -y git ca-certificates
           elif command -v dnf >/dev/null; then dnf install -y git
-          elif command -v zypper >/dev/null; then zypper --non-interactive install git tar gzip
+          # the image ships busybox-gawk, which conflicts with the gawk required by rpm-build
+          elif command -v zypper >/dev/null; then zypper --non-interactive install --force-resolution git tar gzip gawk
           elif command -v pacman >/dev/null; then pacman -Syu --noconfirm git
           fi
 
@@ -173,8 +174,16 @@ jobs:
             libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 \
             libxcb-shape0 libxcb-xinerama0 libxcb-xkb1 libwayland-cursor0 libwayland-egl1
 
+      # on failure, the end of the log goes to an annotation (readable without signing in)
       - name: AppImage
-        run: packaging/linux/build-appimage.sh --output out/packages
+        run: |
+          set +e
+          packaging/linux/build-appimage.sh --output out/packages 2>&1 | tee appimage.log
+          rc=${PIPESTATUS[0]}
+          if [ $rc -ne 0 ]; then
+            echo "::error title=AppImage::$(tail -n 40 appimage.log | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')"
+          fi
+          exit $rc
 
       - uses: actions/upload-artifact@v5
         with:
