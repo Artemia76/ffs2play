@@ -141,6 +141,21 @@ void CWebManager::SaveConfig()
 }
 
 ///
+/// \brief CWebManager::RemoveUser
+/// Removes a profile and keeps the current profile number on the same profile
+/// (0 when the list becomes empty)
+/// \param pIndex index of the profile in m_users
+///
+void CWebManager::RemoveUser(int pIndex)
+{
+    if ((pIndex<0) || (pIndex>=m_users.count())) return;
+    m_users.removeAt(pIndex);
+    if (m_currentUser > pIndex+1) m_currentUser--;
+    else if (m_currentUser > m_users.count()) m_currentUser = m_users.count();
+    SaveConfig();
+}
+
+///
 /// \brief CWebManager::SetCurrentUser
 /// \param num
 ///

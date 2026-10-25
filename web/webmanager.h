@@ -113,6 +113,7 @@ protected:
     QVector<SUser>      m_users;
     void                SaveConfig();
     void                SetCurrentUser(int pNum);
+    void                RemoveUser(int pIndex);
 
 public:
                         ~CWebManager();

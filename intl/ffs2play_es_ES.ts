@@ -4,6 +4,14 @@
 <context>
     <name>AIBaseParser</name>
     <message>
+        <source>CSL folder found : </source>
+        <translation>Carpeta CSL encontrada : </translation>
+    </message>
+    <message>
+        <source>No CSL folder found : add it in the P2P settings</source>
+        <translation>Ninguna carpeta CSL encontrada : añádala en los ajustes P2P</translation>
+    </message>
+    <message>
         <location filename="../disk/aibaseparser.cpp" line="225"/>
         <source>Start updating aircraft database...</source>
         <translation>Comenzar a actualizar la base de datos de aeronaves ...</translation>
@@ -610,6 +618,10 @@
 </context>
 <context>
     <name>DialogProfils</name>
+    <message>
+        <source>This profile is connected to the server. Disconnect before deleting it.</source>
+        <translation>Este perfil está conectado al servidor. Desconéctese antes de eliminarlo.</translation>
+    </message>
     <message>
         <location filename="../gui/dialogprofils.ui" line="20"/>
         <source>Users Profils</source>

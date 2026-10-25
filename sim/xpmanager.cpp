@@ -107,6 +107,7 @@ void CXPManager::close ()
 SimConnector::SIM_VERSION CXPManager::getVersion()
 {
     if (!m_connected) return SimConnector::SIM_VERSION::UNKNOWN;
+    if (isCSLOnlyPlugin(m_version)) return SimConnector::SIM_VERSION::XPLANE_CSL;
     if (getOption(UseAI)) return SimConnector::SIM_VERSION::XPLANE;
     if (getOption(UseCSL)) return SimConnector::SIM_VERSION::XPLANE_CSL;
     return SimConnector::SIM_VERSION::UNKNOWN;
@@ -284,6 +285,18 @@ void CXPManager::sendCallSignColor()
     stream << (quint8)m_CallSignColor.blue();
     QNetworkDatagram Output(Data,m_XPPlugin,m_DestPort);
     m_Server->send(Output);
+}
+
+///
+/// \brief CXPManager::setAIPaths
+/// The folders are known after the connection (AIMapping) and change with the P2P settings:
+/// the plugin gets the whole list each time (docs/contracts/xplane-link.md in ffs2-suite)
+/// \param pPaths CSL packages folders
+///
+void CXPManager::setAIPaths(const QStringList& pPaths)
+{
+    SimConnector::setAIPaths(pPaths);
+    if (getVersion() == SIM_VERSION::XPLANE_CSL) sendAIPaths();
 }
 
 ///
