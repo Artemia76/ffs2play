@@ -69,10 +69,28 @@ endif()
 option(FFS2PLAY_WITH_SIMCONNECT "Build FSX / P3D / MSFS support through SimConnect (Windows / MSVC only)" ${_simconnect_default})
 option(FFS2PLAY_BUILD_TESTS "Build unit tests" ON)
 
+# How the package installs FFS2Play : tells the portal which update to offer (suite contract update-api.md).
+# An AppImage is detected at run time ; empty = development build, no automatic installation.
+if(WIN32)
+    set(_package_format_default inno)
+elseif(APPLE)
+    set(_package_format_default dmg)
+else()
+    set(_package_format_default "")
+endif()
+set(FFS2PLAY_PACKAGE_FORMAT "${_package_format_default}" CACHE STRING
+    "Installation format announced to the update API : inno, dmg, deb, rpm, arch, tgz, appimage or empty")
+
 # =======================================================================
 # Dependencies
 
 find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets Network Sql Xml Protobuf LinguistTools)
+# Private zip reader (xffs2play plugin package), in QtGui or QtCore depending on the Qt version :
+# Qt6::GuiPrivate also brings Qt6::CorePrivate. The private modules are separate packages since Qt 6.9.
+if(Qt6_VERSION VERSION_GREATER_EQUAL 6.9)
+    find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
+endif()
+set(FFS2PLAY_QT_ZIP Qt6::GuiPrivate)
 qt_standard_project_setup(I18N_SOURCE_LANGUAGE en I18N_TRANSLATED_LANGUAGES fr_FR es_ES)
 # qt_standard_project_setup only enables AUTOMOC / AUTOUIC : ressources.qrc needs AUTORCC
 set(CMAKE_AUTORCC ON)
@@ -112,9 +130,11 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     disk/fgaiparser.cpp disk/fgaiparser.h
     disk/xpaiparser.cpp disk/xpaiparser.h
     disk/xpcslparser.cpp disk/xpcslparser.h
+    disk/pluginpackage.cpp disk/pluginpackage.h
     gui/aireplace.cpp gui/aireplace.h gui/aireplace.ui
     gui/dialogp2p.cpp gui/dialogp2p.h gui/dialogp2p.ui
     gui/dialogprofils.cpp gui/dialogprofils.h gui/dialogprofils.ui
+    gui/dialogupdate.cpp gui/dialogupdate.h
     gui/mainwindow.cpp gui/mainwindow.GuiEvents.cpp gui/mainwindow.h gui/mainwindow.ui
     gui/theme.cpp gui/theme.h
     net/p2pmanager.cpp net/p2pmanager.h
@@ -144,6 +164,8 @@ qt_add_executable(ffs2play WIN32 MACOSX_BUNDLE
     tools/version.h
     web/chttprequest.cpp web/chttprequest.h
     web/caddrrequest.cpp web/caddrrequest.h
+    web/cupdatemanager.cpp web/cupdatemanager.h
+    web/updateinfo.cpp web/updateinfo.h
     web/webmanager.cpp web/webmanager.Callback.cpp web/webmanager.Requests.cpp
     web/webmanager.Utils.cpp web/webmanager.h
     ressources.qrc
@@ -158,10 +180,11 @@ target_compile_definitions(ffs2play PRIVATE
     APP_BUILD=${PROJECT_VERSION_PATCH}
     $<$<CONFIG:Debug>:FFS_DEBUG=1>
     QT_DISABLE_DEPRECATED_UP_TO=0x060800
+    FFS2PLAY_PACKAGE_FORMAT="${FFS2PLAY_PACKAGE_FORMAT}"
 )
 
 target_link_libraries(ffs2play PRIVATE
-    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Network Qt6::Sql Qt6::Xml Qt6::Protobuf
+    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Network Qt6::Sql Qt6::Xml Qt6::Protobuf ${FFS2PLAY_QT_ZIP}
     ffs2play_proto
     OpenSSL::Crypto
 )
@@ -169,7 +192,7 @@ target_link_libraries(ffs2play PRIVATE
 if(WIN32)
     target_sources(ffs2play PRIVATE ffs2play.rc)
     target_compile_definitions(ffs2play PRIVATE _WINSOCKAPI_ NOMINMAX)
-    target_link_libraries(ffs2play PRIVATE shlwapi ws2_32 iphlpapi user32 ole32)
+    target_link_libraries(ffs2play PRIVATE shlwapi shell32 ws2_32 iphlpapi user32 ole32)
     if(OPENSSL_USE_STATIC_LIBS)
         target_link_libraries(ffs2play PRIVATE crypt32 advapi32)
     endif()

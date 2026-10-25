@@ -46,6 +46,14 @@
 #include "sim/fgdatagram.h"
 #include "tools/calculation.h"
 #include "tools/atcname.h"
+#include "web/updateinfo.h"
+#include "disk/pluginpackage.h"
+
+#if __has_include(<QtCore/private/qzipwriter_p.h>)
+#include <QtCore/private/qzipwriter_p.h>
+#else
+#include <QtGui/private/qzipwriter_p.h>
+#endif
 
 class TestCore : public QObject
 {
@@ -91,6 +99,17 @@ private slots:
     // ATC type / model of MSFS (tools/atcname)
     void atcName_data();
     void atcName();
+
+    // Update API of the portal (web/updateinfo) and plugin package (disk/pluginpackage)
+    void updateParse();
+    void updateParseInvalid();
+    void updateOsRelease();
+    void updateInstallCommand();
+    void updateSha256();
+    void updateIsNewer();
+    void updateQuery();
+    void pluginPackageInstall();
+    void pluginPackageRejected();
 };
 
 namespace
@@ -994,6 +1013,196 @@ void TestCore::atcName()
     QFETCH(QString, value);
     QFETCH(QString, expected);
     QCOMPARE(::atcName(value), expected);
+}
+
+void TestCore::updateParse()
+{
+    const QByteArray Json = R"({"app":"ffs2play","channel":"beta","update_available":true,"mandatory":true,
+        "latest":{"version":"2.5.0","prerelease":true,"published":"2026-11-01T12:00:00Z","notes":"## Notes",
+                  "page_url":"https://github.com/Artemia76/ffs2play/releases/tag/2.5.0","requires":{"ffs2play":"2.4.3"}},
+        "asset":{"name":"ffs2play_2.5.0-1+debian13_amd64.deb","url":"https://example.org/p.deb","size":1234,
+                 "sha256":"ABCDEF0123456789abcdef0123456789abcdef0123456789abcdef0123456789","format":"deb"},
+        "alternatives":[{"name":"ffs2play-2.5.0-x86_64.AppImage","url":"https://example.org/a","size":9,"format":"appimage"}],
+        "reason":null,"future_field":1})";
+    SUpdateInfo Info;
+    QVERIFY(UpdateInfo::parse(Json, Info));
+    QVERIFY(Info.Available);
+    QVERIFY(Info.Mandatory);
+    QVERIFY(Info.Prerelease);
+    QCOMPARE(Info.Version, QString("2.5.0"));
+    QCOMPARE(Info.RequiredClient, QString("2.4.3"));
+    QVERIFY(Info.HasAsset);
+    QCOMPARE(Info.Asset.Format, QString("deb"));
+    QCOMPARE(Info.Asset.Size, qint64(1234));
+    QCOMPARE(Info.Asset.Sha256, QString("abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"));
+    QCOMPARE(Info.Alternatives.size(), 1);
+    QVERIFY(Info.Alternatives.first().Sha256.isEmpty());
+    QVERIFY(Info.Reason.isEmpty());
+
+    // no package for this system
+    SUpdateInfo None;
+    QVERIFY(UpdateInfo::parse(R"({"app":"xffs2play","update_available":true,"mandatory":false,
+        "latest":{"version":"2.2.0-beta1"},"asset":null,"alternatives":[],"reason":"client_too_old"})", None));
+    QVERIFY(!None.HasAsset);
+    QCOMPARE(None.Reason, QString("client_too_old"));
+}
+
+void TestCore::updateParseInvalid()
+{
+    SUpdateInfo Info;
+    QVERIFY(!UpdateInfo::parse("", Info));
+    QVERIFY(!UpdateInfo::parse("<html>", Info));
+    QVERIFY(!UpdateInfo::parse(R"({"error":"catalog_unavailable"})", Info));
+    QVERIFY(!UpdateInfo::parse(R"({"error":"invalid_parameter","field":"os"})", Info));
+    // update without version : not usable
+    QVERIFY(UpdateInfo::parse(R"({"update_available":true,"latest":null})", Info));
+    QVERIFY(!Info.Available);
+}
+
+void TestCore::updateOsRelease()
+{
+    QTemporaryFile File;
+    QVERIFY(File.open());
+    File.write("# comment\nNAME=\"Linux Mint\"\nID=linuxmint\nVERSION_ID=\"22.1\"\nID_LIKE='ubuntu debian'\nBROKEN\n");
+    File.close();
+    const SOsRelease Release = UpdateInfo::readOsRelease(File.fileName());
+    QCOMPARE(Release.Id, QString("linuxmint"));
+    QCOMPARE(Release.VersionId, QString("22.1"));
+    QCOMPARE(Release.IdLike, QString("ubuntu debian"));
+    QVERIFY(UpdateInfo::readOsRelease("/does/not/exist").Id.isEmpty());
+}
+
+void TestCore::updateInstallCommand()
+{
+    QCOMPARE(UpdateInfo::installCommand("deb", "/tmp/p.deb", false), QStringList({"apt-get", "install", "-y", "/tmp/p.deb"}));
+    QCOMPARE(UpdateInfo::installCommand("rpm", "/tmp/p.rpm", false), QStringList({"dnf", "install", "-y", "/tmp/p.rpm"}));
+    QCOMPARE(UpdateInfo::installCommand("rpm", "/tmp/p.rpm", true).first(), QString("zypper"));
+    QVERIFY(UpdateInfo::installCommand("rpm", "/tmp/p.rpm", true).contains("--allow-unsigned-rpm"));
+    QCOMPARE(UpdateInfo::installCommand("arch", "/tmp/p.pkg.tar.zst", false).first(), QString("pacman"));
+    QVERIFY(UpdateInfo::installCommand("tgz", "/tmp/p.tar.gz", false).isEmpty());
+}
+
+void TestCore::updateSha256()
+{
+    QTemporaryFile File;
+    QVERIFY(File.open());
+    File.write("abc");
+    File.close();
+    // FIPS 180-2 test vector
+    QVERIFY(UpdateInfo::checkSha256(File.fileName(), "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD"));
+    QVERIFY(!UpdateInfo::checkSha256(File.fileName(), "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ae"));
+    QVERIFY(!UpdateInfo::checkSha256(File.fileName(), ""));
+    QVERIFY(!UpdateInfo::checkSha256("/does/not/exist", "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"));
+}
+
+void TestCore::updateIsNewer()
+{
+    QVERIFY(UpdateInfo::isNewer("2.5.0", "2.4.3"));
+    QVERIFY(UpdateInfo::isNewer("3.0.0", "2.9.9"));
+    QVERIFY(UpdateInfo::isNewer("2.10.0", "2.9.0"));
+    QVERIFY(!UpdateInfo::isNewer("2.4.3", "2.4.3"));
+    // the major version is compared too (bug of the former check)
+    QVERIFY(!UpdateInfo::isNewer("2.9.0", "3.0.0"));
+}
+
+void TestCore::updateQuery()
+{
+    const QUrlQuery Client = UpdateInfo::query("ffs2play", "2.4.3", true);
+    QCOMPARE(Client.queryItemValue("app"), QString("ffs2play"));
+    QCOMPARE(Client.queryItemValue("version"), QString("2.4.3"));
+    QCOMPARE(Client.queryItemValue("channel"), QString("beta"));
+    QCOMPARE(Client.queryItemValue("os"), UpdateInfo::osName());
+    QVERIFY(Client.hasQueryItem("format"));
+    const QUrlQuery Plugin = UpdateInfo::query("xffs2play", "2.0.5", false, "2.5.0");
+    QCOMPARE(Plugin.queryItemValue("channel"), QString("stable"));
+    QCOMPARE(Plugin.queryItemValue("client_version"), QString("2.5.0"));
+    QVERIFY(!Plugin.hasQueryItem("format"));
+}
+
+namespace
+{
+    /// Plugin package as built by the xffs2play CI : xffs2play/64/<os>.xpl and resources
+    QString writePluginZip(const QString& pFolder, const QByteArray& pMarker, const QString& pExtraEntry = QString())
+    {
+        const QString Path = pFolder + "/xffs2play_9_9_9.zip";
+        QZipWriter Zip(Path);
+        Zip.addDirectory("xffs2play");
+        Zip.addFile("xffs2play/64/lin.xpl", pMarker);
+        Zip.addFile("xffs2play/64/win.xpl", pMarker);
+        Zip.addFile("xffs2play/Resources/related.txt", "related");
+        if (!pExtraEntry.isEmpty()) Zip.addFile(pExtraEntry, "evil");
+        Zip.close();
+        return Path;
+    }
+
+    QByteArray readAll(const QString& pPath)
+    {
+        QFile File(pPath);
+        return File.open(QIODevice::ReadOnly) ? File.readAll() : QByteArray();
+    }
+}
+
+void TestCore::pluginPackageInstall()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    const QString Plugins = Dir.path() + "/X-Plane 12/Resources/plugins";
+    QVERIFY(QDir().mkpath(Plugins + "/xffs2play/Resources/CSL"));
+    QFile Old(Plugins + "/xffs2play/64/lin.xpl");
+    QVERIFY(QDir().mkpath(Plugins + "/xffs2play/64"));
+    QVERIFY(Old.open(QIODevice::WriteOnly));
+    Old.write("old");
+    Old.close();
+    // remains of an interrupted update
+    QVERIFY(QDir().mkpath(Plugins + "/xffs2play.old/64"));
+
+    const QString Zip = writePluginZip(Dir.path(), "new");
+    QString Error;
+    QVERIFY2(PluginPackage::install(Zip, Plugins, Error), qPrintable(Error));
+    QCOMPARE(readAll(Plugins + "/xffs2play/64/lin.xpl"), QByteArray("new"));
+    QCOMPARE(readAll(Plugins + "/xffs2play/Resources/related.txt"), QByteArray("related"));
+    // the old folder is replaced, not merged : the former bundled CSL disappear
+    QVERIFY(!QFileInfo::exists(Plugins + "/xffs2play/Resources/CSL"));
+    QVERIFY(!QFileInfo::exists(Plugins + "/xffs2play.old"));
+    QVERIFY(!QFileInfo::exists(Plugins + "/xffs2play.new"));
+
+    // first installation (no plugin yet)
+    const QString Other = Dir.path() + "/X-Plane 11/Resources/plugins";
+    QVERIFY(QDir().mkpath(Other));
+    QVERIFY2(PluginPackage::install(Zip, Other, Error), qPrintable(Error));
+    QCOMPARE(readAll(Other + "/xffs2play/64/win.xpl"), QByteArray("new"));
+}
+
+void TestCore::pluginPackageRejected()
+{
+    QTemporaryDir Dir;
+    QVERIFY(Dir.isValid());
+    const QString Plugins = Dir.path() + "/plugins";
+    QVERIFY(QDir().mkpath(Plugins + "/xffs2play/64"));
+    QFile Old(Plugins + "/xffs2play/64/lin.xpl");
+    QVERIFY(Old.open(QIODevice::WriteOnly));
+    Old.write("old");
+    Old.close();
+    QString Error;
+
+    // path traversal : nothing written outside, installed plugin untouched
+    const QString Evil = writePluginZip(Dir.path(), "new", "xffs2play/../../evil.txt");
+    QVERIFY(!PluginPackage::install(Evil, Plugins, Error));
+    QVERIFY(!Error.isEmpty());
+    QVERIFY(!QFileInfo::exists(Dir.path() + "/evil.txt"));
+    QCOMPARE(readAll(Plugins + "/xffs2play/64/lin.xpl"), QByteArray("old"));
+    QVERIFY(!QFileInfo::exists(Plugins + "/xffs2play.new"));
+
+    // not a plugin package
+    const QString Wrong = Dir.path() + "/other.zip";
+    {
+        QZipWriter Zip(Wrong);
+        Zip.addFile("README.txt", "nothing");
+        Zip.close();
+    }
+    QVERIFY(!PluginPackage::install(Wrong, Plugins, Error));
+    QVERIFY(!PluginPackage::install(Dir.path() + "/missing.zip", Plugins, Error));
+    QCOMPARE(readAll(Plugins + "/xffs2play/64/lin.xpl"), QByteArray("old"));
 }
 
 QTEST_GUILESS_MAIN(TestCore)

@@ -31,8 +31,6 @@
 #include "tools/getappversion.h"
 
 #include <QCryptographicHash>
-#include <QMessageBox>
-#include <QDesktopServices>
 
 ///
 /// \brief CWebManager::HelloCallback
@@ -299,99 +297,4 @@ void CWebManager::UpdatePublicAddress(QHostAddress pAddress)
         m_log.log(tr("Public IPv6 address : ") + pAddress.toString());
         m_P2P.setPublicIPv6(pAddress);
     }
-}
-
-///
-/// \brief CWebManager::CheckNewVersionCallback
-/// \param pRequest
-///
-void CWebManager::CheckNewVersionCallback(CHttpRequest* pRequest)
-{
-    sVersion Actual = GetAppVersion();
-    QDomDocument Doc;
-    if (pRequest->getAsXml(Doc))
-    {
-        QDomElement xmlError = Doc.elementsByTagName("error").at(0).toElement();
-        if (xmlError.isNull())
-        {
-            QDomElement xmlVersion = Doc.elementsByTagName("version").at(0).toElement();
-            QDomElement xmlURL = Doc.elementsByTagName("url").at(0).toElement();
-            if (!xmlVersion.isNull() && !xmlURL.isNull())
-            {
-                int SiteMajor = xmlVersion.attribute("major").toInt();
-                int SiteMinor = xmlVersion.attribute("minor").toInt();
-                int SiteBuild = xmlVersion.attribute("build").toInt();
-                bool maj = false;
-                bool compat = true;
-                QString URL = xmlURL.text();
-                QString Message;
-                if (SiteMajor > Actual.Major)
-                {
-                    Message = tr("This version of FFS2Play is legacy and does not suppported. Do you want update it ?");
-                    maj = true;
-                    compat = false;
-                }
-                else if ((SiteMinor > Actual.Minor)||((SiteMinor == Actual.Minor) && (SiteBuild> Actual.Build)))
-                {
-                    Message = tr("This version of FFS2Play is not up to date. Do you want update it?");
-                    maj =true;
-                }
-                if (maj)
-                {
-                    QMessageBox::StandardButton reply;
-                    reply = QMessageBox::question(nullptr, tr("FFS2Play Update"),Message,QMessageBox::Yes|QMessageBox::No);
-                    if (reply == QMessageBox::Yes)
-                    {
-                        QDesktopServices::openUrl(URL);
-                        compat=false;
-                    }
-                    if (!compat) emit FireExit();
-                }
-            }
-        }
-        else
-        {
-#ifdef FFS_DEBUG
-            m_log.log("WEBManager : Error on Version checking : " + xmlError.text(),Qt::darkBlue,LEVEL_NORMAL);
-#endif
-        }
-    }
-    pRequest->deleteLater();
-}
-
-///
-/// \brief CWebManager::CheckNewVersionCallback
-/// \param pRequest
-///
-void CWebManager::CheckXPPluginVersionCallback(CHttpRequest* pRequest)
-{
-    sVersion Actual = m_simManager.getPlugVersion();
-    QDomDocument Doc;
-    if (pRequest->getAsXml(Doc))
-    {
-        QDomElement xmlVersion = Doc.elementsByTagName("version").at(0).toElement();
-        QDomElement xmlURL = Doc.elementsByTagName("url").at(0).toElement();
-
-        if (!xmlVersion.isNull() && !xmlURL.isNull())
-        {
-            int SiteMajor = xmlVersion.attribute("major").toInt();
-            int SiteMinor = xmlVersion.attribute("minor").toInt();
-            int SiteBuild = xmlVersion.attribute("build").toInt();
-            QString URL = xmlURL.text();
-            QString Message;
-            if ((SiteMajor > Actual.Major)||
-                    ((SiteMajor == Actual.Major) && (SiteMinor > Actual.Minor)) ||
-                    ((SiteMajor == Actual.Major) && (SiteMinor == Actual.Minor) && (SiteBuild> Actual.Build)))
-            {
-                Message = tr("The X-Plane XFFS2Play plugin is not up to date. Do you want update it?");
-                QMessageBox::StandardButton reply;
-                reply = QMessageBox::question(nullptr, tr("XFFS2Play Plugin Update"),Message,QMessageBox::Yes|QMessageBox::No);
-                if (reply == QMessageBox::Yes)
-                {
-                    QDesktopServices::openUrl(URL);
-                }
-            }
-        }
-    }
-    pRequest->deleteLater();
 }

@@ -1,5 +1,14 @@
 ChangeLog:
 
+2.5.0 : Updates from the FFS2Play portal
+        Update check through https://ffs2play.fr (packages published on GitHub), stable or beta channel
+        FFS2Play downloads the update, checks its SHA-256 and installs it : Windows installer, macOS disk image,
+                 AppImage replaced in place, .deb / .rpm / Arch package through the distribution package manager
+        X-Plane : the xffs2play plugin is updated too, in every X-Plane installation, once X-Plane is closed
+        Linux : AppImage for every distribution, native packages for Debian, Ubuntu, Fedora, openSUSE and Arch
+        "Skip this version" ; beta channel off by default
+        Fixed : a newer minor version was proposed even with an older major version
+
 2.4.3 : X-Plane CSL folders, native Linux packages
         X-Plane : CSL folders sent to the plugin as soon as the simulator is connected, and again when they change
                   in the P2P settings (the first list sent was empty)
