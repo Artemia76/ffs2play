@@ -18,21 +18,25 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # built without SimConnect : not published, the release gets the installer built locally with the MSFS SDK
           - name: Windows MSVC
             os: windows-2022
             preset: windows-msvc
             build_preset: windows-msvc-release
             package: true
+            artifact: ffs2play-windows-ci
           - name: Linux
             os: ubuntu-24.04
             preset: linux-release
             build_preset: linux-release
             package: false
+            artifact: ''
           - name: macOS
             os: macos-14
             preset: macos-release
             build_preset: macos-release
             package: true
+            artifact: release-macos
 
     steps:
       - uses: actions/checkout@v5
@@ -81,26 +85,121 @@ jobs:
         if: matrix.package
         uses: actions/upload-artifact@v5
         with:
-          name: ffs2play-${{ runner.os }}
+          name: ${{ matrix.artifact }}
           path: |
             out/build/${{ matrix.preset }}/ffs2play_*.exe
             out/build/${{ matrix.preset }}/ffs2play_*.dmg
           if-no-files-found: error
 
+  # Native packages, built in a container of each distribution against its own Qt (>= 6.8).
+  # Asset names are read by the portal (suite contract update-api.md) : keep build-package.sh naming.
+  linux-packages:
+    name: Linux package ${{ matrix.distro }}
+    runs-on: ubuntu-24.04
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { distro: debian-13,           image: 'debian:trixie' }
+          - { distro: ubuntu-26.04,        image: 'ubuntu:26.04' }
+          - { distro: fedora-43,           image: 'fedora:43' }
+          - { distro: fedora-44,           image: 'fedora:44' }
+          - { distro: opensuse-tumbleweed, image: 'opensuse/tumbleweed:latest' }
+          - { distro: arch,                image: 'archlinux:latest' }
+    steps:
+      # without git, actions/checkout downloads an archive : no tags, no version
+      - name: Install git
+        run: |
+          if command -v apt-get >/dev/null; then apt-get update && apt-get install -y git ca-certificates
+          elif command -v dnf >/dev/null; then dnf install -y git
+          elif command -v zypper >/dev/null; then zypper --non-interactive install git tar gzip
+          elif command -v pacman >/dev/null; then pacman -Syu --noconfirm git
+          fi
+
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0          # tags give the application version
+
+      - name: Build dependencies
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          packaging/linux/build-package.sh --install-deps --deps-only
+
+      # the unit tests run in the Linux job above
+      - name: Package
+        run: |
+          if command -v makepkg >/dev/null; then
+            # makepkg refuses to run as root
+            useradd -m builder
+            chown -R builder "$GITHUB_WORKSPACE"
+            su builder -c "git config --global --add safe.directory '$GITHUB_WORKSPACE' && packaging/linux/build-package.sh --no-tests --output out/packages"
+          else
+            packaging/linux/build-package.sh --no-tests --output out/packages
+          fi
+          ls -l out/packages
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: release-linux-${{ matrix.distro }}
+          path: out/packages/ffs2play*
+          if-no-files-found: error
+
+  # One AppImage for every distribution : built on the oldest supported Ubuntu for a wide glibc compatibility
+  appimage:
+    name: Linux AppImage
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          modules: qtgrpc qtwaylandcompositor
+          cache: true
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libssl-dev libgl1-mesa-dev libxkbcommon-dev libxkbcommon-x11-0 \
+            libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 \
+            libxcb-shape0 libxcb-xinerama0 libxcb-xkb1 libwayland-cursor0 libwayland-egl1
+
+      - name: AppImage
+        run: packaging/linux/build-appimage.sh --output out/packages
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: release-appimage
+          path: out/packages/*.AppImage
+          if-no-files-found: error
+
   release:
     name: GitHub release
     if: startsWith(github.ref, 'refs/tags/')
-    needs: build
+    needs: [build, linux-packages, appimage]
     runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
+      # release-* only : the Windows installer of the CI has no SimConnect
       - uses: actions/download-artifact@v5
         with:
           path: packages
+          pattern: release-*
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
           files: packages/*
+          # published by hand once the Windows installer built with the MSFS SDK is uploaded :
+          # gh release upload <tag> ffs2play_M_m_p_Windows.exe --clobber (suite sheet 0005)
           draft: true
           generate_release_notes: true

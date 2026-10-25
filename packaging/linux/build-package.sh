@@ -20,6 +20,7 @@
 #
 # Usage : packaging/linux/build-package.sh [options]
 #   --install-deps     install the build dependencies with the distribution package manager (sudo)
+#   --deps-only        only install the build dependencies (with --install-deps), then stop
 #   --format FMT       force the package format : deb, rpm, arch or tgz
 #   --build-dir DIR    build directory (default : out/build/linux-package-<distribution>)
 #   --output DIR       where the package is copied (default : out/packages)
@@ -32,6 +33,7 @@ QT_MIN_VERSION=6.8
 
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 INSTALL_DEPS=0
+DEPS_ONLY=0
 RUN_TESTS=1
 FORMAT=""
 BUILD_DIR=""
@@ -45,6 +47,7 @@ usage() { sed -n '/^# Usage/,/^$/s/^# \{0,1\}//p' "${BASH_SOURCE[0]}"; }
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --install-deps) INSTALL_DEPS=1 ;;
+        --deps-only)    DEPS_ONLY=1 ;;
         --format)       FORMAT="${2:?--format needs a value}"; shift ;;
         --build-dir)    BUILD_DIR="${2:?--build-dir needs a value}"; shift ;;
         --output)       OUTPUT_DIR="${2:?--output needs a value}"; shift ;;
@@ -132,16 +135,16 @@ install_deps() {
             $SUDO apt-get install -y --no-install-recommends \
                 build-essential cmake ninja-build git pkg-config dpkg-dev file \
                 libssl-dev protobuf-compiler libgl-dev libxkbcommon-dev \
-                qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
+                qt6-base-dev qt6-base-private-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
                 qt6-grpc-dev qt6-grpc-tools libqt6sql6-sqlite qt6-qpa-plugins ;;
         fedora)
             $SUDO dnf install -y \
                 gcc-c++ cmake ninja-build git rpm-build openssl-devel protobuf-compiler \
-                qt6-qtbase-devel qt6-qttools-devel qt6-linguist qt6-qtgrpc-devel ;;
+                qt6-qtbase-devel qt6-qtbase-private-devel qt6-qttools-devel qt6-linguist qt6-qtgrpc-devel ;;
         suse)
             $SUDO zypper --non-interactive install \
                 gcc-c++ cmake ninja git rpm-build libopenssl-devel protobuf-devel \
-                qt6-base-devel qt6-tools-devel qt6-linguist-devel qt6-protobuf-devel \
+                qt6-base-devel qt6-base-private-devel qt6-tools-devel qt6-linguist-devel qt6-protobuf-devel \
                 qt6-sql-sqlite ;;
         arch)
             $SUDO pacman -S --needed --noconfirm \
@@ -155,6 +158,7 @@ if [[ $INSTALL_DEPS -eq 1 ]]; then
     info "Installing build dependencies"
     install_deps
 fi
+[[ $DEPS_ONLY -eq 1 ]] && exit 0
 
 for _tool in cmake ninja protoc; do
     command -v "$_tool" >/dev/null || die "$_tool not found (run with --install-deps)"
@@ -187,6 +191,7 @@ cmake -S "$SOURCE_DIR" -B "$BUILD_DIR" -G Ninja \
     -DFFS2PLAY_WITH_SIMCONNECT=OFF \
     -DFFS2PLAY_BUILD_TESTS=$([[ $RUN_TESTS -eq 1 ]] && echo ON || echo OFF) \
     -DFFS2PLAY_PACKAGE_RELEASE="$PKG_RELEASE" \
+    -DFFS2PLAY_PACKAGE_FORMAT="$FORMAT" \
     -DFFS2PLAY_PACKAGE_DEPENDS="$PKG_DEPENDS"
 
 info "Building"

@@ -27,7 +27,8 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
 1. DEPENDENCIES
 
-	- Qt : >= 6.8 with modules Core, Gui, Widgets, Network, Sql, Xml, Protobuf and Linguist tools
+	- Qt : >= 6.8 with modules Core, Gui, Widgets, Network, Sql, Xml, Protobuf and Linguist tools,
+	  and the private headers of Qt Gui / Qt Core (zip reader used to install the xffs2play plugin)
 	- protoc (protobuf compiler) : >= 3.12, build time only (used by Qt qtprotobufgen)
 	- OpenSSL : >= 3.0 (libcrypto only)
 	- CMake : >= 3.27
@@ -43,9 +44,14 @@ be met: [GPLv3 licence ](https://www.gnu.org/licenses/gpl-3.0.html)
 
 		The package is written to out/packages/ ; `--help` lists the options (forced format, build folder, no tests).
 
+	1. AppImage for every distribution (Qt from the Qt online installer or aqtinstall, on an old distribution
+	   such as Ubuntu 22.04 for a wide glibc compatibility) :
+
+			QT_ROOT_DIR=/path/to/Qt/6.8.3/gcc_64 packaging/linux/build-appimage.sh
+
 	1. Debian (13 or newer) / Ubuntu (25.04 or newer)
 
-			sudo apt-get install build-essential cmake ninja-build libssl-dev protobuf-compiler qt6-base-dev qt6-tools-dev qt6-l10n-tools libqt6sql6-sqlite qt6-grpc-dev qt6-grpc-tools
+			sudo apt-get install build-essential cmake ninja-build libssl-dev protobuf-compiler qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-l10n-tools libqt6sql6-sqlite qt6-grpc-dev qt6-grpc-tools
 
 	1. Arch Linux
 

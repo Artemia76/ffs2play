@@ -121,14 +121,11 @@ public:
     void                Connect();
     void                Disconnect();
     bool                isConnected();
-    void                CheckNewVersion();
-    void                CheckXPPluginVersion();
 
 signals:
     void                FireHelloCallback();
     void                FireConnected();
     void                FireDisconnected();
-    void                FireExit();
 public slots:
     void                connect_disconnect();
 private slots:
@@ -137,8 +134,6 @@ private slots:
     void                LiveUpdateCallback (CHttpRequest* pRequest);
     void                ATCCallback (CHttpRequest* pRequest);
     void                LogoutCallback (CHttpRequest* pRequest);
-    void                CheckNewVersionCallback (CHttpRequest* pRequest);
-    void                CheckXPPluginVersionCallback (CHttpRequest* pRequest);
     void                SendVerify();
     void                SendLiveUpdate();
     void                SendATCUpdate();

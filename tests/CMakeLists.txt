@@ -13,11 +13,13 @@ qt_add_executable(tst_core
     ${PROJECT_SOURCE_DIR}/sim/fgdatagram.cpp ${PROJECT_SOURCE_DIR}/sim/fgdatagram.h
     ${PROJECT_SOURCE_DIR}/net/upnpclient.cpp ${PROJECT_SOURCE_DIR}/net/upnpclient.h
     ${PROJECT_SOURCE_DIR}/web/caddrrequest.cpp ${PROJECT_SOURCE_DIR}/web/caddrrequest.h
+    ${PROJECT_SOURCE_DIR}/web/updateinfo.cpp ${PROJECT_SOURCE_DIR}/web/updateinfo.h
+    ${PROJECT_SOURCE_DIR}/disk/pluginpackage.cpp ${PROJECT_SOURCE_DIR}/disk/pluginpackage.h
 )
 
 target_include_directories(tst_core PRIVATE ${PROJECT_SOURCE_DIR})
 target_link_libraries(tst_core PRIVATE
-    Qt6::Core Qt6::Gui Qt6::Network Qt6::Xml Qt6::Protobuf Qt6::Test
+    Qt6::Core Qt6::Gui Qt6::Network Qt6::Xml Qt6::Protobuf Qt6::Test ${FFS2PLAY_QT_ZIP}
     ffs2play_proto
     OpenSSL::Crypto)
 if(WIN32)
