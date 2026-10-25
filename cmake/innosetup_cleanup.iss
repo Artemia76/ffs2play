@@ -13,3 +13,7 @@ Type: filesandordirs; Name: "{app}\iconengines"
 Type: filesandordirs; Name: "{app}\styles"
 Type: filesandordirs; Name: "{app}\imageformats"
 Type: filesandordirs; Name: "{app}\bearer"
+;
+; Update started by FFS2Play (/SILENT) : the [Run] entry of CPack is skipped in silent mode, start the new version
+[Run]
+Filename: "{app}\bin\ffs2play.exe"; Flags: nowait; Check: WizardSilent

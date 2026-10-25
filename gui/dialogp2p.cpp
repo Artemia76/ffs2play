@@ -35,6 +35,7 @@
 
 #include "ui_dialogp2p.h"
 #include "web/webmanager.h"
+#include "web/cupdatemanager.h"
 #include "sim/simbasemanager.h"
 #include "sim/xpmanager.h"
 
@@ -70,7 +71,7 @@ DialogP2P::DialogP2P(QWidget *parent)
     ui->cbEnforceTCP->setChecked(m_settings.value("EnforceTCP", false).toBool());
     m_settings.endGroup();
     m_settings.beginGroup("Main");
-    ui->cbBeta->setChecked(m_settings.value("Beta",true).toBool());
+    ui->cbBeta->setChecked(m_settings.value("Beta",false).toBool());
     m_settings.endGroup();
     m_settings.beginGroup("XPlane");
     if (m_settings.value("AIMode",false).toBool())
@@ -226,10 +227,10 @@ void DialogP2P::applyChangedItem()
     {
         m_P2PManager.setSendDropRate(ui->cbSendDropRate->isChecked());
     }
-    if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",true).toBool())
+    if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",false).toBool())
     {
         m_settings.setValue("Main/Beta",ui->cbBeta->isChecked());
-        m_WebManager.CheckNewVersion();
+        CUpdateManager::instance().checkClient();
     }
     if (m_textColor != m_SimManager.getCallSignColor())
     {
@@ -334,7 +335,7 @@ void DialogP2P::checkIfChanged()
     {
         m_changed = true;
     }
-    if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",true).toBool())
+    if (ui->cbBeta->isChecked() != m_settings.value("Main/Beta",false).toBool())
     {
         m_changed = true;
     }

@@ -33,6 +33,7 @@
 #include <QDebug>
 
 #include "ui_mainwindow.h"
+#include "web/cupdatemanager.h"
 
 #include <QMenu>
 #include <QTextBlock>
@@ -107,7 +108,7 @@ MainWindow::MainWindow()
 
     connect(m_webManager, &CWebManager::FireConnected, this, &MainWindow::onWM_Connected);
     connect(m_webManager, &CWebManager::FireDisconnected, this, &MainWindow::onWM_Disconnected);
-    connect(m_webManager, &CWebManager::FireExit, this, &MainWindow::onWM_Exit);
+    connect(&CUpdateManager::instance(), &CUpdateManager::fireExit, this, &MainWindow::onWM_Exit, Qt::QueuedConnection);
 
     m_AIMapping = &AIMapping::instance();
     connect(m_AIMapping, &AIMapping::fireScanFinished, this, &MainWindow::onAIScanFinished);
@@ -130,7 +131,8 @@ MainWindow::MainWindow()
     connect(&m_updateTimer, &QTimer::timeout, this, &MainWindow::onUpdate);
     m_updateTimer.start(500);
     m_simManager->open_close();
-    m_webManager->CheckNewVersion();
+    CUpdateManager::instance().installPendingPlugin();
+    CUpdateManager::instance().checkClient();
     m_webManager->Connect();
     m_Theme = &CTheme::instance();
     ui->afTheme->setMenu(m_Theme->createMenu(this));
@@ -203,7 +205,12 @@ void MainWindow::onThemeChanged()
 void MainWindow::onSCM_Opened()
 {
     ui->afFSCon->setIcon(QIcon(":/gfx/plane_green.png"));
-    if (m_simManager->getType()==SIM_TYPE::XPLANE) m_webManager->CheckXPPluginVersion();
+    if (m_simManager->getType()==SIM_TYPE::XPLANE)
+    {
+        const sVersion Plugin = m_simManager->getPlugVersion();
+        if (Plugin.Major > 0)
+            CUpdateManager::instance().checkPlugin(QString("%1.%2.%3").arg(Plugin.Major).arg(Plugin.Minor).arg(Plugin.Build));
+    }
 }
 
 ///
@@ -212,6 +219,8 @@ void MainWindow::onSCM_Opened()
 void MainWindow::onSCM_Closed()
 {
     ui->afFSCon->setIcon(QIcon(":/gfx/plane_gris.png"));
+    // X-Plane closed : it no longer holds the plugin files
+    if (m_simManager->getType()==SIM_TYPE::XPLANE) CUpdateManager::instance().installPendingPlugin();
 }
 
 ///
