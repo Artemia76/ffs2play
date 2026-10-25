@@ -36,6 +36,7 @@
 #include "ui_dialogp2p.h"
 #include "web/webmanager.h"
 #include "sim/simbasemanager.h"
+#include "sim/xpmanager.h"
 
 ///
 /// \brief DialogBox constructor
@@ -72,7 +73,7 @@ DialogP2P::DialogP2P(QWidget *parent)
     ui->cbBeta->setChecked(m_settings.value("Beta",true).toBool());
     m_settings.endGroup();
     m_settings.beginGroup("XPlane");
-    if (m_settings.value("AIMode",true).toBool())
+    if (m_settings.value("AIMode",false).toBool())
     {
         ui->rbAI_Aircrafts->setChecked(true);
     }
@@ -117,9 +118,11 @@ DialogP2P::DialogP2P(QWidget *parent)
         {
             ui->pbTextColor->setVisible(true);
             ui->cbEnableCallsign->setVisible(true);
-            ui->lbl_XPlaneAIMode->setVisible(true);
-            ui->rbAI_Aircrafts->setVisible(true);
-            ui->rbCSL_Aircrafts->setVisible(true);
+            // No choice with xffs2play 2.1.0 and later: CSL aircraft only
+            const bool AIChoice = !CXPManager::isCSLOnlyPlugin(m_SimManager.getPlugVersion());
+            ui->lbl_XPlaneAIMode->setVisible(AIChoice);
+            ui->rbAI_Aircrafts->setVisible(AIChoice);
+            ui->rbCSL_Aircrafts->setVisible(AIChoice);
         }
     }
     if (CWebManager::instance().isConnected()) ui->numPort->setEnabled(false);
@@ -292,8 +295,8 @@ void DialogP2P::checkIfChanged()
     m_settings.endGroup();
     m_settings.beginGroup("XPlane");
     if (
-            (m_settings.value("AIMode",true).toBool() && ui->rbCSL_Aircrafts->isChecked()) ||
-            ((!m_settings.value("AIMode",true).toBool()) && ui->rbAI_Aircrafts->isChecked()))
+            (m_settings.value("AIMode",false).toBool() && ui->rbCSL_Aircrafts->isChecked()) ||
+            ((!m_settings.value("AIMode",false).toBool()) && ui->rbAI_Aircrafts->isChecked()))
     {
         m_changed = true;
     }

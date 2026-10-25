@@ -4,6 +4,14 @@
 <context>
     <name>AIBaseParser</name>
     <message>
+        <source>CSL folder found : </source>
+        <translation>Dossier CSL trouvé : </translation>
+    </message>
+    <message>
+        <source>No CSL folder found : add it in the P2P settings</source>
+        <translation>Aucun dossier CSL trouvé : l'ajouter dans les réglages P2P</translation>
+    </message>
+    <message>
         <location filename="../disk/aibaseparser.cpp" line="225"/>
         <source>Start updating aircraft database...</source>
         <translation>Début de la mise à jour de la base de donée des avions...</translation>

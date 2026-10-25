@@ -63,6 +63,8 @@ class CXPManager : public SimConnector
 public:
     explicit CXPManager(QObject *parent = nullptr);
     ~CXPManager() override;
+    // xffs2play 2.1.0 and later only draw CSL aircraft (AI mode removed)
+static bool         isCSLOnlyPlugin(const sVersion& pVersion) { return (pVersion.Major > 2) || ((pVersion.Major == 2) && (pVersion.Minor >= 1)); }
 private:
     qint64          m_SimRate;
     qint64          m_VariableRate;
@@ -86,6 +88,7 @@ protected:
     void            freezeAI(uint, bool) override;
     void            sendOptions() override {}
     void            sendCallSignColor() override;
+    void            setAIPaths(const QStringList& pPaths) override;
     void            sendAIPaths();
 
     void            sendPing();

@@ -415,9 +415,9 @@ bool AIMapping::needPaths()
 ///
 bool AIMapping::addPath(const QString& pPath,const QString& pSim)
 {
-    if (isInit())
-        return m_AIParser->addPath(pPath,pSim);
-    return false;
+    if (!isInit() || !m_AIParser->addPath(pPath,pSim)) return false;
+    m_simManager.setPathList(getPathList());
+    return true;
 }
 
 ///
@@ -427,9 +427,9 @@ bool AIMapping::addPath(const QString& pPath,const QString& pSim)
 ///
 bool AIMapping::delPath(const QString& pPath)
 {
-    if (isInit())
-        return m_AIParser->delPath(pPath);
-    return false;
+    if (!isInit() || !m_AIParser->delPath(pPath)) return false;
+    m_simManager.setPathList(getPathList());
+    return true;
 }
 
 ///

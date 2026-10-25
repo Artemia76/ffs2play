@@ -141,7 +141,7 @@ protected:
     void            setCallSignColor(const QColor& pColor);
     QColor          getCallSignColor();
     CAircraftState  getState();
-    void            setAIPaths(const QStringList& pPaths);
+virtual void            setAIPaths(const QStringList& pPaths);
 
 virtual void            sendOptions()=0;
 virtual void            open()=0;
