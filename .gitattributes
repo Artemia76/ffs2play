@@ -1,0 +1,11 @@
+# Normalise text files to LF in the repository; checkout follows the platform.
+* text=auto
+
+*.sh   text eol=lf
+*.bat  text eol=crlf
+*.ps1  text eol=crlf
+
+# Binary assets
+*.png  binary
+*.ico  binary
+*.icns binary
