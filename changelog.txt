@@ -1,5 +1,13 @@
 ChangeLog:
 
+2.4.3 : X-Plane CSL folders (not released yet)
+        X-Plane : CSL folders sent to the plugin as soon as the simulator is connected, and again when they change
+                  in the P2P settings (the first list sent was empty)
+        X-Plane : CSL folders installed in the X-Plane plugins found automatically (X-CSL-Updater, xPilot, X-IvAp,
+                  LiveTraffic...) when none is configured
+        X-Plane : CSL aircraft only with xffs2play 2.1.0 and later (AI mode removed from the plugin)
+        Required by xffs2play 2.1.0, which no longer bundles CSL aircraft
+
 2.4.2 : Microsoft Flight Simulator 2024 support
         MSFS 2024 : aircraft list asked to the simulator (title and livery), no folder to configure,
                     read again at each flight ; AIs created with their livery

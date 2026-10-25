@@ -53,7 +53,10 @@ class XPCSLParser : public AIBaseParser
 public:
     XPCSLParser(QObject *parent = nullptr);
     ~XPCSLParser() override;
+    static QStringList findXPlaneRoots();
 private:
+    void    searchSimPath() override;
+    static bool hasCSLPackage(const QString& pPath);
     void    DBFileUpdate(const QString& pKey,const QString& pPath) override;
     void    ReadCSL (const QString& pPath,  xsb_aircraft& pContent);
 };

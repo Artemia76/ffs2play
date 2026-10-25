@@ -4,11 +4,93 @@
 XPCSLParser::XPCSLParser(QObject *parent) : AIBaseParser(parent)
 {
     m_AIFileFilter << "xsb_aircraft.txt";
+    searchSimPath();
 }
 
 XPCSLParser::~XPCSLParser()
 {
     stopScan();
+}
+
+///
+/// \brief XPCSLParser::findXPlaneRoots
+/// \return the X-Plane 12 and 11 installations listed by X-Plane in x-plane_install_12.txt / _11.txt
+///
+QStringList XPCSLParser::findXPlaneRoots()
+{
+#if defined(Q_OS_WIN)
+    const QString Folder = qEnvironmentVariable("LOCALAPPDATA");
+#elif defined(Q_OS_MACOS)
+    const QString Folder = QDir::homePath() + "/Library/Preferences";
+#else
+    const QString Folder = QDir::homePath() + "/.x-plane";
+#endif
+    QStringList Roots;
+    for (const QString& Name : {"x-plane_install_12.txt", "x-plane_install_11.txt"})
+    {
+        QFile File(Folder + "/" + Name);
+        if (!File.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
+        QTextStream Stream(&File);
+        while (!Stream.atEnd())
+        {
+            const QString Root = QDir::fromNativeSeparators(QDir::cleanPath(Stream.readLine().trimmed()));
+            if (!Root.isEmpty() && QDir(Root + "/Resources/plugins").exists() && !Roots.contains(Root, Qt::CaseInsensitive))
+                Roots << Root;
+        }
+    }
+    return Roots;
+}
+
+///
+/// \brief XPCSLParser::hasCSLPackage
+/// \return true if the folder or one of its sub-folders is a CSL package (xsb_aircraft.txt)
+///
+bool XPCSLParser::hasCSLPackage(const QString& pPath)
+{
+    const QDir Dir(pPath);
+    if (!Dir.exists()) return false;
+    if (Dir.exists("xsb_aircraft.txt")) return true;
+    for (const QString& Sub : Dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+    {
+        if (QFile::exists(Dir.absoluteFilePath(Sub + "/xsb_aircraft.txt"))) return true;
+    }
+    return false;
+}
+
+///
+/// \brief XPCSLParser::searchSimPath
+/// Without any folder configured, registers the CSL folders installed in the X-Plane plugins :
+/// X-CSL-Updater, xPilot, X-IvAp, LiveTraffic... (<plugin>/Resources/CSL, <plugin>/CSL, or a plugin
+/// folder named after CSL). The old CSL package bundled with xffs2play is ignored.
+/// The reset of the AI database finds them again.
+///
+void XPCSLParser::searchSimPath()
+{
+    if (!m_Initialized || !getPathList().isEmpty()) return;
+    QStringList Added;
+    for (const QString& Root : findXPlaneRoots())
+    {
+        const QDir Plugins(Root + "/Resources/plugins");
+        for (const QString& Plugin : Plugins.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        {
+            if (Plugin.compare("xffs2play", Qt::CaseInsensitive) == 0) continue;
+            QStringList Candidates;
+            Candidates << Plugins.absoluteFilePath(Plugin + "/Resources/CSL") << Plugins.absoluteFilePath(Plugin + "/CSL");
+            if (Plugin.contains("CSL", Qt::CaseInsensitive)) Candidates << Plugins.absoluteFilePath(Plugin);
+            for (const QString& Candidate : std::as_const(Candidates))
+            {
+                const QString Path = QDir::cleanPath(Candidate);
+                if (Added.contains(Path, Qt::CaseInsensitive) || !hasCSLPackage(Path)) continue;
+                if (addPath(Path))
+                {
+                    Added << Path;
+                    m_log.log(tr("CSL folder found : ") + Path);
+                    break;
+                }
+            }
+        }
+    }
+    if (Added.isEmpty()) m_log.log(tr("No CSL folder found : add it in the P2P settings"), Qt::darkYellow);
 }
 
 ///

@@ -37,9 +37,9 @@ struct sVersion
 {
     QString Name;
     QString FullVersion;
-    int Major;
-    int Minor;
-    int Build;
+    int Major = 0;
+    int Minor = 0;
+    int Build = 0;
 };
 
 sVersion GetAppVersion();
