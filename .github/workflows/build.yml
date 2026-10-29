@@ -14,17 +14,20 @@ jobs:
   build:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+    env:
+      # 'false' when the secret is not readable (pull requests from forks) : Windows build without SimConnect
+      HAS_SDK_KEY: ${{ secrets.SIMCONNECT_SDK_KEY != '' }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          # built without SimConnect : not published, the release gets the installer built locally with the MSFS SDK
+          # with SimConnect (MSFS 2024 SDK from the private repository ffs2play-sdk) : release installer
           - name: Windows MSVC
             os: windows-2022
             preset: windows-msvc
             build_preset: windows-msvc-release
             package: true
-            artifact: ffs2play-windows-ci
+            artifact: release-windows
           - name: Linux
             os: ubuntu-24.04
             preset: linux-release
@@ -65,11 +68,42 @@ jobs:
           brew install ninja
           echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl@3)" >> "$GITHUB_ENV"
 
+      # The MSFS SDK license forbids publishing it : private repository, read-only deploy key (suite sheet 0006)
+      - name: SimConnect SDK
+        if: runner.os == 'Windows' && env.HAS_SDK_KEY == 'true'
+        uses: actions/checkout@v5
+        with:
+          repository: Artemia76/ffs2play-sdk
+          ssh-key: ${{ secrets.SIMCONNECT_SDK_KEY }}
+          persist-credentials: false
+          path: simconnect-sdk
+
       - name: Configure
         shell: bash
         env:
           QTDIR: ${{ env.QT_ROOT_DIR }}
-        run: cmake --preset ${{ matrix.preset }} -DFFS2PLAY_WITH_SIMCONNECT=OFF
+        run: |
+          simconnect=()
+          if [ "$RUNNER_OS" = Windows ]; then
+            if [ -f "simconnect-sdk/SimConnect SDK/include/SimConnect.h" ]; then
+              simconnect=(-DFFS2PLAY_WITH_SIMCONNECT=ON "-DSIMCONNECT_PATH=$(cygpath -m "$PWD/simconnect-sdk/SimConnect SDK")")
+            elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
+              echo "::error title=SimConnect::secret SIMCONNECT_SDK_KEY missing : no release installer without SimConnect"
+              exit 1
+            else
+              echo "::warning title=SimConnect::secret SIMCONNECT_SDK_KEY not readable : build without SimConnect"
+              simconnect=(-DFFS2PLAY_WITH_SIMCONNECT=OFF)
+            fi
+          fi
+          cmake --preset ${{ matrix.preset }} "${simconnect[@]}" 2>&1 | tee configure.log
+          rc=${PIPESTATUS[0]}
+          # a release installer must have SimConnect with the MSFS 2024 API
+          if [ $rc -eq 0 ] && [ "$RUNNER_OS" = Windows ] && [[ "$GITHUB_REF" == refs/tags/* ]] &&
+             grep -q -E "SimConnect SDK not found|SimConnect SDK without MSFS 2024 API" configure.log; then
+            echo "::error title=SimConnect::release installer without SimConnect or without the MSFS 2024 API"
+            exit 1
+          fi
+          exit $rc
 
       - name: Build
         run: cmake --build --preset ${{ matrix.build_preset }}
@@ -199,16 +233,34 @@ jobs:
     permissions:
       contents: write
     steps:
-      # release-* only : the Windows installer of the CI has no SimConnect
       - uses: actions/download-artifact@v5
         with:
           path: packages
           pattern: release-*
           merge-multiple: true
+
+      # Tags are numeric (version read by CMake) : a beta is an annotated tag whose message contains [beta]
+      # (git tag -a 2.6.0 -m "[beta] ..."). The portal offers a prerelease to beta clients only.
+      - name: Channel
+        id: channel
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$GITHUB_REF_NAME" --jq 'select(.object.type == "tag") | .object.sha')
+          message=""
+          if [ -n "$sha" ]; then
+            message=$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$sha" --jq .message)
+          fi
+          if grep -q -i '\[beta\]' <<< "$message"; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # published at once : the portal offers it to the clients within 10 minutes (suite contract update-api.md)
       - uses: softprops/action-gh-release@v2
         with:
           files: packages/*
-          # published by hand once the Windows installer built with the MSFS SDK is uploaded :
-          # gh release upload <tag> ffs2play_M_m_p_Windows.exe --clobber (suite sheet 0005)
-          draft: true
+          draft: false
+          prerelease: ${{ steps.channel.outputs.prerelease }}
           generate_release_notes: true
