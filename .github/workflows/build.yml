@@ -35,7 +35,7 @@ jobs:
             package: false
             artifact: ''
           - name: macOS
-            os: macos-14
+            os: macos-15
             preset: macos-release
             build_preset: macos-release
             package: true

@@ -1,5 +1,9 @@
 ChangeLog:
 
+2.5.2 : First release with the updates from the FFS2Play portal (2.5.1 was tagged but never released)
+        Same features as 2.5.1 below
+        Windows : installer built by the continuous integration with the MSFS 2024 SDK
+
 2.5.1 : Updates from the FFS2Play portal (2.5.0 was tagged but never released)
         Update check through https://ffs2play.fr (packages published on GitHub), stable or beta channel
         FFS2Play downloads the update, checks its SHA-256 and installs it : Windows installer, macOS disk image,
