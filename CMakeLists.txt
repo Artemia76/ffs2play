@@ -278,6 +278,20 @@ if(WIN32 OR APPLE)
     install(SCRIPT ${_deploy_script})
 endif()
 
+if(APPLE)
+    # macdeployqt changes the bundle after the linker signature : sign it again (ad hoc, no Apple certificate),
+    # macOS may refuse to run an arm64 application whose signature is not valid
+    install(CODE "
+        set(_app \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/ffs2play.app\")
+        execute_process(
+            COMMAND codesign --force --deep --sign - \"\${_app}\"
+            RESULT_VARIABLE _sign_result)
+        if(NOT _sign_result EQUAL 0)
+            message(FATAL_ERROR \"codesign failed on \${_app}\")
+        endif()
+    ")
+endif()
+
 if(WIN32 AND MSVC)
     # Ship the Visual C++ runtime next to the executable
     set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CMAKE_INSTALL_BINDIR})
