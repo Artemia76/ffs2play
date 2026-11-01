@@ -34,12 +34,21 @@ jobs:
             build_preset: linux-release
             package: false
             artifact: ''
-          - name: macOS
+          - name: macOS arm64
             os: macos-15
             preset: macos-release
             build_preset: macos-release
             package: true
-            artifact: release-macos
+            artifact: release-macos-arm64
+            expected_arch: arm64
+          # GitHub stops the Intel runners in fall 2027 (suite sheet 0006)
+          - name: macOS Intel
+            os: macos-15-intel
+            preset: macos-release
+            build_preset: macos-release
+            package: true
+            artifact: release-macos-x86_64
+            expected_arch: x86_64
 
     steps:
       - uses: actions/checkout@v5
@@ -114,6 +123,30 @@ jobs:
       - name: Package
         if: matrix.package
         run: cpack --preset ${{ matrix.build_preset }}
+
+      # No Apple Silicon Mac to try the ARM package on : at least check what the portal will offer (suite sheet 0006)
+      - name: Check disk image
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          arch=${{ matrix.expected_arch }}
+          dmg=$(ls out/build/${{ matrix.preset }}/ffs2play_*_Darwin_$arch.dmg)
+          mount=$(mktemp -d)
+          hdiutil attach "$dmg" -nobrowse -readonly -mountpoint "$mount"
+          app=$(find "$mount" -maxdepth 3 -name '*.app' -print -quit)
+          test -n "$app"
+          find "$app" -type f -print0 | while IFS= read -r -d '' file; do
+            file -b "$file" | grep -q Mach-O || continue
+            if ! lipo -archs "$file" | tr ' ' '\n' | grep -qx "$arch"; then
+              echo "::error title=Disk image::$file has no $arch code"
+              exit 1
+            fi
+          done
+          codesign --verify --deep --strict --verbose=2 "$app"
+          # real minimum macOS : the OpenSSL of Homebrew may require more than the deployment target
+          vtool -show-build "$app"/Contents/MacOS/*
+          find "$app" -name 'libcrypto*' -type f -exec vtool -show-build {} \;
+          hdiutil detach "$mount"
 
       - name: Upload package
         if: matrix.package
